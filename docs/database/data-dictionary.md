@@ -13,7 +13,8 @@ Todas as tabelas de negócio incluem `firm_id`; tabelas mutáveis incluem timest
 | `service_types` | Classificação futura de serviço | nome único, descrição, ativo |
 | `matters` | Processo/dossier/assunto | cliente obrigatório; profissional/sociedade opcionais; lifecycle e arquivo |
 | `work_entries` | Movimento de trabalho | data, cliente, profissional, minutos, preços/montantes, estados e origem |
-| `rate_rules` | Resolução de preços | escopos opcionais; tarifa horária ou fixa; vigência e prioridade |
+| `rate_rules` | Resolução de preços | tipo de cobrança, escopo exclusivo, preço, moeda, vigência, prioridade, ativo e autor |
+| `discounts` | Descontos autorizados | percentual/fixo; âmbito movimento/cliente/período; vigência, motivo e autorizador |
 | `manual_overrides` | Justificação de exceções | valores anterior/calculado/override em JSONB; autor e eventual reversão |
 | `invoices` | Controlo interno de faturas | número por sociedade; totais `numeric(14,2)` e estado |
 | `invoice_lines` | Linhas de fatura | quantidade, preço, desconto e total exato; movimento opcional |
@@ -26,7 +27,7 @@ Todas as tabelas de negócio incluem `firm_id`; tabelas mutáveis incluem timest
 
 - `PARTICULAR` → `clients.client_type = individual`.
 - `SOCIEDADE` → `clients.client_type = company`.
-- `GAVETA` → `drawer`; `DOSSIER` → `dossier`; `FINDOS` → `closed_files`.
+- `GAVETA` → `gaveta`; `DOSSIER` → `dossier`; `FINDOS` → `findos`.
 - `√` em FACTURADO/PAGO → booleano verdadeiro.
 - Duração Excel × 1.440 → `duration_minutes`.
 - CARINA SANTOS, LEGAL TEAM e MASSIVE SEARCH são candidatos a `billing_entities`, não seeds automáticos.
@@ -39,5 +40,9 @@ Todas as tabelas de negócio incluem `firm_id`; tabelas mutáveis incluem timest
 - `effective_hourly_rate`: preço efetivamente usado.
 - `calculated_amount`: montante calculado sem override.
 - `effective_amount`: montante final, protegido por override auditável.
+- `imported_amount`: montante original do Excel/CSV, que não é recalculado automaticamente.
+- `manual_amount`: montante introduzido por override manual.
+- `pre_discount_amount`, `calculated_discount_amount`, `effective_discount_amount`: base e desconto proposto/efetivo.
+- `pricing_rule_id`, `charge_type`, `calculation_version`, `last_calculated_at`: proveniência do último cálculo confirmado.
 
 Valores vazios permanecem `null`; zero significa um valor conhecido igual a zero.

@@ -28,6 +28,8 @@ erDiagram
     PROFESSIONALS o|--o{ RATE_RULES : scopes
     BILLING_ENTITIES o|--o{ RATE_RULES : scopes
     SERVICE_TYPES o|--o{ RATE_RULES : scopes
+    CLIENTS o|--o{ DISCOUNTS : receives
+    WORK_ENTRIES o|--o{ DISCOUNTS : receives
     WORK_ENTRIES ||--o{ MANUAL_OVERRIDES : records
     BILLING_ENTITIES ||--o{ INVOICES : issues
     CLIENTS ||--o{ INVOICES : receives
@@ -48,6 +50,7 @@ erDiagram
 - Estados são `text` com `check`, facilitando evolução controlada sem alterações destrutivas de enums.
 - `service_types` foi acrescentada porque é referenciada por regras de preço.
 - Nenhum nome histórico é inserido automaticamente. Sociedades e profissionais serão importados após confirmação.
+- Regras de preço usam escopos exclusivos e precedência determinística; descontos têm escopo movimento, cliente ou período.
 
 ## Integridade e auditoria
 
@@ -55,6 +58,7 @@ erDiagram
 - Apenas owner/admin/billing pode mudar campos financeiros, faturação ou pagamento.
 - Trabalho faturado não pode ser eliminado, mesmo por acesso administrativo direto.
 - Alterações em trabalho, overrides, faturas, linhas, pagamentos e importações alimentam `audit_log`.
+- Alterações em descontos também alimentam `audit_log`; o recálculo é explícito e exclui por omissão overrides, faturados e cancelados.
 - `private.revert_import(uuid)` reverte lotes apenas para papéis autorizados e quando não existem linhas faturadas.
 - Não existem políticas `DELETE` para clientes da aplicação.
 
