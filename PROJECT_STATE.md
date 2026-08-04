@@ -25,6 +25,11 @@ Atualizado em: 2026-08-04
 - Modal acessível de override e painel de confirmação do recálculo criados como componentes reutilizáveis, ainda sem ligação a dados reais.
 - Testes unitários do motor/UI e teste pgTAP comercial usam apenas dados sintéticos.
 - As duas migrations foram aplicadas com sucesso numa base PostgreSQL efémera para validação de sintaxe e dependências; os testes pgTAP continuam pendentes de uma stack Supabase local.
+- Interface visual profissional implementada com design system semântico, shell responsivo, sidebar recolhível e cabeçalho operacional.
+- Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
+- Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
+- Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
+- Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
 
 ## Integrações conhecidas
 
@@ -34,12 +39,14 @@ Atualizado em: 2026-08-04
 
 ## Próxima etapa
 
-Executar as duas migrations e os testes pgTAP numa stack PostgreSQL/Supabase local ou branch de staging; depois ligar os componentes à autenticação e aos movimentos reais. Só após aprovação promover o schema remoto.
+Ligar o shell à autenticação Supabase e substituir os datasets demonstrativos por consultas agregadas protegidas por RLS. Em paralelo, executar migrations e pgTAP numa stack local ou branch de staging antes de qualquer promoção remota.
 
 ## Riscos abertos
 
 - A autenticação ainda não está ligada ao frontend; tenancy e RLS estão modelados, mas aguardam validação numa stack Supabase real.
 - Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
+- Pesquisa, notificações, logout, exportação e ações em massa são ainda controlos visuais sem operação remota.
+- Os gráficos atuais não representam dados reais; devem receber agregações validadas do Supabase antes de uso operacional.
 - As integrações Supabase e Cloudflare ainda não foram autenticadas ou verificadas remotamente.
 - A contagem de clientes existentes exige consulta futura ao Supabase; nesta fase, a folha `CLIENTES` é apenas referência local.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.

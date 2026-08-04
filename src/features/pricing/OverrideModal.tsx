@@ -35,24 +35,24 @@ export function OverrideModal({ open, fieldLabel, originalValue, calculatedValue
 
   return (
     <dialog ref={dialog} onCancel={(event) => { event.preventDefault(); onCancel() }} aria-labelledby="override-title"
-      className="m-auto w-[min(34rem,calc(100%-2rem))] rounded-2xl border border-black/10 bg-white p-0 text-ink-950 shadow-2xl backdrop:bg-black/45">
+      className="m-auto w-[min(34rem,calc(100%-2rem))] rounded-2xl border border-border bg-surface p-0 text-text-primary shadow-raised backdrop:bg-primary/45">
       <form onSubmit={submit} className="p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-600">Alteração protegida</p>
-        <h2 id="override-title" className="mt-2 font-serif text-2xl font-semibold">Alterar {fieldLabel}</h2>
-        <dl className="mt-6 grid gap-3 rounded-xl bg-cream-100 p-4 sm:grid-cols-2">
-          <div><dt className="text-xs text-ink-700">Valor original</dt><dd className="font-semibold">{originalValue}</dd></div>
-          <div><dt className="text-xs text-ink-700">Valor calculado</dt><dd className="font-semibold">{calculatedValue}</dd></div>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">Alteração protegida</p>
+        <h2 id="override-title" className="mt-2 font-display text-2xl font-semibold">Alterar {fieldLabel}</h2>
+        <dl className="mt-6 grid gap-3 rounded-xl bg-surface-subtle p-4 sm:grid-cols-2">
+          <div><dt className="text-xs text-text-secondary">Valor original</dt><dd className="font-semibold">{originalValue}</dd></div>
+          <div><dt className="text-xs text-text-secondary">Valor calculado</dt><dd className="font-semibold">{calculatedValue}</dd></div>
         </dl>
         <label className="mt-5 block text-sm font-semibold" htmlFor="override-value">Novo valor</label>
         <input id="override-value" required value={newValue} onChange={(event) => setNewValue(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-black/20 px-3 py-2 focus:outline-2 focus:outline-gold-500" />
+          className="control mt-2 w-full px-3 py-2" />
         <label className="mt-4 block text-sm font-semibold" htmlFor="override-reason">Motivo da alteração</label>
         <textarea id="override-reason" required value={reason} onChange={(event) => setReason(event.target.value)} rows={3}
-          className="mt-2 w-full rounded-lg border border-black/20 px-3 py-2 focus:outline-2 focus:outline-gold-500" />
-        <p className="mt-4 text-sm text-ink-700">A confirmação cria um override manual e um registo de auditoria. Uma nova regra de preço não o substituirá.</p>
+          className="control mt-2 w-full px-3 py-2" />
+        <p className="mt-4 text-sm text-text-secondary">A confirmação cria um override manual e um registo de auditoria. Uma nova regra de preço não o substituirá.</p>
         <div className="mt-6 flex justify-end gap-3">
-          <button type="button" onClick={onCancel} className="rounded-lg border border-black/20 px-4 py-2 font-semibold">Cancelar</button>
-          <button type="submit" className="rounded-lg bg-ink-950 px-4 py-2 font-semibold text-white">Confirmar alteração</button>
+          <button type="button" onClick={onCancel} className="control px-4 py-2 font-semibold">Cancelar</button>
+          <button type="submit" className="rounded-lg bg-primary px-4 py-2 font-semibold text-surface">Confirmar alteração</button>
         </div>
       </form>
     </dialog>
