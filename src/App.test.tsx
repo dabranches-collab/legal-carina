@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import App from './App'
+import { AuthenticatedApplication as App } from './App'
 
 describe('interface principal', () => {
   it('apresenta navegação, cabeçalho e indicadores da visão geral', () => {

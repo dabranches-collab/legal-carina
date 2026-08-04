@@ -26,6 +26,14 @@ Atualizado em: 2026-08-04
 - Testes unitários do motor/UI e teste pgTAP comercial usam apenas dados sintéticos.
 - As duas migrations foram aplicadas com sucesso numa base PostgreSQL efémera para validação de sintaxe e dependências; os testes pgTAP continuam pendentes de uma stack Supabase local.
 - Interface visual profissional implementada com design system semântico, shell responsivo, sidebar recolhível e cabeçalho operacional.
+- Autenticação Supabase ligada ao frontend: login, logout, recuperação e redefinição de password, persistência de sessão e proteção integral do shell; não existe registo público.
+- Primeiro acesso bloqueado por modal obrigatório até à aceitação explícita dos Termos de Serviço, Política de Privacidade e Termos de RGPD publicados. Os textos jurídicos não foram inventados nem publicados.
+- Aceitações legais versionadas, eventos de segurança, equipas e concessões por sociedade, cliente, processo, equipa ou utilizador foram modelados em migration com RLS.
+- Edge Functions isolam convites administrativos, publicação atómica de documentos legais e registo sanitizado de eventos; a `service_role` nunca é exposta ao frontend.
+- Bucket privado `legal-imports` declarado com limite, MIME types e políticas por sociedade; nenhuma alteração foi aplicada ao Supabase remoto.
+- CI de pull requests criado com lint, typecheck, testes, build, E2E, auditoria de dependências, deteção de segredos e bloqueio de ficheiros sensíveis.
+- Guias Windows, Supabase, Cloudflare, desenvolvimento e deployment preparados para trabalho consistente em vários computadores.
+- Serviço Cloudflare `legal-carina` inspecionado sem alteração: atualmente responde apenas `Hello world`. Workers Static Assets é a opção recomendada e existe uma configuração proposta, não aplicada.
 - Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
 - Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
 - Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
@@ -39,15 +47,17 @@ Atualizado em: 2026-08-04
 
 ## Próxima etapa
 
-Ligar o shell à autenticação Supabase e substituir os datasets demonstrativos por consultas agregadas protegidas por RLS. Em paralelo, executar migrations e pgTAP numa stack local ou branch de staging antes de qualquer promoção remota.
+Obter revisão jurídica e publicar as três versões legais num ambiente local/staging; depois executar migrations, pgTAP e os advisors do Supabase nesse ambiente antes de qualquer promoção remota. Em paralelo, reautenticar o GitHub CLI para ativar a proteção de `main` com os checks documentados.
 
 ## Riscos abertos
 
-- A autenticação ainda não está ligada ao frontend; tenancy e RLS estão modelados, mas aguardam validação numa stack Supabase real.
+- A autenticação está implementada, mas aguarda validação integrada numa stack Supabase local/staging com utilizadores convidados e documentos jurídicos aprovados.
 - Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
-- Pesquisa, notificações, logout, exportação e ações em massa são ainda controlos visuais sem operação remota.
+- Pesquisa, notificações, exportação e ações em massa são ainda controlos visuais sem operação remota.
 - Os gráficos atuais não representam dados reais; devem receber agregações validadas do Supabase antes de uso operacional.
-- As integrações Supabase e Cloudflare ainda não foram autenticadas ou verificadas remotamente.
+- O Supabase remoto não foi alterado. O Cloudflare foi inspecionado apenas em leitura e a produção permanece intacta.
+- A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
+- Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
 - A contagem de clientes existentes exige consulta futura ao Supabase; nesta fase, a folha `CLIENTES` é apenas referência local.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
 - As asserções E2E passam, mas o invólucro Playwright/preview não encerra automaticamente nesta sessão Windows; validar novamente no futuro CI.

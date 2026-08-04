@@ -3,6 +3,13 @@ create extension if not exists pgtap with schema extensions;
 select plan(12);
 
 insert into auth.users (id, email) values ('00000000-0000-0000-0000-000000000091', 'pricing-owner@example.test');
+insert into public.legal_documents (id, document_type, version, title, body_markdown, effective_at, status, content_hash) values
+  ('90000000-0000-0000-0000-000000000091', 'terms_of_service', 'price-test-1', 'Termos sintéticos', 'Conteúdo de teste', now(), 'published', repeat('a', 64)),
+  ('90000000-0000-0000-0000-000000000092', 'privacy_policy', 'price-test-1', 'Privacidade sintética', 'Conteúdo de teste', now(), 'published', repeat('b', 64)),
+  ('90000000-0000-0000-0000-000000000093', 'gdpr_terms', 'price-test-1', 'RGPD sintético', 'Conteúdo de teste', now(), 'published', repeat('c', 64));
+insert into public.user_legal_acceptances (user_id, legal_document_id, document_type, document_version, evidence)
+select '00000000-0000-0000-0000-000000000091', d.id, d.document_type, d.version, '{"source":"pgtap"}'::jsonb
+from public.legal_documents d;
 insert into public.law_firms (id, name) values ('10000000-0000-0000-0000-000000000091', 'Escritório de preços sintético');
 insert into public.firm_members (firm_id, user_id, role) values
   ('10000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 'owner');

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 import type { NavigationItem, ViewId } from '../../types/navigation'
+import { useAuth } from '../../features/auth/AuthContext'
 
 const navigation: NavigationItem[] = [
   { id: 'overview', label: 'Visão geral', icon: 'overview' }, { id: 'work', label: 'Registos de trabalho', icon: 'clock' },
@@ -15,6 +16,7 @@ const navigation: NavigationItem[] = [
 interface AppShellProps { activeView: ViewId; onNavigate: (view: ViewId) => void; children: ReactNode }
 
 export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
+  const { user, signOut } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   useEffect(() => setMobileOpen(false), [activeView])
@@ -41,7 +43,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
         </nav>
         <div className="border-t border-surface/10 p-3"><div className={`flex items-center gap-3 rounded-lg bg-surface/5 p-2 ${collapsed ? 'justify-center' : ''}`}>
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-sm font-semibold">DA</span>
-          {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-semibold">dabranches@gmail.com</p><p className="truncate text-xs text-surface/55">Sessão local</p></div>}
+          {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-semibold">{user?.email ?? 'Utilizador autenticado'}</p><p className="truncate text-xs text-surface/55">Sessão protegida</p></div>}
         </div></div>
       </aside>
 
@@ -54,7 +56,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
             <label className="sr-only" htmlFor="selected-billing">Sociedade selecionada</label><select id="selected-billing" className="control hidden max-w-48 px-3 text-sm sm:block" defaultValue="all"><option value="all">Todas as sociedades</option><option>Carina Santos</option><option>Legal Team</option><option>Massive Search</option></select>
             <button className="relative grid size-10 place-items-center rounded-lg border border-border hover:bg-surface-subtle" aria-label="Notificações, 3 novas"><Icon name="bell" className="size-5"/><span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-danger ring-2 ring-surface" /></button>
             <button className="hidden items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-subtle sm:flex" aria-label="Menu do utilizador"><span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-surface">DA</span><Icon name="chevron" className="size-3 rotate-90 text-text-secondary"/></button>
-            <button className="grid size-10 place-items-center rounded-lg text-text-secondary hover:bg-danger-soft hover:text-danger" aria-label="Terminar sessão"><Icon name="logout" className="size-5"/></button>
+            <button onClick={() => void signOut()} className="grid size-10 place-items-center rounded-lg text-text-secondary hover:bg-danger-soft hover:text-danger" aria-label="Terminar sessão"><Icon name="logout" className="size-5"/></button>
           </div>
         </header>
         <main id="main-content" className="px-[var(--space-page)] py-6 sm:py-8">

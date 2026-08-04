@@ -6,6 +6,7 @@ import { ImportWizard } from './features/imports/ImportWizard'
 import { WorkEntriesPage } from './features/work-entries/WorkEntriesPage'
 import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
+import { AuthGate } from './features/auth/AuthGate'
 
 const placeholders: Partial<Record<ViewId, { title:string; description:string; icon: Parameters<typeof PlaceholderPage>[0]['icon'] }>> = {
   matters:{ title:'Processos', description:'Gestão de assuntos, responsáveis, arquivo, movimentos e ligação ao cliente.', icon:'matters' },
@@ -17,7 +18,7 @@ const placeholders: Partial<Record<ViewId, { title:string; description:string; i
   admin:{ title:'Administração', description:'Utilizadores, papéis, sociedades, segurança, retenção e configurações do escritório.', icon:'admin' },
 }
 
-export default function App() {
+export function AuthenticatedApplication() {
   const [view, setView] = useState<ViewId>('overview')
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage />
@@ -28,4 +29,8 @@ export default function App() {
   else if (view === 'imports') content = <ImportWizard />
   else { const page = placeholders[view]!; content = <PlaceholderPage {...page} /> }
   return <AppShell activeView={view} onNavigate={setView}>{content}</AppShell>
+}
+
+export default function App() {
+  return <AuthGate><AuthenticatedApplication /></AuthGate>
 }

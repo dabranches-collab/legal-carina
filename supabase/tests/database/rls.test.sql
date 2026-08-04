@@ -7,6 +7,17 @@ insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-000000000012', 'professional-a@example.test'),
   ('00000000-0000-0000-0000-000000000013', 'billing-a@example.test'),
   ('00000000-0000-0000-0000-000000000014', 'viewer-b@example.test');
+insert into public.legal_documents (id, document_type, version, title, body_markdown, effective_at, status, content_hash) values
+  ('90000000-0000-0000-0000-000000000011', 'terms_of_service', 'test-1', 'Termos sintéticos', 'Conteúdo de teste', now(), 'published', repeat('a', 64)),
+  ('90000000-0000-0000-0000-000000000012', 'privacy_policy', 'test-1', 'Privacidade sintética', 'Conteúdo de teste', now(), 'published', repeat('b', 64)),
+  ('90000000-0000-0000-0000-000000000013', 'gdpr_terms', 'test-1', 'RGPD sintético', 'Conteúdo de teste', now(), 'published', repeat('c', 64));
+insert into public.user_legal_acceptances (user_id, legal_document_id, document_type, document_version, evidence)
+select u.id, d.id, d.document_type, d.version, '{"source":"pgtap"}'::jsonb
+from auth.users u cross join public.legal_documents d
+where u.id in (
+  '00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000012',
+  '00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-000000000014'
+);
 insert into public.law_firms (id, name) values
   ('10000000-0000-0000-0000-000000000011', 'Escritório RLS A'),
   ('10000000-0000-0000-0000-000000000012', 'Escritório RLS B');
