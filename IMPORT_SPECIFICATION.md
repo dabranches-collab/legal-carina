@@ -2,7 +2,7 @@
 
 ## Estado
 
-Nenhum formato real foi recebido ou analisado. Não há importador implementado.
+O ficheiro-base foi analisado localmente e o importador de análise está implementado no browser. A gravação no Supabase permanece deliberadamente desativada até existirem schema, RLS, bucket privado e operação transacional aprovados.
 
 ## Regras mínimas
 
@@ -13,3 +13,5 @@ Nenhum formato real foi recebido ou analisado. Não há importador implementado.
 5. Encriptar trânsito/armazenamento e apagar temporários segundo a política de retenção.
 
 Mapeamentos por origem deverão ser documentados em `docs/imports/` usando exemplos sintéticos claramente marcados.
+
+Consulte `docs/imports/excel-analysis.md`, `column-mapping.md`, `validation-rules.md` e `duplicate-strategy.md`.

@@ -29,3 +29,7 @@ pnpm test:e2e
 ```
 
 Consulte [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md) e [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
+
+## Importação
+
+O analisador local aceita `.xlsx` e `.csv`, calcula SHA-256 e apresenta um relatório antes de qualquer gravação. A importação remota está desativada até existir backend com RLS e bucket privado. Consulte [IMPORT_SPECIFICATION.md](IMPORT_SPECIFICATION.md).

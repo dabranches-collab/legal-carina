@@ -21,9 +21,7 @@ test-results/
 playwright-report/
 
 # Dados, importações e documentos confidenciais
-imports/
-!docs/imports/
-!docs/imports/.gitkeep
+/imports/
 uploads/
 client-data/
 client-documents/
@@ -35,6 +33,7 @@ backups/
 *.xlsm
 *.ods
 *.csv
+!src/test/fixtures/*.csv
 *.tsv
 *.pdf
 *.doc

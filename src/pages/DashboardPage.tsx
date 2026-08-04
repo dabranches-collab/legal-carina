@@ -1,4 +1,5 @@
 import { SectionCard } from '../components/SectionCard'
+import { ImportWizard } from '../features/imports/ImportWizard'
 
 const modules = [
   ['Horas', 'Registo e validação do trabalho por cliente e assunto.', '◷'],
@@ -31,6 +32,7 @@ export function DashboardPage() {
         <aside className="mt-8 rounded-2xl border border-gold-500/30 bg-cream-100 p-6 text-sm leading-6 text-ink-700" aria-label="Estado da aplicação">
           <strong className="text-ink-950">Estado:</strong> fundação técnica criada; sem dados reais, autenticação ou ligações remotas ativas.
         </aside>
+        <ImportWizard />
       </main>
     </div>
   )
