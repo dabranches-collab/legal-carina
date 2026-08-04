@@ -1,0 +1,1 @@
+-- Intentionally empty. Historical names are imported only after user confirmation.

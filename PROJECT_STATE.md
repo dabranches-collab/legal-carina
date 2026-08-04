@@ -16,6 +16,9 @@ Atualizado em: 2026-08-04
 - Duração Excel convertida para minutos inteiros; valor bruto, texto e fórmula preservados para auditoria.
 - Fixture e testes de importação usam exclusivamente dados sintéticos anonimizados.
 - Dependências de produção auditadas após atualização do SheetJS 0.20.3: nenhuma vulnerabilidade conhecida.
+- Modelo PostgreSQL normalizado criado numa migration local, com tenancy, RLS, auditoria e reversão controlada de imports.
+- Testes pgTAP de constraints e RLS criados com dados sintéticos; execução pendente por ausência de Docker local.
+- Nenhuma migration foi aplicada ao projeto Supabase remoto.
 
 ## Integrações conhecidas
 
@@ -25,7 +28,7 @@ Atualizado em: 2026-08-04
 
 ## Próxima etapa
 
-Validar requisitos funcionais, papéis/permissões e modelo de tenancy; depois desenhar o schema/lote de importação, bucket privado e políticas RLS com testes locais. Só então ativar o botão Importar.
+Rever o ER e a matriz RLS; confirmar a versão PostgreSQL remota; executar reset, pgTAP e advisors numa stack local ou branch Supabase. Só após aprovação aplicar a migration e criar o bucket privado.
 
 ## Riscos abertos
 
@@ -34,3 +37,4 @@ Validar requisitos funcionais, papéis/permissões e modelo de tenancy; depois d
 - A contagem de clientes existentes exige consulta futura ao Supabase; nesta fase, a folha `CLIENTES` é apenas referência local.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
 - As asserções E2E passam, mas o invólucro Playwright/preview não encerra automaticamente nesta sessão Windows; validar novamente no futuro CI.
+- Docker não está disponível neste ambiente, logo a migration e os testes pgTAP ainda não foram executados num PostgreSQL local.
