@@ -12,10 +12,11 @@ const documents: LegalDocumentRow[] = [
 
 describe('autenticação', () => {
   it('mostra login e recuperação sem registo público', async () => {
-    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} />)
+    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn()} onPasskeyLogin={vi.fn()} />)
     expect(screen.getByRole('heading', { name:'Iniciar sessão' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name:/regist/i })).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name:'Esqueci-me da password' }))
+    expect(screen.getByRole('button', { name:'Entrar com passkey' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name:'Preciso de recuperar o acesso' }))
     expect(screen.getByRole('heading', { name:'Recuperar password' })).toBeInTheDocument()
   })
 

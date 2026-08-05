@@ -13,6 +13,7 @@ export const supabase = hasSupabaseConfiguration
         autoRefreshToken: true,
         detectSessionInUrl: true,
         storageKey: 'legal-carina-auth',
+        experimental: { passkey: true },
       },
     })
   : null

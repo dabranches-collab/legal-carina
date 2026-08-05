@@ -16,7 +16,7 @@
     "check": "pnpm security:files && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.112.0",
+    "@supabase/supabase-js": "2.112.1",
     "papaparse": "^5.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

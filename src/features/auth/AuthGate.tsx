@@ -12,8 +12,8 @@ function ConfigurationRequired() {
   return <main className="grid min-h-screen place-items-center bg-background p-6"><section className="card max-w-lg p-7"><p className="text-xs font-semibold uppercase tracking-widest text-warning">Configuração local necessária</p><h1 className="mt-2 font-display text-2xl font-semibold">Supabase Auth não configurado</h1><p className="mt-3 text-sm leading-6 text-text-secondary">Copie <code>.env.example</code> para <code>.env.local</code> e preencha apenas a URL e a chave publicável do projeto. Nunca use a service role no frontend.</p></section></main>
 }
 
-function LegalConfigurationRequired({ onLogout }: { onLogout: () => Promise<void> }) {
-  return <main className="grid min-h-screen place-items-center bg-background p-6"><section role="alert" className="card max-w-xl p-7"><p className="text-xs font-semibold uppercase tracking-widest text-danger">Acesso bloqueado</p><h1 className="mt-2 font-display text-2xl font-semibold">Documentos legais não publicados</h1><p className="mt-3 text-sm leading-6 text-text-secondary">A administração deve publicar versões juridicamente aprovadas dos Termos de Serviço, Política de Privacidade e Termos de RGPD. Não é possível contornar esta validação.</p><button onClick={() => void onLogout()} className="mt-6 rounded-lg bg-primary px-4 py-2 font-semibold text-surface">Terminar sessão</button></section></main>
+function LegalConfigurationRequired({ busy, error, notice, onEnrollPasskey, onLogout }: { busy: boolean; error: string; notice: string; onEnrollPasskey: () => Promise<void>; onLogout: () => Promise<void> }) {
+  return <main className="grid min-h-screen place-items-center bg-background p-6"><section role="alert" className="card max-w-xl p-7"><p className="text-xs font-semibold uppercase tracking-widest text-danger">Acesso bloqueado</p><h1 className="mt-2 font-display text-2xl font-semibold">Documentos legais não publicados</h1><p className="mt-3 text-sm leading-6 text-text-secondary">A administração deve publicar versões juridicamente aprovadas dos Termos de Serviço, Política de Privacidade e Termos de RGPD. Não é possível contornar esta validação.</p><div className="mt-6 grid gap-3 sm:grid-cols-2"><button disabled={busy} onClick={() => void onEnrollPasskey()} className="rounded-lg bg-primary px-4 py-2 font-semibold text-surface disabled:opacity-50">{busy ? 'A configurar…' : 'Ativar passkey neste dispositivo'}</button><button onClick={() => void onLogout()} className="rounded-lg border border-border bg-surface px-4 py-2 font-semibold text-primary">Terminar sessão</button></div>{notice && <p role="status" className="mt-4 rounded-lg bg-success-soft p-3 text-sm text-success">{notice}</p>}{error && <p role="alert" className="mt-4 rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}</section></main>
 }
 
 async function recordSecurityEvent(eventType: string, email?: string) {
@@ -99,6 +99,33 @@ export function AuthGate({ children }: { children: ReactNode }) {
     setBusy(false)
   }
 
+  async function sendEmailLink(email: string) {
+    if (!supabase) return
+    setBusy(true); setError(''); setNotice('')
+    const { error: linkError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: window.location.origin } })
+    if (linkError) setError(authErrorMessage(linkError))
+    else setNotice('Enviámos um acesso temporário. Consulte o email e use apenas o link mais recente.')
+    setBusy(false)
+  }
+
+  async function loginWithPasskey() {
+    if (!supabase) return
+    setBusy(true); setError(''); setNotice('')
+    const { data, error: passkeyError } = await supabase.auth.signInWithPasskey()
+    if (passkeyError || !data.user) setError('Não foi possível usar a passkey. Se mudou de dispositivo ou perdeu o acesso, utilize a recuperação por email.')
+    else { setUser(data.user); setSession(data.session); await recordSecurityEvent('login_succeeded'); try { await loadLegalState(data.user) } catch (reason) { setError(authErrorMessage(reason)) } }
+    setBusy(false)
+  }
+
+  async function enrollPasskey() {
+    if (!supabase) return
+    setBusy(true); setError(''); setNotice('')
+    const { error: passkeyError } = await supabase.auth.registerPasskey()
+    if (passkeyError) setError('Não foi possível criar a passkey neste dispositivo. Confirme que o Windows Hello, Face ID ou código do dispositivo está disponível.')
+    else { setNotice('Passkey ativada. Nos próximos acessos pode usar o PIN, Face ID ou biometria deste dispositivo.'); await recordSecurityEvent('passkey_registered') }
+    setBusy(false)
+  }
+
   async function updatePassword(password: string) {
     if (!supabase) return
     setBusy(true); setError('')
@@ -130,8 +157,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={updatePassword} />
-  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} />
-  if (!legalConfigured) return <LegalConfigurationRequired onLogout={signOut} />
+  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onPasskeyLogin={loginWithPasskey} />
+  if (!legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={enrollPasskey} onLogout={signOut} />
   if (!accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
   return <AuthContext.Provider value={{ user, signOut }}>{children}</AuthContext.Provider>
 }

@@ -34,6 +34,9 @@ Atualizado em: 2026-08-04
 - CI de pull requests criado com lint, typecheck, testes, build, E2E, auditoria de dependências, deteção de segredos e bloqueio de ficheiros sensíveis.
 - Guias Windows, Supabase, Cloudflare, desenvolvimento e deployment preparados para trabalho consistente em vários computadores.
 - Serviço Cloudflare `legal-carina` inspecionado sem alteração: atualmente responde apenas `Hello world`. Workers Static Assets é a opção recomendada e existe uma configuração proposta, não aplicada.
+- As três migrations foram aplicadas ao Supabase remoto `vtvvqyebigflgqccbqsw`; os advisors de segurança não reportaram problemas após a aplicação.
+- `dabranches@gmail.com` foi convidado e associado à organização Legal Carina com o papel backend `owner`.
+- Passkeys Beta foram ativadas no Supabase para o ambiente local e o frontend suporta login/ativação por passkey, acesso temporário por email e aviso explícito de recuperação.
 - Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
 - Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
 - Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
@@ -58,6 +61,7 @@ Obter revisão jurídica e publicar as três versões legais num ambiente local/
 - O Supabase remoto não foi alterado. O Cloudflare foi inspecionado apenas em leitura e a produção permanece intacta.
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
+- Passkeys permanecem experimentais no Supabase; a configuração local está vinculada a `127.0.0.1` e terá de ser alterada para o domínio HTTPS definitivo antes da publicação, exigindo novo registo das passkeys de produção.
 - A contagem de clientes existentes exige consulta futura ao Supabase; nesta fase, a folha `CLIENTES` é apenas referência local.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
 - As asserções E2E passam, mas o invólucro Playwright/preview não encerra automaticamente nesta sessão Windows; validar novamente no futuro CI.

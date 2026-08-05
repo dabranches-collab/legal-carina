@@ -7,9 +7,11 @@ interface LoginPageProps {
   notice: string
   onLogin: (email: string, password: string) => Promise<void>
   onRecover: (email: string) => Promise<void>
+  onEmailLink: (email: string) => Promise<void>
+  onPasskeyLogin: () => Promise<void>
 }
 
-export function LoginPage({ busy, error, notice, onLogin, onRecover }: LoginPageProps) {
+export function LoginPage({ busy, error, notice, onLogin, onRecover, onEmailLink, onPasskeyLogin }: LoginPageProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [recovery, setRecovery] = useState(false)
@@ -21,7 +23,7 @@ export function LoginPage({ busy, error, notice, onLogin, onRecover }: LoginPage
       <form onSubmit={submit} className="mt-8 space-y-5"><label className="block text-sm font-semibold" htmlFor="auth-email">Email</label><div className="relative"><Icon name="search" className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"/><input id="auth-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="control w-full py-2.5 pl-10 pr-3"/></div>{!recovery && <><label className="block text-sm font-semibold" htmlFor="auth-password">Password</label><input id="auth-password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="control w-full px-3 py-2.5"/></>}
         {error && <p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}{notice && <p role="status" className="rounded-lg bg-success-soft p-3 text-sm text-success">{notice}</p>}
         <button disabled={busy} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-surface transition-colors hover:bg-primary-hover disabled:opacity-50">{busy ? 'A processar…' : recovery ? 'Enviar link de recuperação' : 'Entrar'}</button>
-      </form><button type="button" onClick={() => setRecovery((value) => !value)} className="mt-5 text-sm font-semibold text-secondary hover:underline">{recovery ? 'Voltar ao login' : 'Esqueci-me da password'}</button><p className="mt-8 border-t border-border pt-5 text-xs leading-5 text-text-secondary">Não existe registo público. Contacte a administração para obter acesso.</p>
+      </form>{!recovery && <div className="mt-4 grid gap-3"><button type="button" disabled={busy} onClick={() => void onPasskeyLogin()} className="w-full rounded-lg border border-border bg-surface px-4 py-3 font-semibold text-primary transition-colors hover:bg-surface-muted disabled:opacity-50">Entrar com passkey</button><button type="button" disabled={busy || !email} onClick={() => void onEmailLink(email)} className="text-sm font-semibold text-secondary hover:underline disabled:opacity-50">Receber acesso temporário por email</button></div>}<button type="button" onClick={() => setRecovery((value) => !value)} className="mt-5 text-sm font-semibold text-secondary hover:underline">{recovery ? 'Voltar ao login' : 'Preciso de recuperar o acesso'}</button><p className="mt-8 border-t border-border pt-5 text-xs leading-5 text-text-secondary">Não existe registo público. Contacte a administração para obter acesso.</p>
     </div></section>
   </main>
 }
