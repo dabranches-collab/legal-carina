@@ -32,6 +32,13 @@ describe('autenticação', () => {
     expect(onVerifyEmailCode).toHaveBeenCalledWith('utilizador@example.test', '123456')
   })
 
+  it('permite validar um código já recebido sem pedir novo envio', async () => {
+    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn()} onVerifyEmailCode={vi.fn()} onPasskeyLogin={vi.fn()} />)
+    await userEvent.type(screen.getByLabelText('Email'), 'utilizador@example.test')
+    await userEvent.click(screen.getByRole('button', { name:'Já tenho um código' }))
+    expect(screen.getByLabelText('Código de 6 algarismos')).toBeInTheDocument()
+  })
+
   it('bloqueia termos até ambos os consentimentos explícitos', async () => {
     const onAccept=vi.fn()
     render(<TermsModal documents={documents} busy={false} error="" onAccept={onAccept} />)
