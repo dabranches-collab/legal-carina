@@ -30,7 +30,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [legalConfigured, setLegalConfigured] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const resetRoute = window.location.pathname === '/reset-password'
+  const [recoveryMode, setRecoveryMode] = useState(() => {
+    const authFlowType = new URLSearchParams(window.location.hash.slice(1)).get('type')
+    return window.location.pathname === '/reset-password' || authFlowType === 'recovery' || authFlowType === 'invite'
+  })
 
   const loadLegalState = useCallback(async (currentUser: User) => {
     const client = supabase
@@ -65,8 +68,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
       finally { if (active) setLoading(false) }
     }
     void initialize()
-    const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: listener } = client.auth.onAuthStateChange((event, nextSession) => {
       if (!active) return
+      if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
       setSession(nextSession); setUser(nextSession?.user ?? null)
       if (!nextSession) { setAccepted(false); setDocuments([]); setLoading(false) }
     })
@@ -100,7 +104,12 @@ export function AuthGate({ children }: { children: ReactNode }) {
     setBusy(true); setError('')
     const { error: updateError } = await supabase.auth.updateUser({ password })
     if (updateError) setError(authErrorMessage(updateError))
-    else { await recordSecurityEvent('password_changed'); window.history.replaceState({}, '', '/'); if (user) await loadLegalState(user) }
+    else {
+      await recordSecurityEvent('password_changed')
+      window.history.replaceState({}, '', '/')
+      setRecoveryMode(false)
+      if (user) await loadLegalState(user)
+    }
     setBusy(false)
   }
 
@@ -120,7 +129,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
-  if (resetRoute && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={updatePassword} />
+  if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={updatePassword} />
   if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} />
   if (!legalConfigured) return <LegalConfigurationRequired onLogout={signOut} />
   if (!accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
