@@ -100,12 +100,24 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   async function sendEmailLink(email: string) {
-    if (!supabase) return
+    if (!supabase) return false
     setBusy(true); setError(''); setNotice('')
     const { error: linkError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: window.location.origin } })
     if (linkError) setError(authErrorMessage(linkError))
-    else setNotice('Enviámos um acesso temporário. Consulte o email e use apenas o link mais recente.')
+    else setNotice('Enviámos um código temporário de 6 algarismos. Nunca partilhe esse código.')
     setBusy(false)
+    return !linkError
+  }
+
+  async function verifyEmailCode(email: string, code: string) {
+    if (!supabase) return false
+    setBusy(true); setError(''); setNotice('')
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' })
+    if (verifyError || !data.user || !data.session) { setError('Código inválido ou expirado. Solicite um novo código.'); setBusy(false); return false }
+    setUser(data.user); setSession(data.session)
+    try { await recordSecurityEvent('login_succeeded'); await loadLegalState(data.user) } catch (reason) { setError(authErrorMessage(reason)) }
+    setBusy(false)
+    return true
   }
 
   async function loginWithPasskey() {
@@ -157,7 +169,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={updatePassword} />
-  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onPasskeyLogin={loginWithPasskey} />
+  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onVerifyEmailCode={verifyEmailCode} onPasskeyLogin={loginWithPasskey} />
   if (!legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={enrollPasskey} onLogout={signOut} />
   if (!accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
   return <AuthContext.Provider value={{ user, signOut }}>{children}</AuthContext.Provider>

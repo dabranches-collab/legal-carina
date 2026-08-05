@@ -12,12 +12,24 @@ const documents: LegalDocumentRow[] = [
 
 describe('autenticação', () => {
   it('mostra login e recuperação sem registo público', async () => {
-    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn()} onPasskeyLogin={vi.fn()} />)
+    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn().mockResolvedValue(true)} onVerifyEmailCode={vi.fn()} onPasskeyLogin={vi.fn()} />)
     expect(screen.getByRole('heading', { name:'Iniciar sessão' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name:/regist/i })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name:'Entrar com passkey' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name:'Preciso de recuperar o acesso' }))
     expect(screen.getByRole('heading', { name:'Recuperar password' })).toBeInTheDocument()
+  })
+
+  it('permite iniciar o acesso sem password com um código temporário', async () => {
+    const onEmailLink = vi.fn().mockResolvedValue(true)
+    const onVerifyEmailCode = vi.fn().mockResolvedValue(true)
+    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={onEmailLink} onVerifyEmailCode={onVerifyEmailCode} onPasskeyLogin={vi.fn()} />)
+    await userEvent.type(screen.getByLabelText('Email'), 'utilizador@example.test')
+    await userEvent.click(screen.getByRole('button', { name:'Receber código temporário por email' }))
+    expect(onEmailLink).toHaveBeenCalledWith('utilizador@example.test')
+    await userEvent.type(screen.getByLabelText('Código de 6 algarismos'), '123456')
+    await userEvent.click(screen.getByRole('button', { name:'Validar código' }))
+    expect(onVerifyEmailCode).toHaveBeenCalledWith('utilizador@example.test', '123456')
   })
 
   it('bloqueia termos até ambos os consentimentos explícitos', async () => {

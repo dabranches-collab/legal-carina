@@ -1,6 +1,6 @@
 # Estado do projeto
 
-Atualizado em: 2026-08-04
+Atualizado em: 2026-08-05
 
 ## Concluído nesta fase
 
@@ -37,6 +37,7 @@ Atualizado em: 2026-08-04
 - As três migrations foram aplicadas ao Supabase remoto `vtvvqyebigflgqccbqsw`; os advisors de segurança não reportaram problemas após a aplicação.
 - `dabranches@gmail.com` foi convidado e associado à organização Legal Carina com o papel backend `owner`.
 - Passkeys Beta foram ativadas no Supabase para o ambiente local e o frontend suporta login/ativação por passkey, acesso temporário por email e aviso explícito de recuperação.
+- O acesso inicial sem password passou a usar um OTP temporário de seis algarismos; o modelo remoto de email usa `{{ .Token }}` e o frontend valida o código antes de permitir o registo da passkey.
 - Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
 - Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
 - Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
