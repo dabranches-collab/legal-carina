@@ -1,0 +1,69 @@
+import { expect, test } from '@playwright/test'
+
+const models = [
+  ['iPhone 17',402,874,59,'Dynamic Island'], ['iPhone Air',420,912,59,'Dynamic Island'],
+  ['iPhone 17 Pro',402,874,59,'Dynamic Island'], ['iPhone 17 Pro Max',440,956,59,'Dynamic Island'],
+  ['iPhone 17e',390,844,47,'notch'], ['iPhone 16',393,852,59,'Dynamic Island'],
+  ['iPhone 16 Plus',430,932,59,'Dynamic Island'], ['iPhone 16 Pro',402,874,62,'Dynamic Island'],
+  ['iPhone 16 Pro Max',440,956,62,'Dynamic Island'], ['iPhone 16e',390,844,47,'notch'],
+  ['iPhone 13 mini',375,812,47,'notch'],
+] as const
+
+test('matriz local expõe modelos e controlos acessíveis', async ({ page }) => {
+  await page.goto('/iphone-preview')
+  await expect(page.getByRole('heading', { name:'Matriz iPhone' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name:'Modelos de iPhone' }).getByRole('button')).toHaveCount(11)
+  await expect(page.getByRole('button', { name:'iPhone 17', exact:true })).toHaveAttribute('aria-pressed','true')
+  await page.getByRole('button', { name:'iPhone 16 Pro', exact:true }).click()
+  await expect(page.getByText('Safe top aplicado: 62px')).toBeVisible()
+  await expect(page.locator('.phone')).toHaveClass(/island/)
+  await page.getByRole('button', { name:'iPhone 17e', exact:true }).click()
+  await expect(page.locator('.phone')).toHaveClass(/notch/)
+  await expect(page.locator('.phone')).not.toHaveClass(/island/)
+})
+
+for (const [name,width,height,safeTop] of models) {
+  test(`${name}: safe area, alvos e overflow`, async ({ page }) => {
+    await page.setViewportSize({ width, height })
+    await page.goto(`/?qa-iphone=1&safe-top=${safeTop}&safe-bottom=34&display-mode=standalone&theme=light`)
+    await expect(page.getByRole('heading', { name:'Visão geral' })).toBeVisible()
+    const metrics = await page.evaluate(() => {
+      const header=document.querySelector<HTMLElement>('header')!
+      const title=document.querySelector<HTMLElement>('#main-content h1')!
+      const root=getComputedStyle(document.documentElement)
+      return {
+        scrollWidth:document.documentElement.scrollWidth,
+        innerWidth:window.innerWidth,
+        safeTop:root.getPropertyValue('--safe-top').trim(),
+        headerTop:header.getBoundingClientRect().top,
+        titleTop:title.getBoundingClientRect().top,
+        controls:[...document.querySelectorAll<HTMLElement>('button,input')].map((item)=>item.getBoundingClientRect()).filter((rect)=>rect.width>0&&rect.height>0).map((rect)=>Math.min(rect.width,rect.height)),
+      }
+    })
+    expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.innerWidth)
+    expect(metrics.safeTop).toBe(`${safeTop}px`)
+    expect(metrics.headerTop).toBe(0)
+    expect(metrics.titleTop).toBeGreaterThan(safeTop)
+    expect(metrics.controls.every((size)=>size>=44)).toBe(true)
+    await expect(page.getByRole('button', { name:'Abrir navegação' })).toBeVisible()
+  })
+}
+
+test('rotação, tema escuro, texto ampliado e teclado não criam overflow horizontal', async ({ page }) => {
+  await page.setViewportSize({ width:844, height:390 })
+  await page.goto('/?qa-iphone=1&safe-top=0&safe-right=62&safe-bottom=21&safe-left=62&display-mode=browser&theme=dark')
+  await page.evaluate(() => { document.documentElement.style.fontSize='20px' })
+  await page.getByRole('button', { name:'Abrir navegação' }).focus()
+  await expect(page.getByRole('button', { name:'Abrir navegação' })).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).not.toBe('rgb(246, 245, 241)')
+})
+
+test('manifest e service worker de produção são válidos', async ({ request }) => {
+  const manifest=await request.get('/manifest.webmanifest')
+  expect(manifest.ok()).toBe(true)
+  expect((await manifest.json()).display).toBe('standalone')
+  const worker=await request.get('/sw.js')
+  expect(worker.ok()).toBe(true)
+  expect(await worker.text()).toContain('SKIP_WAITING')
+})

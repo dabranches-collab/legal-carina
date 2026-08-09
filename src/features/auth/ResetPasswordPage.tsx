@@ -1,7 +1,24 @@
 import { useState, type FormEvent } from 'react'
 
 export function ResetPasswordPage({ busy, error, onSubmit }: { busy:boolean; error:string; onSubmit:(password:string)=>Promise<void> }) {
-  const [password,setPassword]=useState(''); const [confirmation,setConfirmation]=useState(''); const mismatch=confirmation.length>0 && password!==confirmation
+  const [password,setPassword]=useState('')
+  const [confirmation,setConfirmation]=useState('')
+  const mismatch=confirmation.length>0 && password!==confirmation
   async function submit(event:FormEvent){event.preventDefault(); if(!mismatch) await onSubmit(password)}
-  return <main className="grid min-h-screen place-items-center bg-background p-6"><section className="card w-full max-w-md p-7"><p className="text-xs font-semibold uppercase tracking-widest text-secondary">Legal Carina</p><h1 className="mt-2 font-display text-3xl font-semibold">Definir nova password</h1><p className="mt-3 text-sm text-text-secondary">Utilize pelo menos 12 caracteres, com maiúsculas, minúsculas, número e símbolo.</p><form onSubmit={submit} className="mt-7 space-y-4"><label className="block text-sm font-semibold" htmlFor="new-password">Nova password</label><input id="new-password" type="password" minLength={12} required autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} className="control w-full px-3"/><label className="block text-sm font-semibold" htmlFor="confirm-password">Confirmar password</label><input id="confirm-password" type="password" minLength={12} required autoComplete="new-password" value={confirmation} onChange={(e)=>setConfirmation(e.target.value)} className="control w-full px-3"/>{mismatch&&<p role="alert" className="text-sm text-danger">As passwords não coincidem.</p>}{error&&<p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}<button disabled={busy||mismatch} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-surface disabled:opacity-50">{busy?'A atualizar…':'Guardar nova password'}</button></form></section></main>
+  return <main className="app-safe-screen grid place-items-center bg-background p-6">
+    <section className="card w-full max-w-md p-7">
+      <p className="text-xs font-semibold uppercase tracking-widest text-secondary">Legal Carina</p>
+      <h1 className="mt-2 font-display text-3xl font-semibold">Definir nova password</h1>
+      <p className="mt-3 text-sm text-text-secondary">Utilize pelo menos 12 caracteres, com maiúsculas, minúsculas, número e símbolo.</p>
+      <form onSubmit={submit} className="mt-7 space-y-4">
+        <label className="block text-sm font-semibold" htmlFor="new-password">Nova password</label>
+        <input id="new-password" type="password" minLength={12} required autoComplete="new-password" value={password} onChange={(e)=>setPassword(e.target.value)} className="control w-full px-3"/>
+        <label className="block text-sm font-semibold" htmlFor="confirm-password">Confirmar password</label>
+        <input id="confirm-password" type="password" minLength={12} required autoComplete="new-password" value={confirmation} onChange={(e)=>setConfirmation(e.target.value)} className="control w-full px-3"/>
+        {mismatch&&<p role="alert" className="text-sm text-danger">As passwords não coincidem.</p>}
+        {error&&<p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}
+        <button disabled={busy||mismatch} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-surface disabled:opacity-50">{busy?'A atualizar…':'Guardar nova password'}</button>
+      </form>
+    </section>
+  </main>
 }

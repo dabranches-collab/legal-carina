@@ -1,6 +1,6 @@
 # Estado do projeto
 
-Atualizado em: 2026-08-05
+Atualizado em: 2026-08-09
 
 ## Concluído nesta fase
 
@@ -38,6 +38,8 @@ Atualizado em: 2026-08-05
 - `dabranches@gmail.com` foi convidado e associado à organização Legal Carina com o papel backend `owner`.
 - Passkeys Beta foram ativadas no Supabase para o ambiente local e o frontend suporta login/ativação por passkey, acesso temporário por email e aviso explícito de recuperação.
 - O acesso inicial sem password passou a usar um OTP temporário de seis algarismos; o modelo remoto de email usa `{{ .Token }}` e o frontend valida o código antes de permitir o registo da passkey.
+- Experiência iPhone/PWA implementada com `viewport-fit=cover`, safe areas reais nos quatro lados, `100dvh`, manifest, ícones iOS, service worker atualizável, modo escuro do sistema e redução de movimento.
+- Matriz iPhone local exclusiva do servidor de desenvolvimento criada para 11 modelos, distinguindo Dynamic Island/notch, 59/62/47 px, Safari/PWA, orientação e tema; 14 testes de matriz e um teste de service worker de produção foram aprovados.
 - Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
 - Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
 - Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
@@ -63,6 +65,7 @@ Obter revisão jurídica e publicar as três versões legais num ambiente local/
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
 - Passkeys permanecem experimentais no Supabase; a configuração local está vinculada a `127.0.0.1` e terá de ser alterada para o domínio HTTPS definitivo antes da publicação, exigindo novo registo das passkeys de produção.
+- A matriz iPhone foi validada em Chromium; permanece obrigatório um smoke test final em Safari iOS e hardware real antes da publicação, sobretudo para teclado, zoom do sistema, instalação e atualização do service worker.
 - A contagem de clientes existentes exige consulta futura ao Supabase; nesta fase, a folha `CLIENTES` é apenas referência local.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
 - As asserções E2E passam, mas o invólucro Playwright/preview não encerra automaticamente nesta sessão Windows; validar novamente no futuro CI.

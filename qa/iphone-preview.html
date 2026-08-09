@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Matriz iPhone — Legal Carina</title>
+    <link rel="stylesheet" href="/qa/iphone-preview.css" />
+  </head>
+  <body>
+    <header class="toolbar">
+      <div><p class="eyebrow">QA local · não publicado</p><h1>Matriz iPhone</h1></div>
+      <div class="controls" role="group" aria-label="Condições de visualização">
+        <button id="display-mode" type="button" aria-pressed="true">PWA standalone</button>
+        <button id="theme-mode" type="button" aria-pressed="false">Modo claro</button>
+        <button id="orientation" type="button" aria-pressed="false">Vertical</button>
+      </div>
+      <nav id="models" aria-label="Modelos de iPhone"></nav>
+    </header>
+    <main>
+      <section class="facts" aria-live="polite">
+        <strong id="model-name"></strong><span id="viewport"></span><span id="physical"></span><span id="cutout"></span><span id="safe-top"></span>
+      </section>
+      <section class="stage" aria-label="Pré-visualização isolada">
+        <div id="phone-space"><div id="phone" class="phone">
+          <div class="screen"><iframe id="app-preview" title="Pré-visualização isolada do Legal Carina"></iframe><div class="system-ui" aria-hidden="true"><span class="time">9:41</span><span class="sensor"></span><span class="signals">● ◒ ▰</span><span class="home-indicator"></span></div></div>
+        </div></div>
+      </section>
+      <p class="note">A moldura simula apenas a matriz de QA. Na aplicação real, as áreas seguras são fornecidas por <code>env(safe-area-inset-*)</code>.</p>
+    </main>
+    <script type="module" src="/qa/iphone-preview.ts"></script>
+  </body>
+</html>

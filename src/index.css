@@ -32,6 +32,7 @@
 }
 
 :root {
+  color-scheme: light dark;
   color: var(--color-text-primary);
   background: var(--color-background);
   font-family: var(--font-sans);
@@ -39,11 +40,18 @@
   --space-page: clamp(1rem, 2.5vw, 2rem);
   --transition-fast: 150ms ease;
   --transition-normal: 240ms ease;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 }
 
+html[data-qa-iphone="true"] { --safe-top: var(--qa-safe-top, 0px); --safe-right: var(--qa-safe-right, 0px); --safe-bottom: var(--qa-safe-bottom, 34px); --safe-left: var(--qa-safe-left, 0px); }
+
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--color-background); }
+html { min-width: 320px; min-height: 100%; scroll-behavior: smooth; background: var(--color-background); }
+body { margin: 0; min-width: 320px; min-height: 100%; min-height: 100dvh; overflow-x: clip; background: var(--color-background); }
+button, [role="button"], input, select, textarea { touch-action: manipulation; }
 button, input, select, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }
@@ -56,4 +64,31 @@ button:disabled { cursor: not-allowed; }
 .control:hover { border-color: var(--color-secondary); }
 .control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 3px var(--color-secondary-soft); outline: 0; }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
+.app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+.app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+.app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
+.app-shell-header { min-height: calc(4.5rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
+.app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
+.app-shell-sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); padding-left: var(--safe-left); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-qa-theme="light"]) {
+    --color-background: #0d1826; --color-surface: #152437; --color-surface-subtle: #1c2d42;
+    --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
+    --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
+    --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
+    --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
+    --color-text-primary: #edf3f8; --color-text-secondary: #aebdcc; --color-border: #30445a;
+    --color-border-strong: #486078; --shadow-card: 0 1px 2px rgb(0 0 0 / .2), 0 8px 24px rgb(0 0 0 / .18);
+  }
+}
+html[data-qa-theme="dark"] {
+  --color-background: #0d1826; --color-surface: #152437; --color-surface-subtle: #1c2d42;
+  --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
+  --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
+  --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
+  --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
+  --color-text-primary: #edf3f8; --color-text-secondary: #aebdcc; --color-border: #30445a; --color-border-strong: #486078;
+}
+@media (max-width: 480px) { .control, button { min-width: 2.75rem; min-height: 2.75rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }

@@ -7,6 +7,7 @@ import { WorkEntriesPage } from './features/work-entries/WorkEntriesPage'
 import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
+import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
 
 const placeholders: Partial<Record<ViewId, { title:string; description:string; icon: Parameters<typeof PlaceholderPage>[0]['icon'] }>> = {
   matters:{ title:'Processos', description:'Gestão de assuntos, responsáveis, arquivo, movimentos e ligação ao cliente.', icon:'matters' },
@@ -32,5 +33,8 @@ export function AuthenticatedApplication() {
 }
 
 export default function App() {
-  return <AuthGate><AuthenticatedApplication /></AuthGate>
+  if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('qa-iphone') === '1') {
+    return <><AuthenticatedApplication /><PwaUpdateNotice /></>
+  }
+  return <><AuthGate><AuthenticatedApplication /></AuthGate><PwaUpdateNotice /></>
 }

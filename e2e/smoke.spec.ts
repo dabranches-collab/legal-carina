@@ -11,7 +11,7 @@ test('carrega o login protegido sem registo público', async ({ page }) => {
 
 test('abre a recuperação de password', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Esqueci-me da password' }).click()
+  await page.getByRole('button', { name: 'Preciso de recuperar o acesso' }).click()
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Recuperar password')
   await expect(page.getByLabel('Password')).toHaveCount(0)
 })
