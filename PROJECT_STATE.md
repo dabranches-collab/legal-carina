@@ -54,6 +54,7 @@ Atualizado em: 2026-08-15
 - “Registos de trabalho” está ligado aos 6.789 movimentos reais através de uma função `SECURITY INVOKER`, com paginação no servidor, pesquisa, filtros, ordenação, seleção e fila de revisão, sempre sujeita a RLS.
 - “Utilizadores” foi criado dentro de “Administração”, com listagem de membros e convite por email; a Edge Function valida owner/admin no backend e mantém o registo público desativado.
 - As Edge Functions `admin-users` e `security-event` estão ativas no Supabase; `admin-users` exige JWT e papel owner/admin, enquanto `security-event` aceita eventos anónimos estritamente enumerados e valida o JWT nos eventos autenticados.
+- A falha RLS `permission denied for function has_scope_access` foi corrigida: funções auxiliares privadas têm execução apenas para `authenticated`, e o módulo legal opcional permite acesso quando não existem documentos publicados, voltando a exigir aceitação se forem publicados no futuro.
 - Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
 
 ## Integrações conhecidas
