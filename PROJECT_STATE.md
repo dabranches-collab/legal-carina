@@ -49,6 +49,8 @@ Atualizado em: 2026-08-15
 - A distinção de clientes permanece obrigatória entre `individual` (Particular) e `company` (Sociedade/Empresa); dois clientes com categoria histórica variável ficaram assinalados para revisão.
 - Incoerências de faturação provenientes de importações auditadas entram sem bloqueio numa fila de revisão; 169 movimentos deste lote preservam exatamente os indicadores históricos contraditórios.
 - A página autenticada “Revisão de importações” apresenta contagens por tipo de aviso e as primeiras 100 linhas da fila, sem recalcular ou eliminar movimentos.
+- O dashboard geral está ligado a funções agregadas do Supabase sujeitas a RLS e apresenta horas, valores, faturação, recebimentos, clientes, arquivo e séries anuais/mensais reais.
+- Os dashboards de cliente, sociedade faturante e profissional estão ligados aos dados importados, com seleção da entidade, indicadores, evolução e movimentos recentes.
 - Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
 
 ## Integrações conhecidas
@@ -59,14 +61,14 @@ Atualizado em: 2026-08-15
 
 ## Próxima etapa
 
-Rever os 855 avisos da importação, começando pelos dois clientes com categoria variável e pelos 169 estados de faturação/pagamento incompletos; depois ligar dashboards e gestão de clientes aos movimentos importados. Antes da publicação, definir o domínio HTTPS definitivo da PWA e voltar a configurar/registar as passkeys nesse domínio.
+Rever os 169 estados de faturação/pagamento incompletos e ligar a tabela integral de registos de trabalho e a gestão CRUD de clientes aos dados reais. Antes da publicação, definir o domínio HTTPS definitivo da PWA e voltar a configurar/registar as passkeys nesse domínio.
 
 ## Riscos abertos
 
 - A autenticação está implementada; a passkey local ainda requer validação completa em Windows Hello e, depois da publicação segura, em Safari/iPhone com Face ID.
 - Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
 - Pesquisa, notificações, exportação e ações em massa são ainda controlos visuais sem operação remota.
-- Os gráficos atuais não representam dados reais; devem receber agregações validadas do Supabase antes de uso operacional.
+- Os dashboards usam dados reais, mas a tabela integral de registos de trabalho ainda apresenta amostras anonimizadas; deve ser ligada ao Supabase antes do uso operacional completo.
 - O Supabase remoto contém agora o esquema versionado e o lote de importação acima; o Cloudflare foi inspecionado apenas em leitura e a produção permanece intacta.
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.

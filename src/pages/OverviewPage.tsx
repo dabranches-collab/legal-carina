@@ -1,36 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MetricCard } from '../components/dashboard/MetricCard'
-import { AnnualValueChart, DonutChart, HorizontalChart, MonthlyValueChart, StackedSocietyChart } from '../components/dashboard/Charts'
+import { AnnualValueChart, DonutChart, HorizontalChart, MonthlyValueChart, StackedSocietyChart, type ChartPoint } from '../components/dashboard/Charts'
+import { supabase } from '../lib/supabase'
 
-const metrics = [
-  ['Total de horas', '8 426 h', 'No período selecionado', '+8,4%', 'clock', 'default'], ['Total de minutos', '505 560', 'Equivalente em minutos', undefined, 'clock', 'default'],
-  ['Valor trabalhado', '€ 842 680', 'Antes de descontos', '+11,2%', 'trend', 'default'], ['Valor faturado', '€ 731 240', '86,8% do trabalhado', '+9,1%', 'invoice', 'default'],
-  ['Valor recebido', '€ 654 920', '89,6% do faturado', '+12,6%', 'payment', 'success'], ['Por receber', '€ 76 320', 'Inclui valores vencidos', undefined, 'warning', 'warning'],
-  ['Não faturados', '384', 'Movimentos aprovados', undefined, 'invoice', 'warning'], ['Faturados não pagos', '126', 'Requer acompanhamento', undefined, 'payment', 'warning'],
-  ['Preço médio/hora', '€ 100,01', 'Média ponderada', '+2,3%', 'rules', 'default'], ['Clientes ativos', '147', 'Com movimento no período', undefined, 'clients', 'default'],
-  ['Movimentos sem preço', '18', 'Necessitam de regra', undefined, 'warning', 'danger'], ['Com override', '42', 'Alterações justificadas', undefined, 'audit', 'default'],
-  ['Importações com erros', '2', 'Aguardam correção', undefined, 'import', 'danger'],
-] as const
+type AnnualPoint = ChartPoint & { minutes:number }
+type OverviewData = { metrics:{ minutes:number; worked:number; invoiced:number; paid:number; receivable:number; uninvoicedCount:number; unpaidCount:number; averageRate:number; activeClients:number; missingPrice:number; overrides:number; importErrors:number }; annual:AnnualPoint[]; monthly:ChartPoint[]; latestYear:number; byClient:ChartPoint[]; byBilling:ChartPoint[]; byProfessional:ChartPoint[]; byArchive:ChartPoint[]; clientTypes:ChartPoint[] }
+const money = new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR',maximumFractionDigits:0})
+const number = new Intl.NumberFormat('pt-PT')
+const percent=(part:number,total:number)=>total>0?Math.round(part/total*100):0
 
-export function OverviewPage() {
-  const [compare, setCompare] = useState('2025')
-  return <div className="space-y-6">
-    <section aria-labelledby="summary-title"><div className="mb-4 flex flex-wrap items-end justify-between gap-3"><div><h2 id="summary-title" className="font-semibold">Resumo operacional</h2><p className="mt-1 text-sm text-text-secondary">Indicadores do período selecionado</p></div><div className="flex items-center gap-2 text-sm"><label htmlFor="compare-year" className="text-text-secondary">Comparar com</label><select id="compare-year" value={compare} onChange={(event) => setCompare(event.target.value)} className="control px-3"><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option></select></div></div>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">{metrics.map(([label,value,detail,trend,icon,tone]) => <MetricCard key={label} label={label} value={value} detail={detail} trend={trend} icon={icon} tone={tone} />)}</div>
-    </section>
-    <section aria-labelledby="analysis-title"><div className="mb-4"><h2 id="analysis-title" className="font-semibold">Análise e tendências</h2><p className="mt-1 text-sm text-text-secondary">Comparação visual com {compare}; valores meramente demonstrativos</p></div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"><AnnualValueChart/><MonthlyValueChart/>
-        <HorizontalChart title="Horas por ano" subtitle="Volume de trabalho anual" labels={['2026','2025','2024','2023','2022']} values={[64,86,72,61,53]}/>
-        <HorizontalChart title="Valor por cliente" subtitle="Cinco maiores no período" labels={['Cliente Atlas','Cliente Boreal','Cliente Cobalto','Cliente Duna','Cliente Estrela']} values={[96,82,68,55,43]}/>
-        <HorizontalChart title="Valor por sociedade" subtitle="Sociedades faturantes" labels={['Carina Santos','Legal Team','Massive Search']} values={[128,96,72]}/>
-        <HorizontalChart title="Valor por responsável" subtitle="Distribuição do trabalho" labels={['Carina','Paula','Hugo']} values={[146,91,59]}/>
-        <DonutChart title="Faturação" subtitle="Faturado versus não faturado" firstLabel="Faturado" secondLabel="Não faturado" first={87}/>
-        <DonutChart title="Recebimentos" subtitle="Pago versus por receber" firstLabel="Pago" secondLabel="Por receber" first={90} tone="success"/>
-        <HorizontalChart title="Preço médio/hora" subtitle="Evolução recente (€)" labels={['2026','2025','2024','2023']} values={[100,98,94,91]}/>
-        <DonutChart title="Tipo de cliente" subtitle="Particulares versus sociedades" firstLabel="Sociedades" secondLabel="Particulares" first={61}/>
-        <HorizontalChart title="Arquivo" subtitle="Movimentos por localização" labels={['Dossier','Digital','Findos','Gaveta','Outro']} values={[82,64,42,28,8]}/>
-        <StackedSocietyChart/>
-      </div>
-    </section>
-  </div>
+export function OverviewPage(){
+ const [data,setData]=useState<OverviewData|null>(null); const [error,setError]=useState('')
+ useEffect(()=>{let active=true; void(async()=>{if(!supabase){setError('Ligação ao Supabase indisponível.');return} const {data:result,error:failure}=await supabase.rpc('get_dashboard_overview'); if(!active)return; if(failure)setError(failure.message);else setData(result as OverviewData)})();return()=>{active=false}},[])
+ if(error)return <div role="alert" className="card border-danger/30 bg-danger-soft p-6 text-danger">Não foi possível carregar o dashboard: {error}</div>
+ if(!data)return <div role="status" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{Array.from({length:8},(_,i)=><div key={i} className="card h-32 animate-pulse bg-surface-subtle"/>)}</div>
+ const m=data.metrics
+ const metrics=[
+  ['Total de horas',`${number.format(Math.round(m.minutes/60))} h`,'Duração importada convertida','clock','default'],['Total de minutos',number.format(m.minutes),'Movimentos acessíveis','clock','default'],['Valor trabalhado',money.format(m.worked),'Valor efetivo preservado','trend','default'],['Valor faturado',money.format(m.invoiced),`${percent(m.invoiced,m.worked)}% do trabalhado`,'invoice','default'],['Valor recebido',money.format(m.paid),`${percent(m.paid,m.invoiced)}% do faturado`,'payment','success'],['Por receber',money.format(m.receivable),'Faturado e ainda não pago','warning','warning'],['Não faturados',number.format(m.uninvoicedCount),'Movimentos','invoice','warning'],['Faturados não pagos',number.format(m.unpaidCount),'Requer acompanhamento','payment','warning'],['Preço médio/hora',money.format(m.averageRate),'Média ponderada','rules','default'],['Clientes ativos',number.format(m.activeClients),'Com movimentos','clients','default'],['Movimentos sem preço',number.format(m.missingPrice),'Necessitam de revisão','warning',m.missingPrice?'danger':'default'],['Com override',number.format(m.overrides),'Alterações justificadas','audit','default'],['Importações com erros',number.format(m.importErrors),'Com linhas rejeitadas','import',m.importErrors?'danger':'default'],
+ ] as const
+ const individual=data.clientTypes.find(p=>p.label==='individual')?.value??0; const company=data.clientTypes.find(p=>p.label==='company')?.value??0
+ return <div className="space-y-6"><section aria-labelledby="summary-title"><div className="mb-4"><h2 id="summary-title" className="font-semibold">Resumo operacional</h2><p className="mt-1 text-sm text-text-secondary">Dados reais acessíveis através das políticas RLS</p></div><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">{metrics.map(([label,value,detail,icon,tone])=><MetricCard key={label} label={label} value={value} detail={detail} icon={icon} tone={tone}/>)}</div></section>
+ <section aria-labelledby="analysis-title"><div className="mb-4"><h2 id="analysis-title" className="font-semibold">Análise e tendências</h2><p className="mt-1 text-sm text-text-secondary">Histórico importado de 2018 a {data.latestYear}</p></div><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"><AnnualValueChart data={data.annual}/><MonthlyValueChart data={data.monthly}/><HorizontalChart title="Horas por ano" subtitle="Volume anual" labels={data.annual.map(p=>String(p.label))} values={data.annual.map(p=>p.minutes)} valueFormatter={v=>`${number.format(Math.round(v/60))} h`}/><HorizontalChart title="Valor por cliente" subtitle="Cinco maiores" labels={data.byClient.map(p=>String(p.label))} values={data.byClient.map(p=>p.value)} valueFormatter={money.format}/><HorizontalChart title="Valor por sociedade" subtitle="Sociedades faturantes" labels={data.byBilling.map(p=>String(p.label))} values={data.byBilling.map(p=>p.value)} valueFormatter={money.format}/><HorizontalChart title="Valor por responsável" subtitle="Distribuição do trabalho" labels={data.byProfessional.map(p=>String(p.label))} values={data.byProfessional.map(p=>p.value)} valueFormatter={money.format}/><DonutChart title="Faturação" subtitle="Valor faturado versus restante" firstLabel="Faturado" secondLabel="Não faturado" first={percent(m.invoiced,m.worked)}/><DonutChart title="Recebimentos" subtitle="Valor pago versus por receber" firstLabel="Pago" secondLabel="Por receber" first={percent(m.paid,m.invoiced)} tone="success"/><HorizontalChart title="Preço médio/hora" subtitle="Média global atual" labels={['Média ponderada']} values={[m.averageRate]} valueFormatter={v=>`${money.format(v)}/h`}/><DonutChart title="Tipo de cliente" subtitle="Sociedades versus particulares" firstLabel="Sociedades" secondLabel="Particulares" first={percent(company,company+individual)}/><HorizontalChart title="Arquivo" subtitle="Movimentos por localização" labels={data.byArchive.map(p=>String(p.label))} values={data.byArchive.map(p=>p.value)}/><StackedSocietyChart data={data.byBilling}/></div></section></div>
 }

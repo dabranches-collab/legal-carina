@@ -68,7 +68,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
           </div>
         </header>
         <main id="main-content" className="app-shell-main py-6 sm:py-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Legal Carina</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{activeView === 'import-review' ? 'Dados importados — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Legal Carina</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{(['overview','clients','billing','professionals','import-review'] as ViewId[]).includes(activeView) ? 'Dados reais — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
           {children}
         </main>
       </div>
