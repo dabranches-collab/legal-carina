@@ -1,6 +1,6 @@
 # Estado do projeto
 
-Atualizado em: 2026-08-15
+Atualizado em: 2026-08-16
 
 ## Concluído nesta fase
 
@@ -33,7 +33,8 @@ Atualizado em: 2026-08-15
 - Bucket privado `legal-imports` declarado com limite, MIME types e políticas por sociedade; nenhuma alteração foi aplicada ao Supabase remoto.
 - CI de pull requests criado com lint, typecheck, testes, build, E2E, auditoria de dependências, deteção de segredos e bloqueio de ficheiros sensíveis.
 - Guias Windows, Supabase, Cloudflare, desenvolvimento e deployment preparados para trabalho consistente em vários computadores.
-- Serviço Cloudflare `legal-carina` inspecionado sem alteração: atualmente responde apenas `Hello world`. Workers Static Assets é a opção recomendada e existe uma configuração proposta, não aplicada.
+- Frontend publicado no Cloudflare Worker `legal-carina` através de Workers Static Assets, com fallback de SPA, no endereço `https://legal-carina.dabranches.workers.dev` (versão `78a85830-f22f-4a0f-a80d-c4ca260ff2f7`).
+- Publicação validada no browser integrado: página de login carregada por HTTPS sem erros de consola; build sem source maps e sem padrões proibidos de service-role, tokens Cloudflare ou chaves privadas.
 - As três migrations foram aplicadas ao Supabase remoto `vtvvqyebigflgqccbqsw`; os advisors de segurança não reportaram problemas após a aplicação.
 - `dabranches@gmail.com` foi convidado e associado à organização Legal Carina com o papel backend `owner`.
 - Passkeys Beta foram ativadas no Supabase para o ambiente local com RP ID `localhost` e origem `http://localhost:5173`; o frontend suporta ativação e login por Windows Hello/Face ID/PIN do dispositivo.
@@ -61,11 +62,11 @@ Atualizado em: 2026-08-15
 
 - GitHub: `dabranches-collab/legal-carina`.
 - Supabase: referência `vtvvqyebigflgqccbqsw`, ligado localmente e com importação auditada concluída.
-- Cloudflare: serviço `legal-carina` existente (não publicado nesta fase).
+- Cloudflare: Worker `legal-carina` publicado em `https://legal-carina.dabranches.workers.dev`.
 
 ## Próxima etapa
 
-Rever os 169 estados de faturação/pagamento incompletos e implementar a gestão CRUD de clientes, começando pela criação obrigatória como Particular ou Sociedade. Antes da publicação, definir o domínio HTTPS definitivo da PWA e voltar a configurar/registar as passkeys nesse domínio.
+Configurar o domínio HTTPS definitivo e alinhar o RP ID/origens das passkeys com esse domínio; depois validar login e instalação PWA em iPhone real. Em paralelo, rever os 169 estados de faturação/pagamento incompletos e implementar a gestão CRUD de clientes.
 
 ## Riscos abertos
 
@@ -73,10 +74,10 @@ Rever os 169 estados de faturação/pagamento incompletos e implementar a gestã
 - Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
 - Pesquisa, notificações, exportação e ações em massa são ainda controlos visuais sem operação remota.
 - Os dashboards e a tabela de registos usam dados reais; edição individual/em massa permanece deliberadamente desativada até o fluxo de confirmação, autorização e audit log ser ligado à interface.
-- O Supabase remoto contém agora o esquema versionado e o lote de importação acima; o Cloudflare foi inspecionado apenas em leitura e a produção permanece intacta.
+- O Supabase remoto contém o esquema versionado e o lote de importação acima; o frontend Cloudflare está publicamente acessível, mas os dados continuam protegidos por autenticação e RLS.
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
-- Passkeys permanecem experimentais no Supabase; a configuração local está vinculada a `localhost` e terá de ser alterada para o domínio HTTPS definitivo antes da publicação, exigindo novo registo das passkeys de produção.
+- Passkeys permanecem experimentais no Supabase; a configuração continua vinculada a `localhost` e terá de ser alterada para o domínio HTTPS público, exigindo novo registo das passkeys de produção.
 - A matriz iPhone foi validada em Chromium; permanece obrigatório um smoke test final em Safari iOS e hardware real antes da publicação, sobretudo para teclado, zoom do sistema, instalação e atualização do service worker.
 - Os 194 clientes do ficheiro-base estão no Supabase; dois exigem confirmação da categoria atual porque o histórico contém ambas as classificações.
 - O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
