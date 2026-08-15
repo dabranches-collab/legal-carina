@@ -3,6 +3,7 @@ import { AppShell } from './components/layout/AppShell'
 import { PlaceholderPage } from './components/feedback/PlaceholderPage'
 import { EntityDashboard } from './features/entities/EntityDashboard'
 import { ImportWizard } from './features/imports/ImportWizard'
+import { ImportReviewPage } from './features/imports/ImportReviewPage'
 import { WorkEntriesPage } from './features/work-entries/WorkEntriesPage'
 import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
@@ -28,6 +29,7 @@ export function AuthenticatedApplication() {
   else if (view === 'billing') content = <EntityDashboard kind="billing" />
   else if (view === 'professionals') content = <EntityDashboard kind="professional" />
   else if (view === 'imports') content = <ImportWizard />
+  else if (view === 'import-review') content = <ImportReviewPage />
   else { const page = placeholders[view]!; content = <PlaceholderPage {...page} /> }
   return <AppShell activeView={view} onNavigate={setView}>{content}</AppShell>
 }

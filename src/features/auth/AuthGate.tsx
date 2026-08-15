@@ -8,6 +8,8 @@ import { LoginPage } from './LoginPage'
 import { ResetPasswordPage } from './ResetPasswordPage'
 import { TermsModal } from './TermsModal'
 
+const requiresLegalAcceptance = import.meta.env.VITE_REQUIRE_LEGAL_ACCEPTANCE === 'true'
+
 function ConfigurationRequired() {
   return <main className="grid min-h-screen place-items-center bg-background p-6"><section className="card max-w-lg p-7"><p className="text-xs font-semibold uppercase tracking-widest text-warning">Configuração local necessária</p><h1 className="mt-2 font-display text-2xl font-semibold">Supabase Auth não configurado</h1><p className="mt-3 text-sm leading-6 text-text-secondary">Copie <code>.env.example</code> para <code>.env.local</code> e preencha apenas a URL e a chave publicável do projeto. Nunca use a service role no frontend.</p></section></main>
 }
@@ -36,6 +38,12 @@ export function AuthGate({ children }: { children: ReactNode }) {
   })
 
   const loadLegalState = useCallback(async (currentUser: User) => {
+    if (!requiresLegalAcceptance) {
+      setLegalConfigured(true)
+      setDocuments([])
+      setAccepted(true)
+      return
+    }
     const client = supabase
     if (!client) return
     const { data: currentDocuments, error: documentsError } = await client.from('legal_documents')
@@ -104,7 +112,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     setBusy(true); setError(''); setNotice('')
     const { error: linkError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: window.location.origin } })
     if (linkError) setError(authErrorMessage(linkError))
-    else setNotice('Enviámos um código temporário de 6 algarismos. Nunca partilhe esse código.')
+    else setNotice('Enviámos um código temporário de 8 algarismos. Nunca partilhe esse código.')
     setBusy(false)
     return !linkError
   }
@@ -130,19 +138,26 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   async function enrollPasskey() {
-    if (!supabase) return
+    if (!supabase) return 'Supabase Auth não está configurado.'
     setBusy(true); setError(''); setNotice('')
     const { error: passkeyError } = await supabase.auth.registerPasskey()
-    if (passkeyError) setError('Não foi possível criar a passkey neste dispositivo. Confirme que o Windows Hello, Face ID ou código do dispositivo está disponível.')
+    if (passkeyError) {
+      const technicalMessage = passkeyError instanceof Error ? passkeyError.message : String(passkeyError)
+      const safeMessage = technicalMessage.replace(/[\r\n]+/g, ' ').slice(0, 240)
+      setError('Não foi possível criar a passkey neste dispositivo.')
+      setBusy(false)
+      return safeMessage || 'O dispositivo recusou a criação da passkey.'
+    }
     else { setNotice('Passkey ativada. Nos próximos acessos pode usar o PIN, Face ID ou biometria deste dispositivo.'); await recordSecurityEvent('passkey_registered') }
     setBusy(false)
+    return null
   }
 
   async function updatePassword(password: string) {
-    if (!supabase) return
+    if (!supabase) return false
     setBusy(true); setError('')
     const { error: updateError } = await supabase.auth.updateUser({ password })
-    if (updateError) setError(authErrorMessage(updateError))
+    if (updateError) { setError(authErrorMessage(updateError)); setBusy(false); return false }
     else {
       await recordSecurityEvent('password_changed')
       window.history.replaceState({}, '', '/')
@@ -150,6 +165,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (user) await loadLegalState(user)
     }
     setBusy(false)
+    return true
   }
 
   async function acceptTerms() {
@@ -168,9 +184,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
-  if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={updatePassword} />
-  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onVerifyEmailCode={verifyEmailCode} onPasskeyLogin={loginWithPasskey} />
-  if (!legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={enrollPasskey} onLogout={signOut} />
-  if (!accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
-  return <AuthContext.Provider value={{ user, signOut }}>{children}</AuthContext.Provider>
+  if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={async (password) => { await updatePassword(password) }} />
+  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onVerifyEmailCode={verifyEmailCode} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
+  if (requiresLegalAcceptance && !legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={async () => { await enrollPasskey() }} onLogout={signOut} />
+  if (requiresLegalAcceptance && !accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
+  return <AuthContext.Provider value={{ user, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>
 }

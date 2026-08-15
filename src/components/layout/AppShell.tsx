@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 import type { NavigationItem, ViewId } from '../../types/navigation'
 import { useAuth } from '../../features/auth/AuthContext'
+import { PasswordModal } from '../../features/auth/PasswordModal'
 
 const navigation: NavigationItem[] = [
   { id: 'overview', label: 'Visão geral', icon: 'overview' }, { id: 'work', label: 'Registos de trabalho', icon: 'clock' },
@@ -9,6 +10,7 @@ const navigation: NavigationItem[] = [
   { id: 'billing', label: 'Sociedades faturantes', icon: 'building' }, { id: 'professionals', label: 'Profissionais', icon: 'people' },
   { id: 'invoices', label: 'Faturação', icon: 'invoice' }, { id: 'payments', label: 'Recebimentos', icon: 'payment' },
   { id: 'pricing', label: 'Regras de preços', icon: 'rules' }, { id: 'imports', label: 'Importações', icon: 'import' },
+  { id: 'import-review', label: 'Revisão de importações', icon: 'warning' },
   { id: 'reports', label: 'Relatórios', icon: 'reports' }, { id: 'audit', label: 'Auditoria', icon: 'audit' },
   { id: 'admin', label: 'Administração', icon: 'admin' },
 ]
@@ -16,9 +18,15 @@ const navigation: NavigationItem[] = [
 interface AppShellProps { activeView: ViewId; onNavigate: (view: ViewId) => void; children: ReactNode }
 
 export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
-  const { user, signOut } = useAuth()
+  const { user, signOut, updatePassword, enrollPasskey } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const [passwordOpen, setPasswordOpen] = useState(false)
+  const [accountNotice, setAccountNotice] = useState('')
+  const displayName = typeof user?.user_metadata?.username === 'string' && user.user_metadata.username.trim()
+    ? user.user_metadata.username.trim()
+    : user?.email?.split('@')[0] ?? 'Utilizador'
   useEffect(() => setMobileOpen(false), [activeView])
   const currentLabel = navigation.find(({ id }) => id === activeView)?.label ?? 'Legal Carina'
 
@@ -43,7 +51,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
         </nav>
         <div className="border-t border-surface/10 p-3"><div className={`flex items-center gap-3 rounded-lg bg-surface/5 p-2 ${collapsed ? 'justify-center' : ''}`}>
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-sm font-semibold">DA</span>
-          {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-semibold">{user?.email ?? 'Utilizador autenticado'}</p><p className="truncate text-xs text-surface/55">Sessão protegida</p></div>}
+          {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-semibold">{displayName}</p><p className="truncate text-xs text-surface/55">Sessão protegida</p></div>}
         </div></div>
       </aside>
 
@@ -55,15 +63,17 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
             <button className="control hidden items-center gap-2 px-3 text-sm xl:flex"><Icon name="calendar" className="size-4 text-secondary"/><span>01 jan — 31 dez 2026</span></button>
             <label className="sr-only" htmlFor="selected-billing">Sociedade selecionada</label><select id="selected-billing" className="control hidden max-w-48 px-3 text-sm sm:block" defaultValue="all"><option value="all">Todas as sociedades</option><option>Carina Santos</option><option>Legal Team</option><option>Massive Search</option></select>
             <button className="relative grid size-10 place-items-center rounded-lg border border-border hover:bg-surface-subtle" aria-label="Notificações, 3 novas"><Icon name="bell" className="size-5"/><span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-danger ring-2 ring-surface" /></button>
-            <button className="hidden items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-subtle sm:flex" aria-label="Menu do utilizador"><span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-surface">DA</span><Icon name="chevron" className="size-3 rotate-90 text-text-secondary"/></button>
+            <div className="relative hidden sm:block"><button onClick={() => setAccountOpen((value) => !value)} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-subtle" aria-label="Menu do utilizador" aria-expanded={accountOpen}><span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-surface">DA</span><Icon name="chevron" className="size-3 rotate-90 text-text-secondary"/></button>{accountOpen && <div className="absolute right-0 top-12 z-30 w-52 rounded-lg border border-border bg-surface p-2 shadow-lg"><button onClick={() => { setAccountOpen(false); setPasswordOpen(true) }} className="w-full rounded-md px-3 py-2 text-left text-sm font-semibold hover:bg-surface-subtle">Definir password</button><button onClick={async () => { setAccountOpen(false); setAccountNotice('A aguardar confirmação do dispositivo…'); const passkeyFailure = await enrollPasskey(); setAccountNotice(passkeyFailure ? `A passkey não foi concluída: ${passkeyFailure}` : 'Passkey ativada com sucesso.') }} className="w-full rounded-md px-3 py-2 text-left text-sm font-semibold hover:bg-surface-subtle">Ativar passkey</button></div>}</div>
             <button onClick={() => void signOut()} className="grid size-10 place-items-center rounded-lg text-text-secondary hover:bg-danger-soft hover:text-danger" aria-label="Terminar sessão"><Icon name="logout" className="size-5"/></button>
           </div>
         </header>
         <main id="main-content" className="app-shell-main py-6 sm:py-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Legal Carina</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">Dados demonstrativos anonimizados</span></div>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Legal Carina</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{activeView === 'import-review' ? 'Dados importados — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
           {children}
         </main>
       </div>
+      {passwordOpen && <PasswordModal onClose={() => setPasswordOpen(false)} onSubmit={updatePassword} />}
+      {accountNotice && <div role="status" className="app-safe-toast fixed bottom-4 right-4 z-50 max-w-sm rounded-lg border border-border bg-surface p-4 text-sm shadow-lg"><div className="flex items-start gap-3"><p className="flex-1">{accountNotice}</p><button onClick={() => setAccountNotice('')} aria-label="Fechar mensagem" className="font-semibold text-text-secondary">×</button></div></div>}
     </div>
   )
 }
