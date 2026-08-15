@@ -28,6 +28,20 @@ Deno.serve(async (request) => {
 
   try {
     const input = await request.json()
+    if (input.action === 'list_users') {
+      const firmId = String(input.firmId ?? '')
+      if (!memberships.some((membership) => membership.firm_id === firmId)) return json(request, { error: 'Sociedade inválida.' }, 400)
+      const { data: firmUsers, error: memberError } = await admin.from('firm_members').select('user_id, role, active, created_at').eq('firm_id', firmId)
+      if (memberError) throw memberError
+      const { data: authUsers, error: usersError } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
+      if (usersError) throw usersError
+      const authById = new Map(authUsers.users.map((user) => [user.id, user]))
+      return json(request, { users: firmUsers.map((membership) => {
+        const user = authById.get(membership.user_id)
+        return { userId: membership.user_id, email: user?.email ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
+      }) })
+    }
+
     if (input.action === 'invite_user') {
       const firmId = String(input.firmId ?? '')
       const allowedFirm = memberships.some((membership) => membership.firm_id === firmId)
@@ -40,6 +54,20 @@ Deno.serve(async (request) => {
       const { error: membershipError } = await admin.from('firm_members').insert({ firm_id: firmId, user_id: data.user.id, role: input.role })
       if (membershipError) throw membershipError
       return json(request, { userId: data.user.id }, 201)
+    }
+
+    if (input.action === 'update_user') {
+      const firmId = String(input.firmId ?? '')
+      const userId = String(input.userId ?? '')
+      const role = String(input.role ?? '')
+      const active = Boolean(input.active)
+      const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
+      if (!memberships.some((membership) => membership.firm_id === firmId) || !allowedRoles.includes(role)) return json(request, { error: 'Alteração inválida.' }, 400)
+      const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
+      if (!target || target.role === 'owner') return json(request, { error: 'O proprietário não pode ser alterado por esta operação.' }, 400)
+      const { error } = await admin.from('firm_members').update({ role, active }).eq('firm_id', firmId).eq('user_id', userId)
+      if (error) throw error
+      return json(request, { updated: true })
     }
 
     if (input.action === 'publish_legal_documents') {

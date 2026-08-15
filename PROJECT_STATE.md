@@ -51,6 +51,9 @@ Atualizado em: 2026-08-15
 - A página autenticada “Revisão de importações” apresenta contagens por tipo de aviso e as primeiras 100 linhas da fila, sem recalcular ou eliminar movimentos.
 - O dashboard geral está ligado a funções agregadas do Supabase sujeitas a RLS e apresenta horas, valores, faturação, recebimentos, clientes, arquivo e séries anuais/mensais reais.
 - Os dashboards de cliente, sociedade faturante e profissional estão ligados aos dados importados, com seleção da entidade, indicadores, evolução e movimentos recentes.
+- “Registos de trabalho” está ligado aos 6.789 movimentos reais através de uma função `SECURITY INVOKER`, com paginação no servidor, pesquisa, filtros, ordenação, seleção e fila de revisão, sempre sujeita a RLS.
+- “Utilizadores” foi criado dentro de “Administração”, com listagem de membros e convite por email; a Edge Function valida owner/admin no backend e mantém o registo público desativado.
+- As Edge Functions `admin-users` e `security-event` estão ativas no Supabase; `admin-users` exige JWT e papel owner/admin, enquanto `security-event` aceita eventos anónimos estritamente enumerados e valida o JWT nos eventos autenticados.
 - Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
 
 ## Integrações conhecidas
@@ -61,14 +64,14 @@ Atualizado em: 2026-08-15
 
 ## Próxima etapa
 
-Rever os 169 estados de faturação/pagamento incompletos e ligar a tabela integral de registos de trabalho e a gestão CRUD de clientes aos dados reais. Antes da publicação, definir o domínio HTTPS definitivo da PWA e voltar a configurar/registar as passkeys nesse domínio.
+Rever os 169 estados de faturação/pagamento incompletos e implementar a gestão CRUD de clientes, começando pela criação obrigatória como Particular ou Sociedade. Antes da publicação, definir o domínio HTTPS definitivo da PWA e voltar a configurar/registar as passkeys nesse domínio.
 
 ## Riscos abertos
 
 - A autenticação está implementada; a passkey local ainda requer validação completa em Windows Hello e, depois da publicação segura, em Safari/iPhone com Face ID.
 - Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
 - Pesquisa, notificações, exportação e ações em massa são ainda controlos visuais sem operação remota.
-- Os dashboards usam dados reais, mas a tabela integral de registos de trabalho ainda apresenta amostras anonimizadas; deve ser ligada ao Supabase antes do uso operacional completo.
+- Os dashboards e a tabela de registos usam dados reais; edição individual/em massa permanece deliberadamente desativada até o fluxo de confirmação, autorização e audit log ser ligado à interface.
 - O Supabase remoto contém agora o esquema versionado e o lote de importação acima; o Cloudflare foi inspecionado apenas em leitura e a produção permanece intacta.
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.

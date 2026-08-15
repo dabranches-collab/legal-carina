@@ -9,6 +9,7 @@ import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
 import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
+import { AdminPage } from './features/admin/AdminPage'
 
 const placeholders: Partial<Record<ViewId, { title:string; description:string; icon: Parameters<typeof PlaceholderPage>[0]['icon'] }>> = {
   matters:{ title:'Processos', description:'Gestão de assuntos, responsáveis, arquivo, movimentos e ligação ao cliente.', icon:'matters' },
@@ -30,6 +31,7 @@ export function AuthenticatedApplication() {
   else if (view === 'professionals') content = <EntityDashboard kind="professional" />
   else if (view === 'imports') content = <ImportWizard />
   else if (view === 'import-review') content = <ImportReviewPage />
+  else if (view === 'admin') content = <AdminPage />
   else { const page = placeholders[view]!; content = <PlaceholderPage {...page} /> }
   return <AppShell activeView={view} onNavigate={setView}>{content}</AppShell>
 }
