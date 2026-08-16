@@ -2,7 +2,7 @@
 
 Atualizado em: 2026-08-16
 
-- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. O proprietário pediu a publicação integral deste lote em 2026-08-16. Versão actual: `0.1.0`.
+- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. O proprietário pediu a publicação integral deste lote em 2026-08-16. Versão actual: `0.1.1`.
 
 ## Alterações locais pendentes — PIN inicial
 
@@ -20,6 +20,7 @@ Atualizado em: 2026-08-16
 - Validado localmente com TypeScript, 28 testes unitários e build de produção.
 - A migration `20260816153000_require_initial_pin_change.sql` foi aplicada ao Supabase remoto: 194 perfis de cliente foram criados e nenhum dos 6.789 movimentos ficou sem perfil.
 - As Edge Functions `admin-users` v4, `pin-auth` v3 e `change-pin` v1 foram publicadas com validação JWT e encontram-se activas.
+- O dashboard consolidado e os filtros Particulares/Empresas/Mistos deixaram de repetir a avaliação RLS em cada agregação: a consulta usa um conjunto materializado e um índice por perfil/data. Após a correcção, os 13 ecrãs autenticados de dashboards, listas, movimentos, utilizadores e importações concluíram sem timeout.
 
 ## Atualização — identidade, acesso e PWA
 
