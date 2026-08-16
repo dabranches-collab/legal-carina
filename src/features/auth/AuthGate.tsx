@@ -85,15 +85,24 @@ export function AuthGate({ children }: { children: ReactNode }) {
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [loadLegalState])
 
-  async function login(email: string, password: string) {
+  async function loginWithPin(username: string, pin: string) {
     if (!supabase) return
     setBusy(true); setError(''); setNotice('')
-    const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password })
-    if (loginError || !data.user) { await recordSecurityEvent('login_failed', email); setError(authErrorMessage(loginError)); setBusy(false); return }
-    setUser(data.user); setSession(data.session)
-    try { await recordSecurityEvent('login_succeeded'); await loadLegalState(data.user) }
-    catch (reason) { setError(authErrorMessage(reason)) }
-    finally { setBusy(false) }
+    const { data, error: invokeError } = await supabase.functions.invoke('pin-auth', { body: { username, pin } })
+    if (invokeError || data?.error || !data?.session?.access_token || !data?.session?.refresh_token) {
+      setError(data?.error ?? 'Nome de utilizador ou PIN inválido.')
+      setBusy(false)
+      return
+    }
+    const { data: sessionData, error: sessionError } = await supabase.auth.setSession(data.session)
+    if (sessionError || !sessionData.user || !sessionData.session) {
+      setError('Não foi possível iniciar a sessão. Tente novamente.')
+      setBusy(false)
+      return
+    }
+    setUser(sessionData.user); setSession(sessionData.session)
+    try { await loadLegalState(sessionData.user) } catch (reason) { setError(authErrorMessage(reason)) }
+    setBusy(false)
   }
 
   async function recover(email: string) {
@@ -105,27 +114,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (recoveryError) setError(authErrorMessage(recoveryError))
     else setNotice('Se o endereço estiver autorizado, receberá um email com os próximos passos.')
     setBusy(false)
-  }
-
-  async function sendEmailLink(email: string) {
-    if (!supabase) return false
-    setBusy(true); setError(''); setNotice('')
-    const { error: linkError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: window.location.origin } })
-    if (linkError) setError(authErrorMessage(linkError))
-    else setNotice('Enviámos um código temporário de 8 algarismos. Nunca partilhe esse código.')
-    setBusy(false)
-    return !linkError
-  }
-
-  async function verifyEmailCode(email: string, code: string) {
-    if (!supabase) return false
-    setBusy(true); setError(''); setNotice('')
-    const { data, error: verifyError } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' })
-    if (verifyError || !data.user || !data.session) { setError('Código inválido ou expirado. Solicite um novo código.'); setBusy(false); return false }
-    setUser(data.user); setSession(data.session)
-    try { await recordSecurityEvent('login_succeeded'); await loadLegalState(data.user) } catch (reason) { setError(authErrorMessage(reason)) }
-    setBusy(false)
-    return true
   }
 
   async function loginWithPasskey() {
@@ -185,7 +173,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={async (password) => { await updatePassword(password) }} />
-  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onLogin={login} onRecover={recover} onEmailLink={sendEmailLink} onVerifyEmailCode={verifyEmailCode} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
+  if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onPinLogin={loginWithPin} onRecover={recover} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
   if (requiresLegalAcceptance && !legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={async () => { await enrollPasskey() }} onLogout={signOut} />
   if (requiresLegalAcceptance && !accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
   return <AuthContext.Provider value={{ user, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>

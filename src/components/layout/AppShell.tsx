@@ -28,15 +28,15 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
     ? user.user_metadata.username.trim()
     : user?.email?.split('@')[0] ?? 'Utilizador'
   useEffect(() => setMobileOpen(false), [activeView])
-  const currentLabel = navigation.find(({ id }) => id === activeView)?.label ?? 'Legal Carina'
+  const currentLabel = navigation.find(({ id }) => id === activeView)?.label ?? 'Carina - Legal'
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
       {mobileOpen && <button className="app-safe-fixed fixed z-30 bg-primary/35 lg:hidden" aria-label="Fechar navegação" onClick={() => setMobileOpen(false)} />}
       <aside aria-label="Navegação principal" className={`app-shell-sidebar fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-primary text-surface transition-[width,transform] duration-200 ${collapsed ? 'lg:w-20' : 'lg:w-64'} w-[min(18rem,calc(100vw-var(--safe-right)))] ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex h-18 items-center gap-3 border-b border-surface/10 px-5">
-          <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-accent/50 bg-surface/5 font-display text-lg text-accent">LC</div>
-          {!collapsed && <div className="min-w-0"><p className="font-display text-lg font-semibold leading-none">Legal Carina</p><p className="mt-1 text-[0.65rem] uppercase tracking-[0.18em] text-surface/55">Gestão jurídica</p></div>}
+          <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-accent/50 bg-surface/5 font-display text-lg text-accent">CS</div>
+          {!collapsed && <div className="min-w-0"><p className="font-display text-lg font-semibold leading-none">Carina - Legal</p><p className="mt-1 text-[0.65rem] uppercase tracking-[0.18em] text-surface/55">Gestão de clientes</p></div>}
           <button className="ml-auto hidden size-8 place-items-center rounded-lg text-surface/70 hover:bg-surface/10 hover:text-surface lg:grid" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? 'Expandir navegação' : 'Recolher navegação'} aria-expanded={!collapsed}>
             <Icon name="chevron" className={`size-4 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
           </button>
@@ -68,7 +68,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
           </div>
         </header>
         <main id="main-content" className="app-shell-main py-6 sm:py-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Legal Carina</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{(['overview','work','clients','billing','professionals','import-review','admin'] as ViewId[]).includes(activeView) ? 'Dados reais — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Carina - Legal</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{(['overview','work','clients','billing','professionals','import-review','admin'] as ViewId[]).includes(activeView) ? 'Dados reais — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
           {children}
         </main>
       </div>

@@ -2,6 +2,18 @@
 
 Atualizado em: 2026-08-16
 
+## Atualização — identidade, acesso e PWA
+
+- Nome visível alterado para **Carina - Legal** e monograma para **CS**.
+- Ícones PWA redesenhados com cantos concêntricos e margem adequada à máscara Apple.
+- Login principal por nome de utilizador e PIN de quatro algarismos; o PIN não é persistido no código nem na base de dados.
+- Utilizador proprietário `dabranches` configurado e autenticação validada no endpoint Supabase.
+- Bloqueio temporário após cinco tentativas falhadas e eventos de segurança auditáveis.
+- Administração permite criar utilizadores com perfil e configurar visibilidade e valores por sociedade faturante.
+- A estrutura backend separa visibilidade operacional (`access_grants`) da autorização financeira (`billing_entity_financial_permissions`). Os restantes read models financeiros ainda exigem mascaramento integral antes de atribuir perfis restritos a dados reais.
+- Botão de instalação PWA com instruções para iPhone/iPad, Windows e Android; atualização do service worker mantém aviso explícito de nova versão.
+- Verificação local concluída: segurança de ficheiros, lint, TypeScript, 27 testes unitários e build de produção.
+
 ## Concluído nesta fase
 
 - Repositório vazio clonado e remoto `origin` validado.

@@ -7,7 +7,7 @@ export function ResetPasswordPage({ busy, error, onSubmit }: { busy:boolean; err
   async function submit(event:FormEvent){event.preventDefault(); if(!mismatch) await onSubmit(password)}
   return <main className="app-safe-screen grid place-items-center bg-background p-6">
     <section className="card w-full max-w-md p-7">
-      <p className="text-xs font-semibold uppercase tracking-widest text-secondary">Legal Carina</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-secondary">Carina - Legal</p>
       <h1 className="mt-2 font-display text-3xl font-semibold">Definir nova password</h1>
       <p className="mt-3 text-sm text-text-secondary">Utilize pelo menos 12 caracteres, com maiúsculas, minúsculas, número e símbolo.</p>
       <form onSubmit={submit} className="mt-7 space-y-4">

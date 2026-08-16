@@ -388,6 +388,9 @@ verify_jwt = false
 [functions.admin-users]
 verify_jwt = true
 
+[functions.pin-auth]
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

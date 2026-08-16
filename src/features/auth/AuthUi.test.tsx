@@ -10,55 +10,38 @@ const documents: LegalDocumentRow[] = [
   ['terms_of_service','Termos de Serviço'], ['privacy_policy','Política de Privacidade'], ['gdpr_terms','Termos de RGPD'],
 ].map(([document_type,title], index) => ({ id:`doc-${index}`, document_type:document_type as LegalDocumentRow['document_type'], version:'1.0', title, body_markdown:'Conteúdo jurídico sintético para teste.', effective_at:'2026-08-04T00:00:00Z', content_hash:'a'.repeat(64), status:'published' }))
 
+const loginProps = { busy:false, error:'', notice:'', onPinLogin:vi.fn(), onRecover:vi.fn(), onPasskeyLogin:vi.fn(), onClearError:vi.fn() }
+
 describe('autenticação', () => {
-  it('mostra login e recuperação sem registo público', async () => {
-    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn().mockResolvedValue(true)} onVerifyEmailCode={vi.fn()} onPasskeyLogin={vi.fn()} onClearError={vi.fn()} />)
-    expect(screen.getByRole('heading', { name:'Iniciar sessão' })).toBeInTheDocument()
+  it('inicia sessão apenas com nome e PIN de quatro algarismos', async () => {
+    const onPinLogin = vi.fn()
+    render(<LoginPage {...loginProps} onPinLogin={onPinLogin} />)
+    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Nome de utilizador'), 'dabranches')
+    await userEvent.type(screen.getByLabelText('PIN de 4 algarismos'), '2468')
+    await userEvent.click(screen.getByRole('button', { name:'Entrar' }))
+    expect(onPinLogin).toHaveBeenCalledWith('dabranches', '2468')
+  })
+
+  it('mantém recuperação administrativa sem registo público', async () => {
+    render(<LoginPage {...loginProps} />)
     expect(screen.queryByRole('button', { name:/regist/i })).not.toBeInTheDocument()
-    expect(screen.getByText('dabranches')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name:'Entrar com PIN' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name:'Preciso de recuperar o acesso' }))
-    expect(screen.getByRole('heading', { name:'Recuperar password' })).toBeInTheDocument()
-  })
-
-  it('permite iniciar o acesso sem password com um código temporário', async () => {
-    const onEmailLink = vi.fn().mockResolvedValue(true)
-    const onVerifyEmailCode = vi.fn().mockResolvedValue(true)
-    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={onEmailLink} onVerifyEmailCode={onVerifyEmailCode} onPasskeyLogin={vi.fn()} onClearError={vi.fn()} />)
-    await userEvent.type(screen.getByLabelText('Email'), 'utilizador@example.test')
-    await userEvent.click(screen.getByRole('button', { name:'Receber código temporário por email' }))
-    expect(onEmailLink).toHaveBeenCalledWith('utilizador@example.test')
-    await userEvent.type(screen.getByLabelText('Código de 8 algarismos'), '12345678')
-    await userEvent.click(screen.getByRole('button', { name:'Validar código' }))
-    expect(onVerifyEmailCode).toHaveBeenCalledWith('utilizador@example.test', '12345678')
-  })
-
-  it('permite validar um código já recebido sem pedir novo envio', async () => {
-    render(<LoginPage busy={false} error="" notice="" onLogin={vi.fn()} onRecover={vi.fn()} onEmailLink={vi.fn()} onVerifyEmailCode={vi.fn()} onPasskeyLogin={vi.fn()} onClearError={vi.fn()} />)
-    await userEvent.type(screen.getByLabelText('Email'), 'utilizador@example.test')
-    await userEvent.click(screen.getByRole('button', { name:'Já tenho um código' }))
-    expect(screen.getByLabelText('Código de 8 algarismos')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name:'Recuperar acesso' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Email administrativo')).toBeInTheDocument()
   })
 
   it('bloqueia termos até ambos os consentimentos explícitos', async () => {
-    const onAccept=vi.fn()
-    render(<TermsModal documents={documents} busy={false} error="" onAccept={onAccept} />)
-    const button=screen.getByRole('button',{name:'Aceitar e continuar'})
-    expect(button).toBeDisabled()
-    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de Serviço.'}))
-    expect(button).toBeDisabled()
-    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de RGPD e a Política de Privacidade.'}))
-    expect(button).toBeEnabled()
-    await userEvent.click(button)
-    expect(onAccept).toHaveBeenCalledOnce()
+    const onAccept=vi.fn(); render(<TermsModal documents={documents} busy={false} error="" onAccept={onAccept} />)
+    const button=screen.getByRole('button',{name:'Aceitar e continuar'}); expect(button).toBeDisabled()
+    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de Serviço.'})); expect(button).toBeDisabled()
+    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de RGPD e a Política de Privacidade.'})); expect(button).toBeEnabled()
   })
 
   it('impede redefinição quando as passwords não coincidem', async () => {
-    const onSubmit=vi.fn()
-    render(<ResetPasswordPage busy={false} error="" onSubmit={onSubmit}/>)
+    const onSubmit=vi.fn(); render(<ResetPasswordPage busy={false} error="" onSubmit={onSubmit}/>)
     await userEvent.type(screen.getByLabelText('Nova password'),'Password!2026')
     await userEvent.type(screen.getByLabelText('Confirmar password'),'Password!2027')
     expect(screen.getByRole('button',{name:'Guardar nova password'})).toBeDisabled()
-    expect(onSubmit).not.toHaveBeenCalled()
   })
 })

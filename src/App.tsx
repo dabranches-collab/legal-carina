@@ -9,6 +9,7 @@ import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
 import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
+import { InstallAppButton } from './components/pwa/InstallAppButton'
 import { AdminPage } from './features/admin/AdminPage'
 
 const placeholders: Partial<Record<ViewId, { title:string; description:string; icon: Parameters<typeof PlaceholderPage>[0]['icon'] }>> = {
@@ -38,7 +39,7 @@ export function AuthenticatedApplication() {
 
 export default function App() {
   if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('qa-iphone') === '1') {
-    return <><AuthenticatedApplication /><PwaUpdateNotice /></>
+    return <><AuthenticatedApplication /><InstallAppButton /><PwaUpdateNotice /></>
   }
-  return <><AuthGate><AuthenticatedApplication /></AuthGate><PwaUpdateNotice /></>
+  return <><AuthGate><AuthenticatedApplication /></AuthGate><InstallAppButton /><PwaUpdateNotice /></>
 }

@@ -6,6 +6,14 @@ async function sha256(value: string) {
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 
+function normalizeUsername(value: unknown) {
+  return String(value ?? '').normalize('NFKC').trim().toLowerCase()
+}
+
+async function deriveAuthPassword(credentialId: string, pin: string) {
+  return `CL!${await sha256(`carina-legal-pin-v1:${credentialId}:${pin}`)}`
+}
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders(request) })
   if (request.method !== 'POST') return json(request, { error: 'Método não permitido.' }, 405)
@@ -35,11 +43,111 @@ Deno.serve(async (request) => {
       if (memberError) throw memberError
       const { data: authUsers, error: usersError } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
       if (usersError) throw usersError
+      const { data: credentials, error: credentialsError } = await admin.from('user_login_credentials').select('user_id,username').eq('firm_id', firmId)
+      if (credentialsError) throw credentialsError
       const authById = new Map(authUsers.users.map((user) => [user.id, user]))
+      const usernameById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential.username]))
       return json(request, { users: firmUsers.map((membership) => {
         const user = authById.get(membership.user_id)
-        return { userId: membership.user_id, email: user?.email ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
+        return { userId: membership.user_id, username: usernameById.get(membership.user_id) ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
       }) })
+    }
+
+    if (input.action === 'create_pin_user') {
+      const firmId = String(input.firmId ?? '')
+      const username = normalizeUsername(input.username)
+      const pin = String(input.pin ?? '')
+      const role = String(input.role ?? '')
+      const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
+      if (!memberships.some((membership) => membership.firm_id === firmId)
+        || !allowedRoles.includes(role)
+        || !/^[a-z0-9][a-z0-9._-]{2,31}$/.test(username)
+        || !/^\d{4}$/.test(pin)) return json(request, { error: 'Nome, PIN ou perfil inválido.' }, 400)
+
+      const credentialId = crypto.randomUUID()
+      const authEmail = `lc-${credentialId}@auth.invalid`
+      const password = await deriveAuthPassword(credentialId, pin)
+      const { data, error } = await admin.auth.admin.createUser({
+        email: authEmail, password, email_confirm: true, user_metadata: { username },
+      })
+      if (error || !data.user) throw error ?? new Error('Utilizador não criado')
+      const { error: membershipError } = await admin.from('firm_members').insert({ firm_id: firmId, user_id: data.user.id, role })
+      if (membershipError) { await admin.auth.admin.deleteUser(data.user.id); throw membershipError }
+      const { error: credentialError } = await admin.from('user_login_credentials').insert({
+        id: credentialId, firm_id: firmId, user_id: data.user.id, username, auth_email: authEmail, created_by: authData.user.id,
+      })
+      if (credentialError) { await admin.auth.admin.deleteUser(data.user.id); throw credentialError }
+      await admin.from('audit_log').insert({
+        firm_id: firmId, actor_user_id: authData.user.id, action: 'insert', entity_type: 'user_access',
+        entity_id: data.user.id, new_data: { username, role, active: true, auth_method: 'pin' },
+      })
+      return json(request, { userId: data.user.id, username }, 201)
+    }
+
+    if (input.action === 'configure_pin_access') {
+      const firmId = String(input.firmId ?? '')
+      const userId = String(input.userId ?? '')
+      const username = normalizeUsername(input.username)
+      const pin = String(input.pin ?? '')
+      if (!memberships.some((membership) => membership.firm_id === firmId)
+        || !/^[a-z0-9][a-z0-9._-]{2,31}$/.test(username)
+        || !/^\d{4}$/.test(pin)) return json(request, { error: 'Nome ou PIN inválido.' }, 400)
+      const { data: target } = await admin.from('firm_members').select('user_id').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
+      if (!target) return json(request, { error: 'Utilizador inválido.' }, 400)
+      const { data: existing } = await admin.from('user_login_credentials').select('id,auth_email').eq('user_id', userId).maybeSingle()
+      const credentialId = existing?.id ?? crypto.randomUUID()
+      const authEmail = existing?.auth_email ?? `lc-${credentialId}@auth.invalid`
+      const password = await deriveAuthPassword(credentialId, pin)
+      const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, {
+        email: authEmail, password, email_confirm: true, user_metadata: { username },
+      })
+      if (authUpdateError) throw authUpdateError
+      const { error: credentialError } = await admin.from('user_login_credentials').upsert({
+        id: credentialId, firm_id: firmId, user_id: userId, username, auth_email: authEmail, created_by: authData.user.id,
+        failed_attempts: 0, locked_until: null,
+      }, { onConflict: 'user_id' })
+      if (credentialError) throw credentialError
+      await admin.from('audit_log').insert({
+        firm_id: firmId, actor_user_id: authData.user.id, action: existing ? 'update' : 'insert', entity_type: 'user_access',
+        entity_id: userId, new_data: { username, auth_method: 'pin', pin_changed: true },
+      })
+      return json(request, { configured: true, username })
+    }
+
+    if (input.action === 'get_billing_permissions') {
+      const firmId = String(input.firmId ?? '')
+      const userId = String(input.userId ?? '')
+      if (!memberships.some((membership) => membership.firm_id === firmId)) return json(request, { error: 'Sociedade inválida.' }, 400)
+      const [{ data: entities, error: entityError }, { data: grants, error: grantError }, { data: finance, error: financeError }] = await Promise.all([
+        admin.from('billing_entities').select('id,name').eq('firm_id', firmId).eq('active', true).order('name'),
+        admin.from('access_grants').select('billing_entity_id').eq('firm_id', firmId).eq('user_id', userId).eq('principal_type', 'user').eq('resource_type', 'billing_entity').eq('active', true),
+        admin.from('billing_entity_financial_permissions').select('billing_entity_id,can_view_financials').eq('firm_id', firmId).eq('user_id', userId),
+      ])
+      if (entityError || grantError || financeError) throw entityError ?? grantError ?? financeError
+      const visible = new Set((grants ?? []).map((grant) => grant.billing_entity_id))
+      const financial = new Set((finance ?? []).filter((item) => item.can_view_financials).map((item) => item.billing_entity_id))
+      return json(request, { billingEntities: (entities ?? []).map((entity) => ({ billingEntityId: entity.id, name: entity.name, visible: visible.has(entity.id), financial: financial.has(entity.id) })) })
+    }
+
+    if (input.action === 'set_billing_permissions') {
+      const firmId = String(input.firmId ?? '')
+      const userId = String(input.userId ?? '')
+      const permissions = Array.isArray(input.permissions) ? input.permissions : []
+      if (!memberships.some((membership) => membership.firm_id === firmId)) return json(request, { error: 'Sociedade inválida.' }, 400)
+      const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
+      if (!target || ['owner', 'admin'].includes(target.role)) return json(request, { error: 'As permissões deste perfil são integrais.' }, 400)
+      const { data: entities } = await admin.from('billing_entities').select('id').eq('firm_id', firmId)
+      const allowedIds = new Set((entities ?? []).map((entity) => entity.id))
+      if (permissions.some((item) => !allowedIds.has(String(item.billingEntityId ?? '')) || (item.financial && !item.visible))) return json(request, { error: 'Permissões inválidas.' }, 400)
+      const { error: deleteGrantError } = await admin.from('access_grants').delete().eq('firm_id', firmId).eq('user_id', userId).eq('principal_type', 'user').eq('resource_type', 'billing_entity')
+      const { error: deleteFinanceError } = await admin.from('billing_entity_financial_permissions').delete().eq('firm_id', firmId).eq('user_id', userId)
+      if (deleteGrantError || deleteFinanceError) throw deleteGrantError ?? deleteFinanceError
+      const visibleRows = permissions.filter((item) => item.visible).map((item) => ({ firm_id: firmId, principal_type: 'user', user_id: userId, resource_type: 'billing_entity', billing_entity_id: item.billingEntityId, permission: target.role === 'billing' ? 'billing' : target.role === 'professional' ? 'edit' : 'view', created_by: authData.user.id }))
+      const financeRows = permissions.filter((item) => item.visible).map((item) => ({ firm_id: firmId, user_id: userId, billing_entity_id: item.billingEntityId, can_view_financials: Boolean(item.financial), created_by: authData.user.id }))
+      if (visibleRows.length) { const { error } = await admin.from('access_grants').insert(visibleRows); if (error) throw error }
+      if (financeRows.length) { const { error } = await admin.from('billing_entity_financial_permissions').insert(financeRows); if (error) throw error }
+      await admin.from('audit_log').insert({ firm_id: firmId, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_billing_permissions', entity_id: userId, new_data: { billing_entities: permissions.map((item) => ({ billing_entity_id: item.billingEntityId, visible: Boolean(item.visible), financial: Boolean(item.financial) })) } })
+      return json(request, { updated: true })
     }
 
     if (input.action === 'invite_user') {
