@@ -1,128 +1,56 @@
-# Estado do projeto
+# Estado do projecto
 
-Atualizado em: 2026-08-16
+Actualizado em: 2026-08-16
 
-- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. Versão local em desenvolvimento: `0.1.2`; produção permanece em `0.1.1` até ao próximo pedido de publicação.
+## Regra de entrega
 
-## Alterações locais pendentes — PIN inicial
+- Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
+- Versão local candidata: `0.2.0`.
+- Não fazer commit, push, migração remota ou publicação até aprovação expressa do proprietário.
+- A versão publicada permanece anterior a esta acumulação.
 
-- O perfil de Utilizadores inclui um histórico de acessos exclusivo do proprietário; logins consecutivos do mesmo utilizador são agrupados até entrar outro utilizador, mantendo o detalhe individual expansível.
-- A criação e a edição de utilizadores permitem definir, por Sociedade, a visibilidade operacional e a autorização independente para consultar valores financeiros; proprietário e administradores mantêm acesso integral.
-- A barra superior foi simplificada para usar as cores da sidebar e apresentar apenas o percurso menu/submenu, a insígnia do utilizador, alternância claro/escuro e actualização dos dados do ecrã sem recarregar a página.
-- A designação antiga “Sociedade faturante/facturante” foi bloqueada na interface dos dashboards e substituída por “Sociedade”; a migration seguinte corrige também a origem textual no Supabase. Cliente empresarial e profissional passam igualmente a “Empresa” e “Responsável” nesse read model.
+## Implementado localmente
 
-- A administração pode atribuir um PIN inicial visível, introduzido uma única vez, ao criar um acesso; a confirmação só é pedida ao utilizador quando escolhe o PIN definitivo.
-- Cada conta separa o nome visível, que aceita espaços e aparece durante a sessão, do identificador de utilizador usado exclusivamente no login.
-- Administradores podem suspender/reativar acessos, alterar perfis e redefinir um PIN; qualquer PIN redefinido volta a exigir alteração no login seguinte.
-- O perfil proprietário mantém acesso integral, não pode ser suspenso ou despromovido e o respetivo PIN só pode ser redefinido pelo próprio proprietário autenticado.
-- Após criar um acesso ou redefinir um PIN, a Administração gera localmente uma mensagem copiável para email/WhatsApp com link, utilizador e PIN temporário; a mensagem e o PIN não são persistidos.
-- A secção ativa e a sociedade selecionada ficam no URL, preservando a página após refresh e permitindo navegação anterior/seguinte.
-- A sidebar apresenta Carina Santos, Legal Team e Massive Search como submenus de Visão geral, com ligação direta ao dashboard da sociedade.
-- Clientes apresenta um dashboard consolidado; os submenus Particulares, Empresas e Mistos mostram agregações reais por perfil e preservam a seleção no URL. “Misto” significa possuir simultaneamente as duas vertentes.
-- No primeiro login, o utilizador fica num ecrã obrigatório para confirmar o PIN inicial e escolher um PIN diferente.
-- O estado `must_change_pin` é controlado no backend; enquanto estiver ativo, `private.has_scope_access` recusa acesso aos dados de negócio.
-- A Edge Function autenticada `change-pin` regista a alteração em `audit_log` e `security_events`, sem guardar qualquer PIN.
-- Validado localmente com TypeScript, 28 testes unitários e build de produção.
-- A migration `20260816153000_require_initial_pin_change.sql` foi aplicada ao Supabase remoto: 194 perfis de cliente foram criados e nenhum dos 6.789 movimentos ficou sem perfil.
-- As Edge Functions `admin-users` v4, `pin-auth` v3 e `change-pin` v1 foram publicadas com validação JWT e encontram-se activas.
-- O dashboard consolidado e os filtros Particulares/Empresas/Mistos deixaram de repetir a avaliação RLS em cada agregação: a consulta usa um conjunto materializado e um índice por perfil/data. Após a correcção, os 13 ecrãs autenticados de dashboards, listas, movimentos, utilizadores e importações concluíram sem timeout.
+- Interface **Carina - Legal**, navegação hierárquica, contraste claro/escuro, PWA e versão visível.
+- Dashboards e registos ligados aos dados reais existentes, com ocultação visual uniforme de valores financeiros.
+- Administração de utilizadores com nome visível, identificador independente, PIN inicial, alteração obrigatória, suspensão, reposição e mensagem copiável.
+- Perfis proprietário, administrador, gestor, financeiro, advogado, consulta e auditor; o Gestor continua limitado às Sociedades autorizadas e à permissão financeira independente.
+- Permissões editáveis por Sociedade, separando acesso operacional de acesso a valores financeiros.
+- Clientes com perfis particular e empresa; a mesma entidade pode possuir ambas as vertentes.
+- Documentos de cliente preparados para bucket privado, com metadados, hash, limite, URLs assinadas e validação obrigatória do conteúdo numa Edge Function; uploads directos ficam bloqueados.
+- Importação XLSX/CSV em análise, confirmação e gravação transaccional; linhas inválidas ficam preservadas para revisão.
+- Read models preparados para aplicar âmbito e mascarar valores financeiros no backend.
+- Criação e edição operacional de movimentos usam endpoints controlados; acções em massa de Sociedade, Responsável, processo, preço/hora, desconto, facturação, pagamento e arquivo são atómicas, exigem motivo e ficam auditadas.
+- Worker Cloudflare preparado com CSP e restantes cabeçalhos de segurança.
+- Carregamento diferido dos módulos; processador XLSX separado do bundle principal.
 
-## Atualização — identidade, acesso e PWA
+## Validação local confirmada
 
-- Nome visível alterado para **Carina - Legal** e monograma para **CS**.
-- Ícones PWA redesenhados com cantos concêntricos e margem adequada à máscara Apple.
-- Login principal por nome de utilizador e PIN de quatro algarismos; o PIN não é persistido no código nem na base de dados.
-- Utilizador proprietário `dabranches` configurado e autenticação validada no endpoint Supabase.
-- Bloqueio temporário após cinco tentativas falhadas e eventos de segurança auditáveis.
-- Administração permite criar utilizadores com perfil e configurar visibilidade e valores por sociedade faturante.
-- A estrutura backend separa visibilidade operacional (`access_grants`) da autorização financeira (`billing_entity_financial_permissions`). Os restantes read models financeiros ainda exigem mascaramento integral antes de atribuir perfis restritos a dados reais.
-- Botão de instalação PWA com instruções para iPhone/iPad, Windows e Android; atualização do service worker mantém aviso explícito de nova versão.
-- Verificação local concluída: segurança de ficheiros, lint, TypeScript, 27 testes unitários e build de produção.
+- Lint e TypeScript aprovados; 42/42 testes unitários aprovados; build de produção aprovado e sem source maps.
+- E2E: 24 testes aprovados em duas execuções limpas: 23 cenários funcionais/responsivos e 1 cenário isolado contra o preview real do build e respectivo service worker; 11 iPhones e 7 resoluções Windows cobertos.
+- Inspecção visual corrigiu a localização truncada em iPhone compacto; título completo confirmado sem overflow horizontal.
+- Auditoria de dependências de produção sem vulnerabilidades conhecidas.
+- Pesquisa de segredos no checkout e histórico sem segredo confirmado.
+- Dry-run do Worker Cloudflare aprovado, sem publicação.
 
-## Concluído nesta fase
+## Exige aprovação e execução remota
 
-- Repositório vazio clonado e remoto `origin` validado.
-- Fundação React/TypeScript/Vite/Tailwind criada.
-- Estrutura de frontend, Supabase e documentação criada.
-- Testes unitário e E2E mínimos adicionados.
-- Lint, teste unitário e build validados; smoke test E2E aprovado em Chromium.
-- Regras de exclusão para segredos, dados e documentos reais reforçadas.
-- Nenhuma credencial, dado real, migration remota ou deploy criado.
-- Ficheiro-base Excel analisado localmente e sem alteração; hash e estrutura documentados.
-- Importador local `.xlsx`/`.csv` com drag-and-drop, mapeamento, validação, pré-visualização e confirmação implementado.
-- Duração Excel convertida para minutos inteiros; valor bruto, texto e fórmula preservados para auditoria.
-- Fixture e testes de importação usam exclusivamente dados sintéticos anonimizados.
-- Dependências de produção auditadas após atualização do SheetJS 0.20.3: nenhuma vulnerabilidade conhecida.
-- Modelo PostgreSQL normalizado criado numa migration local, com tenancy, RLS, auditoria e reversão controlada de imports.
-- Testes pgTAP de constraints e RLS criados com dados sintéticos; execução pendente por ausência de Docker local.
-- O esquema e as migrations versionadas estão aplicados ao projeto Supabase remoto.
-- Motor de preços implementado em TypeScript e PostgreSQL, com precedência por especificidade, vigências, oito tipos de cobrança e arredondamento monetário.
-- Valores importado, calculado, efetivo e manual são preservados separadamente; não existe recálculo automático de histórico.
-- Descontos percentuais/fixos e overrides manuais auditáveis implementados; preview e RPC de recálculo excluem overrides e faturados por omissão.
-- Modal acessível de override e painel de confirmação do recálculo criados como componentes reutilizáveis, ainda sem ligação a dados reais.
-- Testes unitários do motor/UI e teste pgTAP comercial usam apenas dados sintéticos.
-- As duas migrations foram aplicadas com sucesso numa base PostgreSQL efémera para validação de sintaxe e dependências; os testes pgTAP continuam pendentes de uma stack Supabase local.
-- Interface visual profissional implementada com design system semântico, shell responsivo, sidebar recolhível e cabeçalho operacional.
-- Autenticação Supabase ligada ao frontend: login, logout, recuperação e redefinição de password, persistência de sessão e proteção integral do shell; não existe registo público.
-- O módulo opcional de documentos legais permanece preservado, mas a aceitação foi desativada por decisão do proprietário; o produto é uma ferramenta interna de gestão de clientes e controlo de faturação.
-- Aceitações legais versionadas, eventos de segurança, equipas e concessões por sociedade, cliente, processo, equipa ou utilizador foram modelados em migration com RLS.
-- Edge Functions isolam convites administrativos, publicação atómica de documentos legais e registo sanitizado de eventos; a `service_role` nunca é exposta ao frontend.
-- Bucket privado `legal-imports` declarado com limite, MIME types e políticas por sociedade; nenhuma alteração foi aplicada ao Supabase remoto.
-- CI de pull requests criado com lint, typecheck, testes, build, E2E, auditoria de dependências, deteção de segredos e bloqueio de ficheiros sensíveis.
-- Guias Windows, Supabase, Cloudflare, desenvolvimento e deployment preparados para trabalho consistente em vários computadores.
-- Frontend publicado no Cloudflare Worker `legal-carina` através de Workers Static Assets, com fallback de SPA, no endereço `https://legal-carina.dabranches.workers.dev` (versão `78a85830-f22f-4a0f-a80d-c4ca260ff2f7`).
-- Publicação validada no browser integrado: página de login carregada por HTTPS sem erros de consola; build sem source maps e sem padrões proibidos de service-role, tokens Cloudflare ou chaves privadas.
-- As três migrations foram aplicadas ao Supabase remoto `vtvvqyebigflgqccbqsw`; os advisors de segurança não reportaram problemas após a aplicação.
-- `dabranches@gmail.com` foi convidado e associado à organização Legal Carina com o papel backend `owner`.
-- Passkeys Beta foram ativadas no Supabase para o ambiente local com RP ID `localhost` e origem `http://localhost:5173`; o frontend suporta ativação e login por Windows Hello/Face ID/PIN do dispositivo.
-- O acesso inicial sem password usa um OTP temporário de oito algarismos; o frontend foi alinhado com a configuração remota e apresenta erros de passkey de forma explícita.
-- A experiência de instalação PWA em Windows e iPhone é um requisito permanente: deve manter manifest, service worker atualizável, safe areas iOS, comportamento standalone e autenticação por passkey nos domínios HTTPS definitivos.
-- Experiência iPhone/PWA implementada com `viewport-fit=cover`, safe areas reais nos quatro lados, `100dvh`, manifest, ícones iOS, service worker atualizável, modo escuro do sistema e redução de movimento.
-- Matriz iPhone local exclusiva do servidor de desenvolvimento criada para 11 modelos, distinguindo Dynamic Island/notch, 59/62/47 px, Safari/PWA, orientação e tema; 14 testes de matriz e um teste de service worker de produção foram aprovados.
-- Dashboard principal inclui 13 indicadores e 12 visualizações para o histórico 2018–2026, sempre identificadas como dados demonstrativos anonimizados.
-- Dashboards reutilizáveis de cliente, sociedade faturante e profissional foram criados.
-- Registos de trabalho têm tabela densa, filtros/chips, seleção, densidade, colunas, paginação e pré-confirmação de edição em massa.
-- O ficheiro-base `20260407 HORAS ESCRITÓRIO.xlsx` foi importado sem alteração, com SHA-256 `2d72dda625ee4a1302298483b0df21e32d50e7597cad77f6027f7dd75dc6548d`, no lote reversível `c6079a6a-504d-4c5d-9277-0092230ca37d`.
-- A carga contém 6.794 linhas efetivas: 5.934 limpas, 855 com avisos, 5 inválidas mantidas no relatório e 6.789 movimentos gravados; existem 194 clientes, 3 profissionais e 3 sociedades faturantes.
-- A distinção de clientes permanece obrigatória entre `individual` (Particular) e `company` (Sociedade/Empresa); dois clientes com categoria histórica variável ficaram assinalados para revisão.
-- Incoerências de faturação provenientes de importações auditadas entram sem bloqueio numa fila de revisão; 169 movimentos deste lote preservam exatamente os indicadores históricos contraditórios.
-- A página autenticada “Revisão de importações” apresenta contagens por tipo de aviso e as primeiras 100 linhas da fila, sem recalcular ou eliminar movimentos.
-- O dashboard geral está ligado a funções agregadas do Supabase sujeitas a RLS e apresenta horas, valores, faturação, recebimentos, clientes, arquivo e séries anuais/mensais reais.
-- Os dashboards de cliente, sociedade faturante e profissional estão ligados aos dados importados, com seleção da entidade, indicadores, evolução e movimentos recentes.
-- “Registos de trabalho” está ligado aos 6.789 movimentos reais através de uma função `SECURITY INVOKER`, com paginação no servidor, pesquisa, filtros, ordenação, seleção e fila de revisão, sempre sujeita a RLS.
-- “Utilizadores” foi criado dentro de “Administração”, com listagem de membros e convite por email; a Edge Function valida owner/admin no backend e mantém o registo público desativado.
-- As Edge Functions `admin-users` e `security-event` estão ativas no Supabase; `admin-users` exige JWT e papel owner/admin, enquanto `security-event` aceita eventos anónimos estritamente enumerados e valida o JWT nos eventos autenticados.
-- A falha RLS `permission denied for function has_scope_access` foi corrigida: funções auxiliares privadas têm execução apenas para `authenticated`, e o módulo legal opcional permite acesso quando não existem documentos publicados, voltando a exigir aceitação se forem publicados no futuro.
-- Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
-- A consulta autenticada de movimentos foi otimizada sem retirar RLS: a verificação legal passou a `initPlan`, a permissão de âmbito permanece numa função privada, e paginação/contagem deixaram de materializar todos os joins. A contagem dos 6.789 movimentos desceu de cerca de 2,17 s para 0,42 s e a resposta completa da primeira página mede cerca de 0,55 s.
-- O CI passou a autorizar explicitamente apenas os scripts de instalação de `esbuild` e `workerd`; instalação congelada, secret scan, lint, typecheck, 28 testes e build passam localmente.
-- O audit de dependências deixou de reportar vulnerabilidades conhecidas após fixar a dependência transitiva `nanoid` na versão corrigida 3.3.18.
-- O workspace pnpm declara explicitamente o pacote raiz e o projeto fixa `pnpm@11.19.0`, eliminando diferenças de resolução entre computadores, GitHub e Cloudflare.
-- A configuração versionada do Wrangler executa `pnpm build` antes do deploy. O pipeline Workers Builds foi igualmente configurado com `pnpm build` e recebeu apenas as variáveis públicas necessárias ao frontend; não foi configurada qualquer `service_role`.
+- Migrations `20260816142830_add_private_client_documents.sql` e `20260816180000` a `20260816198000`, incluindo leitura financeira protegida, importação confirmada, preços, permissões, PIN, documentos, remoção do gate legal, Gestor, auditoria, restrições de mutação, dados mestre por âmbito e escrita controlada de movimentos.
+- Edge Functions eventualmente alteradas, deploy do frontend/Worker e actualização das PWA instaladas.
 
-## Integrações conhecidas
+## Ainda aberto antes da publicação
 
-- GitHub: `dabranches-collab/legal-carina`.
-- Supabase: referência `vtvvqyebigflgqccbqsw`, ligado localmente e com importação auditada concluída.
-- Cloudflare: Worker `legal-carina` publicado em `https://legal-carina.dabranches.workers.dev`.
+- Executar pgTAP das novas políticas e importador num PostgreSQL/Supabase autorizado.
+- Os fixtures pgTAP foram alinhados com o modelo actual, mas esta estação não tem Docker para iniciar uma stack Supabase local.
+- Concluir a decisão de histórico para os pares de migrations com formatação extensa e para a migration de username/PIN aplicada fora do histórico.
+- Repetir a matriz e os fluxos críticos no preview remoto sem dados reais, depois de aplicar a configuração aprovada.
 
-## Próxima etapa
+## Riscos actuais
 
-Validar o CI e a publicação automática remotos. Depois, aplicar progressivamente o componente normalizado de tabelas às tabelas reais, começando por Registos de trabalho, sem degradar a paginação no servidor. Configurar também o domínio HTTPS definitivo e alinhar passkeys/Face ID/Windows Hello com esse domínio.
-
-## Riscos abertos
-
-- A autenticação está implementada; a passkey local ainda requer validação completa em Windows Hello e, depois da publicação segura, em Safari/iPhone com Face ID.
-- Avenças e pacotes de horas estão preparados no modelo, sem gestão de saldos/consumo neste MVP.
-- Pesquisa, notificações, exportação e ações em massa são ainda controlos visuais sem operação remota.
-- Os dashboards e a tabela de registos usam dados reais; edição individual/em massa permanece deliberadamente desativada até o fluxo de confirmação, autorização e audit log ser ligado à interface.
-- O Supabase remoto contém o esquema versionado e o lote de importação acima; o frontend Cloudflare está publicamente acessível, mas os dados continuam protegidos por autenticação e RLS.
-- A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
-- Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
-- A proteção contra passwords comprometidas continua desativada no Supabase Auth (único aviso de segurança atual dos advisors); avaliar ativação conforme o plano disponível.
-- Passkeys permanecem experimentais no Supabase; a configuração continua vinculada a `localhost` e terá de ser alterada para o domínio HTTPS público, exigindo novo registo das passkeys de produção.
-- A matriz iPhone foi validada em Chromium; permanece obrigatório um smoke test final em Safari iOS e hardware real antes da publicação, sobretudo para teclado, zoom do sistema, instalação e atualização do service worker.
-- Os 194 clientes do ficheiro-base estão no Supabase; dois exigem confirmação da categoria atual porque o histórico contém ambas as classificações.
-- O parser XLSX deve permanecer carregado sob demanda e sujeito a revisão contínua de dependências para ficheiros não confiáveis.
-- As asserções E2E passam, mas o invólucro Playwright/preview não encerra automaticamente nesta sessão Windows; validar novamente no futuro CI.
-- Docker não está disponível neste ambiente, logo a migration e os testes pgTAP ainda não foram executados num PostgreSQL local.
+- As funções SQL novas ainda não foram executadas na base remota.
+- O histórico remoto de migrations usa 11 versões que não existem com o mesmo carimbo no checkout; o `db push --dry-run` fica bloqueado até reconciliar os identificadores sem perder código.
+- A ocultação visual protege o ecrã; a autorização efectiva tem de permanecer no backend.
+- Passkeys exigem domínio HTTPS definitivo e validação em hardware Windows/iPhone.
+- Documentos só podem ser activados após confirmar bucket privado, políticas e validade curta das URLs.
+- A validação local dos documentos verifica assinatura, extensão, estrutura OOXML e nomes de conteúdo macro; a validação remota do objecto continua dependente da aplicação das novas políticas.
+- A aplicação não pode receber “PRONTA PARA PUBLICAÇÃO” antes dos testes remotos de RLS, Storage, perfis e bundle.

@@ -6,6 +6,8 @@
   --color-surface-subtle: #f0f1ef;
   --color-primary: #13263d;
   --color-primary-hover: #1b3654;
+  --color-navigation: #13263d;
+  --color-navigation-text: #f2cf76;
   --color-secondary: #17636a;
   --color-secondary-soft: #e5f0ef;
   --color-accent: #d9b75f;
@@ -67,9 +69,13 @@ button:disabled { cursor: not-allowed; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
-.app-shell-header { min-height: calc(4.5rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
+.app-shell-header { min-height: calc(6.5rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); padding-left: var(--safe-left); }
+.app-shell-sidebar [aria-current="page"] { color: var(--color-navigation) !important; }
+.financial-value { display: inline-block; min-width: 4ch; }
+html[data-financial-values="hidden"] .financial-value { color: transparent !important; font-size: 0 !important; letter-spacing: 0 !important; text-shadow: none !important; user-select: none; }
+html[data-financial-values="hidden"] .financial-value::after { content: "••••"; color: var(--color-text-primary); font-size: .875rem; font-weight: 700; letter-spacing: .08em; }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-qa-theme="light"]):not([data-theme="light"]) {
@@ -92,3 +98,23 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
 }
 @media (max-width: 480px) { .control, button { min-width: 2.75rem; min-height: 2.75rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
+@media print {
+  @page { size: landscape; margin: 12mm; }
+  body { background: #fff !important; color: #000 !important; }
+  aside, header, .table-tools, .table-pagination, button { display: none !important; }
+  main { margin: 0 !important; padding: 0 !important; }
+  .table-standard { border: 0 !important; box-shadow: none !important; }
+  .app-safe-fixed:has(.table-standard) { position: static !important; display: block !important; overflow: visible !important; padding: 0 !important; background: #fff !important; }
+  .print-table-heading { display: block !important; margin-bottom: 8mm; }
+  .print-table-heading h2 { font-size: 16pt; font-weight: 700; }
+  .print-table-heading p { margin-top: 2mm; font-size: 9pt; }
+  .table-standard > div { max-height: none !important; overflow: visible !important; }
+  .table-standard table { width: 100% !important; min-width: 0 !important; border-collapse: collapse !important; font-size: 8pt !important; }
+  .table-standard thead { display: table-header-group; position: static !important; }
+  .table-standard th, .table-standard td { position: static !important; width: auto !important; min-width: 0 !important; max-width: none !important; border: 1px solid #777 !important; color: #000 !important; background: #fff !important; }
+  .table-standard tr { break-inside: avoid; }
+}
+
+/* Table scroll must hand control back to the page at its boundaries. */
+.table-standard .overscroll-contain,
+main .overscroll-contain { overscroll-behavior: auto; }

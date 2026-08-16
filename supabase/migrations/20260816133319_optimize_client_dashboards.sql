@@ -63,3 +63,5 @@ $$;
 
 revoke all on function public.get_client_category_dashboard(text) from public, anon;
 grant execute on function public.get_client_category_dashboard(text) to authenticated;
+
+;

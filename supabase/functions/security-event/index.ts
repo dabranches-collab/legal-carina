@@ -1,8 +1,8 @@
-import { createClient } from 'npm:@supabase/supabase-js@2.112.0'
+import { createClient } from 'npm:@supabase/supabase-js@2.112.1'
 import { corsHeaders, isAllowedOrigin, json } from '../_shared/http.ts'
 
 const anonymousEvents = new Set(['login_failed', 'password_recovery_requested'])
-const authenticatedEvents = new Set(['login_succeeded', 'logout', 'password_changed', 'access_denied'])
+const authenticatedEvents = new Set(['login_succeeded', 'logout', 'password_changed', 'passkey_registered', 'access_denied'])
 
 async function sha256(value: string) {
   const bytes = new TextEncoder().encode(value)

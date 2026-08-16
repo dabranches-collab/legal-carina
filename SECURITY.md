@@ -8,6 +8,8 @@ Credenciais, `.env*` (exceto `.env.example` vazio), chaves, dumps, logs de clien
 
 Copiar `.env.example` para `.env.local`. Variáveis `VITE_*` são públicas no bundle: apenas URL e chave publishable/anon podem ser usadas. A `service_role` nunca pode entrar no browser, Git ou logs.
 
+O armazenamento local do browser contém apenas preferências não sensíveis de interface. Pesquisas, filtros, nomes de clientes e valores financeiros não são persistidos no `localStorage`.
+
 ## Supabase
 
 - RLS em todas as tabelas expostas e políticas com ownership explícito.

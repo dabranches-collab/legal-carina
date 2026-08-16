@@ -6,7 +6,7 @@ O serviço Worker `legal-carina` serve a aplicação React através de Workers S
 
 ## Decisão recomendada
 
-Foi adotado **Workers Static Assets**, sem criar um projeto Pages paralelo. `wrangler.jsonc` é a configuração versionada usada no deploy; `wrangler.proposed.jsonc` permanece apenas como registo da proposta inicial.
+Foi adoptado **Workers Static Assets**, sem criar um projecto Pages paralelo. `wrangler.jsonc` é a configuração versionada usada no deploy; `wrangler.proposed.jsonc` permanece apenas como registo da proposta inicial.
 
 ## Plano
 
@@ -21,13 +21,13 @@ Foi adotado **Workers Static Assets**, sem criar um projeto Pages paralelo. `wra
 - Comando de deploy: `npx wrangler deploy`.
 - Diretório raiz: `/`.
 - Branch de produção: `main`.
-- Variáveis de build obrigatórias: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_APP_ENV=production` e `VITE_REQUIRE_LEGAL_ACCEPTANCE=false`.
+- Variáveis de build obrigatórias: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` e `VITE_APP_ENV=production`.
 - Estas variáveis destinam-se apenas ao frontend; nunca configurar `SUPABASE_SERVICE_ROLE_KEY` no build.
 - O CI autoriza scripts de instalação apenas para `esbuild` e `workerd` em `pnpm-workspace.yaml`.
 
 ## Impacto
 
-O Worker serve a aplicação estática e esta contacta diretamente o Supabase autorizado. Não existem segredos Cloudflare no bundle; apenas variáveis públicas `VITE_*` fazem parte do build.
+O Worker serve a aplicação estática e esta contacta directamente o Supabase autorizado. Não existem segredos Cloudflare no bundle; apenas variáveis públicas `VITE_*` fazem parte do build.
 
 ## Rollback
 
@@ -35,7 +35,7 @@ Usar `wrangler rollback <VERSION_ID>` ou o dashboard para restaurar uma versão 
 
 ## Variáveis
 
-- local: `.env.local`, projeto Supabase local/staging.
+- local: `.env.local`, projecto Supabase local/staging.
 - preview: `VITE_APP_ENV=preview`, URL e chave publicável de staging; dados exclusivamente sintéticos.
 - production: `VITE_APP_ENV=production`, URL e chave publicável de produção.
 

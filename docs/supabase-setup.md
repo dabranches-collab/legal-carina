@@ -1,6 +1,6 @@
 # Configuração Supabase
 
-Projeto: `vtvvqyebigflgqccbqsw`.
+Projecto: `vtvvqyebigflgqccbqsw`.
 
 ## Local
 
@@ -17,11 +17,11 @@ supabase functions serve --env-file supabase\.env.local
 
 ## Documentos legais
 
-Não existem textos legais seed. Um administrador publica atomicamente as três versões aprovadas através de `admin-users` com a ação `publish_legal_documents`. Até isso acontecer todos os acessos a dados de negócio permanecem bloqueados.
+O gate de aceitação foi retirado do fluxo e das políticas, conforme a decisão do proprietário para esta aplicação interna de gestão de clientes e facturação. As tabelas históricas do modelo não são apresentadas nem condicionam o acesso; não existem textos legais seed.
 
 ## Utilizadores e tipos
 
-Utilizadores são convidados pela ação `invite_user`; não existe endpoint público de criação. Os códigos internos mapeiam para os perfis funcionais: owner=administrador, admin=gestor, billing=financeiro, professional=advogado, viewer=consulta e auditor=auditor.
+Não existe registo público. Administradores criam nome visível, username e PIN temporário, ou usam o fluxo de convite por email quando necessário. O primeiro login por PIN exige a sua substituição. Os códigos internos mapeiam para os perfis funcionais: owner=proprietário, admin=administrador, manager=gestor, billing=financeiro, professional=advogado, viewer=consulta e auditor=auditor.
 
 Depois de aplicar a migration numa branch/staging, gere novamente os tipos:
 
@@ -33,4 +33,4 @@ Antes de produção: executar pgTAP, `supabase db advisors`, rever RLS, configur
 
 ## Storage
 
-O original importado, se for conservado, usa o bucket privado `legal-imports`, com limite declarativo de 50 MB, MIME types `.xlsx`/`.csv` e políticas por `firm_id`. A migration apenas declara esta configuração: ainda não foi aplicada remotamente e exige revisão de retenção, tamanho e custos antes da promoção.
+O original importado, se for conservado, usa o bucket privado `legal-imports`, com limite declarado de 50 MB, MIME types `.xlsx`/`.csv` e políticas por `firm_id`. Documentos de clientes usam o bucket privado `client-documents`, ligações assinadas de 60 segundos e a Edge Function `client-documents`; escritas directas do browser ficam revogadas para impedir que se contorne a validação de conteúdo. Estas migrations ainda não foram aplicadas remotamente e exigem revisão de retenção, tamanho e custos antes da promoção.

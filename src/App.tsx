@@ -1,37 +1,31 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { AppShell } from './components/layout/AppShell'
 import { PlaceholderPage } from './components/feedback/PlaceholderPage'
-import { EntityDashboard } from './features/entities/EntityDashboard'
-import { ImportWizard } from './features/imports/ImportWizard'
-import { ImportReviewPage } from './features/imports/ImportReviewPage'
-import { WorkEntriesPage } from './features/work-entries/WorkEntriesPage'
-import { OverviewPage } from './pages/OverviewPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
 import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
-import { AdminPage } from './features/admin/AdminPage'
-import { AdminLandingPage } from './features/admin/AdminLandingPage'
-import { MasterDataPage } from './features/master-data/MasterDataPage'
 
-const placeholders: Partial<Record<ViewId, { title:string; description:string; icon: Parameters<typeof PlaceholderPage>[0]['icon'] }>> = {
-  matters:{ title:'Processos', description:'Gestão de assuntos, responsáveis, arquivo, movimentos e ligação ao cliente.', icon:'matters' },
-  invoices:{ title:'Facturação', description:'Preparação, emissão interna, agrupamento de movimentos e acompanhamento do estado das facturas.', icon:'invoice' },
-  payments:{ title:'Recebimentos', description:'Reconciliação de pagamentos, valores pendentes, vencidos e parcialmente recebidos.', icon:'payment' },
-  pricing:{ title:'Regras de preços', description:'Hierarquia comercial, vigências, descontos, overrides e pré-visualização de recálculos.', icon:'rules' },
-  reports:{ title:'Relatórios', description:'Análises autorizadas, vistas guardadas e exportações controladas.', icon:'reports' },
-  audit:{ title:'Auditoria', description:'Histórico imutável das alterações relevantes, com ator, data, motivo e valores antes/depois.', icon:'audit' },
-  admin:{ title:'Administração', description:'Utilizadores, papéis, sociedades, segurança, retenção e configurações do escritório.', icon:'admin' },
+const OverviewPage=lazy(()=>import('./pages/OverviewPage').then(module=>({default:module.OverviewPage})))
+const WorkEntriesPage=lazy(()=>import('./features/work-entries/WorkEntriesPage').then(module=>({default:module.WorkEntriesPage})))
+const EntityDashboard=lazy(()=>import('./features/entities/EntityDashboard').then(module=>({default:module.EntityDashboard})))
+const ImportWizard=lazy(()=>import('./features/imports/ImportWizard').then(module=>({default:module.ImportWizard})))
+const ImportReviewPage=lazy(()=>import('./features/imports/ImportReviewPage').then(module=>({default:module.ImportReviewPage})))
+const AdminPage=lazy(()=>import('./features/admin/AdminPage').then(module=>({default:module.AdminPage})))
+const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then(module=>({default:module.AdminLandingPage})))
+const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
+const operations=()=>import('./features/operations/OperationalPages')
+const MattersPage=lazy(()=>operations().then(module=>({default:module.MattersPage}))),InvoicesPage=lazy(()=>operations().then(module=>({default:module.InvoicesPage}))),PaymentsPage=lazy(()=>operations().then(module=>({default:module.PaymentsPage}))),PricingPage=lazy(()=>operations().then(module=>({default:module.PricingPage}))),ReportsPage=lazy(()=>operations().then(module=>({default:module.ReportsPage}))),AuditPage=lazy(()=>operations().then(module=>({default:module.AuditPage})))
+
+const validViews:ViewId[] = ['overview','work','clients','matters','billing','professionals','invoices','payments','pricing','imports','import-review','reports','audit','master-data','admin','admin-users']
+function readLocation() {
+  const params = new URLSearchParams(window.location.search)
+  const requested = params.get('view') as ViewId|null
+  const requestedClientType=params.get('clientType')
+  const requestedEntity=params.get('entity')
+  return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'?requestedEntity:null) as 'clients'|'billing_entities'|null }
 }
 
 export function AuthenticatedApplication() {
-  const validViews:ViewId[] = ['overview','work','clients','matters','billing','professionals','invoices','payments','pricing','imports','import-review','reports','audit','master-data','admin','admin-users']
-  const readLocation = () => {
-    const params = new URLSearchParams(window.location.search)
-    const requested = params.get('view') as ViewId|null
-    const requestedClientType=params.get('clientType')
-    const requestedEntity=params.get('entity')
-    return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'?requestedEntity:null) as 'clients'|'billing_entities'|null }
-  }
   const initial = readLocation()
   const [view, setView] = useState<ViewId>(initial.view)
   const [society,setSociety] = useState<string|null>(initial.society)
@@ -57,8 +51,14 @@ export function AuthenticatedApplication() {
   else if (view === 'master-data') content = <MasterDataPage initialSection={settingsEntity??'clients'} />
   else if (view === 'admin') content = <AdminLandingPage onNavigate={navigate} />
   else if (view === 'admin-users') content = <AdminPage />
-  else { const page = placeholders[view]!; content = <PlaceholderPage {...page} /> }
-  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><div key={refreshKey}>{content}</div></AppShell>
+  else if (view === 'matters') content = <MattersPage />
+  else if (view === 'invoices') content = <InvoicesPage />
+  else if (view === 'payments') content = <PaymentsPage />
+  else if (view === 'pricing') content = <PricingPage />
+  else if (view === 'reports') content = <ReportsPage />
+  else if (view === 'audit') content = <AuditPage />
+  else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
+  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card h-56 animate-pulse bg-surface-subtle" aria-label="A carregar módulo"/>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
 }
 
 export default function App() {

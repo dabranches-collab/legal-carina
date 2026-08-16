@@ -1,10 +1,10 @@
 # Legal Carina
 
-Aplicação de gestão de horas, clientes, faturação e recebimentos para um escritório de advogados.
+Aplicação de gestão de horas, clientes, facturação e recebimentos para um escritório de advogados.
 
 ## Stack
 
-React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwright. Supabase será o backend e o serviço Cloudflare `legal-carina` será o destino de alojamento, sem deploy nesta fase.
+React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwright. Supabase é o backend e o serviço Cloudflare `legal-carina` é o destino de alojamento. A versão candidata actual permanece apenas local até aprovação expressa.
 
 ## Desenvolvimento local
 
@@ -16,7 +16,7 @@ Copy-Item .env.example .env.local
 pnpm dev
 ```
 
-Preencher `.env.local` apenas com a URL e a chave pública/publishable do projeto Supabase. Nunca usar a `service_role` no frontend.
+Preencher `.env.local` apenas com a URL e a chave pública/publishable do projecto Supabase. Nunca usar a `service_role` no frontend.
 
 ## Verificação
 
@@ -32,4 +32,4 @@ Consulte [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md) e [DEVEL
 
 ## Importação
 
-O analisador local aceita `.xlsx` e `.csv`, calcula SHA-256 e apresenta um relatório antes de qualquer gravação. A importação remota está desativada até existir backend com RLS e bucket privado. Consulte [IMPORT_SPECIFICATION.md](IMPORT_SPECIFICATION.md).
+O analisador local aceita `.xlsx` e `.csv`, calcula SHA-256, rejeita conteúdo activo e apresenta um relatório antes de qualquer gravação. A comparação com os dados existentes e a confirmação transaccional no Supabase estão preparadas localmente, mas as migrations candidatas ainda não foram aplicadas remotamente. Consulte [IMPORT_SPECIFICATION.md](IMPORT_SPECIFICATION.md).

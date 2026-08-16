@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react'
 
-export type IconName = 'overview' | 'clock' | 'clients' | 'matters' | 'building' | 'people' | 'invoice' | 'payment' | 'rules' | 'import' | 'reports' | 'audit' | 'admin' | 'search' | 'calendar' | 'bell' | 'logout' | 'menu' | 'chevron' | 'filter' | 'download' | 'columns' | 'more' | 'trend' | 'warning' | 'check' | 'close' | 'moon' | 'sun' | 'refresh'
+export type IconName = 'overview' | 'clock' | 'clients' | 'matters' | 'building' | 'people' | 'invoice' | 'payment' | 'rules' | 'import' | 'reports' | 'audit' | 'admin' | 'search' | 'calendar' | 'bell' | 'logout' | 'menu' | 'chevron' | 'filter' | 'download' | 'columns' | 'more' | 'trend' | 'warning' | 'check' | 'close' | 'moon' | 'sun' | 'refresh' | 'eye' | 'eyeOff'
 
 const paths: Record<IconName, React.ReactNode> = {
   overview: <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></>,
@@ -23,6 +23,8 @@ const paths: Record<IconName, React.ReactNode> = {
   more: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>, trend: <path d="m3 17 6-6 4 4 8-9M15 6h6v6"/>,
   warning: <><path d="M12 3 2 21h20z"/><path d="M12 9v5M12 18h.01"/></>, check: <path d="m4 12 5 5L20 6"/>, close: <path d="m6 6 12 12M18 6 6 18"/>,
   moon: <path d="M20 15.5A8 8 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5z"/>, sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></>, refresh: <><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M18.5 9A7 7 0 0 0 6 6.5L4 9M5.5 15A7 7 0 0 0 18 17.5l2-2.5"/></>,
+  eye: <><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></>,
+  eyeOff: <><path d="m3 3 18 18M10.6 6.2A10 10 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-2.1 2.8M6.6 6.6C3.6 8.4 2 12 2 12s3.5 6 10 6a10 10 0 0 0 4.1-.8M9.9 9.9a3 3 0 0 0 4.2 4.2"/></>,
 }
 
 export function Icon({ name, ...props }: { name: IconName } & SVGProps<SVGSVGElement>) {

@@ -710,4 +710,4 @@ grant insert, update on public.firm_members, public.billing_entities, public.cli
   public.work_entries, public.rate_rules, public.manual_overrides, public.invoices,
   public.invoice_lines, public.payments, public.imports, public.import_rows
 to authenticated;
-grant update on public.law_firms to authenticated;
+grant update on public.law_firms to authenticated;;

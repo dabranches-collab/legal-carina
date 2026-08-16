@@ -62,3 +62,5 @@ grant execute on function public.get_entity_dashboard(text,uuid) to authenticate
 
 comment on table public.billing_entity_financial_permissions is
   'Autorização explícita e independente para consultar valores financeiros por sociedade.';
+
+;

@@ -1,8 +1,8 @@
-import { createClient } from 'npm:@supabase/supabase-js@2.112.0'
+import { createClient } from 'npm:@supabase/supabase-js@2.112.1'
 import { corsHeaders, isAllowedOrigin, json } from '../_shared/http.ts'
 
-const MAX_ATTEMPTS = 5
 const LOCK_MINUTES = 15
+const IP_MAX_ATTEMPTS = 25
 const USERNAME_PATTERN = /^[a-z0-9][a-z0-9._-]{2,31}$/
 
 function normalizeUsername(value: unknown) {
@@ -32,7 +32,8 @@ Deno.serve(async (request) => {
   const url = Deno.env.get('SUPABASE_URL')
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
   const publishableKey = Deno.env.get('SUPABASE_ANON_KEY')
-  if (!url || !serviceKey || !publishableKey) return json(request, { error: 'Serviço de acesso indisponível.' }, 503)
+  const eventSalt = Deno.env.get('SECURITY_EVENT_HASH_SALT')
+  if (!url || !serviceKey || !publishableKey || !eventSalt) return json(request, { error: 'Serviço de acesso indisponível.' }, 503)
 
   const genericError = 'Nome de utilizador ou PIN inválido.'
   try {
@@ -42,6 +43,13 @@ Deno.serve(async (request) => {
     if (!USERNAME_PATTERN.test(username) || !/^\d{4}$/.test(pin)) return json(request, { error: genericError }, 401)
 
     const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
+    const ipHash = await hashIp(request)
+    if (ipHash) {
+      const since = new Date(Date.now() - LOCK_MINUTES * 60_000).toISOString()
+      const { count, error: rateError } = await admin.from('security_events').select('id', { count:'exact', head:true }).eq('event_type','login_failed').eq('ip_hash',ipHash).gte('occurred_at',since)
+      if (rateError) throw rateError
+      if ((count ?? 0) >= IP_MAX_ATTEMPTS) return json(request, { error: 'Acesso temporariamente bloqueado. Tente novamente mais tarde.' }, 429)
+    }
     const { data: credential, error: credentialError } = await admin.from('user_login_credentials')
       .select('id,user_id,firm_id,auth_email,failed_attempts,locked_until,must_change_pin')
       .eq('username', username).maybeSingle()
@@ -52,35 +60,30 @@ Deno.serve(async (request) => {
       return json(request, { error: 'Acesso temporariamente bloqueado. Tente novamente mais tarde.' }, 429)
     }
 
-    const { data: membership } = await admin.from('firm_members').select('active')
+    const { data: membership, error: membershipError } = await admin.from('firm_members').select('active')
       .eq('firm_id', credential.firm_id).eq('user_id', credential.user_id).maybeSingle()
+    if (membershipError) throw membershipError
     if (!membership?.active) return json(request, { error: genericError }, 401)
 
     const authClient = createClient(url, publishableKey, { auth: { persistSession: false, autoRefreshToken: false } })
     const password = await deriveAuthPassword(credential.id, pin)
     const { data, error } = await authClient.auth.signInWithPassword({ email: credential.auth_email, password })
     if (error || !data.session || data.user.id !== credential.user_id) {
-      const failedAttempts = Math.min(Number(credential.failed_attempts ?? 0) + 1, 20)
-      const shouldLock = failedAttempts >= MAX_ATTEMPTS
-      await admin.from('user_login_credentials').update({
-        failed_attempts: shouldLock ? 0 : failedAttempts,
-        last_failed_at: new Date().toISOString(),
-        locked_until: shouldLock ? new Date(Date.now() + LOCK_MINUTES * 60_000).toISOString() : null,
-      }).eq('id', credential.id)
-      await admin.from('security_events').insert({
-        user_id: credential.user_id, event_type: 'login_failed', ip_hash: await hashIp(request),
-        user_agent: request.headers.get('user-agent'), metadata: { auth_method: 'pin' },
-      })
+      const { data:failure,error:failureError }=await admin.rpc('register_pin_login_failure',{p_credential_id:credential.id,p_ip_hash:ipHash,p_user_agent:request.headers.get('user-agent')})
+      if(failureError)throw failureError
+      const shouldLock=Boolean(failure?.locked)
       return json(request, { error: shouldLock ? 'Acesso temporariamente bloqueado. Tente novamente mais tarde.' : genericError }, shouldLock ? 429 : 401)
     }
 
-    await admin.from('user_login_credentials').update({
+    const { error: successUpdateError } = await admin.from('user_login_credentials').update({
       failed_attempts: 0, locked_until: null, last_success_at: new Date().toISOString(),
     }).eq('id', credential.id)
-    await admin.from('security_events').insert({
+    if (successUpdateError) throw successUpdateError
+    const { error: successEventError } = await admin.from('security_events').insert({
       user_id: credential.user_id, event_type: 'login_succeeded',
       ip_hash: await hashIp(request), user_agent: request.headers.get('user-agent'), metadata: { auth_method: 'pin' },
     })
+    if (successEventError) throw successEventError
     return json(request, {
       session: { access_token: data.session.access_token, refresh_token: data.session.refresh_token },
       mustChangePin: Boolean(credential.must_change_pin),

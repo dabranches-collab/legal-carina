@@ -5,23 +5,23 @@ Todas as tabelas de negócio incluem `firm_id`; tabelas mutáveis incluem timest
 | Tabela | Finalidade | Campos e regras principais |
 | --- | --- | --- |
 | `law_firms` | Escritório/tenant | nome, ativo, timestamps |
-| `firm_members` | Associação utilizador-escritório | papel: owner/admin/billing/professional/viewer; associação única |
-| `billing_entities` | Sociedade faturante | nome único por escritório; dados legais e contacto |
+| `firm_members` | Associação utilizador-escritório | papel: owner/admin/manager/billing/professional/viewer/auditor; associação única |
+| `billing_entities` | Sociedade | nome único por escritório; dados legais e contacto |
 | `clients` | Cliente | código único; tipo individual/company; identidade e contacto |
 | `client_contacts` | Contactos do cliente | nome obrigatório; email, telefone, papel e notas |
-| `professionals` | Profissional histórico/ativo | utilizador Auth opcional; tarifa padrão `numeric(12,2)` |
+| `professionals` | Responsável histórico/activo | utilizador Auth opcional; tarifa padrão `numeric(12,2)` |
 | `service_types` | Classificação futura de serviço | nome único, descrição, ativo |
-| `matters` | Processo/dossier/assunto | cliente obrigatório; profissional/sociedade opcionais; lifecycle e arquivo |
-| `work_entries` | Movimento de trabalho | data, cliente, profissional, minutos, preços/montantes, estados e origem |
+| `matters` | Processo/dossier/assunto | cliente obrigatório; responsável/Sociedade opcionais; ciclo de vida e arquivo |
+| `work_entries` | Movimento de trabalho | data, cliente, responsável, minutos, preços/montantes, estados e origem |
 | `rate_rules` | Resolução de preços | tipo de cobrança, escopo exclusivo, preço, moeda, vigência, prioridade, ativo e autor |
 | `discounts` | Descontos autorizados | percentual/fixo; âmbito movimento/cliente/período; vigência, motivo e autorizador |
 | `manual_overrides` | Justificação de exceções | valores anterior/calculado/override em JSONB; autor e eventual reversão |
-| `invoices` | Controlo interno de faturas | número por sociedade; totais `numeric(14,2)` e estado |
-| `invoice_lines` | Linhas de fatura | quantidade, preço, desconto e total exato; movimento opcional |
+| `invoices` | Controlo interno de facturas | número por Sociedade; totais `numeric(14,2)` e estado |
+| `invoice_lines` | Linhas de factura | quantidade, preço, desconto e total exacto; movimento opcional |
 | `payments` | Recebimentos | data, valor positivo, moeda, método e referência |
 | `imports` | Lote de importação | nome/hash/tamanho, contagens, estado e timestamps |
 | `import_rows` | Linha auditável do ficheiro | bruto/normalizado/erros/avisos JSONB, hash, estado e movimento |
-| `audit_log` | Histórico imutável da aplicação | ator, ação, entidade, antes/depois JSONB e timestamp |
+| `audit_log` | Histórico imutável da aplicação | actor, acção, entidade, antes/depois JSONB e timestamp |
 
 ## Mapeamentos históricos
 
@@ -37,12 +37,12 @@ Todas as tabelas de negócio incluem `firm_id`; tabelas mutáveis incluem timest
 
 - `imported_hourly_rate`: preço preservado da origem.
 - `calculated_hourly_rate`: resultado do motor de regras.
-- `effective_hourly_rate`: preço efetivamente usado.
+- `effective_hourly_rate`: preço efectivamente usado.
 - `calculated_amount`: montante calculado sem override.
 - `effective_amount`: montante final, protegido por override auditável.
 - `imported_amount`: montante original do Excel/CSV, que não é recalculado automaticamente.
 - `manual_amount`: montante introduzido por override manual.
-- `pre_discount_amount`, `calculated_discount_amount`, `effective_discount_amount`: base e desconto proposto/efetivo.
+- `pre_discount_amount`, `calculated_discount_amount`, `effective_discount_amount`: base e desconto proposto/efectivo.
 - `pricing_rule_id`, `charge_type`, `calculation_version`, `last_calculated_at`: proveniência do último cálculo confirmado.
 
 Valores vazios permanecem `null`; zero significa um valor conhecido igual a zero.

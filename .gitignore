@@ -17,6 +17,7 @@ dist-ssr
 !.env.example
 .dev.vars
 .wrangler/
+.tmp/
 coverage/
 test-results/
 playwright-report/

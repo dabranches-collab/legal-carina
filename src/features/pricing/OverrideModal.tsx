@@ -40,8 +40,8 @@ export function OverrideModal({ open, fieldLabel, originalValue, calculatedValue
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">Alteração protegida</p>
         <h2 id="override-title" className="mt-2 font-display text-2xl font-semibold">Alterar {fieldLabel}</h2>
         <dl className="mt-6 grid gap-3 rounded-xl bg-surface-subtle p-4 sm:grid-cols-2">
-          <div><dt className="text-xs text-text-secondary">Valor original</dt><dd className="font-semibold">{originalValue}</dd></div>
-          <div><dt className="text-xs text-text-secondary">Valor calculado</dt><dd className="font-semibold">{calculatedValue}</dd></div>
+          <div><dt className="text-xs text-text-secondary">Valor original</dt><dd className="financial-value font-semibold">{originalValue}</dd></div>
+          <div><dt className="text-xs text-text-secondary">Valor calculado</dt><dd className="financial-value font-semibold">{calculatedValue}</dd></div>
         </dl>
         <label className="mt-5 block text-sm font-semibold" htmlFor="override-value">Novo valor</label>
         <input id="override-value" required value={newValue} onChange={(event) => setNewValue(event.target.value)}

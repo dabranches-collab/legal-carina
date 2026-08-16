@@ -1,10 +1,10 @@
 # Modelo de dados PostgreSQL
 
-## Objetivo
+## Objectivo
 
-O modelo normaliza clientes, assuntos, trabalho, preços, faturação interna, pagamentos, importações e auditoria. O Excel não é copiado para uma tabela única. Todos os dados de negócio são isolados por `firm_id`.
+O modelo normaliza clientes, assuntos, trabalho, preços, facturação interna, pagamentos, importações e auditoria. O Excel não é copiado para uma tabela única. Todos os dados de negócio são isolados por `firm_id`.
 
-O modelo não implementa faturação fiscal certificada e não cria processos durante a primeira importação. `work_entries.matter_id` permanece opcional.
+O modelo não implementa facturação fiscal certificada e não cria processos durante a primeira importação. `work_entries.matter_id` permanece opcional.
 
 ## Diagrama ER
 
@@ -55,25 +55,25 @@ erDiagram
 ## Integridade e auditoria
 
 - `effective_hourly_rate` e `effective_amount` só mudam quando existe `manual_overrides` correspondente na mesma transação.
-- Apenas owner/admin/billing pode mudar campos financeiros, faturação ou pagamento.
-- Trabalho faturado não pode ser eliminado, mesmo por acesso administrativo direto.
-- Alterações em trabalho, overrides, faturas, linhas, pagamentos e importações alimentam `audit_log`.
-- Alterações em descontos também alimentam `audit_log`; o recálculo é explícito e exclui por omissão overrides, faturados e cancelados.
-- `private.revert_import(uuid)` reverte lotes apenas para papéis autorizados e quando não existem linhas faturadas.
+- Apenas owner/admin/billing pode mudar campos financeiros, facturação ou pagamento.
+- Trabalho facturado não pode ser eliminado, mesmo por acesso administrativo directo.
+- Alterações em trabalho, overrides, facturas, linhas, pagamentos e importações alimentam `audit_log`.
+- Alterações em descontos também alimentam `audit_log`; o recálculo é explícito e exclui por omissão overrides, facturados e cancelados.
+- `private.revert_import(uuid)` reverte lotes apenas para papéis autorizados e quando não existem linhas facturadas.
 - Não existem políticas `DELETE` para clientes da aplicação.
 
 ## Impacto da migration
 
 Cria os schemas/tabelas/índices/funções/triggers/políticas descritos, mas não move dados nem cria utilizadores, sociedades, clientes ou profissionais. O schema `public` é explicitamente concedido a `authenticated` apenas nas operações previstas; `anon` não recebe acesso.
 
-A versão local está configurada com PostgreSQL 17. Antes do deploy deve confirmar-se `show server_version` no projeto remoto e ajustar `supabase/config.toml` se necessário.
+A versão local está configurada com PostgreSQL 17. Antes do deploy deve confirmar-se `show server_version` no projecto remoto e ajustar `supabase/config.toml` se necessário.
 
 ## Estratégia de reversão
 
 Antes do primeiro deploy:
 
-1. Confirmar backup/PITR do projeto e executar a migration numa branch/staging.
+1. Confirmar backup/PITR do projecto e executar a migration numa branch/staging.
 2. Executar pgTAP e advisors.
 3. Só promover após revisão do diagrama e políticas.
 
-Como a migration ainda não foi aplicada, a reversão atual é simplesmente não a promover. Depois de aplicada, preferir uma migration corretiva. Uma remoção integral só é segura antes de existirem dados e deve eliminar, por ordem, políticas/triggers, tabelas dependentes, funções `private` e finalmente o schema privado. Nunca executar `drop ... cascade` em produção sem inventário e backup verificado.
+Como a migration ainda não foi aplicada, a reversão actual é simplesmente não a promover. Depois de aplicada, preferir uma migration correctiva. Uma remoção integral só é segura antes de existirem dados e deve eliminar, por ordem, políticas/triggers, tabelas dependentes, funções `private` e finalmente o schema privado. Nunca executar `drop ... cascade` em produção sem inventário e backup verificado.

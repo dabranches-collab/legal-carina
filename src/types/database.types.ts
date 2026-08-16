@@ -1,21 +1,10 @@
 // Typed Data API contract for the authentication slice.
 // Regenerate from the linked project after applying migrations; see docs/supabase-setup.md.
-export interface LegalDocumentRow {
-  id: string
-  document_type: 'terms_of_service' | 'privacy_policy' | 'gdpr_terms'
-  version: string
-  title: string
-  body_markdown: string
-  effective_at: string
-  content_hash: string
-  status: 'draft' | 'published' | 'retired'
-}
-
 export interface FirmMemberRow {
   id: string
   firm_id: string
   user_id: string
-  role: 'owner' | 'admin' | 'billing' | 'professional' | 'viewer' | 'auditor'
+  role: 'owner' | 'admin' | 'manager' | 'billing' | 'professional' | 'viewer' | 'auditor'
   active: boolean
 }
 
@@ -24,18 +13,17 @@ export type ApplicationRole = FirmMemberRow['role']
 export interface Database {
   public: {
     Tables: {
-      legal_documents: { Row: LegalDocumentRow; Insert: never; Update: never; Relationships: [] }
-      user_legal_acceptances: {
-        Row: { id: string; user_id: string; legal_document_id: string; document_type: string; document_version: string; accepted_at: string; evidence: Record<string, unknown> }
-        Insert: never; Update: never; Relationships: []
-      }
       firm_members: { Row: FirmMemberRow; Insert: never; Update: never; Relationships: [] }
       security_events: { Row: Record<string, unknown>; Insert: Record<string, unknown>; Update: never; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {
-      get_pending_legal_documents: { Args: Record<PropertyKey, never>; Returns: LegalDocumentRow[] }
-      accept_legal_documents: { Args: { target_document_ids: string[]; acceptance_evidence: Record<string, unknown> }; Returns: number }
+      get_my_access_status: { Args: Record<PropertyKey, never>; Returns: Array<{ active:boolean; must_change_pin:boolean }> }
+      get_work_entry_form_options: { Args: Record<PropertyKey, never>; Returns: Record<string, unknown> }
+      get_work_entry_for_edit: { Args: { p_work_entry_id:string }; Returns: Record<string, unknown>|null }
+      create_work_entry: { Args: { p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_billing_entity_id:string|null; p_activity_description:string; p_duration_minutes:number; p_observations:string|null }; Returns:string }
+      update_work_entry_details: { Args: { p_work_entry_id:string; p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_activity_description:string; p_observations:string|null }; Returns:undefined }
+      bulk_update_work_entries: { Args: { p_work_entry_ids:string[]; p_action:string; p_value:unknown; p_reason:string }; Returns:number }
     }
     Enums: Record<string, never>
     CompositeTypes: Record<string, never>

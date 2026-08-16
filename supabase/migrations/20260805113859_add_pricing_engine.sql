@@ -509,4 +509,4 @@ revoke all on function private.recalculate_work_entries(uuid[], boolean, boolean
 grant execute on function private.resolve_rate_rule(uuid, date, uuid, uuid, uuid, uuid, uuid) to authenticated;
 grant execute on function private.calculate_work_entry(uuid) to authenticated;
 grant execute on function private.apply_work_entry_override(uuid, text, jsonb, text) to authenticated;
-grant execute on function private.recalculate_work_entries(uuid[], boolean, boolean) to authenticated;
+grant execute on function private.recalculate_work_entries(uuid[], boolean, boolean) to authenticated;;

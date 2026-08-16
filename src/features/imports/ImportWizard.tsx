@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react'
-import { canonicalFields, type CanonicalField, type WorkbookAnalysis } from './types'
+import { canonicalFields, type CanonicalField, type ImportRow, type WorkbookAnalysis } from './types'
 import { fieldLabels } from './mapping'
+import { supabase } from '../../lib/supabase'
 
 const formatCurrency = (value: number) => new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value)
 
@@ -13,6 +14,8 @@ export function ImportWizard() {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
   const [confirmed, setConfirmed] = useState(false)
+  const [importResult,setImportResult]=useState<{importId:string;importedRows:number;invalidRows:number;status:string}>()
+  const [remoteValidated,setRemoteValidated]=useState(false)
 
   async function run(nextFile: File, selectedSheet?: string, mappingOverrides?: Partial<Record<CanonicalField, number | null>>) {
     setBusy(true); setError(''); setConfirmed(false); setProgress(15)
@@ -20,6 +23,18 @@ export function ImportWizard() {
       setProgress(40)
       const { analyzeFile } = await import('./analyzeFile')
       const result = await analyzeFile(nextFile, { selectedSheet, maxFileSizeMb: maxSize, mappingOverrides })
+      setProgress(70);setRemoteValidated(false)
+      if(supabase){
+        const {data:remote,error:remoteError}=await supabase.rpc('analyze_import_candidates',{p_rows:result.rows})
+        if(remoteError)throw new Error(`A validação local terminou, mas a comparação segura com a base de dados falhou: ${remoteError.message}`)
+        const comparison=remote as {duplicateSourceRows:number[];existingClients:number;newClients:number}
+        const duplicateRows=new Set(comparison.duplicateSourceRows)
+        const fingerprintCounts=new Map<string,number>();result.rows.forEach(row=>fingerprintCounts.set(row.fingerprint,(fingerprintCounts.get(row.fingerprint)??0)+1))
+        result.rows=result.rows.map(row=>duplicateRows.has(row.sourceRow)?{...row,issues:[...row.issues,{severity:'warning' as const,code:'existing_duplicate',message:'Existe um movimento equivalente na base de dados.'}]}:row)
+        const hasError=(row:ImportRow)=>row.issues.some(issue=>issue.severity==='error'),hasWarning=(row:ImportRow)=>row.issues.some(issue=>issue.severity==='warning')
+        result.summary={...result.summary,validRows:result.rows.filter(row=>!hasError(row)&&!hasWarning(row)).length,warningRows:result.rows.filter(row=>!hasError(row)&&hasWarning(row)).length,possibleDuplicates:result.rows.filter(row=>duplicateRows.has(row.sourceRow)||(fingerprintCounts.get(row.fingerprint)??0)>1).length,existingClients:comparison.existingClients,newClients:comparison.newClients}
+        setRemoteValidated(true)
+      }
       setProgress(100); setAnalysis(result); setFile(nextFile)
     } catch (reason) {
       setAnalysis(undefined); setProgress(0); setError(reason instanceof Error ? reason.message : 'Não foi possível analisar o ficheiro.')
@@ -28,7 +43,20 @@ export function ImportWizard() {
 
   function selected(event: ChangeEvent<HTMLInputElement>) { const next = event.target.files?.[0]; if (next) void run(next) }
   function dropped(event: DragEvent<HTMLDivElement>) { event.preventDefault(); const next = event.dataTransfer.files[0]; if (next) void run(next) }
-  function cancel() { setFile(undefined); setAnalysis(undefined); setProgress(0); setError(''); setConfirmed(false); if (inputRef.current) inputRef.current.value = '' }
+  function cancel() { setFile(undefined); setAnalysis(undefined); setProgress(0); setError(''); setConfirmed(false); setImportResult(undefined); setRemoteValidated(false); if (inputRef.current) inputRef.current.value = '' }
+
+  async function commit(){
+    if(!confirmed||!remoteValidated||!analysis||!file||!supabase)return
+    setBusy(true);setError('');setProgress(10)
+    try{
+      const payload={fileName:analysis.fileName,fileSize:analysis.fileSize,sha256:analysis.sha256,selectedSheet:analysis.selectedSheet,summary:analysis.summary,rows:analysis.rows,clientDirectory:analysis.clientDirectory}
+      setProgress(35)
+      const {data,error:failure}=await supabase.rpc('commit_validated_import',{p_payload:payload})
+      if(failure)throw failure
+      setProgress(100);setImportResult(data as {importId:string;importedRows:number;invalidRows:number;status:string})
+    }catch(reason){setProgress(0);setError(reason instanceof Error?reason.message:'Não foi possível concluir a importação.')}
+    finally{setBusy(false)}
+  }
 
   const summary = analysis?.summary
   return (
@@ -48,7 +76,7 @@ export function ImportWizard() {
         </div>
         <div className="rounded-2xl border border-border bg-surface-subtle p-6">
           <label htmlFor="max-size" className="text-sm font-semibold">Limite configurável</label>
-          <div className="mt-2 flex items-center gap-2"><input id="max-size" type="number" min="1" max="100" value={maxSize} onChange={(event) => setMaxSize(Number(event.target.value))} className="control w-24 px-3 py-2" /><span>MB</span></div>
+          <div className="mt-2 flex items-center gap-2"><input id="max-size" type="number" min="1" max="50" value={maxSize} onChange={(event) => setMaxSize(Math.min(50,Math.max(1,Number(event.target.value))))} className="control w-24 px-3 py-2" /><span>MB</span></div>
           <p className="mt-4 break-all text-xs leading-5 text-text-secondary">{file ? `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB` : 'Nenhum ficheiro seleccionado.'}</p>
         </div>
       </div>
@@ -68,11 +96,12 @@ export function ImportWizard() {
           ['Linhas analisadas', summary.totalRows], ['Válidas', summary.validRows], ['Com avisos', summary.warningRows], ['Inválidas', summary.invalidRows],
           ['Clientes novos', summary.newClients], ['Clientes existentes', summary.existingClients], ['Possíveis duplicados', summary.possibleDuplicates], ['Sem preço', summary.withoutPrice],
           ['Facturadas', summary.invoicedRows], ['Pagas', summary.paidRows], ['Arquivadas', summary.archivedRows], ['Impacto financeiro', formatCurrency(summary.financialImpact)],
-        ].map(([label, value]) => <div key={label} className="card rounded-xl p-4"><p className="text-xs text-text-secondary">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p></div>)}</div><p className="mt-3 text-sm text-text-secondary">{analysis.ignoredRows} linhas sem data, cliente e actividade foram ignoradas.</p></div>
+        ].map(([label, value]) => <div key={label} className="card rounded-xl p-4"><p className="text-xs text-text-secondary">{label}</p><p className={`${label==='Impacto financeiro'?'financial-value ':''}mt-1 text-xl font-semibold`}>{value}</p></div>)}</div><p className="mt-3 text-sm text-text-secondary">{analysis.ignoredRows} linhas sem data, cliente e actividade foram ignoradas. A folha CLIENTES contém {analysis.clientDirectory.length} entradas reconhecidas; apenas categorias dedutíveis serão criadas automaticamente.</p></div>
 
         <div className="card overflow-x-auto"><table className="min-w-full text-left text-xs"><caption className="p-4 text-left font-display text-lg font-semibold">Pré-visualização local (primeiras 8 linhas)</caption><thead className="bg-surface-subtle"><tr>{analysis.preview[0].map((header, index) => <th key={`${header}-${index}`} className="whitespace-nowrap px-3 py-2">{header}</th>)}</tr></thead><tbody>{analysis.preview.slice(1).map((row, rowIndex) => <tr key={rowIndex} className="border-t border-border">{row.map((value, index) => <td key={index} className="max-w-56 truncate px-3 py-2">{value}</td>)}</tr>)}</tbody></table></div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-primary p-6 text-surface"><label className="flex items-start gap-3 text-sm"><input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} className="mt-1" /><span>Confirmei o relatório e compreendo que a gravação remota ainda não está ativada.</span></label><div className="flex gap-3"><button type="button" onClick={cancel} className="rounded-lg border border-surface/40 px-4 py-2">Cancelar</button><button type="button" onClick={() => file && void run(file, analysis.selectedSheet, analysis.mapping)} className="rounded-lg bg-surface px-4 py-2 font-semibold text-primary">Validar</button><button type="button" disabled className="cursor-not-allowed rounded-lg bg-accent px-4 py-2 font-semibold text-primary opacity-50" title="Será ativado após configurar o bucket privado, RLS e a operação transacional">Importar</button></div></div>
+        {importResult&&<p role="status" className="rounded-xl border border-success/30 bg-success-soft p-4 text-success">Importação concluída: {importResult.importedRows} movimentos gravados e {importResult.invalidRows} linhas mantidas para revisão. Lote: <code>{importResult.importId}</code>.</p>}
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-primary p-6 text-surface"><label className="flex items-start gap-3 text-sm"><input type="checkbox" disabled={!remoteValidated} checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} className="mt-1" /><span>{remoteValidated?'Confirmei o relatório, os avisos, os duplicados e o impacto financeiro. Pretendo gravar este lote no Supabase.':'A importação permanece bloqueada até concluir a comparação segura com os dados existentes.'}</span></label><div className="flex gap-3"><button type="button" onClick={cancel} className="rounded-lg border border-surface/40 px-4 py-2">Cancelar</button><button type="button" disabled={busy} onClick={() => file && void run(file, analysis.selectedSheet, analysis.mapping)} className="rounded-lg bg-surface px-4 py-2 font-semibold text-primary disabled:opacity-50">Validar</button><button type="button" disabled={!confirmed||!remoteValidated||busy||Boolean(importResult)} onClick={()=>void commit()} className="rounded-lg bg-accent px-4 py-2 font-semibold text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy?'A importar…':'Importar'}</button></div></div>
       </div>}
     </section>
   )

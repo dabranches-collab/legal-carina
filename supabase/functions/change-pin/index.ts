@@ -1,4 +1,4 @@
-import { createClient } from 'npm:@supabase/supabase-js@2.112.0'
+import { createClient } from 'npm:@supabase/supabase-js@2.112.1'
 import { corsHeaders, isAllowedOrigin, json } from '../_shared/http.ts'
 
 async function sha256(value: string) {
@@ -27,6 +27,8 @@ Deno.serve(async (request) => {
     const { data: credential, error: credentialError } = await admin.from('user_login_credentials')
       .select('id,user_id,firm_id,auth_email,must_change_pin').eq('user_id', authData.user.id).maybeSingle()
     if (credentialError || !credential) return json(request, { error: 'Acesso por PIN não configurado.' }, 400)
+    const {data:membership}=await admin.from('firm_members').select('active').eq('firm_id',credential.firm_id).eq('user_id',authData.user.id).maybeSingle()
+    if(!membership?.active)return json(request,{error:'Acesso suspenso.'},403)
     const authClient = createClient(url, publishableKey, { auth: { persistSession: false, autoRefreshToken: false } })
     const { error: verificationError } = await authClient.auth.signInWithPassword({ email: credential.auth_email, password: await deriveAuthPassword(credential.id, currentPin) })
     if (verificationError) return json(request, { error: 'O PIN inicial não está correto.' }, 401)
@@ -35,8 +37,10 @@ Deno.serve(async (request) => {
     if (updateError) throw updateError
     const { error: credentialUpdateError } = await admin.from('user_login_credentials').update({ must_change_pin: false, pin_changed_at: new Date().toISOString(), failed_attempts: 0, locked_until: null }).eq('id', credential.id)
     if (credentialUpdateError) throw credentialUpdateError
-    await admin.from('audit_log').insert({ firm_id: credential.firm_id, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_access', entity_id: authData.user.id, new_data: { pin_changed: true, mandatory_change_completed: true } })
-    await admin.from('security_events').insert({ user_id: authData.user.id, event_type: 'pin_changed', user_agent: request.headers.get('user-agent'), metadata: { mandatory_change: Boolean(credential.must_change_pin) } })
+    const { error: auditError } = await admin.from('audit_log').insert({ firm_id: credential.firm_id, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_access', entity_id: authData.user.id, new_data: { pin_changed: true, mandatory_change_completed: true } })
+    if (auditError) throw auditError
+    const { error: eventError } = await admin.from('security_events').insert({ user_id: authData.user.id, event_type: 'pin_changed', user_agent: request.headers.get('user-agent'), metadata: { mandatory_change: Boolean(credential.must_change_pin) } })
+    if (eventError) throw eventError
     return json(request, { changed: true })
   } catch { return json(request, { error: 'Não foi possível alterar o PIN.' }, 400) }
 })

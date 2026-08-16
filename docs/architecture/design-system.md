@@ -4,11 +4,11 @@
 
 A interface combina fundo quente claro, superfícies brancas, azul-noite estrutural, azul-petróleo funcional e âmbar discreto. Verde comunica estados concluídos; vermelho fica reservado a erros, bloqueios e vencimentos. O contraste, o foco visível e a comunicação textual dos estados são obrigatórios.
 
-Os números atualmente renderizados são exclusivamente demonstrativos e anonimizados. A etiqueta persistente no cabeçalho do conteúdo impede que sejam confundidos com dados reais.
+Os módulos ligados ao Supabase apresentam os dados autorizados do ambiente activo e são identificados como acesso restrito. Ficheiros de teste continuam integralmente anonimizados e nunca são apresentados como dados reais.
 
 ## Tokens semânticos
 
-Os tokens estão centralizados em `src/index.css`; componentes não definem hexadecimais nem nomes de cores visuais diretamente.
+Os tokens estão centralizados em `src/index.css`; componentes não definem hexadecimais nem nomes de cores visuais directamente.
 
 | Grupo | Tokens |
 | --- | --- |
@@ -25,7 +25,7 @@ Os tokens estão centralizados em `src/index.css`; componentes não definem hexa
 ## Estrutura
 
 - Sidebar recolhível no desktop e painel sobreposto no telemóvel.
-- Cabeçalho fixo com pesquisa, período, sociedade, notificações, utilizador e logout.
+- Cabeçalho fixo com localização hierárquica, controlo de visibilidade financeira, tema, actualização dos dados apresentados e utilizador.
 - Conteúdo desktop-first com grelhas que colapsam progressivamente.
 - Tabelas mantêm densidade informativa e usam scroll horizontal em ecrãs estreitos.
 - Cards usam raio moderado, borda visível e sombra discreta.
@@ -37,9 +37,9 @@ Os tokens estão centralizados em `src/index.css`; componentes não definem hexa
 - Gráficos: `figure`, legenda textual e descrição `role="img"`.
 - Tabela: caption, scopes, seleção nomeada, cabeçalho fixo, densidade e paginação.
 - `TableSkeleton`, `TableEmptyState` e `TableErrorState`: estados operacionais reutilizáveis.
-- Modais de override e ação em massa: título, contexto financeiro e confirmação explícita.
+- Modais de override e acção em massa: título, contexto financeiro e confirmação explícita.
 - Foco global de alto contraste; nenhuma mensagem depende apenas da cor.
 
-## Limites atuais
+## Estado actual
 
-Esta fase é visual. Pesquisa, notificações, logout, exportação, vistas guardadas e escrita em massa são controlos preparados, mas não executam operações remotas. Dashboards usam dados demonstrativos até existir autenticação e camada de consulta Supabase aprovada.
+Dashboards, registos, entidades, importações e administração consomem dados autorizados do Supabase. As áreas ainda sem fluxo completo surgem agrupadas em **Em construção**. A ocultação visual de valores é apenas uma preferência de apresentação; a autorização efectiva e o mascaramento são aplicados no backend.

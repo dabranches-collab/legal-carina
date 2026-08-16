@@ -4,11 +4,15 @@ test.skip(!process.env.PWA_PRODUCTION_QA, 'Executado apenas contra o preview de 
 
 test('preview de produção regista e ativa o service worker', async ({ page }) => {
   await page.goto('/')
-  const state=await page.evaluate(async () => {
-    const registration=await navigator.serviceWorker.ready
-    return { active:Boolean(registration.active), scope:registration.scope, caches:await caches.keys() }
-  })
+  let state:{active:boolean;scope:string;caches:string[]}|undefined
+  for(let attempt=0;attempt<3&&!state;attempt+=1){
+    try{state=await page.evaluate(async () => {const registration=await navigator.serviceWorker.ready;return { active:Boolean(registration.active),scope:registration.scope,caches:await caches.keys() }})}
+    catch{await page.waitForLoadState('domcontentloaded')}
+  }
+  expect(state).toBeDefined()
+  if(!state)return
   expect(state.active).toBe(true)
-  expect(state.scope).toBe('http://127.0.0.1:4173/')
-  expect(state.caches).toContain('legal-carina-shell-v2')
+  expect(state.scope).toBe(new URL('/',page.url()).href)
+  expect(state.caches).toContain('carina-legal-shell-0.2.0')
+  await page.close()
 })

@@ -1,5 +1,3 @@
--- Import source inconsistencies for review without weakening manually created records.
-
 alter table public.work_entries
   add column has_historical_state_exception boolean not null default false;
 
@@ -33,4 +31,4 @@ comment on constraint work_entries_invoiced_requires_date_check on public.work_e
   'Invoiced normally requires a date; only an explicitly flagged and traceable imported row may enter the review queue without one.';
 
 comment on column public.work_entries.has_historical_state_exception is
-  'True when an audited import preserves source billing flags that require human review.';
+  'True when an audited import preserves source billing flags that require human review.';;

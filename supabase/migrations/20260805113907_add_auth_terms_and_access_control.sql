@@ -449,4 +449,4 @@ with check (bucket_id = 'legal-imports' and (select private.has_firm_role(
   private.storage_firm_id(name), array['owner', 'admin', 'billing']
 )));
 
-revoke all on function private.storage_firm_id(text) from public, anon, authenticated;
+revoke all on function private.storage_firm_id(text) from public, anon, authenticated;;

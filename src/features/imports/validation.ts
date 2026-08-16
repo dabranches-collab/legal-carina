@@ -3,12 +3,19 @@ import type { CellSnapshot, ImportIssue, ImportRow, ImportSummary } from './type
 import type { CanonicalField } from './types'
 
 const yes = (value?: CellSnapshot) => ['√', 'SIM', 'S', 'TRUE', '1'].includes(value?.text.trim().toUpperCase() ?? '')
-const numberValue = (cell?: CellSnapshot) => typeof cell?.raw === 'number' && Number.isFinite(cell.raw) ? cell.raw : Number(String(cell?.raw ?? '').replace(',', '.'))
+const numberValue = (cell?: CellSnapshot) => {
+  if(!cell||cell.raw===null||cell.raw===undefined||String(cell.raw).trim()==='')return Number.NaN
+  return typeof cell.raw === 'number' && Number.isFinite(cell.raw) ? cell.raw : Number(String(cell.raw).trim().replace(',', '.'))
+}
 const normalizedPartyType = (cell?: CellSnapshot):'individual'|'company'|undefined => {
   const value=cell?.text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase()
   if (value==='PARTICULAR'||value==='INDIVIDUAL') return 'individual'
   if (value==='SOCIEDADE'||value==='EMPRESA'||value==='COMPANY') return 'company'
   return undefined
+}
+const normalizedArchive=(cell?:CellSnapshot):'gaveta'|'dossier'|'findos'|'digital'|'other'|undefined=>{
+  const value=cell?.text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase()
+  return value==='GAVETA'?'gaveta':value==='DOSSIER'?'dossier':value==='FINDOS'?'findos':value==='DIGITAL'?'digital':value?'other':undefined
 }
 
 function excelDate(cell?: CellSnapshot): string | undefined {
@@ -19,9 +26,21 @@ function excelDate(cell?: CellSnapshot): string | undefined {
     if (parsed) return `${parsed.y}-${String(parsed.m).padStart(2, '0')}-${String(parsed.d).padStart(2, '0')}`
   }
   const match = cell.text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/)
-  if (match) return `${match[3]}-${match[2].padStart(2, '0')}-${match[1].padStart(2, '0')}`
+  if (match) {
+    const day=Number(match[1]),month=Number(match[2]),year=Number(match[3])
+    const candidate=new Date(Date.UTC(year,month-1,day))
+    if(candidate.getUTCFullYear()!==year||candidate.getUTCMonth()!==month-1||candidate.getUTCDate()!==day)return undefined
+    return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`
+  }
   const date = new Date(cell.text)
   return Number.isNaN(date.valueOf()) ? undefined : date.toISOString().slice(0, 10)
+}
+
+function durationInMinutes(cell?:CellSnapshot){
+  const clock=cell?.text.trim().match(/^(\d{1,3}):([0-5]\d)$/)
+  if(clock)return Number(clock[1])*60+Number(clock[2])
+  const fraction=numberValue(cell)
+  return Number.isFinite(fraction)?Math.round(fraction*24*60):undefined
 }
 
 const fingerprint = (cells: Partial<Record<CanonicalField, CellSnapshot>>) => [cells.date?.text, cells.clientName?.text, cells.activity?.text, cells.duration?.text, cells.responsible?.text].map((v) => v?.trim().toUpperCase() ?? '').join('|')
@@ -31,11 +50,12 @@ export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalFi
   const date = excelDate(cells.date)
   if (!date) issues.push({ severity: 'error', code: 'invalid_date', message: 'Data ausente ou inválida.' })
   if (!cells.clientName?.text.trim()) issues.push({ severity: 'error', code: 'missing_client', message: 'Cliente em falta.' })
+  if (!cells.clientCode?.text.trim()) issues.push({ severity: 'error', code: 'missing_client_code', message: 'Código de cliente em falta.' })
   if (!cells.activity?.text.trim()) issues.push({ severity: 'error', code: 'missing_activity', message: 'Actividade em falta.' })
+  if (!cells.responsible?.text.trim()) issues.push({ severity: 'error', code: 'missing_responsible', message: 'Responsável em falta.' })
   const clientType=normalizedPartyType(cells.partyType)
   if (!clientType) issues.push({ severity: 'warning', code: 'unknown_client_type', message: 'Tipo de cliente desconhecido; deve ser Particular ou Empresa.' })
-  const durationFraction = numberValue(cells.duration)
-  const durationMinutes = Number.isFinite(durationFraction) ? Math.round(durationFraction * 24 * 60) : undefined
+  const durationMinutes = durationInMinutes(cells.duration)
   if (!durationMinutes || durationMinutes < 1) issues.push({ severity: 'error', code: 'invalid_duration', message: 'Duração inválida; deve resultar em minutos positivos.' })
   const hourlyRate = numberValue(cells.hourlyRate)
   if (!Number.isFinite(hourlyRate) || hourlyRate < 0) issues.push({ severity: 'warning', code: 'invalid_price', message: 'Valor hora ausente ou inválido.' })
@@ -45,7 +65,12 @@ export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalFi
   if (cells.amount?.raw !== null && cells.amount?.raw !== '' && !cells.amount?.formula) issues.push({ severity: 'warning', code: 'manual_amount', message: 'Valor aparenta ter sido introduzido manualmente.' })
   const code = cells.clientCode?.text.trim()
   if (code && knownClientCodes.size && !knownClientCodes.has(code)) issues.push({ severity: 'warning', code: 'unknown_client_code', message: 'Código não consta da folha CLIENTES.' })
-  return { sourceRow, cells, normalized: { date, clientType, durationMinutes, hourlyRate: Number.isFinite(hourlyRate) ? hourlyRate : undefined, amount: Number.isFinite(amount) ? amount : calculated, invoiced: yes(cells.invoiced), paid: yes(cells.paid), archived: Boolean(cells.archive?.text.trim()) }, issues, fingerprint: fingerprint(cells) }
+  const archive=normalizedArchive(cells.archive)
+  const invoiced=yes(cells.invoiced),paid=yes(cells.paid),invoiceDate=excelDate(cells.invoiceDate)
+  if(invoiced&&!invoiceDate)issues.push({severity:'warning',code:'invoiced_without_invoice_date',message:'Movimento marcado como facturado sem data de factura.'})
+  if(paid&&!invoiced)issues.push({severity:'warning',code:'paid_without_invoiced',message:'Movimento marcado como pago sem marca de facturado.'})
+  const importedAmount=Number.isFinite(amount)?amount:undefined
+  return { sourceRow, cells, normalized: { date, invoiceDate, clientType, durationMinutes, hourlyRate: Number.isFinite(hourlyRate) ? hourlyRate : undefined, importedAmount, calculatedAmount:calculated, effectiveAmount:importedAmount??calculated, invoiced, paid, archive, archived:Boolean(archive) }, issues, fingerprint: fingerprint(cells) }
 }
 
 export function summarizeRows(rows: ImportRow[]): ImportSummary {
@@ -65,6 +90,6 @@ export function summarizeRows(rows: ImportRow[]): ImportSummary {
     invoicedRows: rows.filter((row) => row.normalized.invoiced).length,
     paidRows: rows.filter((row) => row.normalized.paid).length,
     archivedRows: rows.filter((row) => row.normalized.archived).length,
-    financialImpact: rows.reduce((sum, row) => sum + (row.normalized.amount ?? 0), 0),
+    financialImpact: rows.reduce((sum, row) => sum + (row.normalized.effectiveAmount ?? 0), 0),
   }
 }

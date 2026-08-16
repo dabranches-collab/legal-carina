@@ -1,6 +1,6 @@
 # Arquitetura
 
-## Estado atual
+## Estado actual
 
 SPA React/TypeScript compilada pelo Vite. A interface está separada por componentes e páginas; integrações externas ainda não foram ativadas.
 

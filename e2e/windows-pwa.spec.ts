@@ -18,7 +18,7 @@ for (const viewport of windowsViewports) {
     const productName = sidebar.getByText('Carina - Legal', { exact:true })
     await expect(sidebar).toBeVisible()
     await expect(productName).toBeVisible()
-    await expect(sidebar.getByText('Versão 0.1.0', { exact:true })).toBeVisible()
+    await expect(sidebar.getByText('Versão 0.2.0', { exact:true })).toBeVisible()
     expect(await productName.evaluate((element) => ({ whiteSpace:getComputedStyle(element).whiteSpace, height:element.getBoundingClientRect().height, lineHeight:parseFloat(getComputedStyle(element).lineHeight) }))).toMatchObject({ whiteSpace:'nowrap' })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
     await expect(page.getByRole('button', { name:'Terminar sessão' })).toBeVisible()

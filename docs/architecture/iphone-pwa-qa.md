@@ -4,13 +4,13 @@
 
 - O viewport usa `viewport-fit=cover`.
 - Os quatro insets provêm de `env(safe-area-inset-top/right/bottom/left)` e alimentam tokens semânticos de layout.
-- Cabeçalho, sidebar, conteúdo, autenticação, modais, overlays e avisos de atualização respeitam esses tokens.
+- Cabeçalho, sidebar, conteúdo, autenticação, modais, overlays e avisos de actualização respeitam esses tokens.
 - `100dvh` é usado como altura funcional, mantendo `100vh` como fallback.
 - O manifest usa `display: standalone`, ícones PNG para iOS/instalação e ícone SVG maskable.
-- O service worker aplica network-first ao conteúdo da aplicação, mantém um shell offline mínimo e só ativa uma nova versão após ação explícita no aviso de atualização.
+- O service worker aplica network-first ao conteúdo da aplicação, mantém um shell offline mínimo e só activa uma nova versão após acção explícita no aviso de actualização.
 - O modo escuro segue `prefers-color-scheme`; `prefers-reduced-motion` elimina animações não essenciais.
 
-Não existe deteção por user agent. Os valores específicos de modelos nunca são usados em produção.
+Não existe detecção por user agent. Os valores específicos de modelos nunca são usados em produção.
 
 ## Matriz local
 
@@ -31,4 +31,4 @@ Dynamic Island e notch usam geometrias distintas. Em landscape, o recorte e os i
 
 ## Exceção e gate de publicação
 
-Esta estação não disponibiliza o motor WebKit/iOS nem hardware iPhone. A matriz valida CSS, geometria, breakpoints, acessibilidade e lifecycle PWA em Chromium; antes da publicação deve repetir-se um smoke test em Safari iOS real, incluindo teclado, zoom do sistema, rotação, instalação no ecrã principal e atualização entre duas versões do service worker. Isto é um risco residual documentado, não uma alegação de equivalência total com hardware.
+Esta estação não disponibiliza o motor WebKit/iOS nem hardware iPhone. A matriz valida CSS, geometria, breakpoints, acessibilidade e ciclo de vida PWA em Chromium; antes da publicação deve repetir-se um smoke test em Safari iOS real, incluindo teclado, zoom do sistema, rotação, instalação no ecrã principal e actualização entre duas versões do service worker. Isto é um risco residual documentado, não uma alegação de equivalência total com hardware.

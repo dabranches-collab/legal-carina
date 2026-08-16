@@ -26,4 +26,4 @@ pnpm install --frozen-lockfile
 pnpm check
 ```
 
-No fim, faça commit e push da branch. Abra pull request; não faça push direto para `main`. Consulte `docs/development-workflow.md`.
+No fim, faça commit e push da branch. Abra pull request; não faça push directo para `main`. Consulte `docs/development-workflow.md`.

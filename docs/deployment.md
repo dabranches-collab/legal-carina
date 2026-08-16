@@ -12,7 +12,7 @@
 
 1. Fixar o commit e artefacto aprovados.
 2. Aplicar migration aditiva no Supabase; nunca executar reset remoto.
-3. Publicar Edge Functions e respetivos segredos backend.
+3. Publicar Edge Functions e respectivos segredos backend.
 4. Validar login, reset, termos, RLS e auditoria com utilizadores de teste.
 5. Publicar os assets no ambiente production somente após aprovação explícita do plano Cloudflare.
 6. Monitorizar erros e reverter Worker se o smoke test falhar.

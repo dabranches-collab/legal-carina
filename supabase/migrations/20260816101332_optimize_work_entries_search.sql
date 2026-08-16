@@ -159,3 +159,5 @@ $$;
 
 revoke all on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,text,text) from public, anon;
 grant execute on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,text,text) to authenticated;
+
+;

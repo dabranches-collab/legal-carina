@@ -10,9 +10,11 @@ As funções `private.is_firm_member` e `private.has_firm_role` são `security d
 | --- | --- | --- |
 | owner | todo o próprio escritório, incluindo auditoria | administração, financeiro, overrides e imports |
 | admin | todo o próprio escritório, incluindo auditoria | referências, membros, financeiro, trabalho e imports |
-| billing | todo o próprio escritório, exceto auditoria | preços, overrides, faturas, pagamentos, imports e trabalho |
-| professional | todo o próprio escritório, exceto auditoria | criar/editar trabalho sem alterar campos financeiros |
-| viewer | todo o próprio escritório, exceto auditoria | nenhuma |
+| manager | apenas Sociedades, clientes, processos e equipas concedidos | operação; financeiro apenas onde exista autorização independente |
+| billing | apenas o âmbito concedido, excepto auditoria | preços, overrides, facturas, pagamentos, imports e trabalho dentro do âmbito |
+| professional | apenas o âmbito concedido, excepto auditoria | criar/editar trabalho sem alterar campos financeiros |
+| viewer | apenas o âmbito concedido, excepto auditoria | nenhuma escrita |
+| auditor | audit log imutável; sem dados de negócio por defeito | nenhuma escrita |
 
 ## Princípios aplicados
 
@@ -34,8 +36,8 @@ Não existe política pública para criar `law_firms`. O primeiro escritório e 
 
 - leitura limitada ao escritório;
 - admin sem escrita cross-tenant;
-- profissional capaz de criar trabalho próprio;
-- profissional impedido de alterar faturação;
+- responsável capaz de criar trabalho próprio;
+- responsável impedido de alterar facturação;
 - billing capaz de aplicar override previamente registado;
 - viewer apenas vê o seu escritório.
 

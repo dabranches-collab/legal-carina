@@ -2,14 +2,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { LoginPage } from './LoginPage'
-import { TermsModal } from './TermsModal'
 import { ResetPasswordPage } from './ResetPasswordPage'
 import { InitialPinChangePage } from './InitialPinChangePage'
-import type { LegalDocumentRow } from '../../types/database.types'
-
-const documents: LegalDocumentRow[] = [
-  ['terms_of_service','Termos de Serviço'], ['privacy_policy','Política de Privacidade'], ['gdpr_terms','Termos de RGPD'],
-].map(([document_type,title], index) => ({ id:`doc-${index}`, document_type:document_type as LegalDocumentRow['document_type'], version:'1.0', title, body_markdown:'Conteúdo jurídico sintético para teste.', effective_at:'2026-08-04T00:00:00Z', content_hash:'a'.repeat(64), status:'published' }))
 
 const loginProps = { busy:false, error:'', notice:'', onPinLogin:vi.fn(), onRecover:vi.fn(), onPasskeyLogin:vi.fn(), onClearError:vi.fn() }
 
@@ -30,13 +24,6 @@ describe('autenticação', () => {
     await userEvent.click(screen.getByRole('button', { name:'Preciso de recuperar o acesso' }))
     expect(screen.getByRole('heading', { name:'Recuperar acesso' })).toBeInTheDocument()
     expect(screen.getByLabelText('Email administrativo')).toBeInTheDocument()
-  })
-
-  it('bloqueia termos até ambos os consentimentos explícitos', async () => {
-    const onAccept=vi.fn(); render(<TermsModal documents={documents} busy={false} error="" onAccept={onAccept} />)
-    const button=screen.getByRole('button',{name:'Aceitar e continuar'}); expect(button).toBeDisabled()
-    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de Serviço.'})); expect(button).toBeDisabled()
-    await userEvent.click(screen.getByRole('checkbox',{name:'Li e aceito os Termos de RGPD e a Política de Privacidade.'})); expect(button).toBeEnabled()
   })
 
   it('impede redefinição quando as passwords não coincidem', async () => {

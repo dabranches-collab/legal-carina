@@ -1,4 +1,4 @@
-import { createClient } from 'npm:@supabase/supabase-js@2.112.0'
+import { createClient } from 'npm:@supabase/supabase-js@2.112.1'
 import { corsHeaders, isAllowedOrigin, json } from '../_shared/http.ts'
 
 async function sha256(value: string) {
@@ -34,6 +34,11 @@ Deno.serve(async (request) => {
   const { data: authData, error: authError } = await admin.auth.getUser(token)
   if (authError || !authData.user) return json(request, { error: 'Sessão inválida.' }, 401)
 
+  const { data: callerCredential, error: callerCredentialError } = await admin.from('user_login_credentials')
+    .select('must_change_pin').eq('user_id', authData.user.id).maybeSingle()
+  if (callerCredentialError || !callerCredential) return json(request, { error: 'Acesso administrativo por PIN não configurado.' }, 403)
+  if (callerCredential.must_change_pin) return json(request, { error: 'Substitua o PIN inicial antes de usar a Administração.' }, 403)
+
   const { data: memberships } = await admin.from('firm_members').select('firm_id, role')
     .eq('user_id', authData.user.id).eq('active', true).in('role', ['owner', 'admin'])
   if (!memberships?.length) return json(request, { error: 'Permissão administrativa necessária.' }, 403)
@@ -54,7 +59,15 @@ Deno.serve(async (request) => {
       const displayNameById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential.display_name]))
       return json(request, { users: firmUsers.map((membership) => {
         const user = authById.get(membership.user_id)
-        return { userId: membership.user_id, username: usernameById.get(membership.user_id) ?? '', displayName: displayNameById.get(membership.user_id) ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
+        const metadata = user?.user_metadata ?? {}
+        return {
+          userId: membership.user_id,
+          username: usernameById.get(membership.user_id) ?? (typeof metadata.username === 'string' ? metadata.username : ''),
+          displayName: displayNameById.get(membership.user_id) ?? (typeof metadata.display_name === 'string' ? metadata.display_name : ''),
+          pinConfigured: usernameById.has(membership.user_id),
+          role: membership.role, active: membership.active, invitedAt: membership.created_at,
+          lastSignInAt: user?.last_sign_in_at ?? null,
+        }
       }) })
     }
 
@@ -94,7 +107,7 @@ Deno.serve(async (request) => {
       const displayName = normalizeDisplayName(input.displayName)
       const pin = String(input.pin ?? '')
       const role = String(input.role ?? '')
-      const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId)
         || !allowedRoles.includes(role)
         || displayName.length < 1 || displayName.length > 100
@@ -108,16 +121,11 @@ Deno.serve(async (request) => {
         email: authEmail, password, email_confirm: true, user_metadata: { username, display_name: displayName }, app_metadata: { must_change_pin: true },
       })
       if (error || !data.user) throw error ?? new Error('Utilizador não criado')
-      const { error: membershipError } = await admin.from('firm_members').insert({ firm_id: firmId, user_id: data.user.id, role })
-      if (membershipError) { await admin.auth.admin.deleteUser(data.user.id); throw membershipError }
-      const { error: credentialError } = await admin.from('user_login_credentials').insert({
-        id: credentialId, firm_id: firmId, user_id: data.user.id, username, display_name: displayName, auth_email: authEmail, created_by: authData.user.id, must_change_pin: true,
+      const { error: finalizeError } = await admin.rpc('finalize_pin_user_creation', {
+        p_firm_id: firmId, p_user_id: data.user.id, p_credential_id: credentialId, p_username: username,
+        p_display_name: displayName, p_auth_email: authEmail, p_role: role, p_actor_id: authData.user.id,
       })
-      if (credentialError) { await admin.auth.admin.deleteUser(data.user.id); throw credentialError }
-      await admin.from('audit_log').insert({
-        firm_id: firmId, actor_user_id: authData.user.id, action: 'insert', entity_type: 'user_access',
-        entity_id: data.user.id, new_data: { username, display_name: displayName, role, active: true, auth_method: 'pin' },
-      })
+      if (finalizeError) { await admin.auth.admin.deleteUser(data.user.id); throw finalizeError }
       return json(request, { userId: data.user.id, username }, 201)
     }
 
@@ -139,10 +147,10 @@ Deno.serve(async (request) => {
       }
       const { data: existing } = await admin.from('user_login_credentials').select('id,auth_email').eq('user_id', userId).maybeSingle()
       const credentialId = existing?.id ?? crypto.randomUUID()
-      const authEmail = existing?.auth_email ?? `lc-${credentialId}@auth.invalid`
-      const password = await deriveAuthPassword(credentialId, pin)
       const { data: targetAuthData, error: targetAuthError } = await admin.auth.admin.getUserById(userId)
       if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
+      const authEmail = existing?.auth_email ?? targetAuthData.user.email ?? `lc-${credentialId}@auth.invalid`
+      const password = await deriveAuthPassword(credentialId, pin)
       const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, {
         email: authEmail, password, email_confirm: true, user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName },
         app_metadata: { ...(targetAuthData.user.app_metadata ?? {}), must_change_pin: true },
@@ -153,10 +161,11 @@ Deno.serve(async (request) => {
         failed_attempts: 0, locked_until: null, must_change_pin: true, pin_changed_at: null,
       }, { onConflict: 'user_id' })
       if (credentialError) throw credentialError
-      await admin.from('audit_log').insert({
+      const { error: accessAuditError } = await admin.from('audit_log').insert({
         firm_id: firmId, actor_user_id: authData.user.id, action: existing ? 'update' : 'insert', entity_type: 'user_access',
         entity_id: userId, new_data: { username, display_name: displayName, auth_method: 'pin', initial_pin_assigned: true, mandatory_change_required: true },
       })
+      if (accessAuditError) throw accessAuditError
       return json(request, { configured: true, username })
     }
 
@@ -174,10 +183,12 @@ Deno.serve(async (request) => {
       if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
       const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, { user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName } })
       if (authUpdateError) throw authUpdateError
-      const { error: credentialError } = await admin.from('user_login_credentials').update({ username, display_name: displayName }).eq('user_id', userId).eq('firm_id', firmId)
+      const { data: credential, error: credentialError } = await admin.from('user_login_credentials')
+        .update({ username, display_name: displayName }).eq('user_id', userId).eq('firm_id', firmId).select('user_id').maybeSingle()
       if (credentialError) throw credentialError
-      await admin.from('audit_log').insert({ firm_id: firmId, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_identity', entity_id: userId, new_data: { username, display_name: displayName } })
-      return json(request, { updated: true })
+      const { error: identityAuditError } = await admin.from('audit_log').insert({ firm_id: firmId, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_identity', entity_id: userId, new_data: { username, display_name: displayName } })
+      if (identityAuditError) throw identityAuditError
+      return json(request, { updated: true, pinConfigured: Boolean(credential) })
     }
 
     if (input.action === 'get_billing_permissions') {
@@ -202,32 +213,10 @@ Deno.serve(async (request) => {
       if (!memberships.some((membership) => membership.firm_id === firmId)) return json(request, { error: 'Sociedade inválida.' }, 400)
       const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target || ['owner', 'admin'].includes(target.role)) return json(request, { error: 'As permissões deste perfil são integrais.' }, 400)
-      const { data: entities } = await admin.from('billing_entities').select('id').eq('firm_id', firmId)
-      const allowedIds = new Set((entities ?? []).map((entity) => entity.id))
-      if (permissions.some((item) => !allowedIds.has(String(item.billingEntityId ?? '')) || (item.financial && !item.visible))) return json(request, { error: 'Permissões inválidas.' }, 400)
-      const { error: deleteGrantError } = await admin.from('access_grants').delete().eq('firm_id', firmId).eq('user_id', userId).eq('principal_type', 'user').eq('resource_type', 'billing_entity')
-      const { error: deleteFinanceError } = await admin.from('billing_entity_financial_permissions').delete().eq('firm_id', firmId).eq('user_id', userId)
-      if (deleteGrantError || deleteFinanceError) throw deleteGrantError ?? deleteFinanceError
-      const visibleRows = permissions.filter((item) => item.visible).map((item) => ({ firm_id: firmId, principal_type: 'user', user_id: userId, resource_type: 'billing_entity', billing_entity_id: item.billingEntityId, permission: target.role === 'billing' ? 'billing' : target.role === 'professional' ? 'edit' : 'view', created_by: authData.user.id }))
-      const financeRows = permissions.filter((item) => item.visible).map((item) => ({ firm_id: firmId, user_id: userId, billing_entity_id: item.billingEntityId, can_view_financials: Boolean(item.financial), created_by: authData.user.id }))
-      if (visibleRows.length) { const { error } = await admin.from('access_grants').insert(visibleRows); if (error) throw error }
-      if (financeRows.length) { const { error } = await admin.from('billing_entity_financial_permissions').insert(financeRows); if (error) throw error }
-      await admin.from('audit_log').insert({ firm_id: firmId, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_billing_permissions', entity_id: userId, new_data: { billing_entities: permissions.map((item) => ({ billing_entity_id: item.billingEntityId, visible: Boolean(item.visible), financial: Boolean(item.financial) })) } })
+      const normalized = permissions.map((item) => ({ billingEntityId:String(item.billingEntityId ?? ''), visible:Boolean(item.visible), financial:Boolean(item.financial) }))
+      const { error: replaceError } = await admin.rpc('replace_user_billing_permissions', { p_firm_id:firmId, p_user_id:userId, p_permissions:normalized, p_actor_user_id:authData.user.id })
+      if (replaceError) throw replaceError
       return json(request, { updated: true })
-    }
-
-    if (input.action === 'invite_user') {
-      const firmId = String(input.firmId ?? '')
-      const allowedFirm = memberships.some((membership) => membership.firm_id === firmId)
-      const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
-      if (!allowedFirm || !allowedRoles.includes(input.role)) return json(request, { error: 'Convite inválido.' }, 400)
-      const { data, error } = await admin.auth.admin.inviteUserByEmail(String(input.email ?? ''), {
-        redirectTo: String(input.redirectTo ?? ''),
-      })
-      if (error || !data.user) throw error ?? new Error('Convite sem utilizador')
-      const { error: membershipError } = await admin.from('firm_members').insert({ firm_id: firmId, user_id: data.user.id, role: input.role })
-      if (membershipError) throw membershipError
-      return json(request, { userId: data.user.id }, 201)
     }
 
     if (input.action === 'update_user') {
@@ -235,42 +224,19 @@ Deno.serve(async (request) => {
       const userId = String(input.userId ?? '')
       const role = String(input.role ?? '')
       const active = Boolean(input.active)
-      const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId) || !allowedRoles.includes(role)) return json(request, { error: 'Alteração inválida.' }, 400)
       const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target || target.role === 'owner') return json(request, { error: 'O proprietário não pode ser alterado por esta operação.' }, 400)
-      const { error } = await admin.from('firm_members').update({ role, active }).eq('firm_id', firmId).eq('user_id', userId)
+      const { error } = await admin.rpc('update_user_membership', {
+        p_firm_id: firmId, p_user_id: userId, p_role: role, p_active: active,
+        p_actor_user_id: authData.user.id,
+      })
       if (error) throw error
       return json(request, { updated: true })
     }
 
-    if (input.action === 'publish_legal_documents') {
-      const documents = Array.isArray(input.documents) ? input.documents : []
-      const requiredTypes = ['terms_of_service', 'privacy_policy', 'gdpr_terms']
-      if (documents.length !== 3 || !requiredTypes.every((type) => documents.some((document) => document.documentType === type))) {
-        return json(request, { error: 'São necessários os três documentos legais.' }, 400)
-      }
-      for (const document of documents) {
-        if (!document.version || !document.title || !document.bodyMarkdown || !document.effectiveAt) {
-          return json(request, { error: 'Documento legal incompleto.' }, 400)
-        }
-      }
-      const rows = await Promise.all(documents.map(async (document) => ({
-        document_type: document.documentType,
-        version: document.version,
-        title: document.title,
-        body_markdown: document.bodyMarkdown,
-        effective_at: document.effectiveAt,
-        content_hash: await sha256(document.bodyMarkdown),
-      })))
-      const { data: published, error } = await admin.rpc('publish_legal_document_set', {
-        target_documents: rows,
-        publisher_user_id: authData.user.id,
-      })
-      if (error) throw error
-      return json(request, { published }, 201)
-    }
-    return json(request, { error: 'Ação administrativa desconhecida.' }, 400)
+    return json(request, { error: 'Acção administrativa desconhecida.' }, 400)
   } catch {
     return json(request, { error: 'A operação administrativa não foi concluída.' }, 400)
   }
