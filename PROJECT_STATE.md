@@ -5,8 +5,8 @@ Actualizado em: 2026-08-16
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão publicada candidata: `0.2.2`.
-- Publicação correctiva da versão `0.2.2` expressamente aprovada pelo proprietário em 2026-08-16.
+- Versão publicada candidata: `0.2.3`.
+- Publicação correctiva da versão `0.2.3` expressamente aprovada pelo proprietário em 2026-08-17.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
 
 ## Implementado localmente
@@ -29,6 +29,7 @@ Actualizado em: 2026-08-16
 - TypeScript aprovado; 46/46 testes unitários aprovados; build de produção aprovado e sem source maps.
 - Refresh da Visão geral validado com estado de carregamento explícito; gráficos anuais e mensais suportam vista agregada ou por Sociedade, com séries de cores distintas e curvas mensais suavizadas.
 - O gráfico anual por Sociedade usa todo o histórico autorizado; o gráfico mensal apresenta os 12 meses terminados no mês do movimento mais recente.
+- Os dashboards individuais terminam os seus 12 meses no último movimento da entidade seleccionada; o export completo de movimentos foi criado no Supabase com mascaramento financeiro e acesso apenas autenticado.
 - E2E: 24 testes aprovados em duas execuções limpas: 23 cenários funcionais/responsivos e 1 cenário isolado contra o preview real do build e respectivo service worker; 11 iPhones e 7 resoluções Windows cobertos.
 - Inspecção visual corrigiu a localização truncada em iPhone compacto; título completo confirmado sem overflow horizontal.
 - Auditoria de dependências de produção sem vulnerabilidades conhecidas.
