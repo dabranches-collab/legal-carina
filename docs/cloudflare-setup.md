@@ -15,6 +15,16 @@ Foi adotado **Workers Static Assets**, sem criar um projeto Pages paralelo. `wra
 3. Smoke test HTTPS e inspeção da consola.
 4. Configurar posteriormente domínio definitivo, preview isolado e passkeys para esse domínio.
 
+## Workers Builds
+
+- Comando de build: `pnpm build`.
+- Comando de deploy: `npx wrangler deploy`.
+- Diretório raiz: `/`.
+- Branch de produção: `main`.
+- Variáveis de build obrigatórias: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_APP_ENV=production` e `VITE_REQUIRE_LEGAL_ACCEPTANCE=false`.
+- Estas variáveis destinam-se apenas ao frontend; nunca configurar `SUPABASE_SERVICE_ROLE_KEY` no build.
+- O CI autoriza scripts de instalação apenas para `esbuild` e `workerd` em `pnpm-workspace.yaml`.
+
 ## Impacto
 
 O Worker serve a aplicação estática e esta contacta diretamente o Supabase autorizado. Não existem segredos Cloudflare no bundle; apenas variáveis públicas `VITE_*` fazem parte do build.

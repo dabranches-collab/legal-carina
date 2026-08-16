@@ -57,6 +57,9 @@ Atualizado em: 2026-08-16
 - As Edge Functions `admin-users` e `security-event` estão ativas no Supabase; `admin-users` exige JWT e papel owner/admin, enquanto `security-event` aceita eventos anónimos estritamente enumerados e valida o JWT nos eventos autenticados.
 - A falha RLS `permission denied for function has_scope_access` foi corrigida: funções auxiliares privadas têm execução apenas para `authenticated`, e o módulo legal opcional permite acesso quando não existem documentos publicados, voltando a exigir aceitação se forem publicados no futuro.
 - Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
+- A consulta autenticada de movimentos foi otimizada sem retirar RLS: a verificação legal passou a `initPlan`, a permissão de âmbito permanece numa função privada, e paginação/contagem deixaram de materializar todos os joins. A contagem dos 6.789 movimentos desceu de cerca de 2,17 s para 0,42 s e a resposta completa da primeira página mede cerca de 0,55 s.
+- O CI passou a autorizar explicitamente apenas os scripts de instalação de `esbuild` e `workerd`; instalação congelada, secret scan, lint, typecheck, 28 testes e build passam localmente.
+- A configuração versionada do Wrangler executa `pnpm build` antes do deploy. O pipeline Workers Builds foi igualmente configurado com `pnpm build` e recebeu apenas as variáveis públicas necessárias ao frontend; não foi configurada qualquer `service_role`.
 
 ## Integrações conhecidas
 
@@ -66,7 +69,7 @@ Atualizado em: 2026-08-16
 
 ## Próxima etapa
 
-Configurar o domínio HTTPS definitivo e alinhar o RP ID/origens das passkeys com esse domínio; depois validar login e instalação PWA em iPhone real. Em paralelo, rever os 169 estados de faturação/pagamento incompletos e implementar a gestão CRUD de clientes.
+Validar o CI e a publicação automática remotos. Depois, alterar a gestão de acessos para que Administração crie cada utilizador com nome de utilizador, PIN e perfil/permissões atribuídos no mesmo fluxo; o frontend não deve expor email como identificador de login. O PIN nunca pode ser guardado em texto nem substituir controlos backend, rate limiting, bloqueio temporário, auditoria e RLS. Configurar também o domínio HTTPS definitivo e alinhar passkeys/Face ID/Windows Hello com esse domínio.
 
 ## Riscos abertos
 
@@ -77,6 +80,7 @@ Configurar o domínio HTTPS definitivo e alinhar o RP ID/origens das passkeys co
 - O Supabase remoto contém o esquema versionado e o lote de importação acima; o frontend Cloudflare está publicamente acessível, mas os dados continuam protegidos por autenticação e RLS.
 - A proteção remota da branch `main` não foi aplicada porque a autenticação atual do GitHub CLI é inválida; workflows, CODEOWNERS e Dependabot estão preparados localmente.
 - Limites avançados de sessão, single-session, MFA obrigatório, SMTP dedicado, PITR ou retenção adicional podem exigir planos pagos ou serviços terceiros e devem ser confirmados antes da ativação.
+- A proteção contra passwords comprometidas continua desativada no Supabase Auth (único aviso de segurança atual dos advisors); avaliar ativação conforme o plano disponível.
 - Passkeys permanecem experimentais no Supabase; a configuração continua vinculada a `localhost` e terá de ser alterada para o domínio HTTPS público, exigindo novo registo das passkeys de produção.
 - A matriz iPhone foi validada em Chromium; permanece obrigatório um smoke test final em Safari iOS e hardware real antes da publicação, sobretudo para teclado, zoom do sistema, instalação e atualização do service worker.
 - Os 194 clientes do ficheiro-base estão no Supabase; dois exigem confirmação da categoria atual porque o histórico contém ambas as classificações.
