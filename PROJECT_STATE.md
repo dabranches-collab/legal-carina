@@ -57,3 +57,10 @@ Actualizado em: 2026-08-16
 - Documentos só podem ser activados após confirmar bucket privado, políticas e validade curta das URLs.
 - A validação local dos documentos verifica assinatura, extensão, estrutura OOXML e nomes de conteúdo macro; a validação remota do objecto continua dependente da aplicação das novas políticas.
 - A aplicação não pode receber “PRONTA PARA PUBLICAÇÃO” antes dos testes remotos de RLS, Storage, perfis e bundle.
+# Correcções 0.2.3 em preparação
+
+- Registos de trabalho passaram a carregar os primeiros 100 movimentos pela pesquisa paginada, sem executar uma exportação integral no arranque.
+- RPCs de Registos de trabalho e dashboards tiveram permissões autenticadas reafirmadas e o schema PostgREST recarregado.
+- Os dashboards das Sociedades apresentam os 12 meses até ao último registo disponível.
+- O gráfico mensal deixa de exigir scroll horizontal em resoluções desktop, mantendo comportamento adaptado em ecrãs pequenos.
+- O servidor de desenvolvimento remove service workers antigos para mostrar sempre a versão local em preparação.

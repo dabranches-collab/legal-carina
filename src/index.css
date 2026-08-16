@@ -59,6 +59,10 @@ html[data-qa-iphone="true"] { --safe-top: var(--qa-safe-top, 0px); --safe-right:
 * { box-sizing: border-box; }
 html { min-width: 320px; min-height: 100%; scroll-behavior: smooth; background: var(--color-background); }
 body { margin: 0; min-width: 320px; min-height: 100%; min-height: 100dvh; overflow-x: clip; background: var(--color-background); }
+@media (min-width: 768px) {
+  figure[data-chart-title="Valor por mês"] > div > .overflow-x-auto { overflow-x: visible; }
+  figure[data-chart-title="Valor por mês"] > div > .overflow-x-auto > div { min-width: 0; }
+}
 button, [role="button"], input, select, textarea { touch-action: manipulation; }
 button, input, select, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
