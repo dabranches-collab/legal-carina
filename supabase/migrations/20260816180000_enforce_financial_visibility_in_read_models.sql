@@ -188,7 +188,7 @@ with entries as materialized (
     ) series),'{}'::jsonb) societies
   from annual_totals a order by a.label
 ), latest_year as (select max(extract(year from work_date)::int) value from entries), latest_month as (
-  select date_trunc('month',current_date)::date value
+  select date_trunc('month',max(work_date))::date value from entries
 ), rolling_months as (
   select generate_series((select value from latest_month)-interval '11 months',(select value from latest_month),interval '1 month')::date month_start
   where (select value from latest_month) is not null

@@ -1,4 +1,7 @@
 import { expect, test } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+
+const packageVersion=(JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')) as {version:string}).version
 
 const windowsViewports = [
   { name:'Windows 1280×800', width:1280, height:800 },
@@ -18,7 +21,7 @@ for (const viewport of windowsViewports) {
     const productName = sidebar.getByText('Carina - Legal', { exact:true })
     await expect(sidebar).toBeVisible()
     await expect(productName).toBeVisible()
-    await expect(sidebar.getByText('Versão 0.2.0', { exact:true })).toBeVisible()
+    await expect(sidebar.getByText(`Versão ${packageVersion}`, { exact:true })).toBeVisible()
     expect(await productName.evaluate((element) => ({ whiteSpace:getComputedStyle(element).whiteSpace, height:element.getBoundingClientRect().height, lineHeight:parseFloat(getComputedStyle(element).lineHeight) }))).toMatchObject({ whiteSpace:'nowrap' })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
     await expect(page.getByRole('button', { name:'Terminar sessão' })).toBeVisible()

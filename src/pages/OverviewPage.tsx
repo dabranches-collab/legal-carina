@@ -13,10 +13,10 @@ const percent=(part:MoneyValue,total:MoneyValue)=>part!=null&&total!=null&&total
 
 async function loadSocietySeries(){
  type VisibleRow={work_date:string;effective_amount:number|null;billing:{name:string}|null}
- const end=new Date();end.setUTCDate(1);end.setUTCHours(0,0,0,0)
- const periods=Array.from({length:12},(_,offset)=>{const date=new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()-11+offset,1));return `${date.getUTCFullYear()}-${String(date.getUTCMonth()+1).padStart(2,'0')}`})
  const rows:VisibleRow[]=[]
- for(let from=0;;from+=1000){const response=await supabase!.from('work_entries').select('work_date,effective_amount,billing:billing_entities(name)').gte('work_date',`${periods[0]}-01`).order('work_date',{ascending:false}).range(from,from+999);if(response.error)throw response.error;const batch=(response.data??[]) as unknown as VisibleRow[];rows.push(...batch);if(batch.length<1000)break}
+ for(let from=0;;from+=1000){const response=await supabase!.from('work_entries').select('work_date,effective_amount,billing:billing_entities(name)').order('work_date',{ascending:false}).range(from,from+999);if(response.error)throw response.error;const batch=(response.data??[]) as unknown as VisibleRow[];rows.push(...batch);if(batch.length<1000)break}
+ const latest=rows[0]?.work_date?new Date(`${rows[0].work_date}T00:00:00Z`):new Date();latest.setUTCDate(1);latest.setUTCHours(0,0,0,0)
+ const periods=Array.from({length:12},(_,offset)=>{const date=new Date(Date.UTC(latest.getUTCFullYear(),latest.getUTCMonth()-11+offset,1));return `${date.getUTCFullYear()}-${String(date.getUTCMonth()+1).padStart(2,'0')}`})
  const monthly=periods.map(label=>{const matching=rows.filter(row=>row.work_date.startsWith(label)),societies:Record<string,number>={};for(const row of matching){const society=row.billing?.name??'Sem sociedade';societies[society]=(societies[society]??0)+(row.effective_amount??0)}return {label,value:matching.reduce((sum,row)=>sum+(row.effective_amount??0),0),societies}})
  const annual:SocietyYearPoint[]=[]
  for(const row of rows){const society=row.billing?.name??'Sem sociedade',year=Number(row.work_date.slice(0,4)),existing=annual.find(point=>point.year===year&&point.society===society);if(existing)existing.value+=row.effective_amount??0;else annual.push({society,year,value:row.effective_amount??0})}
