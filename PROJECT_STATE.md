@@ -59,6 +59,7 @@ Atualizado em: 2026-08-16
 - Estados de loading, vazio e erro foram preparados; a interface foi inspecionada localmente em desktop e telemóvel sem erros de consola.
 - A consulta autenticada de movimentos foi otimizada sem retirar RLS: a verificação legal passou a `initPlan`, a permissão de âmbito permanece numa função privada, e paginação/contagem deixaram de materializar todos os joins. A contagem dos 6.789 movimentos desceu de cerca de 2,17 s para 0,42 s e a resposta completa da primeira página mede cerca de 0,55 s.
 - O CI passou a autorizar explicitamente apenas os scripts de instalação de `esbuild` e `workerd`; instalação congelada, secret scan, lint, typecheck, 28 testes e build passam localmente.
+- O audit de dependências deixou de reportar vulnerabilidades conhecidas após fixar a dependência transitiva `nanoid` na versão corrigida 3.3.18.
 - A configuração versionada do Wrangler executa `pnpm build` antes do deploy. O pipeline Workers Builds foi igualmente configurado com `pnpm build` e recebeu apenas as variáveis públicas necessárias ao frontend; não foi configurada qualquer `service_role`.
 
 ## Integrações conhecidas
