@@ -17,7 +17,7 @@ export function ResetPasswordPage({ busy, error, onSubmit }: { busy:boolean; err
         <input id="confirm-password" type="password" minLength={12} required autoComplete="new-password" value={confirmation} onChange={(e)=>setConfirmation(e.target.value)} className="control w-full px-3"/>
         {mismatch&&<p role="alert" className="text-sm text-danger">As passwords não coincidem.</p>}
         {error&&<p role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}
-        <button disabled={busy||mismatch} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-surface disabled:opacity-50">{busy?'A atualizar…':'Guardar nova password'}</button>
+        <button disabled={busy||mismatch} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-surface disabled:opacity-50">{busy?'A actualizar…':'Guardar nova password'}</button>
       </form>
     </section>
   </main>

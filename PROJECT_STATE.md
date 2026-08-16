@@ -2,9 +2,14 @@
 
 Atualizado em: 2026-08-16
 
-- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. O proprietário pediu a publicação integral deste lote em 2026-08-16. Versão actual: `0.1.1`.
+- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. Versão local em desenvolvimento: `0.1.2`; produção permanece em `0.1.1` até ao próximo pedido de publicação.
 
 ## Alterações locais pendentes — PIN inicial
+
+- O perfil de Utilizadores inclui um histórico de acessos exclusivo do proprietário; logins consecutivos do mesmo utilizador são agrupados até entrar outro utilizador, mantendo o detalhe individual expansível.
+- A criação e a edição de utilizadores permitem definir, por Sociedade, a visibilidade operacional e a autorização independente para consultar valores financeiros; proprietário e administradores mantêm acesso integral.
+- A barra superior foi simplificada para usar as cores da sidebar e apresentar apenas o percurso menu/submenu, a insígnia do utilizador, alternância claro/escuro e actualização dos dados do ecrã sem recarregar a página.
+- A designação antiga “Sociedade faturante/facturante” foi bloqueada na interface dos dashboards e substituída por “Sociedade”; a migration seguinte corrige também a origem textual no Supabase. Cliente empresarial e profissional passam igualmente a “Empresa” e “Responsável” nesse read model.
 
 - A administração pode atribuir um PIN inicial visível, introduzido uma única vez, ao criar um acesso; a confirmação só é pedida ao utilizador quando escolhe o PIN definitivo.
 - Cada conta separa o nome visível, que aceita espaços e aparece durante a sessão, do identificador de utilizador usado exclusivamente no login.

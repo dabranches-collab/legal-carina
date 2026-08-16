@@ -58,6 +58,36 @@ Deno.serve(async (request) => {
       }) })
     }
 
+    if (input.action === 'list_login_activity') {
+      const firmId = String(input.firmId ?? '')
+      const callerMembership = memberships.find((membership) => membership.firm_id === firmId)
+      if (callerMembership?.role !== 'owner') return json(request, { error: 'Apenas o proprietário pode consultar o histórico de acessos.' }, 403)
+      const { data: firmUsers, error: memberError } = await admin.from('firm_members').select('user_id').eq('firm_id', firmId)
+      if (memberError) throw memberError
+      const userIds = (firmUsers ?? []).map((membership) => membership.user_id)
+      if (!userIds.length) return json(request, { groups: [] })
+      const [{ data: events, error: eventsError }, { data: credentials, error: credentialsError }] = await Promise.all([
+        admin.from('security_events').select('id,user_id,occurred_at').eq('event_type', 'login_succeeded').in('user_id', userIds).order('occurred_at', { ascending: false }).limit(500),
+        admin.from('user_login_credentials').select('user_id,username,display_name').eq('firm_id', firmId),
+      ])
+      if (eventsError || credentialsError) throw eventsError ?? credentialsError
+      const identityById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential]))
+      const groups: Array<{ userId:string; username:string; displayName:string; firstAt:string; lastAt:string; count:number; events:string[] }> = []
+      for (const event of events ?? []) {
+        if (!event.user_id) continue
+        const previous = groups.at(-1)
+        if (previous?.userId === event.user_id) {
+          previous.count += 1
+          previous.firstAt = event.occurred_at
+          previous.events.push(event.occurred_at)
+        } else {
+          const identity = identityById.get(event.user_id)
+          groups.push({ userId:event.user_id, username:identity?.username ?? '', displayName:identity?.display_name ?? identity?.username ?? 'Utilizador', firstAt:event.occurred_at, lastAt:event.occurred_at, count:1, events:[event.occurred_at] })
+        }
+      }
+      return json(request, { groups: groups.slice(0, 100) })
+    }
+
     if (input.action === 'create_pin_user') {
       const firmId = String(input.firmId ?? '')
       const username = normalizeUsername(input.username)

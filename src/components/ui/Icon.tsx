@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react'
 
-export type IconName = 'overview' | 'clock' | 'clients' | 'matters' | 'building' | 'people' | 'invoice' | 'payment' | 'rules' | 'import' | 'reports' | 'audit' | 'admin' | 'search' | 'calendar' | 'bell' | 'logout' | 'menu' | 'chevron' | 'filter' | 'download' | 'columns' | 'more' | 'trend' | 'warning' | 'check' | 'close'
+export type IconName = 'overview' | 'clock' | 'clients' | 'matters' | 'building' | 'people' | 'invoice' | 'payment' | 'rules' | 'import' | 'reports' | 'audit' | 'admin' | 'search' | 'calendar' | 'bell' | 'logout' | 'menu' | 'chevron' | 'filter' | 'download' | 'columns' | 'more' | 'trend' | 'warning' | 'check' | 'close' | 'moon' | 'sun' | 'refresh'
 
 const paths: Record<IconName, React.ReactNode> = {
   overview: <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></>,
@@ -22,6 +22,7 @@ const paths: Record<IconName, React.ReactNode> = {
   download: <><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></>, columns: <><rect x="3" y="4" width="18" height="16"/><path d="M9 4v16M15 4v16"/></>,
   more: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>, trend: <path d="m3 17 6-6 4 4 8-9M15 6h6v6"/>,
   warning: <><path d="M12 3 2 21h20z"/><path d="M12 9v5M12 18h.01"/></>, check: <path d="m4 12 5 5L20 6"/>, close: <path d="m6 6 12 12M18 6 6 18"/>,
+  moon: <path d="M20 15.5A8 8 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5z"/>, sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></>, refresh: <><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M18.5 9A7 7 0 0 0 6 6.5L4 9M5.5 15A7 7 0 0 0 18 17.5l2-2.5"/></>,
 }
 
 export function Icon({ name, ...props }: { name: IconName } & SVGProps<SVGSVGElement>) {

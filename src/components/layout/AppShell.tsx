@@ -2,7 +2,6 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Icon } from '../ui/Icon'
 import type { NavigationItem, ViewId } from '../../types/navigation'
 import { useAuth } from '../../features/auth/AuthContext'
-import { PasswordModal } from '../../features/auth/PasswordModal'
 import { InstallAppButton } from '../pwa/InstallAppButton'
 
 const navigation: NavigationItem[] = [
@@ -15,17 +14,16 @@ const navigation: NavigationItem[] = [
   { id: 'admin', label: 'Definições', icon: 'admin' },
 ]
 
-interface AppShellProps { activeView: ViewId; selectedSociety:string|null; selectedClientType:'individual'|'company'|'mixed'|null; settingsEntity:'clients'|'billing_entities'|null; onNavigate: (view: ViewId) => void; onNavigateSociety:(name:string)=>void; onNavigateClientType:(type:'individual'|'company'|'mixed')=>void; onNavigateSettings:(target:'admin'|'clients'|'billing_entities')=>void; children: ReactNode }
+interface AppShellProps { activeView: ViewId; selectedSociety:string|null; selectedClientType:'individual'|'company'|'mixed'|null; settingsEntity:'clients'|'billing_entities'|null; onRefresh:()=>void; onNavigate: (view: ViewId) => void; onNavigateSociety:(name:string)=>void; onNavigateClientType:(type:'individual'|'company'|'mixed')=>void; onNavigateSettings:(target:'admin'|'clients'|'billing_entities')=>void; children: ReactNode }
 
 const billingSocieties=['Carina Santos','Legal Team','Massive Search']
 
-export function AppShell({ activeView, selectedSociety, selectedClientType, settingsEntity, onNavigate, onNavigateSociety, onNavigateClientType, onNavigateSettings, children }: AppShellProps) {
-  const { user, signOut, updatePassword, enrollPasskey } = useAuth()
+export function AppShell({ activeView, selectedSociety, selectedClientType, settingsEntity, onRefresh, onNavigate, onNavigateSociety, onNavigateClientType, onNavigateSettings, children }: AppShellProps) {
+  const { user, signOut } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [accountOpen, setAccountOpen] = useState(false)
-  const [passwordOpen, setPasswordOpen] = useState(false)
-  const [accountNotice, setAccountNotice] = useState('')
+  const [refreshing,setRefreshing] = useState(false)
+  const [theme,setTheme] = useState<'light'|'dark'>(()=>localStorage.getItem('carina-theme')==='dark'?'dark':'light')
   const [expandedMenu, setExpandedMenu] = useState<ViewId|null>(() => activeView==='overview'||activeView==='clients' ? activeView : activeView==='admin'||activeView==='admin-users'||activeView==='master-data'||activeView==='imports'||activeView==='import-review' ? 'admin' : null)
   const [administrationExpanded,setAdministrationExpanded]=useState(()=>activeView==='admin'||activeView==='admin-users'||activeView==='imports'||activeView==='import-review')
   const displayName = typeof user?.user_metadata?.display_name === 'string' && user.user_metadata.display_name.trim()
@@ -34,8 +32,12 @@ export function AppShell({ activeView, selectedSociety, selectedClientType, sett
       ? user.user_metadata.username.trim()
     : user?.email?.split('@')[0] ?? 'Utilizador'
   useEffect(() => setMobileOpen(false), [activeView])
+  useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem('carina-theme',theme)},[theme])
   const currentLabel = activeView==='master-data'?'Definições':activeView==='admin-users'?'Utilizadores':navigation.find(({ id }) => id === activeView)?.label ?? 'Carina - Legal'
   const isNavigationSelected = (id:ViewId) => (id==='overview'&&Boolean(selectedSociety)) || (id==='clients'&&activeView==='clients') || (id==='admin'&&(activeView==='admin'||activeView==='admin-users'||activeView==='master-data'||activeView==='imports'||activeView==='import-review')) || (activeView===id&&!(id==='billing'&&Boolean(selectedSociety)))
+  const subLabel = activeView==='billing'&&selectedSociety?selectedSociety:activeView==='clients'&&selectedClientType?({individual:'Particulares',company:'Empresas',mixed:'Mistos'} as const)[selectedClientType]:activeView==='master-data'?(settingsEntity==='billing_entities'?'Sociedades':'Clientes'):activeView==='admin-users'?'Utilizadores':activeView==='imports'?'Importações':activeView==='import-review'?'Revisão de importações':null
+  const parentLabel = activeView==='master-data'||activeView==='admin'||activeView==='admin-users'||activeView==='imports'||activeView==='import-review'?'Definições':currentLabel
+  const refreshData=()=>{setRefreshing(true);onRefresh();window.setTimeout(()=>setRefreshing(false),500)}
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -73,23 +75,18 @@ export function AppShell({ activeView, selectedSociety, selectedClientType, sett
       </aside>
 
       <div className={`transition-[padding] duration-200 ${collapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
-        <header className="app-shell-header sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-surface/95 backdrop-blur">
-          <button className="grid size-10 place-items-center rounded-lg border border-border lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Abrir navegação"><Icon name="menu" className="size-5" /></button>
-          <div className="hidden min-w-0 flex-1 items-center md:flex"><div className="relative w-full max-w-md"><Icon name="search" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"/><input className="control w-full py-2 pl-10 pr-4 text-sm" aria-label="Pesquisa global" placeholder="Pesquisar clientes, processos ou movimentos…" /></div></div>
-          <div className="ml-auto flex items-center gap-2">
-            <button className="control hidden items-center gap-2 px-3 text-sm xl:flex"><Icon name="calendar" className="size-4 text-secondary"/><span>01 jan — 31 dez 2026</span></button>
-            <label className="sr-only" htmlFor="selected-billing">Sociedade selecionada</label><select id="selected-billing" className="control hidden max-w-48 px-3 text-sm sm:block" defaultValue="all"><option value="all">Todas as sociedades</option><option>Carina Santos</option><option>Legal Team</option><option>Massive Search</option></select>
-            <button className="relative grid size-10 place-items-center rounded-lg border border-border hover:bg-surface-subtle" aria-label="Notificações, 3 novas"><Icon name="bell" className="size-5"/><span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-danger ring-2 ring-surface" /></button>
-            <div className="relative hidden sm:block"><button onClick={() => setAccountOpen((value) => !value)} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-subtle" aria-label="Menu do utilizador" aria-expanded={accountOpen}><span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-surface">DA</span><Icon name="chevron" className="size-3 rotate-90 text-text-secondary"/></button>{accountOpen && <div className="absolute right-0 top-12 z-30 w-52 rounded-lg border border-border bg-surface p-2 shadow-lg"><button onClick={() => { setAccountOpen(false); setPasswordOpen(true) }} className="w-full rounded-md px-3 py-2 text-left text-sm font-semibold hover:bg-surface-subtle">Definir password</button><button onClick={async () => { setAccountOpen(false); setAccountNotice('A aguardar confirmação do dispositivo…'); const passkeyFailure = await enrollPasskey(); setAccountNotice(passkeyFailure ? `A passkey não foi concluída: ${passkeyFailure}` : 'Passkey ativada com sucesso.') }} className="w-full rounded-md px-3 py-2 text-left text-sm font-semibold hover:bg-surface-subtle">Ativar passkey</button></div>}</div>
-          </div>
+        <header className="app-shell-header sticky top-0 z-20 flex items-center gap-3 border-b border-accent/30 bg-primary text-accent shadow-sm">
+          <button className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Abrir navegação"><Icon name="menu" className="size-5" /></button>
+          <nav aria-label="Localização" className="min-w-0 flex-1"><ol className="flex min-w-0 items-center gap-2 text-sm font-semibold"><li className="truncate">{parentLabel}</li>{subLabel&&subLabel!==parentLabel&&<><li aria-hidden="true" className="text-accent/55">/</li><li className="truncate text-accent/75" aria-current="page">{subLabel}</li></>}</ol></nav>
+          <button type="button" onClick={()=>setTheme(value=>value==='light'?'dark':'light')} className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 hover:bg-surface/10" aria-label={theme==='light'?'Activar modo escuro':'Activar modo claro'} title={theme==='light'?'Modo escuro':'Modo claro'}><Icon name={theme==='light'?'moon':'sun'} className="size-5"/></button>
+          <button type="button" onClick={refreshData} disabled={refreshing} className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 hover:bg-surface/10 disabled:opacity-60" aria-label="Actualizar dados apresentados" title="Actualizar dados"><Icon name="refresh" className={`size-5 ${refreshing?'animate-spin':''}`}/></button>
+          <div className="grid size-10 place-items-center rounded-full border border-accent/50 bg-secondary text-xs font-semibold text-surface" title={displayName}>{displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase()}</div>
         </header>
         <main id="main-content" className="app-shell-main py-6 sm:py-8">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-secondary">Carina - Legal</p><h1 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">{currentLabel}</h1></div><span className="rounded-full border border-warning/25 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">{(['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users'] as ViewId[]).includes(activeView) ? 'Dados reais — acesso restrito' : 'Dados demonstrativos anonimizados'}</span></div>
           {children}
         </main>
       </div>
-      {passwordOpen && <PasswordModal onClose={() => setPasswordOpen(false)} onSubmit={updatePassword} />}
-      {accountNotice && <div role="status" className="app-safe-toast fixed bottom-4 right-4 z-50 max-w-sm rounded-lg border border-border bg-surface p-4 text-sm shadow-lg"><div className="flex items-start gap-3"><p className="flex-1">{accountNotice}</p><button onClick={() => setAccountNotice('')} aria-label="Fechar mensagem" className="font-semibold text-text-secondary">×</button></div></div>}
     </div>
   )
 }

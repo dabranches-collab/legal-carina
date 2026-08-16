@@ -24,8 +24,8 @@ export function LoginPage({ busy, error, notice, onPinLogin, onRecover, onPasske
 
   return <main className="app-safe-screen grid bg-background lg:grid-cols-[1.05fr_.95fr]">
     <section className="hidden bg-primary p-12 text-surface lg:flex lg:flex-col lg:justify-between">
-      <div><div className="grid size-12 place-items-center rounded-xl border border-accent/50 font-display text-2xl font-semibold text-accent">CS</div><p className="mt-8 max-w-lg font-display text-4xl leading-tight">Gestão de clientes e faturação com rigor, clareza e confidencialidade.</p></div>
-      <p className="max-w-md text-sm leading-6 text-surface/65">Acesso reservado a utilizadores criados pela administração. A atividade de segurança pode ser auditada.</p>
+      <div><div className="grid size-12 place-items-center rounded-xl border border-accent/50 font-display text-2xl font-semibold text-accent">CS</div><p className="mt-8 max-w-lg font-display text-4xl leading-tight">Gestão de clientes e facturação com rigor, clareza e confidencialidade.</p></div>
+      <p className="max-w-md text-sm leading-6 text-surface/65">Acesso reservado a utilizadores criados pela administração. A actividade de segurança pode ser auditada.</p>
     </section>
     <section className="flex items-center justify-center p-6 sm:p-10"><div className="w-full max-w-md">
       <div className="mb-8 lg:hidden"><div className="grid size-11 place-items-center rounded-xl bg-primary font-display text-xl font-semibold text-surface">CS</div></div>

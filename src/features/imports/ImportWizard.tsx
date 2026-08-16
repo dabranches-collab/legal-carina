@@ -42,14 +42,14 @@ export function ImportWizard() {
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.35fr_.65fr]">
         <div onDragOver={(event) => event.preventDefault()} onDrop={dropped} className="card rounded-2xl border-2 border-dashed border-accent/50 p-8 text-center">
           <p className="font-serif text-xl font-semibold">Arraste o ficheiro para esta zona</p>
-          <p className="mt-2 text-sm text-text-secondary">Formatos permitidos: .xlsx e .csv · sem macros ou conteúdo ativo</p>
-          <button type="button" onClick={() => inputRef.current?.click()} className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-surface hover:bg-primary-hover">Selecionar ficheiro</button>
-          <input ref={inputRef} type="file" accept=".xlsx,.csv" onChange={selected} className="sr-only" aria-label="Selecionar ficheiro XLSX ou CSV" />
+          <p className="mt-2 text-sm text-text-secondary">Formatos permitidos: .xlsx e .csv · sem macros ou conteúdo activo</p>
+          <button type="button" onClick={() => inputRef.current?.click()} className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-surface hover:bg-primary-hover">Seleccionar ficheiro</button>
+          <input ref={inputRef} type="file" accept=".xlsx,.csv" onChange={selected} className="sr-only" aria-label="Seleccionar ficheiro XLSX ou CSV" />
         </div>
         <div className="rounded-2xl border border-border bg-surface-subtle p-6">
           <label htmlFor="max-size" className="text-sm font-semibold">Limite configurável</label>
           <div className="mt-2 flex items-center gap-2"><input id="max-size" type="number" min="1" max="100" value={maxSize} onChange={(event) => setMaxSize(Number(event.target.value))} className="control w-24 px-3 py-2" /><span>MB</span></div>
-          <p className="mt-4 break-all text-xs leading-5 text-text-secondary">{file ? `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB` : 'Nenhum ficheiro selecionado.'}</p>
+          <p className="mt-4 break-all text-xs leading-5 text-text-secondary">{file ? `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB` : 'Nenhum ficheiro seleccionado.'}</p>
         </div>
       </div>
 
@@ -67,8 +67,8 @@ export function ImportWizard() {
         <div><h3 className="font-serif text-2xl font-semibold">Confirmação</h3><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[
           ['Linhas analisadas', summary.totalRows], ['Válidas', summary.validRows], ['Com avisos', summary.warningRows], ['Inválidas', summary.invalidRows],
           ['Clientes novos', summary.newClients], ['Clientes existentes', summary.existingClients], ['Possíveis duplicados', summary.possibleDuplicates], ['Sem preço', summary.withoutPrice],
-          ['Faturadas', summary.invoicedRows], ['Pagas', summary.paidRows], ['Arquivadas', summary.archivedRows], ['Impacto financeiro', formatCurrency(summary.financialImpact)],
-        ].map(([label, value]) => <div key={label} className="card rounded-xl p-4"><p className="text-xs text-text-secondary">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p></div>)}</div><p className="mt-3 text-sm text-text-secondary">{analysis.ignoredRows} linhas sem data, cliente e atividade foram ignoradas.</p></div>
+          ['Facturadas', summary.invoicedRows], ['Pagas', summary.paidRows], ['Arquivadas', summary.archivedRows], ['Impacto financeiro', formatCurrency(summary.financialImpact)],
+        ].map(([label, value]) => <div key={label} className="card rounded-xl p-4"><p className="text-xs text-text-secondary">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p></div>)}</div><p className="mt-3 text-sm text-text-secondary">{analysis.ignoredRows} linhas sem data, cliente e actividade foram ignoradas.</p></div>
 
         <div className="card overflow-x-auto"><table className="min-w-full text-left text-xs"><caption className="p-4 text-left font-display text-lg font-semibold">Pré-visualização local (primeiras 8 linhas)</caption><thead className="bg-surface-subtle"><tr>{analysis.preview[0].map((header, index) => <th key={`${header}-${index}`} className="whitespace-nowrap px-3 py-2">{header}</th>)}</tr></thead><tbody>{analysis.preview.slice(1).map((row, rowIndex) => <tr key={rowIndex} className="border-t border-border">{row.map((value, index) => <td key={index} className="max-w-56 truncate px-3 py-2">{value}</td>)}</tr>)}</tbody></table></div>
 

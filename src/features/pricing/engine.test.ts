@@ -21,7 +21,7 @@ const discount = (id: string, patch: Partial<DiscountRule> = {}): DiscountRule =
 
 describe('pricing engine', () => {
   it.each([[0.0104166667, 15], [0.0208333333, 30], [0.0416666667, 60], [0.125, 180]])(
-    'converte a fração Excel %s em %i minutos', (fraction, minutes) => {
+    'converte a fracção Excel %s em %i minutos', (fraction, minutes) => {
       expect(excelDayFractionToMinutes(fraction)).toBe(minutes)
     },
   )
@@ -79,7 +79,7 @@ describe('pricing engine', () => {
     expect(result).toMatchObject({ preDiscountAmount: 150, discountAmount: 150, proposedAmount: 0 })
   })
 
-  it('preserva overrides e registos faturados na pré-visualização por defeito', () => {
+  it('preserva overrides e registos facturados na pré-visualização por defeito', () => {
     const preview = previewRecalculation([
       entry,
       { ...entry, id: 'override', hasManualOverride: true, manualAmount: 400, effectiveAmount: 400 },
@@ -89,7 +89,7 @@ describe('pricing engine', () => {
     expect(preview.entries.map(({ id }) => id)).toEqual(['entry-1'])
   })
 
-  it('filtra ações em massa por período, cliente, sociedade e profissional', () => {
+  it('filtra acções em massa por período, cliente, sociedade e profissional', () => {
     const preview = previewRecalculation([
       entry,
       { ...entry, id: 'other-client', clientId: 'client-2' },

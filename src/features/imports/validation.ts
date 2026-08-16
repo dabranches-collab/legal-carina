@@ -31,7 +31,7 @@ export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalFi
   const date = excelDate(cells.date)
   if (!date) issues.push({ severity: 'error', code: 'invalid_date', message: 'Data ausente ou inválida.' })
   if (!cells.clientName?.text.trim()) issues.push({ severity: 'error', code: 'missing_client', message: 'Cliente em falta.' })
-  if (!cells.activity?.text.trim()) issues.push({ severity: 'error', code: 'missing_activity', message: 'Atividade em falta.' })
+  if (!cells.activity?.text.trim()) issues.push({ severity: 'error', code: 'missing_activity', message: 'Actividade em falta.' })
   const clientType=normalizedPartyType(cells.partyType)
   if (!clientType) issues.push({ severity: 'warning', code: 'unknown_client_type', message: 'Tipo de cliente desconhecido; deve ser Particular ou Empresa.' })
   const durationFraction = numberValue(cells.duration)

@@ -37,6 +37,7 @@ export function AuthenticatedApplication() {
   const [society,setSociety] = useState<string|null>(initial.society)
   const [clientType,setClientType] = useState<'individual'|'company'|'mixed'|null>(initial.clientType)
   const [settingsEntity,setSettingsEntity] = useState<'clients'|'billing_entities'|null>(initial.settingsEntity)
+  const [refreshKey,setRefreshKey] = useState(0)
   useEffect(() => { const sync=()=>{const location=readLocation();setView(location.view);setSociety(location.society);setClientType(location.clientType);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [])
   function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|null=null) {
     const url=new URL(window.location.href); url.searchParams.set('view',nextView)
@@ -57,7 +58,7 @@ export function AuthenticatedApplication() {
   else if (view === 'admin') content = <AdminLandingPage onNavigate={navigate} />
   else if (view === 'admin-users') content = <AdminPage />
   else { const page = placeholders[view]!; content = <PlaceholderPage {...page} /> }
-  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}>{content}</AppShell>
+  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><div key={refreshKey}>{content}</div></AppShell>
 }
 
 export default function App() {

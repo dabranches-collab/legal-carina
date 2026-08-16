@@ -11,8 +11,8 @@ type ReviewRow = {
 
 const labels: Record<string, string> = {
   possible_duplicate: 'Possível duplicado',
-  invoiced_without_invoice_date: 'Faturado sem data',
-  paid_without_invoiced: 'Pago sem marca de faturado',
+  invoiced_without_invoice_date: 'Facturado sem data',
+  paid_without_invoiced: 'Pago sem marca de facturado',
   client_category_conflict: 'Categoria do cliente variável',
 }
 

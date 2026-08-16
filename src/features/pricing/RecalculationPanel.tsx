@@ -17,13 +17,13 @@ export function RecalculationPanel({ preview, onCancel, onConfirm }: Recalculati
       <p className="mt-2 text-sm text-text-secondary">Nenhum valor é gravado antes da confirmação.</p>
       <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div><dt className="text-xs text-text-secondary">Registos</dt><dd className="text-xl font-semibold">{preview.recalculableCount}</dd></div>
-        <div><dt className="text-xs text-text-secondary">Valor atual</dt><dd className="text-xl font-semibold">{euro.format(preview.currentTotal)}</dd></div>
+        <div><dt className="text-xs text-text-secondary">Valor actual</dt><dd className="text-xl font-semibold">{euro.format(preview.currentTotal)}</dd></div>
         <div><dt className="text-xs text-text-secondary">Valor proposto</dt><dd className="text-xl font-semibold">{euro.format(preview.proposedTotal)}</dd></div>
         <div><dt className="text-xs text-text-secondary">Diferença</dt><dd className="text-xl font-semibold">{euro.format(preview.difference)}</dd></div>
       </dl>
       {(preview.skippedOverrideCount > 0 || preview.skippedInvoicedCount > 0 || preview.missingPriceCount > 0) && (
         <p className="mt-4 rounded-lg bg-warning-soft p-3 text-sm text-warning">
-          Excluídos: {preview.skippedOverrideCount} com override, {preview.skippedInvoicedCount} faturados; {preview.missingPriceCount} sem preço.
+          Excluídos: {preview.skippedOverrideCount} com override, {preview.skippedInvoicedCount} facturados; {preview.missingPriceCount} sem preço.
         </p>
       )}
       <label className="mt-5 flex items-start gap-3 text-sm">

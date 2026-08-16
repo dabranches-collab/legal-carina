@@ -16,7 +16,7 @@ export function MonthlyValueChart({ data }: { data: ChartPoint[] }) {
   const values = Array.from({ length: 12 }, (_, index) => data.find((point) => Number(point.label) === index + 1)?.value ?? 0)
   const max = Math.max(...values, 1)
   const points = values.map((value, index) => `${(index / 11) * 100},${100 - value / max * 90}`).join(' ')
-  return <ChartCard title="Valor por mês" subtitle="Ano selecionado · sazonalidade mensal" className="lg:col-span-2"><div className="h-56">
+  return <ChartCard title="Valor por mês" subtitle="Ano seleccionado · sazonalidade mensal" className="lg:col-span-2"><div className="h-56">
     <svg viewBox="0 0 100 110" preserveAspectRatio="none" className="h-48 w-full overflow-visible" role="img" aria-label="Linha demonstrativa de valor mensal">
       <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="var(--color-chart-1)" stopOpacity=".25"/><stop offset="1" stopColor="var(--color-chart-1)" stopOpacity="0"/></linearGradient></defs>
       <path d={`M0,100 L${points} L100,100 Z`} fill="url(#area)"/><polyline points={points} fill="none" stroke="var(--color-chart-1)" strokeWidth="2" vectorEffect="non-scaling-stroke"/>
