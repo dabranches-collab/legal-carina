@@ -24,11 +24,11 @@ export function LoginPage({ busy, error, notice, onPinLogin, onRecover, onPasske
 
   return <main className="app-safe-screen grid bg-background lg:grid-cols-[1.05fr_.95fr]">
     <section className="hidden bg-primary p-12 text-surface lg:flex lg:flex-col lg:justify-between">
-      <div><div className="grid size-12 place-items-center rounded-xl border border-accent/50 font-display text-xl text-accent">CS</div><p className="mt-8 max-w-lg font-display text-4xl leading-tight">Gestão de clientes e faturação com rigor, clareza e confidencialidade.</p></div>
+      <div><div className="grid size-12 place-items-center rounded-xl border border-accent/50 font-display text-2xl font-semibold text-accent">CS</div><p className="mt-8 max-w-lg font-display text-4xl leading-tight">Gestão de clientes e faturação com rigor, clareza e confidencialidade.</p></div>
       <p className="max-w-md text-sm leading-6 text-surface/65">Acesso reservado a utilizadores criados pela administração. A atividade de segurança pode ser auditada.</p>
     </section>
     <section className="flex items-center justify-center p-6 sm:p-10"><div className="w-full max-w-md">
-      <div className="mb-8 lg:hidden"><div className="grid size-11 place-items-center rounded-xl bg-primary font-display text-surface">CS</div></div>
+      <div className="mb-8 lg:hidden"><div className="grid size-11 place-items-center rounded-xl bg-primary font-display text-xl font-semibold text-surface">CS</div></div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">Carina - Legal</p>
       <h1 className="mt-2 font-display text-3xl font-semibold">{recovery ? 'Recuperar acesso' : 'Iniciar sessão'}</h1>
       <p className="mt-3 text-sm leading-6 text-text-secondary">{recovery ? 'A recuperação é enviada apenas para o email administrativo associado à conta.' : 'Introduza o nome de utilizador e o PIN definidos pela administração.'}</p>
@@ -43,7 +43,7 @@ export function LoginPage({ busy, error, notice, onPinLogin, onRecover, onPasske
       </form>
       {!recovery && <button type="button" disabled={busy} onClick={() => void onPasskeyLogin()} className="mt-3 min-h-11 w-full rounded-lg border border-border bg-surface px-4 py-3 font-semibold text-primary hover:bg-surface-muted disabled:opacity-50">Entrar com Face ID, Windows Hello ou passkey</button>}
       <button type="button" onClick={() => { onClearError(); setRecovery((value) => !value) }} className="mt-5 text-sm font-semibold text-secondary hover:underline">{recovery ? 'Voltar ao login' : 'Preciso de recuperar o acesso'}</button>
-      <p className="mt-8 border-t border-border pt-5 text-xs leading-5 text-text-secondary">Não existe registo público. Os acessos são criados em Administração.</p>
+      <p className="mt-8 border-t border-border pt-5 text-xs leading-5 text-text-secondary">Não existe registo público. Os acessos são criados em Administração.</p><p className="mt-2 text-[0.7rem] text-text-secondary">Versão {__APP_VERSION__}</p>
     </div></section>
   </main>
 }

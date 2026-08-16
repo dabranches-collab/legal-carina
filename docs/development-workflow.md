@@ -1,5 +1,14 @@
 # Workflow de desenvolvimento
 
+## Publicação por lotes e versões
+
+- Alterações pedidas durante o trabalho são acumuladas e verificadas localmente.
+- Não fazer `push`, merge ou publicação por cada instrução.
+- Quando solicitado, apresentar a lista das alterações pendentes e respetivos testes.
+- Só publicar após instrução explícita do responsável pelo projeto.
+- A versão visível segue SemVer: correção compatível aumenta `PATCH` (`0.1.1`), nova funcionalidade compatível aumenta `MINOR` (`0.2.0`) e mudança incompatível aumenta `MAJOR` (`1.0.0`).
+- Durante o MVP usa-se a série `0.x`; a primeira versão considerada estável e publicável será `1.0.0` após a auditoria final.
+
 1. Começar sempre com `git switch main` e `git pull --ff-only`.
 2. Criar `feature/*`, `fix/*`, `docs/*` ou `security/*` por alteração coerente.
 3. Usar exclusivamente o `pnpm-lock.yaml` versionado e `pnpm install --frozen-lockfile`.

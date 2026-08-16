@@ -2,6 +2,8 @@
 
 Atualizado em: 2026-08-16
 
+- Regra de entrega atual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. Versão local atual: `0.1.0`.
+
 ## Atualização — identidade, acesso e PWA
 
 - Nome visível alterado para **Carina - Legal** e monograma para **CS**.

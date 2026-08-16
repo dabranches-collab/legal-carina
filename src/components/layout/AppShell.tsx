@@ -35,8 +35,8 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
       {mobileOpen && <button className="app-safe-fixed fixed z-30 bg-primary/35 lg:hidden" aria-label="Fechar navegação" onClick={() => setMobileOpen(false)} />}
       <aside aria-label="Navegação principal" className={`app-shell-sidebar fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-primary text-surface transition-[width,transform] duration-200 ${collapsed ? 'lg:w-20' : 'lg:w-64'} w-[min(18rem,calc(100vw-var(--safe-right)))] ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex h-18 items-center gap-3 border-b border-surface/10 px-5">
-          <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-accent/50 bg-surface/5 font-display text-lg text-accent">CS</div>
-          {!collapsed && <div className="min-w-0"><p className="font-display text-lg font-semibold leading-none">Carina - Legal</p><p className="mt-1 text-[0.65rem] uppercase tracking-[0.18em] text-surface/55">Gestão de clientes</p></div>}
+          <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-accent/50 bg-surface/5 font-display text-xl font-semibold text-accent">CS</div>
+          {!collapsed && <div className="min-w-0 flex-1"><p className="whitespace-nowrap font-display text-base font-semibold leading-none">Carina - Legal</p><p className="mt-1 whitespace-nowrap text-[0.6rem] uppercase tracking-[0.14em] text-surface/55">Gestão de clientes</p></div>}
           <button className="ml-auto hidden size-8 place-items-center rounded-lg text-surface/70 hover:bg-surface/10 hover:text-surface lg:grid" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? 'Expandir navegação' : 'Recolher navegação'} aria-expanded={!collapsed}>
             <Icon name="chevron" className={`size-4 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
           </button>
@@ -52,7 +52,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
         <div className="border-t border-surface/10 p-3"><div className={`flex items-center gap-3 rounded-lg bg-surface/5 p-2 ${collapsed ? 'justify-center' : ''}`}>
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-sm font-semibold">DA</span>
           {!collapsed && <div className="min-w-0"><p className="truncate text-sm font-semibold">{displayName}</p><p className="truncate text-xs text-surface/55">Sessão protegida</p></div>}
-        </div></div>
+        </div>{!collapsed && <p className="mt-2 text-center text-[0.65rem] tracking-wider text-surface/45">Versão {__APP_VERSION__}</p>}</div>
       </aside>
 
       <div className={`transition-[padding] duration-200 ${collapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
