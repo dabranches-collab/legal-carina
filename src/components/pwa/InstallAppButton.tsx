@@ -15,13 +15,18 @@ function platformInstructions() {
 export function InstallAppButton() {
   const [prompt, setPrompt] = useState<InstallPromptEvent | null>(null)
   const [open, setOpen] = useState(false)
-  const installed = window.matchMedia('(display-mode: standalone)').matches
+  const [installed, setInstalled] = useState(() => window.matchMedia('(display-mode: standalone)').matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
   const instructions = platformInstructions()
 
   useEffect(() => {
     const capture = (event: Event) => { event.preventDefault(); setPrompt(event as InstallPromptEvent) }
+    const markInstalled = () => { setInstalled(true); setOpen(false); setPrompt(null) }
+    const displayMode = window.matchMedia('(display-mode: standalone)')
+    const inspectMode = () => setInstalled(displayMode.matches || Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
     window.addEventListener('beforeinstallprompt', capture)
-    return () => window.removeEventListener('beforeinstallprompt', capture)
+    window.addEventListener('appinstalled', markInstalled)
+    displayMode.addEventListener('change', inspectMode)
+    return () => { window.removeEventListener('beforeinstallprompt', capture); window.removeEventListener('appinstalled', markInstalled); displayMode.removeEventListener('change', inspectMode) }
   }, [])
 
   if (installed) return null
