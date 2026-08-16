@@ -4,6 +4,12 @@ import type { CanonicalField } from './types'
 
 const yes = (value?: CellSnapshot) => ['√', 'SIM', 'S', 'TRUE', '1'].includes(value?.text.trim().toUpperCase() ?? '')
 const numberValue = (cell?: CellSnapshot) => typeof cell?.raw === 'number' && Number.isFinite(cell.raw) ? cell.raw : Number(String(cell?.raw ?? '').replace(',', '.'))
+const normalizedPartyType = (cell?: CellSnapshot):'individual'|'company'|undefined => {
+  const value=cell?.text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase()
+  if (value==='PARTICULAR'||value==='INDIVIDUAL') return 'individual'
+  if (value==='SOCIEDADE'||value==='EMPRESA'||value==='COMPANY') return 'company'
+  return undefined
+}
 
 function excelDate(cell?: CellSnapshot): string | undefined {
   if (!cell || cell.raw === null || cell.raw === '') return undefined
@@ -18,7 +24,7 @@ function excelDate(cell?: CellSnapshot): string | undefined {
   return Number.isNaN(date.valueOf()) ? undefined : date.toISOString().slice(0, 10)
 }
 
-const fingerprint = (cells: Partial<Record<CanonicalField, CellSnapshot>>) => [cells.date?.text, cells.clientName?.text, cells.activity?.text, cells.duration?.text, cells.owner?.text].map((v) => v?.trim().toUpperCase() ?? '').join('|')
+const fingerprint = (cells: Partial<Record<CanonicalField, CellSnapshot>>) => [cells.date?.text, cells.clientName?.text, cells.activity?.text, cells.duration?.text, cells.responsible?.text].map((v) => v?.trim().toUpperCase() ?? '').join('|')
 
 export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalField, CellSnapshot>>, knownClientCodes = new Set<string>()): ImportRow {
   const issues: ImportIssue[] = []
@@ -26,6 +32,8 @@ export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalFi
   if (!date) issues.push({ severity: 'error', code: 'invalid_date', message: 'Data ausente ou inválida.' })
   if (!cells.clientName?.text.trim()) issues.push({ severity: 'error', code: 'missing_client', message: 'Cliente em falta.' })
   if (!cells.activity?.text.trim()) issues.push({ severity: 'error', code: 'missing_activity', message: 'Atividade em falta.' })
+  const clientType=normalizedPartyType(cells.partyType)
+  if (!clientType) issues.push({ severity: 'warning', code: 'unknown_client_type', message: 'Tipo de cliente desconhecido; deve ser Particular ou Empresa.' })
   const durationFraction = numberValue(cells.duration)
   const durationMinutes = Number.isFinite(durationFraction) ? Math.round(durationFraction * 24 * 60) : undefined
   if (!durationMinutes || durationMinutes < 1) issues.push({ severity: 'error', code: 'invalid_duration', message: 'Duração inválida; deve resultar em minutos positivos.' })
@@ -37,7 +45,7 @@ export function validateRow(sourceRow: number, cells: Partial<Record<CanonicalFi
   if (cells.amount?.raw !== null && cells.amount?.raw !== '' && !cells.amount?.formula) issues.push({ severity: 'warning', code: 'manual_amount', message: 'Valor aparenta ter sido introduzido manualmente.' })
   const code = cells.clientCode?.text.trim()
   if (code && knownClientCodes.size && !knownClientCodes.has(code)) issues.push({ severity: 'warning', code: 'unknown_client_code', message: 'Código não consta da folha CLIENTES.' })
-  return { sourceRow, cells, normalized: { date, durationMinutes, hourlyRate: Number.isFinite(hourlyRate) ? hourlyRate : undefined, amount: Number.isFinite(amount) ? amount : calculated, invoiced: yes(cells.invoiced), paid: yes(cells.paid), archived: Boolean(cells.archive?.text.trim()) }, issues, fingerprint: fingerprint(cells) }
+  return { sourceRow, cells, normalized: { date, clientType, durationMinutes, hourlyRate: Number.isFinite(hourlyRate) ? hourlyRate : undefined, amount: Number.isFinite(amount) ? amount : calculated, invoiced: yes(cells.invoiced), paid: yes(cells.paid), archived: Boolean(cells.archive?.text.trim()) }, issues, fingerprint: fingerprint(cells) }
 }
 
 export function summarizeRows(rows: ImportRow[]): ImportSummary {

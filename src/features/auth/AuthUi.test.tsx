@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { LoginPage } from './LoginPage'
 import { TermsModal } from './TermsModal'
 import { ResetPasswordPage } from './ResetPasswordPage'
+import { InitialPinChangePage } from './InitialPinChangePage'
 import type { LegalDocumentRow } from '../../types/database.types'
 
 const documents: LegalDocumentRow[] = [
@@ -43,5 +44,20 @@ describe('autenticação', () => {
     await userEvent.type(screen.getByLabelText('Nova password'),'Password!2026')
     await userEvent.type(screen.getByLabelText('Confirmar password'),'Password!2027')
     expect(screen.getByRole('button',{name:'Guardar nova password'})).toBeDisabled()
+  })
+
+  it('obriga a substituir o PIN inicial por um PIN diferente', async () => {
+    const onSubmit=vi.fn()
+    render(<InitialPinChangePage busy={false} error="" onSubmit={onSubmit} onLogout={vi.fn()}/>)
+    await userEvent.type(screen.getByLabelText('PIN inicial'),'2468')
+    await userEvent.type(screen.getByLabelText('Novo PIN'),'2468')
+    await userEvent.type(screen.getByLabelText('Confirmar novo PIN'),'2468')
+    expect(screen.getByRole('button',{name:'Guardar novo PIN'})).toBeDisabled()
+    await userEvent.clear(screen.getByLabelText('Novo PIN'))
+    await userEvent.clear(screen.getByLabelText('Confirmar novo PIN'))
+    await userEvent.type(screen.getByLabelText('Novo PIN'),'1357')
+    await userEvent.type(screen.getByLabelText('Confirmar novo PIN'),'1357')
+    await userEvent.click(screen.getByRole('button',{name:'Guardar novo PIN'}))
+    expect(onSubmit).toHaveBeenCalledWith('2468','1357')
   })
 })

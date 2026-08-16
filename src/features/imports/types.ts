@@ -1,5 +1,5 @@
 export const canonicalFields = [
-  'date', 'partyType', 'clientName', 'clientCode', 'activity', 'owner',
+  'date', 'partyType', 'clientName', 'clientCode', 'activity', 'responsible',
   'duration', 'hourlyRate', 'amount', 'billingEntity', 'status', 'invoiced',
   'invoiceDate', 'archive', 'paid', 'notes', 'year', 'tableDuration',
 ] as const
@@ -9,7 +9,7 @@ export type CellSnapshot = { raw: unknown; text: string; formula?: string }
 export type ImportRow = {
   sourceRow: number
   cells: Partial<Record<CanonicalField, CellSnapshot>>
-  normalized: { date?: string; durationMinutes?: number; hourlyRate?: number; amount?: number; invoiced: boolean; paid: boolean; archived: boolean }
+  normalized: { date?: string; clientType?: 'individual'|'company'; durationMinutes?: number; hourlyRate?: number; amount?: number; invoiced: boolean; paid: boolean; archived: boolean }
   issues: ImportIssue[]
   fingerprint: string
 }

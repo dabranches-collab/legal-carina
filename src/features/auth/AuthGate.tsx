@@ -7,6 +7,7 @@ import { authErrorMessage } from './messages'
 import { LoginPage } from './LoginPage'
 import { ResetPasswordPage } from './ResetPasswordPage'
 import { TermsModal } from './TermsModal'
+import { InitialPinChangePage } from './InitialPinChangePage'
 
 const requiresLegalAcceptance = import.meta.env.VITE_REQUIRE_LEGAL_ACCEPTANCE === 'true'
 
@@ -32,6 +33,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [legalConfigured, setLegalConfigured] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [mustChangePin, setMustChangePin] = useState(false)
   const [recoveryMode, setRecoveryMode] = useState(() => {
     const authFlowType = new URLSearchParams(window.location.hash.slice(1)).get('type')
     return window.location.pathname === '/reset-password' || authFlowType === 'recovery' || authFlowType === 'invite'
@@ -72,6 +74,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (userError || !data.user) { await client.auth.signOut(); setLoading(false); return }
       setSession(initialSession); setUser(data.user)
+      setMustChangePin(data.user.app_metadata?.must_change_pin === true)
       try { await loadLegalState(data.user) } catch (reason) { setError(authErrorMessage(reason)) }
       finally { if (active) setLoading(false) }
     }
@@ -80,7 +83,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
       setSession(nextSession); setUser(nextSession?.user ?? null)
-      if (!nextSession) { setAccepted(false); setDocuments([]); setLoading(false) }
+      if (!nextSession) { setAccepted(false); setDocuments([]); setMustChangePin(false); setLoading(false) }
     })
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [loadLegalState])
@@ -101,6 +104,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       return
     }
     setUser(sessionData.user); setSession(sessionData.session)
+    setMustChangePin(data.mustChangePin === true || sessionData.user.app_metadata?.must_change_pin === true)
     try { await loadLegalState(sessionData.user) } catch (reason) { setError(authErrorMessage(reason)) }
     setBusy(false)
   }
@@ -167,13 +171,26 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
-    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setAccepted(false)
+    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setAccepted(false); setMustChangePin(false)
+  }
+
+  async function changeInitialPin(currentPin:string,newPin:string) {
+    if (!supabase) return
+    setBusy(true); setError('')
+    const { data, error:changeError } = await supabase.functions.invoke('change-pin', { body:{ currentPin,newPin } })
+    if (changeError || data?.error) { setError(data?.error ?? 'Não foi possível alterar o PIN.'); setBusy(false); return }
+    const { data:refreshed, error:refreshError } = await supabase.auth.refreshSession()
+    if (refreshError || !refreshed.session) { await signOut(); return }
+    setSession(refreshed.session); setUser(refreshed.user); setMustChangePin(false)
+    if (refreshed.user) { try { await loadLegalState(refreshed.user) } catch (reason) { setError(authErrorMessage(reason)) } }
+    setBusy(false)
   }
 
   if (!hasSupabaseConfiguration) return <ConfigurationRequired />
   if (loading) return <div role="status" className="grid min-h-screen place-items-center bg-background text-sm text-text-secondary">A validar sessão segura…</div>
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={async (password) => { await updatePassword(password) }} />
   if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onPinLogin={loginWithPin} onRecover={recover} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
+  if (mustChangePin) return <InitialPinChangePage busy={busy} error={error} onSubmit={changeInitialPin} onLogout={signOut}/>
   if (requiresLegalAcceptance && !legalConfigured) return <LegalConfigurationRequired busy={busy} error={error} notice={notice} onEnrollPasskey={async () => { await enrollPasskey() }} onLogout={signOut} />
   if (requiresLegalAcceptance && !accepted) return <TermsModal documents={documents} busy={busy} error={error} onAccept={acceptTerms} />
   return <AuthContext.Provider value={{ user, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>

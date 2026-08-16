@@ -36,7 +36,7 @@ describe('interface principal', () => {
 
   it('abre os dashboards de cliente, sociedade e profissional', async () => {
     render(<App />)
-    for (const [button, heading] of [['Clientes','Cliente Atlas'], ['Sociedades faturantes','Carina Santos'], ['Profissionais','Carina']]) {
+    for (const [button, heading] of [['Clientes','Cliente Atlas'], ['Sociedades','Carina Santos'], ['Responsáveis','Carina']]) {
       await userEvent.click(screen.getByRole('button', { name: button }))
       expect(await screen.findByRole('heading', { name: heading, level: 2 })).toBeInTheDocument()
     }
@@ -44,9 +44,11 @@ describe('interface principal', () => {
 
   it('mantém utilizadores dentro da Administração', async () => {
     render(<App />)
+    await userEvent.click(screen.getByRole('button', { name: 'Definições' }))
     await userEvent.click(screen.getByRole('button', { name: 'Administração' }))
+    expect(await screen.findByRole('navigation', { name: 'Administração' })).toBeInTheDocument()
+    await userEvent.click(screen.getAllByRole('button', { name: 'Utilizadores' })[0])
     expect(await screen.findByRole('heading', { name: 'Utilizadores da aplicação' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Criar utilizador' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Utilizadores e permissões' })).toHaveAttribute('aria-current', 'page')
   })
 })

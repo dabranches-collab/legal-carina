@@ -3,7 +3,6 @@ export type ChartPoint = { label: string | number; value: number }
 function ChartCard({ title, subtitle, children, className = '' }: { title: string; subtitle: string; children: React.ReactNode; className?: string }) {
   return <figure className={`card min-w-0 p-5 ${className}`}><figcaption><h2 className="font-semibold">{title}</h2><p className="mt-1 text-xs text-text-secondary">{subtitle}</p></figcaption><div className="mt-5">{children}</div></figure>
 }
-
 export function AnnualValueChart({ data }: { data: ChartPoint[] }) {
   const max = Math.max(...data.map((point) => point.value), 1)
   return <ChartCard title="Valor por ano" subtitle="2018–2026 · comparação de evolução" className="lg:col-span-2">
@@ -24,7 +23,6 @@ export function MonthlyValueChart({ data }: { data: ChartPoint[] }) {
     </svg><div className="flex justify-between text-[0.62rem] text-text-secondary">{['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'].map((month) => <span key={month}>{month}</span>)}</div>
   </div></ChartCard>
 }
-
 export function HorizontalChart({ title, subtitle, labels, values, valueFormatter = (value) => value.toLocaleString('pt-PT') }: { title: string; subtitle: string; labels: string[]; values: number[]; valueFormatter?: (value: number) => string }) {
   const max = Math.max(...values, 1)
   return <ChartCard title={title} subtitle={subtitle}><div className="space-y-3" role="img" aria-label={title}>
@@ -38,7 +36,7 @@ export function DonutChart({ title, subtitle, firstLabel, secondLabel, first, to
 }
 
 export function StackedSocietyChart({ data }: { data: ChartPoint[] }) {
-  return <ChartCard title="Distribuição das sociedades" subtitle="Valor total por sociedade faturante" className="lg:col-span-2"><div className="space-y-4" role="img" aria-label="Distribuição real das sociedades faturantes">
+  return <ChartCard title="Distribuição das sociedades" subtitle="Valor total por sociedade" className="lg:col-span-2"><div className="space-y-4" role="img" aria-label="Distribuição real das sociedades">
     {data.map((point) => <div key={point.label} className="grid grid-cols-[8rem_1fr] items-center gap-3"><span className="truncate text-xs text-text-secondary">{point.label}</span><div className="h-4 overflow-hidden rounded-full bg-surface-subtle"><span className="block h-full bg-chart-1" style={{ width: `${point.value / Math.max(...data.map((item) => item.value),1) * 100}%` }}/></div></div>)}
   </div></ChartCard>
 }

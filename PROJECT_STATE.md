@@ -2,7 +2,24 @@
 
 Atualizado em: 2026-08-16
 
-- Regra de entrega atual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. Versão local atual: `0.1.0`.
+- Regra de entrega actual: acumular alterações localmente; `push` e publicação apenas após pedido explícito. O proprietário pediu a publicação integral deste lote em 2026-08-16. Versão actual: `0.1.0`.
+
+## Alterações locais pendentes — PIN inicial
+
+- A administração pode atribuir um PIN inicial visível, introduzido uma única vez, ao criar um acesso; a confirmação só é pedida ao utilizador quando escolhe o PIN definitivo.
+- Cada conta separa o nome visível, que aceita espaços e aparece durante a sessão, do identificador de utilizador usado exclusivamente no login.
+- Administradores podem suspender/reativar acessos, alterar perfis e redefinir um PIN; qualquer PIN redefinido volta a exigir alteração no login seguinte.
+- O perfil proprietário mantém acesso integral, não pode ser suspenso ou despromovido e o respetivo PIN só pode ser redefinido pelo próprio proprietário autenticado.
+- Após criar um acesso ou redefinir um PIN, a Administração gera localmente uma mensagem copiável para email/WhatsApp com link, utilizador e PIN temporário; a mensagem e o PIN não são persistidos.
+- A secção ativa e a sociedade selecionada ficam no URL, preservando a página após refresh e permitindo navegação anterior/seguinte.
+- A sidebar apresenta Carina Santos, Legal Team e Massive Search como submenus de Visão geral, com ligação direta ao dashboard da sociedade.
+- Clientes apresenta um dashboard consolidado; os submenus Particulares, Empresas e Mistos mostram agregações reais por perfil e preservam a seleção no URL. “Misto” significa possuir simultaneamente as duas vertentes.
+- No primeiro login, o utilizador fica num ecrã obrigatório para confirmar o PIN inicial e escolher um PIN diferente.
+- O estado `must_change_pin` é controlado no backend; enquanto estiver ativo, `private.has_scope_access` recusa acesso aos dados de negócio.
+- A Edge Function autenticada `change-pin` regista a alteração em `audit_log` e `security_events`, sem guardar qualquer PIN.
+- Validado localmente com TypeScript, 28 testes unitários e build de produção.
+- A migration `20260816153000_require_initial_pin_change.sql` foi aplicada ao Supabase remoto: 194 perfis de cliente foram criados e nenhum dos 6.789 movimentos ficou sem perfil.
+- As Edge Functions `admin-users` v4, `pin-auth` v3 e `change-pin` v1 foram publicadas com validação JWT e encontram-se activas.
 
 ## Atualização — identidade, acesso e PWA
 
@@ -85,7 +102,7 @@ Atualizado em: 2026-08-16
 
 ## Próxima etapa
 
-Validar o CI e a publicação automática remotos. Depois, alterar a gestão de acessos para que Administração crie cada utilizador com nome de utilizador, PIN e perfil/permissões atribuídos no mesmo fluxo; o frontend não deve expor email como identificador de login. O PIN nunca pode ser guardado em texto nem substituir controlos backend, rate limiting, bloqueio temporário, auditoria e RLS. Configurar também o domínio HTTPS definitivo e alinhar passkeys/Face ID/Windows Hello com esse domínio.
+Validar o CI e a publicação automática remotos. Depois, aplicar progressivamente o componente normalizado de tabelas às tabelas reais, começando por Registos de trabalho, sem degradar a paginação no servidor. Configurar também o domínio HTTPS definitivo e alinhar passkeys/Face ID/Windows Hello com esse domínio.
 
 ## Riscos abertos
 

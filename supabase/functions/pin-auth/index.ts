@@ -43,7 +43,7 @@ Deno.serve(async (request) => {
 
     const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
     const { data: credential, error: credentialError } = await admin.from('user_login_credentials')
-      .select('id,user_id,firm_id,auth_email,failed_attempts,locked_until')
+      .select('id,user_id,firm_id,auth_email,failed_attempts,locked_until,must_change_pin')
       .eq('username', username).maybeSingle()
     if (credentialError || !credential) return json(request, { error: genericError }, 401)
 
@@ -83,6 +83,7 @@ Deno.serve(async (request) => {
     })
     return json(request, {
       session: { access_token: data.session.access_token, refresh_token: data.session.refresh_token },
+      mustChangePin: Boolean(credential.must_change_pin),
     })
   } catch {
     return json(request, { error: 'Não foi possível concluir o acesso.' }, 400)

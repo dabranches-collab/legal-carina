@@ -10,6 +10,10 @@ function normalizeUsername(value: unknown) {
   return String(value ?? '').normalize('NFKC').trim().toLowerCase()
 }
 
+function normalizeDisplayName(value: unknown) {
+  return String(value ?? '').normalize('NFKC').replace(/\s+/g, ' ').trim()
+}
+
 async function deriveAuthPassword(credentialId: string, pin: string) {
   return `CL!${await sha256(`carina-legal-pin-v1:${credentialId}:${pin}`)}`
 }
@@ -43,24 +47,27 @@ Deno.serve(async (request) => {
       if (memberError) throw memberError
       const { data: authUsers, error: usersError } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
       if (usersError) throw usersError
-      const { data: credentials, error: credentialsError } = await admin.from('user_login_credentials').select('user_id,username').eq('firm_id', firmId)
+      const { data: credentials, error: credentialsError } = await admin.from('user_login_credentials').select('user_id,username,display_name').eq('firm_id', firmId)
       if (credentialsError) throw credentialsError
       const authById = new Map(authUsers.users.map((user) => [user.id, user]))
       const usernameById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential.username]))
+      const displayNameById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential.display_name]))
       return json(request, { users: firmUsers.map((membership) => {
         const user = authById.get(membership.user_id)
-        return { userId: membership.user_id, username: usernameById.get(membership.user_id) ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
+        return { userId: membership.user_id, username: usernameById.get(membership.user_id) ?? '', displayName: displayNameById.get(membership.user_id) ?? '', role: membership.role, active: membership.active, invitedAt: membership.created_at, lastSignInAt: user?.last_sign_in_at ?? null }
       }) })
     }
 
     if (input.action === 'create_pin_user') {
       const firmId = String(input.firmId ?? '')
       const username = normalizeUsername(input.username)
+      const displayName = normalizeDisplayName(input.displayName)
       const pin = String(input.pin ?? '')
       const role = String(input.role ?? '')
       const allowedRoles = ['admin', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId)
         || !allowedRoles.includes(role)
+        || displayName.length < 1 || displayName.length > 100
         || !/^[a-z0-9][a-z0-9._-]{2,31}$/.test(username)
         || !/^\d{4}$/.test(pin)) return json(request, { error: 'Nome, PIN ou perfil inválido.' }, 400)
 
@@ -68,18 +75,18 @@ Deno.serve(async (request) => {
       const authEmail = `lc-${credentialId}@auth.invalid`
       const password = await deriveAuthPassword(credentialId, pin)
       const { data, error } = await admin.auth.admin.createUser({
-        email: authEmail, password, email_confirm: true, user_metadata: { username },
+        email: authEmail, password, email_confirm: true, user_metadata: { username, display_name: displayName }, app_metadata: { must_change_pin: true },
       })
       if (error || !data.user) throw error ?? new Error('Utilizador não criado')
       const { error: membershipError } = await admin.from('firm_members').insert({ firm_id: firmId, user_id: data.user.id, role })
       if (membershipError) { await admin.auth.admin.deleteUser(data.user.id); throw membershipError }
       const { error: credentialError } = await admin.from('user_login_credentials').insert({
-        id: credentialId, firm_id: firmId, user_id: data.user.id, username, auth_email: authEmail, created_by: authData.user.id,
+        id: credentialId, firm_id: firmId, user_id: data.user.id, username, display_name: displayName, auth_email: authEmail, created_by: authData.user.id, must_change_pin: true,
       })
       if (credentialError) { await admin.auth.admin.deleteUser(data.user.id); throw credentialError }
       await admin.from('audit_log').insert({
         firm_id: firmId, actor_user_id: authData.user.id, action: 'insert', entity_type: 'user_access',
-        entity_id: data.user.id, new_data: { username, role, active: true, auth_method: 'pin' },
+        entity_id: data.user.id, new_data: { username, display_name: displayName, role, active: true, auth_method: 'pin' },
       })
       return json(request, { userId: data.user.id, username }, 201)
     }
@@ -88,30 +95,59 @@ Deno.serve(async (request) => {
       const firmId = String(input.firmId ?? '')
       const userId = String(input.userId ?? '')
       const username = normalizeUsername(input.username)
+      const displayName = normalizeDisplayName(input.displayName)
       const pin = String(input.pin ?? '')
       if (!memberships.some((membership) => membership.firm_id === firmId)
         || !/^[a-z0-9][a-z0-9._-]{2,31}$/.test(username)
+        || displayName.length < 1 || displayName.length > 100
         || !/^\d{4}$/.test(pin)) return json(request, { error: 'Nome ou PIN inválido.' }, 400)
-      const { data: target } = await admin.from('firm_members').select('user_id').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
+      const { data: target } = await admin.from('firm_members').select('user_id,role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target) return json(request, { error: 'Utilizador inválido.' }, 400)
+      const callerMembership = memberships.find((membership) => membership.firm_id === firmId)
+      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) {
+        return json(request, { error: 'O acesso do proprietário só pode ser redefinido pelo próprio.' }, 403)
+      }
       const { data: existing } = await admin.from('user_login_credentials').select('id,auth_email').eq('user_id', userId).maybeSingle()
       const credentialId = existing?.id ?? crypto.randomUUID()
       const authEmail = existing?.auth_email ?? `lc-${credentialId}@auth.invalid`
       const password = await deriveAuthPassword(credentialId, pin)
+      const { data: targetAuthData, error: targetAuthError } = await admin.auth.admin.getUserById(userId)
+      if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
       const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, {
-        email: authEmail, password, email_confirm: true, user_metadata: { username },
+        email: authEmail, password, email_confirm: true, user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName },
+        app_metadata: { ...(targetAuthData.user.app_metadata ?? {}), must_change_pin: true },
       })
       if (authUpdateError) throw authUpdateError
       const { error: credentialError } = await admin.from('user_login_credentials').upsert({
-        id: credentialId, firm_id: firmId, user_id: userId, username, auth_email: authEmail, created_by: authData.user.id,
-        failed_attempts: 0, locked_until: null,
+        id: credentialId, firm_id: firmId, user_id: userId, username, display_name: displayName, auth_email: authEmail, created_by: authData.user.id,
+        failed_attempts: 0, locked_until: null, must_change_pin: true, pin_changed_at: null,
       }, { onConflict: 'user_id' })
       if (credentialError) throw credentialError
       await admin.from('audit_log').insert({
         firm_id: firmId, actor_user_id: authData.user.id, action: existing ? 'update' : 'insert', entity_type: 'user_access',
-        entity_id: userId, new_data: { username, auth_method: 'pin', pin_changed: true },
+        entity_id: userId, new_data: { username, display_name: displayName, auth_method: 'pin', initial_pin_assigned: true, mandatory_change_required: true },
       })
       return json(request, { configured: true, username })
+    }
+
+    if (input.action === 'update_user_identity') {
+      const firmId = String(input.firmId ?? ''), userId = String(input.userId ?? '')
+      const username = normalizeUsername(input.username), displayName = normalizeDisplayName(input.displayName)
+      if (!memberships.some((membership) => membership.firm_id === firmId)
+        || !/^[a-z0-9][a-z0-9._-]{2,31}$/.test(username)
+        || displayName.length < 1 || displayName.length > 100) return json(request, { error: 'Nome ou utilizador inválido.' }, 400)
+      const { data: target } = await admin.from('firm_members').select('user_id,role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
+      if (!target) return json(request, { error: 'Utilizador inválido.' }, 400)
+      const callerMembership = memberships.find((membership) => membership.firm_id === firmId)
+      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) return json(request, { error: 'O perfil do proprietário só pode ser alterado pelo próprio.' }, 403)
+      const { data: targetAuthData, error: targetAuthError } = await admin.auth.admin.getUserById(userId)
+      if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
+      const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, { user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName } })
+      if (authUpdateError) throw authUpdateError
+      const { error: credentialError } = await admin.from('user_login_credentials').update({ username, display_name: displayName }).eq('user_id', userId).eq('firm_id', firmId)
+      if (credentialError) throw credentialError
+      await admin.from('audit_log').insert({ firm_id: firmId, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_identity', entity_id: userId, new_data: { username, display_name: displayName } })
+      return json(request, { updated: true })
     }
 
     if (input.action === 'get_billing_permissions') {

@@ -17,7 +17,7 @@ const paths: Record<IconName, React.ReactNode> = {
   audit: <><path d="M9 3h6l1 3h4v15H4V6h4zM8 11h8M8 15h5"/></>,
   admin: <><circle cx="12" cy="12" r="3"/><path d="M19 13.5l2 1.5-2 3.5-2.5-1a8 8 0 0 1-3 1.7L13 22H9l-.5-2.8a8 8 0 0 1-3-1.7l-2.5 1L1 15l2-1.5a8 8 0 0 1 0-3L1 9l2-3.5 2.5 1a8 8 0 0 1 3-1.7L9 2h4l.5 2.8a8 8 0 0 1 3 1.7l2.5-1L21 9l-2 1.5a8 8 0 0 1 0 3z"/></>,
   search: <><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>, calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></>,
-  bell: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></>, logout: <><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h10"/></>,
+  bell: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></>, logout: <><path d="M14 4h6v16h-6M10 8l-4 4 4 4M6 12h10"/></>,
   menu: <path d="M4 6h16M4 12h16M4 18h16"/>, chevron: <path d="m9 18 6-6-6-6"/>, filter: <path d="M3 5h18l-7 8v6l-4 2v-8z"/>,
   download: <><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></>, columns: <><rect x="3" y="4" width="18" height="16"/><path d="M9 4v16M15 4v16"/></>,
   more: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>, trend: <path d="m3 17 6-6 4 4 8-9M15 6h6v6"/>,

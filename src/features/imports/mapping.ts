@@ -2,7 +2,7 @@ import type { CanonicalField } from './types'
 
 export const fieldLabels: Record<CanonicalField, string> = {
   date: 'DATA', partyType: 'PART / SOC', clientName: 'CLIENTE', clientCode: 'CÓDIGO CLIENTE',
-  activity: 'ACTIVIDADE', owner: 'RESPONSÁVEL', duration: 'DURAÇÃO', hourlyRate: 'VALOR HORA',
+  activity: 'ACTIVIDADE', responsible: 'RESPONSÁVEL', duration: 'DURAÇÃO', hourlyRate: 'VALOR HORA',
   amount: 'VALOR', billingEntity: 'SOCIEDADE FACTURA', status: 'STATUS', invoiced: 'FACTURADO',
   invoiceDate: 'DATA FACT', archive: 'ARQUIVADO', paid: 'PAGO', notes: 'OBSERVAÇÕES', year: 'ANO',
   tableDuration: 'TEMPO TABELA',

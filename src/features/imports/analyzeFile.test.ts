@@ -8,11 +8,11 @@ test('analisa um CSV completamente anonimizado e converte duração para minutos
   const result = await analyzeFile(file)
   expect(result.rows).toHaveLength(3)
   expect(result.rows[0].normalized.durationMinutes).toBe(30)
+  expect(result.rows[0].normalized.clientType).toBe('company')
   expect(result.summary.possibleDuplicates).toBe(2)
   expect(result.summary.invalidRows).toBe(1)
   expect(result.sha256).toMatch(/^[a-f0-9]{64}$/)
 })
-
 test('analisa XLSX anonimizado, preserva fórmula e lê códigos da referência CLIENTES', async () => {
   const workbook = utils.book_new()
   const dados = utils.aoa_to_sheet([
@@ -30,5 +30,6 @@ test('analisa XLSX anonimizado, preserva fórmula e lê códigos da referência 
   expect(result.knownClientCodes).toContain('CLI-003')
   expect(result.rows[0].cells.amount?.formula).toBe('H2*G2*24')
   expect(result.rows[0].normalized.durationMinutes).toBe(60)
+  expect(result.rows[0].normalized.clientType).toBe('company')
   expect(result.rows[0].issues.map((issue) => issue.code)).not.toContain('unknown_client_code')
 })

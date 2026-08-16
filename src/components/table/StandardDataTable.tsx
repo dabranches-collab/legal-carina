@@ -1,0 +1,56 @@
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { utils, writeFile } from 'xlsx'
+
+type Scalar=string|number|boolean|Date|null|undefined
+export type TableColumn<Row>={
+  id:string; label:string; value:(row:Row)=>Scalar; render?:(row:Row)=>ReactNode
+  kind?:'text'|'number'|'date'|'money'|'boolean'; essential?:boolean; sticky?:boolean
+  align?:'left'|'center'|'right'; width?:number; sortable?:boolean; searchable?:boolean; exportable?:boolean
+}
+
+type Props<Row>={
+  id:string; label:string; rows:Row[]; columns:TableColumn<Row>[]; rowKey:(row:Row)=>string
+  loading?:boolean; updating?:boolean; error?:string; onRetry?:()=>void; defaultPageSize?:10|20|50|'all'
+  selected?:string[]; onSelectionChange?:(ids:string[])=>void; emptyMessage?:string
+}
+
+const fold=(value:Scalar)=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-PT')
+const comparable=(value:Scalar,kind:TableColumn<unknown>['kind'])=>kind==='date'?new Date(String(value)).valueOf():kind==='number'||kind==='money'?Number(value??0):kind==='boolean'?Number(Boolean(value)):fold(value)
+
+export function StandardDataTable<Row>({id,label,rows,columns,rowKey,loading=false,updating=false,error,onRetry,defaultPageSize=20,selected=[],onSelectionChange,emptyMessage='Não existem dados.'}:Props<Row>){
+  const storageKey=`carina.table.${id}`
+  const saved=useMemo(()=>{try{return JSON.parse(localStorage.getItem(storageKey)??'{}')}catch{return {}}},[storageKey])
+  const [query,setQuery]=useState(saved.query??''); const [sort,setSort]=useState<{id:string;direction:'asc'|'desc'}|null>(saved.sort??null)
+  const [hidden,setHidden]=useState<string[]>(saved.hidden??[]); const [filters,setFilters]=useState<Record<string,string>>(saved.filters??{})
+  const [pageSize,setPageSize]=useState<10|20|50|'all'>(saved.pageSize??defaultPageSize); const [page,setPage]=useState<number>(Number(saved.page??1))
+  const [columnsOpen,setColumnsOpen]=useState(false); const columnsButton=useRef<HTMLButtonElement>(null); const columnsPanel=useRef<HTMLDivElement>(null)
+  const visible=columns.filter(column=>column.essential||!hidden.includes(column.id))
+  const processed=useMemo(()=>{
+    const words=fold(query).split(/\s+/).filter(Boolean)
+    const result=rows.filter(row=>words.every(word=>columns.some(column=>(column.searchable??column.exportable!==false)&&fold(column.value(row)).includes(word)))&&columns.every(column=>!filters[column.id]||fold(column.value(row)).includes(fold(filters[column.id]))))
+    if(sort){const column=columns.find(item=>item.id===sort.id);if(column)result.sort((a,b)=>{const av=comparable(column.value(a),column.kind),bv=comparable(column.value(b),column.kind);const order=av<bv?-1:av>bv?1:0;return sort.direction==='asc'?order:-order})}
+    return result
+  },[rows,columns,query,filters,sort])
+  const pageCount=pageSize==='all'?1:Math.max(1,Math.ceil(processed.length/pageSize)); const validPage=Math.min(page,pageCount)
+  const shown=pageSize==='all'?processed:processed.slice((validPage-1)*pageSize,validPage*pageSize)
+  useEffect(()=>{localStorage.setItem(storageKey,JSON.stringify({query,sort,hidden,filters,pageSize,page:validPage}))},[storageKey,query,sort,hidden,filters,pageSize,validPage])
+  useEffect(()=>{if(page>pageCount)setPage(pageCount)},[page,pageCount])
+  useEffect(()=>{if(!columnsOpen)return;const close=(event:MouseEvent)=>{if(!columnsPanel.current?.contains(event.target as Node)&&!columnsButton.current?.contains(event.target as Node)){setColumnsOpen(false);columnsButton.current?.focus()}};const key=(event:KeyboardEvent)=>{if(event.key==='Escape'){setColumnsOpen(false);columnsButton.current?.focus()}};document.addEventListener('mousedown',close);document.addEventListener('keydown',key);return()=>{document.removeEventListener('mousedown',close);document.removeEventListener('keydown',key)}},[columnsOpen])
+  const toggleSort=(column:TableColumn<Row>)=>{if(column.sortable===false)return;setSort(value=>value?.id===column.id?value.direction==='asc'?{id:column.id,direction:'desc'}:null:{id:column.id,direction:'asc'});setPage(1)}
+  const exportXlsx=()=>{const exportColumns=visible.filter(column=>column.exportable!==false);const sheet=utils.json_to_sheet(processed.map(row=>Object.fromEntries(exportColumns.map(column=>[column.label,column.value(row)??'']))));const book=utils.book_new();utils.book_append_sheet(book,sheet,label.slice(0,31));writeFile(book,`${id}-${new Date().toISOString().slice(0,10)}.xlsx`)}
+  const printTable=()=>window.print()
+  const allShownSelected=Boolean(onSelectionChange&&shown.length&&shown.every(row=>selected.includes(rowKey(row))))
+  return <section className="table-standard card overflow-visible" aria-label={label}>
+    <div className="table-tools flex flex-wrap items-center gap-2 border-b border-border p-3"><label className="relative min-w-52 flex-1"><span className="sr-only">Pesquisar em {label}</span><input value={query} onChange={event=>{setQuery(event.target.value);setPage(1)}} className="control w-full px-3 pr-10 text-sm" placeholder="Pesquisar em todas as colunas…"/>{query&&<button type="button" onClick={()=>setQuery('')} aria-label="Limpar pesquisa" className="absolute right-1 top-1 grid size-8 place-items-center rounded">×</button>}</label>
+      <button type="button" onClick={()=>{setFilters({});setQuery('');setPage(1)}} className="control px-3 text-sm font-semibold">Limpar filtros</button>
+      <div className="relative"><button ref={columnsButton} type="button" aria-expanded={columnsOpen} onClick={()=>setColumnsOpen(value=>!value)} className="control px-3 text-sm font-semibold">Colunas · {visible.length}/{columns.length}</button>{columnsOpen&&<div ref={columnsPanel} className="absolute right-0 top-[calc(100%+0.4rem)] z-[100] max-h-80 w-64 overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"><div className="mb-2 flex gap-2"><button type="button" onClick={()=>setHidden([])} className="text-xs font-semibold text-primary">Mostrar todas</button><button type="button" onClick={()=>setHidden(columns.filter(column=>!column.essential&&column.id.startsWith('optional-')).map(column=>column.id))} className="text-xs font-semibold text-secondary">Repor</button></div>{columns.map(column=><label key={column.id} className="flex min-h-10 items-center gap-2 text-sm"><input type="checkbox" checked={column.essential||!hidden.includes(column.id)} disabled={column.essential} onChange={event=>setHidden(values=>event.target.checked?values.filter(id=>id!==column.id):[...values,column.id])}/>{column.label}</label>)}</div>}</div>
+      <button type="button" onClick={exportXlsx} className="control px-3 text-sm font-semibold">XLSX</button><button type="button" onClick={printTable} className="control px-3 text-sm font-semibold">Imprimir / PDF</button>
+    </div>
+    <div className="px-3 py-2 text-xs text-text-secondary" role="status">{updating?'A actualizar… · ':''}{processed.length} resultados de {rows.length}{selected.length?` · ${selected.length} seleccionados`:''}</div>
+    <div className="scrollbar-thin max-h-[42rem] overflow-auto overscroll-contain"><table className="w-full min-w-max border-separate border-spacing-0 text-left text-sm"><caption className="sr-only">{label}</caption><thead className="sticky top-0 z-30 bg-surface"><tr>{onSelectionChange&&<th className="sticky left-0 z-40 border-b border-border bg-surface px-3 py-3"><input type="checkbox" aria-label="Seleccionar linhas visíveis" checked={allShownSelected} onChange={event=>onSelectionChange(event.target.checked?[...new Set([...selected,...shown.map(rowKey)])]:selected.filter(key=>!shown.some(row=>rowKey(row)===key)))}/></th>}{visible.map((column,index)=>{const sticky=column.sticky||index===0;return <th key={column.id} style={{width:column.width,minWidth:column.width}} aria-sort={sort?.id===column.id?(sort.direction==='asc'?'ascending':'descending'):'none'} className={`border-b border-border bg-surface px-3 py-2 align-bottom ${sticky?'sticky left-0 z-40 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]':''}`}><button type="button" disabled={column.sortable===false} onClick={()=>toggleSort(column)} className="flex min-h-8 w-full items-center gap-2 font-semibold disabled:cursor-default"><span>{column.label}</span>{sort?.id===column.id&&<span aria-hidden="true">{sort.direction==='asc'?'↑':'↓'}</span>}</button><input aria-label={`Filtrar ${column.label}`} value={filters[column.id]??''} onChange={event=>{setFilters(value=>({...value,[column.id]:event.target.value}));setPage(1)}} className="mt-1 w-full min-w-20 rounded border border-border bg-background px-2 py-1 text-xs font-normal" placeholder="Filtrar…"/></th>})}</tr></thead>
+      <tbody>{!loading&&shown.map(row=>{const key=rowKey(row),isSelected=selected.includes(key);return <tr key={key} className={isSelected?'bg-secondary-soft outline outline-1 outline-secondary':'hover:bg-surface-subtle'}>{onSelectionChange&&<td className="sticky left-0 z-20 border-b border-border bg-inherit px-3 py-3"><input type="checkbox" aria-label={`Seleccionar ${key}`} checked={isSelected} onChange={()=>onSelectionChange(isSelected?selected.filter(id=>id!==key):[...selected,key])}/></td>}{visible.map((column,index)=>{const sticky=column.sticky||index===0;return <td key={column.id} style={{width:column.width,minWidth:column.width}} className={`border-b border-border bg-inherit px-3 py-3 ${column.align==='right'?'text-right tabular-nums':column.align==='center'?'text-center':''} ${sticky?'sticky left-0 z-10 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]':''}`}>{column.render?column.render(row):String(column.value(row)??'—')}</td>})}</tr>})}</tbody></table>
+      {loading&&<div role="status" className="space-y-2 p-4">{Array.from({length:5},(_,index)=><div key={index} className="h-10 animate-pulse rounded bg-surface-subtle"/>)}</div>}{error&&<div role="alert" className="m-4 rounded-lg bg-danger-soft p-4 text-sm text-danger">{error}{onRetry&&<button type="button" onClick={onRetry} className="ml-3 font-semibold underline">Tentar novamente</button>}</div>}{!loading&&!error&&!processed.length&&<div className="p-8 text-center text-sm text-text-secondary">{rows.length?'Os filtros não encontraram resultados.':emptyMessage}</div>}
+    </div>
+    <div className="table-pagination flex flex-wrap items-center justify-between gap-3 border-t border-border p-3 text-sm"><label>Linhas <select value={pageSize} onChange={event=>{setPageSize(event.target.value==='all'?'all':Number(event.target.value) as 10|20|50);setPage(1)}} className="control ml-2 min-h-9 px-2"><option value={10}>10</option><option value={20}>20</option><option value={50}>50</option>{rows.length<=500&&<option value="all">Todas</option>}</select></label><span>{processed.length?`${pageSize==='all'?1:(validPage-1)*pageSize+1}–${pageSize==='all'?processed.length:Math.min(validPage*pageSize,processed.length)} de ${processed.length}`:'0 resultados'}</span><div className="flex gap-2"><button type="button" disabled={validPage<=1} onClick={()=>setPage(value=>value-1)} className="control min-h-9 px-3 disabled:opacity-40">Anterior</button><button type="button" disabled={validPage>=pageCount} onClick={()=>setPage(value=>value+1)} className="control min-h-9 px-3 disabled:opacity-40">Seguinte</button></div></div>
+  </section>
+}
