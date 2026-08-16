@@ -46,6 +46,12 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
+  /* Mantidos como tokens CSS reais porque os gráficos escolhem a série dinamicamente. */
+  --color-chart-1: #17636a;
+  --color-chart-2: #b68a3a;
+  --color-chart-3: #5d7994;
+  --color-chart-4: #8a6c91;
+  --color-chart-5: #5c8064;
 }
 
 html[data-qa-iphone="true"] { --safe-top: var(--qa-safe-top, 0px); --safe-right: var(--qa-safe-right, 0px); --safe-bottom: var(--qa-safe-bottom, 34px); --safe-left: var(--qa-safe-left, 0px); }

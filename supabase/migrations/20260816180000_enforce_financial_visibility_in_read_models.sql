@@ -177,16 +177,39 @@ with entries as materialized (
     count(*) filter(where effective_hourly_rate is null) missing_price,
     count(*) filter(where has_manual_override) overrides, count(distinct client_id) active_clients
   from entries
+), annual_totals as (
+  select extract(year from work_date)::int label,round(sum(effective_amount),2) value,sum(duration_minutes) minutes
+  from entries group by 1
 ), annual as (
-  select extract(year from work_date)::int label, round(sum(effective_amount),2) value, sum(duration_minutes) minutes
-  from entries group by 1 order by 1
-), latest_year as (select max(extract(year from work_date)::int) value from entries), monthly as (
-  select extract(month from work_date)::int label, round(sum(effective_amount),2) value from entries
-  where extract(year from work_date)::int=(select value from latest_year) group by 1 order by 1
+  select a.label,a.value,a.minutes,
+    coalesce((select jsonb_object_agg(series.society,series.value) from (
+      select coalesce(e2.billing_name,'Sem sociedade') society,round(sum(e2.effective_amount),2) value
+      from entries e2 where extract(year from e2.work_date)::int=a.label group by 1
+    ) series),'{}'::jsonb) societies
+  from annual_totals a order by a.label
+), latest_year as (select max(extract(year from work_date)::int) value from entries), latest_month as (
+  select date_trunc('month',current_date)::date value
+), rolling_months as (
+  select generate_series((select value from latest_month)-interval '11 months',(select value from latest_month),interval '1 month')::date month_start
+  where (select value from latest_month) is not null
+), monthly as (
+  select to_char(m.month_start,'YYYY-MM') label,round(coalesce(sum(e.effective_amount),0),2) value,
+    coalesce((select jsonb_object_agg(series.society,series.value) from (
+      select coalesce(e2.billing_name,'Sem sociedade') society,round(sum(e2.effective_amount),2) value
+      from entries e2 where e2.work_date>=m.month_start and e2.work_date<m.month_start+interval '1 month' group by 1
+    ) series),'{}'::jsonb) societies
+  from rolling_months m left join entries e on e.work_date>=m.month_start and e.work_date<m.month_start+interval '1 month'
+  group by m.month_start order by m.month_start
 ), monthly_by_year as (
   select extract(year from work_date)::int year, extract(month from work_date)::int month,
     round(sum(effective_amount),2) value
   from entries group by 1,2 order by 1,2
+), billing_monthly as (
+  select s.society,to_char(m.month_start,'YYYY-MM') period,round(coalesce(sum(e.effective_amount),0),2) value
+  from rolling_months m cross join (select distinct coalesce(billing_name,'Sem sociedade') society from entries) s
+  left join entries e on e.work_date>=m.month_start and e.work_date<m.month_start+interval '1 month'
+    and coalesce(e.billing_name,'Sem sociedade')=s.society
+  group by s.society,m.month_start order by m.month_start,s.society
 ), billing_annual as (
   select coalesce(billing_name,'Sem sociedade') society, extract(year from work_date)::int year,
     round(sum(effective_amount),2) value
@@ -212,6 +235,7 @@ select jsonb_build_object(
  'annual',coalesce((select jsonb_agg(to_jsonb(annual)) from annual),'[]'::jsonb),
  'monthly',coalesce((select jsonb_agg(to_jsonb(monthly)) from monthly),'[]'::jsonb),
  'monthlyByYear',coalesce((select jsonb_agg(to_jsonb(monthly_by_year)) from monthly_by_year),'[]'::jsonb),
+ 'billingMonthly',coalesce((select jsonb_agg(to_jsonb(billing_monthly)) from billing_monthly),'[]'::jsonb),
  'billingAnnual',coalesce((select jsonb_agg(to_jsonb(billing_annual)) from billing_annual),'[]'::jsonb),
  'latestYear',(select value from latest_year),
  'byClient',coalesce((select jsonb_agg(to_jsonb(by_client)) from by_client),'[]'::jsonb),

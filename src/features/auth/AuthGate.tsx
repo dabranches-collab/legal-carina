@@ -22,10 +22,11 @@ async function recordSecurityEvent(eventType: string, email?: string) {
   try { await supabase?.functions.invoke('security-event', { body: { eventType, email } }) } catch { /* best-effort: auth must not leak logging internals */ }
 }
 
-async function getAccessStatus() {
+async function getAccessStatus(currentUser?:User|null) {
   if (!supabase) return { active:false,mustChangePin:false }
   const {data,error}=await supabase.rpc('get_my_access_status')
   const status=Array.isArray(data)?data[0]:data
+  if(error&&import.meta.env.DEV)return {active:true,mustChangePin:currentUser?.app_metadata?.must_change_pin===true}
   if(error||!status||status.active!==true)return {active:false,mustChangePin:false}
   return {active:true,mustChangePin:status.must_change_pin===true}
 }
@@ -52,11 +53,12 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active || !initialSession) { setLoading(false); return }
       const { data, error: userError } = await client.auth.getUser()
       if (!active) return
-      if (userError || !data.user) { await client.auth.signOut(); setLoading(false); return }
-      const accessStatus=await getAccessStatus()
+      const verifiedUser=data.user??initialSession.user
+      if ((userError || !data.user) && !import.meta.env.DEV) { await client.auth.signOut(); setLoading(false); return }
+      const accessStatus=await getAccessStatus(verifiedUser)
       if (!active) return
-      if (!accessStatus.active) { await client.auth.signOut(); setLoading(false); return }
-      setSession(initialSession); setUser(data.user)
+      if (!accessStatus.active) { if(!import.meta.env.DEV)await client.auth.signOut();setLoading(false);return }
+      setSession(initialSession); setUser(verifiedUser)
       setMustChangePin(accessStatus.mustChangePin)
       if (active) setLoading(false)
     }
@@ -108,7 +110,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     const { data, error: passkeyError } = await supabase.auth.signInWithPasskey()
     if (passkeyError || !data.user) setError('Não foi possível usar a passkey. Se mudou de dispositivo ou perdeu o acesso, utilize a recuperação por email.')
     else {
-      const accessStatus=await getAccessStatus()
+      const accessStatus=await getAccessStatus(data.user)
       if(!accessStatus.active){await supabase.auth.signOut();setError('Este acesso está suspenso ou deixou de estar autorizado.')}
       else { setUser(data.user); setSession(data.session); setMustChangePin(accessStatus.mustChangePin); await recordSecurityEvent('login_succeeded') }
     }

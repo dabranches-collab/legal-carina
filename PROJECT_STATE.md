@@ -5,9 +5,9 @@ Actualizado em: 2026-08-16
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão local candidata: `0.2.0`.
-- Não fazer commit, push, migração remota ou publicação até aprovação expressa do proprietário.
-- A versão publicada permanece anterior a esta acumulação.
+- Versão publicada candidata: `0.2.1`.
+- Publicação da versão `0.2.1` expressamente aprovada pelo proprietário em 2026-08-16.
+- Migrações remotas destrutivas continuam excluídas desta publicação.
 
 ## Implementado localmente
 
@@ -26,7 +26,8 @@ Actualizado em: 2026-08-16
 
 ## Validação local confirmada
 
-- Lint e TypeScript aprovados; 42/42 testes unitários aprovados; build de produção aprovado e sem source maps.
+- TypeScript aprovado; 46/46 testes unitários aprovados; build de produção aprovado e sem source maps.
+- Refresh da Visão geral validado com estado de carregamento explícito; gráficos anuais e mensais suportam vista agregada ou por Sociedade, com séries de cores distintas e curvas mensais suavizadas.
 - E2E: 24 testes aprovados em duas execuções limpas: 23 cenários funcionais/responsivos e 1 cenário isolado contra o preview real do build e respectivo service worker; 11 iPhones e 7 resoluções Windows cobertos.
 - Inspecção visual corrigiu a localização truncada em iPhone compacto; título completo confirmado sem overflow horizontal.
 - Auditoria de dependências de produção sem vulnerabilidades conhecidas.
