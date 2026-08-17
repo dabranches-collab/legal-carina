@@ -1,6 +1,6 @@
 # Estado do projecto
 
-Actualizado em: 2026-08-16
+Actualizado em: 2026-08-17
 
 ## Regra de entrega
 
@@ -8,6 +8,25 @@ Actualizado em: 2026-08-16
 - Versão publicada candidata: `0.2.3`.
 - Publicação correctiva da versão `0.2.3` expressamente aprovada pelo proprietário em 2026-08-17.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
+- Próxima versão local em preparação: `0.2.4`, na branch `codex/prepare-0.2.4-continuity-export`; produção mantém `0.2.3`.
+
+## Lote local 0.2.4 ainda não publicado
+
+- A exportação XLSX dos Registos de trabalho pede ao backend todos os movimentos autorizados que correspondem aos filtros principais apenas quando o utilizador carrega em XLSX.
+- O carregamento inicial continua limitado à pesquisa paginada de 100 movimentos e deixa de determinar o conteúdo da exportação integral.
+- O botão comunica preparação, sucesso e erro sem bloquear a abertura da página.
+- Foram acrescentadas regras permanentes em `AGENTS.md`, protocolo de computador novo e política de versionamento.
+- O deployment Cloudflare activo e a limitação da associação ao commit ficaram documentados.
+- Validação local: `pnpm check` aprovado com 47/47 testes; E2E local com 23 aprovados e 1 cenário exclusivo do preview de produção omitido como previsto.
+- Browser integrado: versão `0.2.4`, exportação visível, claro/escuro e viewport iPhone compacto sem overflow horizontal.
+
+## Advisors Supabase consultados em 2026-08-17
+
+- Segurança: `billing_entity_financial_permissions` e `user_login_credentials` têm RLS activa sem políticas directas; confirmar que permanecem exclusivamente acessíveis por endpoints controlados.
+- Segurança: `export_visible_work_entries` e `get_entity_dashboard_rolling` são `SECURITY DEFINER` executáveis por `authenticated`; este desenho é intencional para aplicar âmbito e mascaramento, mas exige revisão dos predicados e testes negativos antes de publicação.
+- Auth: protecção contra passwords comprometidas aparece desactivada; confirmar disponibilidade/custo do plano antes de activar.
+- Desempenho: existem FKs sem índice de cobertura, índices ainda não utilizados e políticas permissivas múltiplas. Não remover índices apenas por ainda não terem utilização; rever com carga representativa e migrations próprias.
+- Nenhuma alteração remota foi feita durante esta consulta.
 
 ## Implementado localmente
 

@@ -12,6 +12,17 @@ Data: 17/08/2026
 - Supabase: projecto `vtvvqyebigflgqccbqsw`
 - Cloudflare: Worker `legal-carina`
 - CI do commit funcional `3a665b7`: verde, incluindo lint, typecheck, testes, build, Playwright e auditoria de dependências.
+- Produção confirmada: versão `0.2.3`, deployment `ebcb958a-a49c-4485-acb1-65a055011d5d`, version ID `a0d0f411-a5cc-4d13-80ad-f2524eb08b15`.
+
+## Trabalho local ainda não publicado
+
+- Branch: `codex/prepare-0.2.4-continuity-export`.
+- Versão local: `0.2.4`.
+- Exportação XLSX integral dos Registos de trabalho em implementação e validação; é executada apenas após pedido do utilizador.
+- Regras permanentes de continuidade e protocolo de computador novo acrescentados ao repositório.
+- `pnpm check`: aprovado, 47/47 testes; E2E local: 23 aprovados e 1 teste de preview de produção omitido como previsto.
+- Advisors Supabase consultados apenas em leitura; os avisos de RLS sem políticas directas, funções `SECURITY DEFINER`, passwords comprometidas e desempenho estão registados em `PROJECT_STATE.md`.
+- Produção permanece em `0.2.3`; nenhuma alteração Cloudflare, Edge Function ou migration remota foi publicada neste lote.
 
 ## Correcções incluídas em 0.2.3
 

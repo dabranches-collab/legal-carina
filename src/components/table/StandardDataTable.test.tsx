@@ -1,7 +1,9 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { StandardDataTable, type TableColumn } from './StandardDataTable'
+
+vi.mock('xlsx',async importOriginal=>({...await importOriginal<typeof import('xlsx')>(),writeFile:vi.fn()}))
 
 type Row={id:string;name:string;amount:number;active:boolean}
 const rows:Row[]=[{id:'1',name:'Álvaro',amount:20,active:true},{id:'2',name:'Beatriz',amount:10,active:false},{id:'3',name:'Carlos',amount:30,active:true}]
@@ -23,6 +25,15 @@ describe('StandardDataTable',()=>{
     await user.click(screen.getByRole('button',{name:'Valor'}))
     const body=screen.getByRole('table').querySelector('tbody')!
     expect(within(body).getAllByRole('row')[0]).toHaveTextContent('10')
+  })
+
+  test('carrega a exportação integral apenas depois do pedido do utilizador',async()=>{
+    const user=userEvent.setup(),loadExportRows=vi.fn(async()=>[...rows,{id:'4',name:'Duarte',amount:40,active:true}])
+    render(<StandardDataTable id="remote-export" label="Tabela remota" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadExportRows={loadExportRows}/>)
+    expect(loadExportRows).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button',{name:'XLSX'}))
+    expect(await screen.findByText('4 resultados exportados para XLSX.')).toBeInTheDocument()
+    expect(loadExportRows).toHaveBeenCalledTimes(1)
   })
 
   test('multisselecção booleana distingue todas as opções de nenhuma opção',async()=>{
