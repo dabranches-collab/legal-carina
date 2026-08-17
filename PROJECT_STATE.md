@@ -5,10 +5,10 @@ Actualizado em: 2026-08-17
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão publicada: `0.2.5`.
-- A versão `0.2.5` foi publicada pela integração GitHub–Cloudflare após autorização expressa do proprietário.
+- Versão publicada: `0.2.6`.
+- A Cloudflare publicou automaticamente a versão `0.2.6` após o push da branch `codex/client-identifiers-documents-0.2.6`; a produção foi confirmada directamente no browser integrado.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
-- Próxima versão local em preparação: `0.2.6`, na branch `codex/client-identifiers-documents-0.2.6`; produção mantém `0.2.5`.
+- Versão local e produção: `0.2.6`, na branch `codex/client-identifiers-documents-0.2.6`. `main` ainda não contém o lote; abrir PR, obter CI verde e fundir é prioritário para não deixar produção à frente do GitHub principal.
 
 ## Lote local 0.2.6 em preparação
 
@@ -19,6 +19,7 @@ Actualizado em: 2026-08-17
 - Migrations remotas isoladas `20260817095147`, `20260817095157`, `20260817095206` e `20260817095316`; não foi executado `db push`.
 - O ficheiro de importação mais recente ainda tem de ser localizado e comparado por data, hash, linhas e duplicados. Não limpar a base antes dessa verificação, cópia de segurança e autorização específica para a operação destrutiva.
 - Validação local deste lote: lint, TypeScript e 49/49 testes aprovados. A validação visual autenticada ficou pendente porque a sessão do browser integrado expirou; não foram solicitados nem usados PINs.
+- Produção confirmada em 0.2.6. O erro transitório `permission denied for table clients` foi investigado: privilégios e RLS permanecem presentes e a lista voltou a carregar sem alteração à base.
 
 ## Lote 0.2.4 publicado
 

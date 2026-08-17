@@ -10,9 +10,9 @@ Data: 17/08/2026
 - Directório obrigatório: `C:\Projetos\legal-carina`, fora do OneDrive.
 - Branch: `codex/client-identifiers-documents-0.2.6`
 - Commit funcional: `1f05f59 feat: activar identificadores e documentos de clientes`
-- Versão local: `0.2.6`; versão publicada/Cloudflare: `0.2.5`.
-- O frontend 0.2.6 não foi publicado, não foi fundido em `main` e ainda não tem PR/CI.
-- O código foi enviado apenas para a branch de desenvolvimento no GitHub.
+- Versão local e publicada/Cloudflare: `0.2.6`.
+- A Cloudflare publicou automaticamente o push da branch, apesar de não existir PR nem merge em `main`. O endereço público foi verificado directamente e apresenta `Versão 0.2.6`.
+- O código está na branch de desenvolvimento no GitHub, mas `main` ainda não contém este lote. Prioridade: não deixar produção à frente de `main`; abrir PR, obter CI verde e fundir antes de novos lotes.
 - Supabase `vtvvqyebigflgqccbqsw`: identificadores, documentos, bucket privado e Edge Function `client-documents` já estão activos remotamente.
 
 ## O que ficou implementado
@@ -30,6 +30,8 @@ Data: 17/08/2026
 - `pnpm security:files`, lint, typecheck e build aprovados.
 - 49/49 testes aprovados.
 - Browser integrado confirmado na versão local 0.2.6, mas a sessão autenticada expirou. Falta validar visualmente a ficha depois de iniciar sessão; não pedir, inventar ou expor PINs.
+- Produção verificada em `https://legal-carina.dabranches.workers.dev/`: versão 0.2.6. O PWA apresentou a actualização correspondente.
+- O erro transitório `permission denied for table clients` foi investigado: `authenticated` mantém os privilégios e políticas RLS da tabela, e a lista voltou a carregar na sessão local sem alteração correctiva à base.
 - Servidor local: `pnpm dev --host 127.0.0.1 --port 5173`.
 
 ## Importação e base de dados
@@ -49,7 +51,7 @@ Data: 17/08/2026
 4. Executar pgTAP das políticas de RLS, Storage e importação num ambiente autorizado.
 5. Reconciliar as migrations locais antigas `20260816180000` a `20260816198000`; nunca executar `supabase db push` indiscriminadamente.
 6. Rever os avisos antigos do Supabase e testar passkeys/Windows Hello/Face ID em equipamento real.
-7. Quando o lote estiver pronto, abrir PR para arrancar CI. Publicar apenas após pedido explícito “publica”.
+7. Abrir PR deste lote com prioridade, executar CI e fundir em `main`, porque a Cloudflare já publicou automaticamente a branch. Não iniciar nova publicação sem pedido explícito “publica”.
 
 ## Comandos para retomar
 
