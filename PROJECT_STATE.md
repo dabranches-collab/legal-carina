@@ -44,6 +44,14 @@ Actualizado em: 2026-08-17
 - A mesma acção é acessível por teclado com `Enter` quando a linha tem foco.
 - Produção mantém `0.2.4`; não efectuar push deste lote até controlar os builds automáticos Cloudflare.
 
+## Correcção local 0.2.6 em preparação
+
+- Importação integral reconciliadora implementada na branch `codex/reconcile-full-import`.
+- Todas as linhas efectivas são comparadas com a linhagem do lote anterior; novas são criadas, inalteradas preservam o movimento e alteradas actualizam o mesmo `id` com auditoria.
+- Linhas ausentes não são apagadas. Conflitos com alterações manuais bloqueiam a transacção.
+- RPCs base e reconciliadoras aplicadas isoladamente ao Supabase remoto em 2026-08-17. Nenhuma outra migration pendente, Edge Function ou publicação Cloudflare foi executada.
+- Aplicação directa confirmada por catálogo e privilégios: RPCs apenas para `authenticated`, helper privado sem execução para clientes. Os carimbos locais permanecem ausentes do histórico remoto e devem ser reconciliados sem `migration repair` por suposição.
+
 ## Implementado localmente
 
 - Interface **Carina - Legal**, navegação hierárquica, contraste claro/escuro, PWA e versão visível.

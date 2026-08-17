@@ -14,7 +14,7 @@ export function ImportWizard() {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
   const [confirmed, setConfirmed] = useState(false)
-  const [importResult,setImportResult]=useState<{importId:string;importedRows:number;invalidRows:number;status:string}>()
+  const [importResult,setImportResult]=useState<{importId:string;newRows:number;updatedRows:number;unchangedRows:number;invalidRows:number;missingRows:number;status:string}>()
   const [remoteValidated,setRemoteValidated]=useState(false)
 
   async function run(nextFile: File, selectedSheet?: string, mappingOverrides?: Partial<Record<CanonicalField, number | null>>) {
@@ -27,13 +27,18 @@ export function ImportWizard() {
       if(supabase){
         const {data:remote,error:remoteError}=await supabase.rpc('analyze_import_candidates',{p_rows:result.rows})
         if(remoteError)throw new Error(`A validação local terminou, mas a comparação segura com a base de dados falhou: ${remoteError.message}`)
-        const comparison=remote as {duplicateSourceRows:number[];existingClients:number;newClients:number}
-        const duplicateRows=new Set(comparison.duplicateSourceRows)
+        const comparison=remote as {rows:{sourceRow:number;action:'new'|'unchanged'|'update'|'conflict';workEntryId?:string;changedFields:string[]}[];existingClients:number;newClients:number;newRows:number;unchangedRows:number;updatedRows:number;conflictRows:number;missingRows:number}
+        const reconciliationByRow=new Map(comparison.rows.map(row=>[row.sourceRow,row]))
         const fingerprintCounts=new Map<string,number>();result.rows.forEach(row=>fingerprintCounts.set(row.fingerprint,(fingerprintCounts.get(row.fingerprint)??0)+1))
-        result.rows=result.rows.map(row=>duplicateRows.has(row.sourceRow)?{...row,issues:[...row.issues,{severity:'warning' as const,code:'existing_duplicate',message:'Existe um movimento equivalente na base de dados.'}]}:row)
+        result.rows=result.rows.map(row=>{
+          const reconciliation=reconciliationByRow.get(row.sourceRow)
+          if(!reconciliation)return {...row,issues:[...row.issues,{severity:'error' as const,code:'reconciliation_missing',message:'A linha não recebeu uma decisão segura do servidor.'}]}
+          const issue=reconciliation.action==='update'?{severity:'warning' as const,code:'existing_update',message:`O movimento existente será actualizado: ${reconciliation.changedFields.join(', ')}.`}:reconciliation.action==='conflict'?{severity:'error' as const,code:'manual_override_conflict',message:'O movimento tem alterações manuais e exige revisão antes da importação.'}:undefined
+          return {...row,reconciliation,issues:issue?[...row.issues,issue]:row.issues}
+        })
         const hasError=(row:ImportRow)=>row.issues.some(issue=>issue.severity==='error'),hasWarning=(row:ImportRow)=>row.issues.some(issue=>issue.severity==='warning')
-        result.summary={...result.summary,validRows:result.rows.filter(row=>!hasError(row)&&!hasWarning(row)).length,warningRows:result.rows.filter(row=>!hasError(row)&&hasWarning(row)).length,possibleDuplicates:result.rows.filter(row=>duplicateRows.has(row.sourceRow)||(fingerprintCounts.get(row.fingerprint)??0)>1).length,existingClients:comparison.existingClients,newClients:comparison.newClients}
-        setRemoteValidated(true)
+        result.summary={...result.summary,validRows:result.rows.filter(row=>!hasError(row)&&!hasWarning(row)).length,warningRows:result.rows.filter(row=>!hasError(row)&&hasWarning(row)).length,invalidRows:result.rows.filter(hasError).length,possibleDuplicates:result.rows.filter(row=>(fingerprintCounts.get(row.fingerprint)??0)>1).length,existingClients:comparison.existingClients,newClients:comparison.newClients,newRows:comparison.newRows,unchangedRows:comparison.unchangedRows,updatedRows:comparison.updatedRows,conflictRows:comparison.conflictRows,missingRows:comparison.missingRows}
+        setRemoteValidated(comparison.conflictRows===0)
       }
       setProgress(100); setAnalysis(result); setFile(nextFile)
     } catch (reason) {
@@ -53,7 +58,7 @@ export function ImportWizard() {
       setProgress(35)
       const {data,error:failure}=await supabase.rpc('commit_validated_import',{p_payload:payload})
       if(failure)throw failure
-      setProgress(100);setImportResult(data as {importId:string;importedRows:number;invalidRows:number;status:string})
+      setProgress(100);setImportResult(data as {importId:string;newRows:number;updatedRows:number;unchangedRows:number;invalidRows:number;missingRows:number;status:string})
     }catch(reason){setProgress(0);setError(reason instanceof Error?reason.message:'Não foi possível concluir a importação.')}
     finally{setBusy(false)}
   }
@@ -64,7 +69,7 @@ export function ImportWizard() {
       <div className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">Importação local em duas fases</p>
         <h2 id="import-title" className="mt-3 font-display text-3xl font-semibold">Analisar antes de gravar</h2>
-        <p className="mt-3 leading-7 text-text-secondary">O ficheiro é processado neste browser. Nenhum conteúdo é enviado ou importado para o Supabase durante a análise.</p>
+        <p className="mt-3 leading-7 text-text-secondary">O ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segura com o Supabase; nenhum movimento é gravado antes da confirmação final.</p>
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.35fr_.65fr]">
@@ -94,14 +99,15 @@ export function ImportWizard() {
 
         <div><h3 className="font-serif text-2xl font-semibold">Confirmação</h3><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[
           ['Linhas analisadas', summary.totalRows], ['Válidas', summary.validRows], ['Com avisos', summary.warningRows], ['Inválidas', summary.invalidRows],
-          ['Clientes novos', summary.newClients], ['Clientes existentes', summary.existingClients], ['Possíveis duplicados', summary.possibleDuplicates], ['Sem preço', summary.withoutPrice],
+          ['Movimentos novos', summary.newRows], ['Sem alterações', summary.unchangedRows], ['A actualizar', summary.updatedRows], ['Conflitos', summary.conflictRows],
+          ['Ausentes no ficheiro', summary.missingRows], ['Clientes novos', summary.newClients], ['Clientes existentes', summary.existingClients], ['Possíveis duplicados', summary.possibleDuplicates], ['Sem preço', summary.withoutPrice],
           ['Facturadas', summary.invoicedRows], ['Pagas', summary.paidRows], ['Arquivadas', summary.archivedRows], ['Impacto financeiro', formatCurrency(summary.financialImpact)],
         ].map(([label, value]) => <div key={label} className="card rounded-xl p-4"><p className="text-xs text-text-secondary">{label}</p><p className={`${label==='Impacto financeiro'?'financial-value ':''}mt-1 text-xl font-semibold`}>{value}</p></div>)}</div><p className="mt-3 text-sm text-text-secondary">{analysis.ignoredRows} linhas sem data, cliente e actividade foram ignoradas. A folha CLIENTES contém {analysis.clientDirectory.length} entradas reconhecidas; apenas categorias dedutíveis serão criadas automaticamente.</p></div>
 
         <div className="card overflow-x-auto"><table className="min-w-full text-left text-xs"><caption className="p-4 text-left font-display text-lg font-semibold">Pré-visualização local (primeiras 8 linhas)</caption><thead className="bg-surface-subtle"><tr>{analysis.preview[0].map((header, index) => <th key={`${header}-${index}`} className="whitespace-nowrap px-3 py-2">{header}</th>)}</tr></thead><tbody>{analysis.preview.slice(1).map((row, rowIndex) => <tr key={rowIndex} className="border-t border-border">{row.map((value, index) => <td key={index} className="max-w-56 truncate px-3 py-2">{value}</td>)}</tr>)}</tbody></table></div>
 
-        {importResult&&<p role="status" className="rounded-xl border border-success/30 bg-success-soft p-4 text-success">Importação concluída: {importResult.importedRows} movimentos gravados e {importResult.invalidRows} linhas mantidas para revisão. Lote: <code>{importResult.importId}</code>.</p>}
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-primary p-6 text-surface"><label className="flex items-start gap-3 text-sm"><input type="checkbox" disabled={!remoteValidated} checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} className="mt-1" /><span>{remoteValidated?'Confirmei o relatório, os avisos, os duplicados e o impacto financeiro. Pretendo gravar este lote no Supabase.':'A importação permanece bloqueada até concluir a comparação segura com os dados existentes.'}</span></label><div className="flex gap-3"><button type="button" onClick={cancel} className="rounded-lg border border-surface/40 px-4 py-2">Cancelar</button><button type="button" disabled={busy} onClick={() => file && void run(file, analysis.selectedSheet, analysis.mapping)} className="rounded-lg bg-surface px-4 py-2 font-semibold text-primary disabled:opacity-50">Validar</button><button type="button" disabled={!confirmed||!remoteValidated||busy||Boolean(importResult)} onClick={()=>void commit()} className="rounded-lg bg-accent px-4 py-2 font-semibold text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy?'A importar…':'Importar'}</button></div></div>
+        {importResult&&<p role="status" className="rounded-xl border border-success/30 bg-success-soft p-4 text-success">Reconciliação concluída: {importResult.newRows} novos, {importResult.updatedRows} actualizados, {importResult.unchangedRows} sem alterações e {importResult.invalidRows} inválidos. {importResult.missingRows} movimentos anteriores ficaram apenas sinalizados como ausentes. Lote: <code>{importResult.importId}</code>.</p>}
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-primary p-6 text-surface"><label className="flex items-start gap-3 text-sm"><input type="checkbox" disabled={!remoteValidated} checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} className="mt-1" /><span>{remoteValidated?'Confirmei as linhas novas, inalteradas, alteradas, ausentes e o impacto financeiro. Pretendo reconciliar este lote no Supabase.':summary.conflictRows>0?'A importação está bloqueada porque existem alterações manuais em conflito.':'A importação permanece bloqueada até concluir a comparação segura com todos os movimentos existentes.'}</span></label><div className="flex gap-3"><button type="button" onClick={cancel} className="rounded-lg border border-surface/40 px-4 py-2">Cancelar</button><button type="button" disabled={busy} onClick={() => file && void run(file, analysis.selectedSheet, analysis.mapping)} className="rounded-lg bg-surface px-4 py-2 font-semibold text-primary disabled:opacity-50">Validar</button><button type="button" disabled={!confirmed||!remoteValidated||busy||Boolean(importResult)} onClick={()=>void commit()} className="rounded-lg bg-accent px-4 py-2 font-semibold text-primary disabled:cursor-not-allowed disabled:opacity-50">{busy?'A reconciliar…':'Reconciliar'}</button></div></div>
       </div>}
     </section>
   )

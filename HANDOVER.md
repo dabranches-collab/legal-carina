@@ -38,6 +38,14 @@ Data: 17/08/2026
 - Foi preparada localmente a migração `20260817081315_add_client_identifiers.sql` para vários identificadores por cliente (CC/BI, passaporte, título de residência, registo comercial, fiscal ou outro). Não foi aplicada ao Supabase remoto devido à divergência conhecida no histórico de migrações.
 - Este lote `0.2.5` não deve ser enviado ao GitHub enquanto o deployment automático não estiver controlado.
 
+## Correcção 0.2.6 em preparação
+
+- Branch local: `codex/reconcile-full-import`.
+- A importação compara todas as linhas efectivas com o último lote concluído e classifica-as como novas, inalteradas, alteradas ou em conflito.
+- Movimentos existentes mantêm o mesmo `id`; linhas alteradas actualizam o movimento e ficam auditadas. Linhas ausentes são apenas sinalizadas e nunca eliminadas automaticamente.
+- Alterações manuais protegidas bloqueiam a importação para revisão.
+- As funções `analyze_import_candidates`, `commit_validated_import` e o comparador privado foram aplicados isoladamente ao Supabase remoto em 2026-08-17, sem `db push` das restantes migrations e sem publicação Cloudflare. O histórico remoto ainda não contém os carimbos locais `20260816181000` e `20260817143340`.
+
 ## Correcções incluídas em 0.2.3
 
 - Registos de trabalho deixam de executar a exportação completa no carregamento; usam a pesquisa paginada e mostram até 100 movimentos na vista inicial.
