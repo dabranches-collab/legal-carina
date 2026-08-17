@@ -23,6 +23,8 @@ export interface Database {
       get_work_entry_for_edit: { Args: { p_work_entry_id:string }; Returns: Record<string, unknown>|null }
       create_work_entry: { Args: { p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_billing_entity_id:string|null; p_activity_description:string; p_duration_minutes:number; p_observations:string|null }; Returns:string }
       update_work_entry_details: { Args: { p_work_entry_id:string; p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_activity_description:string; p_observations:string|null }; Returns:undefined }
+      update_work_entry_full: { Args: { p_work_entry_id:string; p_values:Record<string,unknown>; p_reason:string }; Returns:undefined }
+      delete_work_entry: { Args: { p_work_entry_id:string; p_reason:string }; Returns:undefined }
       bulk_update_work_entries: { Args: { p_work_entry_ids:string[]; p_action:string; p_value:unknown; p_reason:string }; Returns:number }
     }
     Enums: Record<string, never>

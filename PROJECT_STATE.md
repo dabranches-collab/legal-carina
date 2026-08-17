@@ -1,13 +1,48 @@
 # Estado do projecto
 
-Actualizado em: 2026-08-16
+Actualizado em: 2026-08-17
 
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão publicada candidata: `0.2.3`.
-- Publicação correctiva da versão `0.2.3` expressamente aprovada pelo proprietário em 2026-08-17.
+- Versão publicada: `0.2.4`.
+- A versão `0.2.4` foi publicada automaticamente pela integração GitHub–Cloudflare e a sua manutenção foi posteriormente autorizada pelo proprietário.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
+- Próxima versão local em preparação: `0.2.5`, na branch `codex/prepare-0.2.4-continuity-export`; produção mantém `0.2.4`.
+
+## Lote 0.2.4 publicado
+
+- A exportação XLSX dos Registos de trabalho pede ao backend todos os movimentos autorizados que correspondem aos filtros principais apenas quando o utilizador carrega em XLSX.
+- O carregamento inicial continua limitado à pesquisa paginada de 100 movimentos e deixa de determinar o conteúdo da exportação integral.
+- O botão comunica preparação, sucesso e erro sem bloquear a abertura da página.
+- Foram acrescentadas regras permanentes em `AGENTS.md`, protocolo de computador novo e política de versionamento.
+- O deployment Cloudflare activo e a limitação da associação ao commit ficaram documentados.
+- Validação local: `pnpm check` aprovado com 47/47 testes; E2E local com 23 aprovados e 1 cenário exclusivo do preview de produção omitido como previsto.
+- Browser integrado: versão `0.2.4`, exportação visível, claro/escuro e viewport iPhone compacto sem overflow horizontal.
+- GitHub: PR rascunho `#5`; `CI` e `Secret scan` do commit funcional `67797f9` verdes.
+
+## Advisors Supabase consultados em 2026-08-17
+
+- Segurança: `billing_entity_financial_permissions` e `user_login_credentials` têm RLS activa sem políticas directas; confirmar que permanecem exclusivamente acessíveis por endpoints controlados.
+- Segurança: `export_visible_work_entries` e `get_entity_dashboard_rolling` são `SECURITY DEFINER` executáveis por `authenticated`; este desenho é intencional para aplicar âmbito e mascaramento, mas exige revisão dos predicados e testes negativos antes de publicação.
+- Auth: protecção contra passwords comprometidas aparece desactivada; confirmar disponibilidade/custo do plano antes de activar.
+- Desempenho: existem FKs sem índice de cobertura, índices ainda não utilizados e políticas permissivas múltiplas. Não remover índices apenas por ainda não terem utilização; rever com carga representativa e migrations próprias.
+- Nenhuma alteração remota foi feita durante esta consulta.
+
+## Lote local 0.2.5 em preparação
+
+- Registos de trabalho e clientes abrem por duplo clique; `Enter` numa linha focada mantém acesso equivalente por teclado.
+- Corrigida a abertura dos movimentos enquanto as RPC `get_work_entry_form_options`, `get_work_entry_for_edit` e `update_work_entry_details` ainda não existem no Supabase remoto: existe fallback compatível, sempre sujeito às permissões/RLS actuais.
+- Ficha completa de movimento preparada, incluindo duração, preços, descontos, estados, facturação, pagamento, arquivo e sociedade.
+- Edição completa activa no Supabase através de `update_work_entry_full`. A eliminação foi simplificada para controlo interno: qualquer utilizador com acesso de edição pode apagar qualquer movimento após confirmação, incluindo facturados ou pagos. Ligações a facturas, importações e descontos são anuladas, preservando esses registos. Migrações remotas isoladas `20260817091517` e `20260817091927`, sem `db push` das restantes migrações divergentes.
+- A ficha de cliente abre inicialmente para consulta e permite mudar explicitamente para edição e guardar alterações.
+- Dados gerais da ficha: nome, estado, vertentes/códigos, denominação legal, NIF, correio electrónico, telefone, morada e notas.
+- Documentos do cliente são consultáveis na ficha; o carregamento só aparece durante a edição.
+- Migração local preparada para identificadores múltiplos e flexíveis (`client_identifiers`), ainda não aplicada ao remoto até reconciliar o histórico de migrações.
+
+- Duplo clique numa linha dos Registos de trabalho abre directamente o modal de edição desse movimento.
+- A mesma acção é acessível por teclado com `Enter` quando a linha tem foco.
+- Produção mantém `0.2.4`; não efectuar push deste lote até controlar os builds automáticos Cloudflare.
 
 ## Implementado localmente
 

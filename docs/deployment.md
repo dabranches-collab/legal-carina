@@ -1,5 +1,18 @@
 # Deployment seguro
 
+## Produção confirmada em 2026-08-17
+
+- Plataforma: Cloudflare Workers Static Assets.
+- Serviço: `legal-carina`.
+- Ambiente: produção.
+- URL: `https://legal-carina.dabranches.workers.dev`.
+- Versão visível: `0.2.3`.
+- Deployment activo: `ebcb958a-a49c-4485-acb1-65a055011d5d`.
+- Version ID activo: `a0d0f411-a5cc-4d13-80ad-f2524eb08b15` (versão Cloudflare 34, 100% do tráfego).
+- Commit funcional documentado: `3a665b7`; a Cloudflare não guarda o SHA Git nos metadados desta versão, pelo que esta associação depende do handover e da sequência temporal, não de prova directa da plataforma.
+
+Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
+
 ## Gates obrigatórios
 
 - Pull request revisto; CI, E2E, auditoria de dependências e secret scan verdes.
