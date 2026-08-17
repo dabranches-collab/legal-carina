@@ -31,3 +31,20 @@ grant execute on function public.can_manage_client_document(uuid, uuid) to authe
 
 comment on function public.can_manage_client_document(uuid, uuid) is
   'Authorisation probe used by the client-documents Edge Function before a validated private upload.';
+
+create or replace function public.can_manage_client_document_record(target_document_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.client_documents d
+    where d.id = target_document_id
+      and private.has_scope_access(d.firm_id, null, d.client_id, null, 'edit')
+  );
+$$;
+
+revoke all on function public.can_manage_client_document_record(uuid) from public, anon;
+grant execute on function public.can_manage_client_document_record(uuid) to authenticated;

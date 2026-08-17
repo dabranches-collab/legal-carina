@@ -27,6 +27,8 @@ playwright-report/
 uploads/
 client-data/
 client-documents/
+!supabase/functions/client-documents/
+!supabase/functions/client-documents/index.ts
 legal-documents/
 dumps/
 backups/

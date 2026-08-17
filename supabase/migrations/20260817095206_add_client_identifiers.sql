@@ -21,14 +21,16 @@ create index client_identifiers_client_id_idx on public.client_identifiers(clien
 alter table public.client_identifiers enable row level security;
 
 create policy client_identifiers_select_scoped on public.client_identifiers for select to authenticated
-using ((select private.can_read_client(firm_id,client_id)));
-create policy client_identifiers_insert_admin on public.client_identifiers for insert to authenticated
-with check ((select private.has_firm_role(firm_id,array['owner','admin'])));
-create policy client_identifiers_update_admin on public.client_identifiers for update to authenticated
-using ((select private.has_firm_role(firm_id,array['owner','admin'])))
-with check ((select private.has_firm_role(firm_id,array['owner','admin'])));
+using ((select private.has_scope_access(firm_id,null,client_id,null,'view')));
+create policy client_identifiers_insert_scoped on public.client_identifiers for insert to authenticated
+with check ((select private.has_scope_access(firm_id,null,client_id,null,'edit')));
+create policy client_identifiers_update_scoped on public.client_identifiers for update to authenticated
+using ((select private.has_scope_access(firm_id,null,client_id,null,'edit')))
+with check ((select private.has_scope_access(firm_id,null,client_id,null,'edit')));
+create policy client_identifiers_delete_scoped on public.client_identifiers for delete to authenticated
+using ((select private.has_scope_access(firm_id,null,client_id,null,'edit')));
 
-grant select,insert,update on public.client_identifiers to authenticated;
+grant select,insert,update,delete on public.client_identifiers to authenticated;
 
 create trigger set_client_identifiers_updated_at before update on public.client_identifiers
 for each row execute function private.set_updated_at();

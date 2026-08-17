@@ -5,10 +5,20 @@ Actualizado em: 2026-08-17
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão publicada: `0.2.4`.
-- A versão `0.2.4` foi publicada automaticamente pela integração GitHub–Cloudflare e a sua manutenção foi posteriormente autorizada pelo proprietário.
+- Versão publicada: `0.2.5`.
+- A versão `0.2.5` foi publicada pela integração GitHub–Cloudflare após autorização expressa do proprietário.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
-- Próxima versão local em preparação: `0.2.5`, na branch `codex/prepare-0.2.4-continuity-export`; produção mantém `0.2.4`.
+- Próxima versão local em preparação: `0.2.6`, na branch `codex/client-identifiers-documents-0.2.6`; produção mantém `0.2.5`.
+
+## Lote local 0.2.6 em preparação
+
+- Identificadores de cliente activos no Supabase, com consulta, criação, alteração e eliminação sujeitas ao âmbito de acesso do cliente.
+- Documentos de cliente activos num bucket privado de 20 MB, limitado a PDF, JPG, PNG, DOCX e XLSX sem conteúdo activo.
+- Upload, arquivo, reactivação e eliminação passam pela Edge Function autenticada `client-documents`; o browser não tem escrita directa na tabela nem no Storage.
+- Consulta por ligação assinada de 60 segundos; metadados incluem categoria, datas, tamanho e SHA-256.
+- Migrations remotas isoladas `20260817095147`, `20260817095157`, `20260817095206` e `20260817095316`; não foi executado `db push`.
+- O ficheiro de importação mais recente ainda tem de ser localizado e comparado por data, hash, linhas e duplicados. Não limpar a base antes dessa verificação, cópia de segurança e autorização específica para a operação destrutiva.
+- Validação local deste lote: lint, TypeScript e 49/49 testes aprovados. A validação visual autenticada ficou pendente porque a sessão do browser integrado expirou; não foram solicitados nem usados PINs.
 
 ## Lote 0.2.4 publicado
 
@@ -38,7 +48,7 @@ Actualizado em: 2026-08-17
 - A ficha de cliente abre inicialmente para consulta e permite mudar explicitamente para edição e guardar alterações.
 - Dados gerais da ficha: nome, estado, vertentes/códigos, denominação legal, NIF, correio electrónico, telefone, morada e notas.
 - Documentos do cliente são consultáveis na ficha; o carregamento só aparece durante a edição.
-- Migração local preparada para identificadores múltiplos e flexíveis (`client_identifiers`), ainda não aplicada ao remoto até reconciliar o histórico de migrações.
+- Identificadores múltiplos e flexíveis (`client_identifiers`) aplicados remotamente e preparados para criação, edição e eliminação.
 
 - Duplo clique numa linha dos Registos de trabalho abre directamente o modal de edição desse movimento.
 - A mesma acção é acessível por teclado com `Enter` quando a linha tem foco.
@@ -73,7 +83,7 @@ Actualizado em: 2026-08-17
 
 ## Exige aprovação e execução remota
 
-- Migrations `20260816142830_add_private_client_documents.sql` e `20260816180000` a `20260816198000`, incluindo leitura financeira protegida, importação confirmada, preços, permissões, PIN, documentos, remoção do gate legal, Gestor, auditoria, restrições de mutação, dados mestre por âmbito e escrita controlada de movimentos.
+- Permanecem por decidir as migrations locais divergentes `20260816180000` a `20260816198000` que não foram aplicadas isoladamente neste lote.
 - Edge Functions eventualmente alteradas, deploy do frontend/Worker e actualização das PWA instaladas.
 
 ## Ainda aberto antes da publicação
@@ -85,12 +95,11 @@ Actualizado em: 2026-08-17
 
 ## Riscos actuais
 
-- As funções SQL novas ainda não foram executadas na base remota.
+- As funções deste lote documental foram executadas; outras funções de migrations locais divergentes continuam por reconciliar.
 - O histórico remoto de migrations usa 11 versões que não existem com o mesmo carimbo no checkout; o `db push --dry-run` fica bloqueado até reconciliar os identificadores sem perder código.
 - A ocultação visual protege o ecrã; a autorização efectiva tem de permanecer no backend.
 - Passkeys exigem domínio HTTPS definitivo e validação em hardware Windows/iPhone.
-- Documentos só podem ser activados após confirmar bucket privado, políticas e validade curta das URLs.
-- A validação local dos documentos verifica assinatura, extensão, estrutura OOXML e nomes de conteúdo macro; a validação remota do objecto continua dependente da aplicação das novas políticas.
+- Documentos estão activos com bucket privado, políticas por âmbito e URLs de 60 segundos; falta executar um teste visual autenticado sem dados reais.
 - A aplicação não pode receber “PRONTA PARA PUBLICAÇÃO” antes dos testes remotos de RLS, Storage, perfis e bundle.
 # Correcções 0.2.3 em preparação
 

@@ -64,10 +64,10 @@ values (
 on conflict (id) do update set public = false, file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
-create or replace function private.storage_path_uuid(path text, position integer)
+create or replace function private.storage_path_uuid(path text, p_position integer)
 returns uuid language plpgsql immutable set search_path = '' as $$
 begin
-  return ((storage.foldername(path))[position])::uuid;
+  return ((storage.foldername(path))[p_position])::uuid;
 exception when others then
   return null;
 end;
