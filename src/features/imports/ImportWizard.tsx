@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type DragEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { canonicalFields, type CanonicalField, type ImportRow, type WorkbookAnalysis } from './types'
 import { fieldLabels } from './mapping'
 import { supabase } from '../../lib/supabase'
@@ -16,6 +16,9 @@ export function ImportWizard() {
   const [confirmed, setConfirmed] = useState(false)
   const [importResult,setImportResult]=useState<{importId:string;newRows:number;updatedRows:number;unchangedRows:number;invalidRows:number;missingRows:number;status:string}>()
   const [remoteValidated,setRemoteValidated]=useState(false)
+  const [importMetrics,setImportMetrics]=useState<{overrides:number;importErrors:number}|null>(null)
+
+  useEffect(()=>{let active=true;void(async()=>{if(!supabase)return;const response=await supabase.rpc('get_dashboard_overview');if(!active||response.error)return;const metrics=(response.data as {metrics?:{overrides?:number;importErrors?:number}})?.metrics;setImportMetrics({overrides:Number(metrics?.overrides??0),importErrors:Number(metrics?.importErrors??0)})})();return()=>{active=false}},[])
 
   async function run(nextFile: File, selectedSheet?: string, mappingOverrides?: Partial<Record<CanonicalField, number | null>>) {
     setBusy(true); setError(''); setConfirmed(false); setProgress(15)
@@ -73,6 +76,11 @@ export function ImportWizard() {
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-secondary">Importação local em duas fases</p>
         <h2 id="import-title" className="mt-3 font-display text-3xl font-semibold">Analisar antes de gravar</h2>
         <p className="mt-3 leading-7 text-text-secondary">O ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segura com o Supabase; nenhum movimento é gravado antes da confirmação final.</p>
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2" aria-label="Indicadores de importação">
+        <article className="card p-4"><p className="text-xs text-text-secondary">Importações com erros</p><p className="mt-1 text-xl font-semibold tabular-nums">{importMetrics?.importErrors??'—'}</p><p className="mt-1 text-xs text-text-secondary">Lotes com linhas rejeitadas</p></article>
+        <article className="card p-4"><p className="text-xs text-text-secondary">Com override</p><p className="mt-1 text-xl font-semibold tabular-nums">{importMetrics?.overrides??'—'}</p><p className="mt-1 text-xs text-text-secondary">Movimentos com alterações manuais protegidas</p></article>
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.35fr_.65fr]">

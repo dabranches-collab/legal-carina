@@ -8,6 +8,7 @@ import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
 const OverviewPage=lazy(()=>import('./pages/OverviewPage').then(module=>({default:module.OverviewPage})))
 const WorkEntriesPage=lazy(()=>import('./features/work-entries/WorkEntriesPage').then(module=>({default:module.WorkEntriesPage})))
 const EntityDashboard=lazy(()=>import('./features/entities/EntityDashboard').then(module=>({default:module.EntityDashboard})))
+const ClientLandingPage=lazy(()=>import('./features/entities/ClientLandingPage').then(module=>({default:module.ClientLandingPage})))
 const ImportWizard=lazy(()=>import('./features/imports/ImportWizard').then(module=>({default:module.ImportWizard})))
 const ImportReviewPage=lazy(()=>import('./features/imports/ImportReviewPage').then(module=>({default:module.ImportReviewPage})))
 const AdminPage=lazy(()=>import('./features/admin/AdminPage').then(module=>({default:module.AdminPage})))
@@ -43,7 +44,7 @@ export function AuthenticatedApplication() {
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage />
   else if (view === 'work') content = <WorkEntriesPage />
-  else if (view === 'clients') content = <EntityDashboard kind="client" aggregateClients clientCategory={clientType} />
+  else if (view === 'clients') content = clientType?<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>:<ClientLandingPage onSelect={(type)=>navigate('clients',null,type)}/>
   else if (view === 'billing') content = <EntityDashboard kind="billing" initialSelectionLabel={society} />
   else if (view === 'professionals') content = <EntityDashboard kind="professional" />
   else if (view === 'imports') content = <ImportWizard />
@@ -58,7 +59,7 @@ export function AuthenticatedApplication() {
   else if (view === 'reports') content = <ReportsPage />
   else if (view === 'audit') content = <AuditPage />
   else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
-  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card h-56 animate-pulse bg-surface-subtle" aria-label="A carregar módulo"/>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
+  return <AppShell activeView={view} selectedSociety={society} selectedClientType={clientType} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateClientType={(type)=>navigate('clients',null,type)} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
 }
 
 export default function App() {

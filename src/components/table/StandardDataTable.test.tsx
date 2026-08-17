@@ -47,6 +47,13 @@ describe('StandardDataTable',()=>{
     expect(onOpen).toHaveBeenCalledTimes(2)
   })
 
+  test('mantém as células numa linha e expõe o conteúdo completo ao passar o rato',()=>{
+    render(<StandardDataTable id="compact-table" label="Tabela compacta" rows={rows} columns={columns} rowKey={row=>row.id}/>)
+    const cell=screen.getByText('Álvaro')
+    expect(cell).toHaveClass('whitespace-nowrap')
+    expect(cell).toHaveAttribute('title','Álvaro')
+  })
+
   test('multisselecção booleana distingue todas as opções de nenhuma opção',async()=>{
     const user=userEvent.setup()
     render(<StandardDataTable id="test-boolean" label="Tabela booleana" rows={rows} columns={columns} rowKey={row=>row.id}/>)

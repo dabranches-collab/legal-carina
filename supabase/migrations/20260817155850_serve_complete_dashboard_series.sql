@@ -1,0 +1,87 @@
+create or replace function public.get_dashboard_overview()
+returns jsonb
+language sql stable security definer
+set search_path = ''
+set statement_timeout = '30s'
+as $$
+with scope_access as materialized (
+  select targets.firm_id,targets.billing_entity_id,targets.client_id,targets.matter_id,
+    private.has_scope_access(targets.firm_id,targets.billing_entity_id,targets.client_id,targets.matter_id,'view') can_view
+  from (select distinct w.firm_id,w.billing_entity_id,w.client_id,w.matter_id from public.work_entries w) targets
+), financial_access as materialized (
+  select targets.firm_id,targets.billing_entity_id,
+    private.can_view_billing_financials(targets.firm_id,targets.billing_entity_id) can_view
+  from (select distinct w.firm_id,w.billing_entity_id from public.work_entries w) targets
+), entries as materialized (
+  select w.work_date,w.duration_minutes,w.is_invoiced,w.is_paid,w.archive_status,w.has_manual_override,w.client_id,w.billing_entity_id,
+    case when fa.can_view then w.effective_hourly_rate end effective_hourly_rate,
+    case when fa.can_view then w.effective_amount end effective_amount,
+    c.display_name client_name,c.client_type,b.name billing_name,p.display_name professional_name
+  from public.work_entries w join public.clients c on c.id=w.client_id join public.professionals p on p.id=w.professional_id
+  left join public.billing_entities b on b.id=w.billing_entity_id
+  join scope_access scope on scope.firm_id=w.firm_id and scope.billing_entity_id is not distinct from w.billing_entity_id
+    and scope.client_id=w.client_id and scope.matter_id is not distinct from w.matter_id
+  join financial_access fa on fa.firm_id=w.firm_id and fa.billing_entity_id is not distinct from w.billing_entity_id
+  where scope.can_view
+), totals as (
+  select coalesce(sum(duration_minutes),0) minutes,sum(effective_amount) worked,sum(effective_amount) filter(where is_invoiced) invoiced,
+    sum(effective_amount) filter(where is_paid) paid,count(*) filter(where not is_invoiced) uninvoiced_count,
+    count(*) filter(where is_invoiced and not is_paid) unpaid_count,count(*) filter(where effective_hourly_rate is null) missing_price,
+    count(*) filter(where has_manual_override) overrides,count(distinct client_id) active_clients from entries
+), annual_totals as (
+  select extract(year from work_date)::int label,round(sum(effective_amount),2) value,sum(duration_minutes) minutes from entries group by 1
+), annual as (
+  select a.label,a.value,a.minutes,coalesce((select jsonb_object_agg(series.society,series.value) from (
+    select coalesce(e2.billing_name,'Sem sociedade') society,round(sum(e2.effective_amount),2) value from entries e2
+    where extract(year from e2.work_date)::int=a.label group by 1) series),'{}'::jsonb) societies
+  from annual_totals a order by a.label
+), latest_year as (select max(extract(year from work_date)::int) value from entries),
+latest_month as (select date_trunc('month',max(work_date))::date value from entries),
+rolling_months as (
+  select generate_series((select value from latest_month)-interval '11 months',(select value from latest_month),interval '1 month')::date month_start
+  where (select value from latest_month) is not null
+), monthly as (
+  select to_char(m.month_start,'YYYY-MM') label,round(coalesce(sum(e.effective_amount),0),2) value,
+    coalesce((select jsonb_object_agg(series.society,series.value) from (
+      select coalesce(e2.billing_name,'Sem sociedade') society,round(sum(e2.effective_amount),2) value from entries e2
+      where e2.work_date>=m.month_start and e2.work_date<m.month_start+interval '1 month' group by 1) series),'{}'::jsonb) societies
+  from rolling_months m left join entries e on e.work_date>=m.month_start and e.work_date<m.month_start+interval '1 month'
+  group by m.month_start order by m.month_start
+), monthly_by_year as (
+  select extract(year from work_date)::int as "year",extract(month from work_date)::int as "month",round(sum(effective_amount),2) value
+  from entries group by 1,2 order by 1,2
+), billing_monthly as (
+  select s.society,to_char(m.month_start,'YYYY-MM') period,round(coalesce(sum(e.effective_amount),0),2) value
+  from rolling_months m cross join (select distinct coalesce(billing_name,'Sem sociedade') society from entries) s
+  left join entries e on e.work_date>=m.month_start and e.work_date<m.month_start+interval '1 month' and coalesce(e.billing_name,'Sem sociedade')=s.society
+  group by s.society,m.month_start order by m.month_start,s.society
+), billing_annual as (
+  select coalesce(billing_name,'Sem sociedade') society,extract(year from work_date)::int as "year",round(sum(effective_amount),2) value
+  from entries group by 1,2 order by 1,2
+), by_client as (select client_name label,round(sum(effective_amount),2) value from entries group by client_name order by value desc nulls last limit 5),
+by_billing as (select coalesce(billing_name,'Sem sociedade') label,round(sum(effective_amount),2) value from entries group by billing_name order by value desc nulls last),
+by_professional as (select professional_name label,round(sum(effective_amount),2) value from entries group by professional_name order by value desc nulls last),
+by_archive as (select coalesce(archive_status,'none') label,count(*) value from entries group by archive_status order by value desc),
+client_types as (select client_type label,count(distinct client_id) value from entries group by client_type)
+select jsonb_build_object(
+  'metrics',jsonb_build_object('minutes',t.minutes,'worked',t.worked,'invoiced',t.invoiced,'paid',t.paid,
+    'receivable',case when t.invoiced is null then null else t.invoiced-coalesce(t.paid,0) end,
+    'uninvoicedCount',t.uninvoiced_count,'unpaidCount',t.unpaid_count,
+    'averageRate',case when t.minutes=0 or t.worked is null then null else round(t.worked*60/t.minutes,2) end,
+    'activeClients',t.active_clients,'missingPrice',t.missing_price,'overrides',t.overrides,
+    'importErrors',(select count(*) from public.imports i where i.invalid_rows>0 and private.is_firm_member(i.firm_id))),
+  'annual',coalesce((select jsonb_agg(to_jsonb(annual)) from annual),'[]'::jsonb),
+  'monthly',coalesce((select jsonb_agg(to_jsonb(monthly)) from monthly),'[]'::jsonb),
+  'monthlyByYear',coalesce((select jsonb_agg(to_jsonb(monthly_by_year)) from monthly_by_year),'[]'::jsonb),
+  'billingMonthly',coalesce((select jsonb_agg(to_jsonb(billing_monthly)) from billing_monthly),'[]'::jsonb),
+  'billingAnnual',coalesce((select jsonb_agg(to_jsonb(billing_annual)) from billing_annual),'[]'::jsonb),
+  'latestYear',(select value from latest_year),'byClient',coalesce((select jsonb_agg(to_jsonb(by_client)) from by_client),'[]'::jsonb),
+  'byBilling',coalesce((select jsonb_agg(to_jsonb(by_billing)) from by_billing),'[]'::jsonb),
+  'byProfessional',coalesce((select jsonb_agg(to_jsonb(by_professional)) from by_professional),'[]'::jsonb),
+  'byArchive',coalesce((select jsonb_agg(to_jsonb(by_archive)) from by_archive),'[]'::jsonb),
+  'clientTypes',coalesce((select jsonb_agg(to_jsonb(client_types)) from client_types),'[]'::jsonb)
+) from totals t;
+$$;
+
+revoke all on function public.get_dashboard_overview() from public,anon;
+grant execute on function public.get_dashboard_overview() to authenticated;
