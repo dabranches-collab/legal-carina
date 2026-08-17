@@ -54,12 +54,22 @@ export function ClientDocumentsPanel({firmId,clientId,readOnly=false}:{firmId:st
     if(linkError||!data){setError(linkError?.message??'Não foi possível criar o acesso temporário.');return}
     window.open(data.signedUrl,'_blank','noopener,noreferrer')
   }
+  async function changeDocument(document:ClientDocument,action:'archive'|'activate'|'remove'){
+    const label=action==='remove'?'eliminar definitivamente':action==='archive'?'arquivar':'reactivar'
+    if(!window.confirm(`Pretende ${label} “${document.title}”?`))return
+    setBusy(true);setError('');setNotice('')
+    const {data,error:actionError}=await supabase!.functions.invoke('client-documents',{body:{action,documentId:document.id}})
+    if(actionError||data?.error)setError(data?.error??'Não foi possível alterar o documento.')
+    else{setNotice(action==='remove'?'Documento eliminado.':action==='archive'?'Documento arquivado.':'Documento reactivado.');await load()}
+    setBusy(false)
+  }
   const columns:TableColumn<ClientDocument>[]=[
     {id:'title',label:'Documento',essential:true,sticky:true,value:item=>`${item.title} ${item.original_filename}`,render:item=><><span className="block font-semibold">{item.title}</span><span className="text-xs text-text-secondary">{item.original_filename}</span></>},
     {id:'category',label:'Tipo',value:item=>categoryLabel(item.category)},
     {id:'date',label:'Data',kind:'date',value:item=>item.document_date,render:item=>item.document_date?new Date(`${item.document_date}T00:00:00`).toLocaleDateString('pt-PT'):'—'},
     {id:'size',label:'Tamanho (MB)',kind:'number',align:'right',value:item=>item.size_bytes/1024/1024,render:item=>(item.size_bytes/1024/1024).toLocaleString('pt-PT',{maximumFractionDigits:2})},
-    {id:'action',label:'Acção',sortable:false,searchable:false,exportable:false,value:()=>null,render:item=><button type="button" onClick={()=>void openDocument(item)} className="rounded-lg border border-border px-3 py-2 font-semibold text-primary">Consultar</button>},
+    {id:'status',label:'Estado',value:item=>item.status,render:item=>item.status==='active'?'Activo':'Arquivado'},
+    {id:'action',label:'Acções',sortable:false,searchable:false,exportable:false,value:()=>null,render:item=><div className="flex flex-wrap gap-2"><button type="button" onClick={()=>void openDocument(item)} className="rounded-lg border border-border px-3 py-2 font-semibold text-primary">Consultar</button>{!readOnly&&<><button disabled={busy} type="button" onClick={()=>void changeDocument(item,item.status==='active'?'archive':'activate')} className="rounded-lg border border-border px-3 py-2 font-semibold text-primary">{item.status==='active'?'Arquivar':'Reactivar'}</button><button disabled={busy} type="button" onClick={()=>void changeDocument(item,'remove')} className="rounded-lg border border-danger/40 px-3 py-2 font-semibold text-danger">Eliminar</button></>}</div>},
   ]
 
   return <section className="mt-6 border-t border-border pt-5" aria-labelledby="client-documents-title"><h3 id="client-documents-title" className="font-display text-xl font-semibold">Documentos do cliente</h3><p className="mt-1 text-sm text-text-secondary">Arquivo privado. Cada consulta utiliza uma ligação temporária válida durante 60 segundos.</p>
