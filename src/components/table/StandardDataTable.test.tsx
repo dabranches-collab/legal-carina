@@ -36,6 +36,17 @@ describe('StandardDataTable',()=>{
     expect(loadExportRows).toHaveBeenCalledTimes(1)
   })
 
+  test('abre uma linha com duplo clique ou Enter quando existe acção configurada',async()=>{
+    const user=userEvent.setup(),onOpen=vi.fn()
+    render(<StandardDataTable id="open-row" label="Tabela editável" rows={rows} columns={columns} rowKey={row=>row.id} onRowDoubleClick={onOpen}/>)
+    const row=screen.getByRole('row',{name:'Abrir 1'})
+    await user.dblClick(row)
+    expect(onOpen).toHaveBeenLastCalledWith(rows[0])
+    row.focus()
+    await user.keyboard('{Enter}')
+    expect(onOpen).toHaveBeenCalledTimes(2)
+  })
+
   test('multisselecção booleana distingue todas as opções de nenhuma opção',async()=>{
     const user=userEvent.setup()
     render(<StandardDataTable id="test-boolean" label="Tabela booleana" rows={rows} columns={columns} rowKey={row=>row.id}/>)

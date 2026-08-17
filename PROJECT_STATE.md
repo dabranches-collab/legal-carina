@@ -5,12 +5,12 @@ Actualizado em: 2026-08-17
 ## Regra de entrega
 
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
-- Versão publicada candidata: `0.2.3`.
-- Publicação correctiva da versão `0.2.3` expressamente aprovada pelo proprietário em 2026-08-17.
+- Versão publicada: `0.2.4`.
+- A versão `0.2.4` foi publicada automaticamente pela integração GitHub–Cloudflare e a sua manutenção foi posteriormente autorizada pelo proprietário.
 - Migrações remotas destrutivas continuam excluídas desta publicação.
-- Próxima versão local em preparação: `0.2.4`, na branch `codex/prepare-0.2.4-continuity-export`; produção mantém `0.2.3`.
+- Próxima versão local em preparação: `0.2.5`, na branch `codex/prepare-0.2.4-continuity-export`; produção mantém `0.2.4`.
 
-## Lote local 0.2.4 ainda não publicado
+## Lote 0.2.4 publicado
 
 - A exportação XLSX dos Registos de trabalho pede ao backend todos os movimentos autorizados que correspondem aos filtros principais apenas quando o utilizador carrega em XLSX.
 - O carregamento inicial continua limitado à pesquisa paginada de 100 movimentos e deixa de determinar o conteúdo da exportação integral.
@@ -28,6 +28,18 @@ Actualizado em: 2026-08-17
 - Auth: protecção contra passwords comprometidas aparece desactivada; confirmar disponibilidade/custo do plano antes de activar.
 - Desempenho: existem FKs sem índice de cobertura, índices ainda não utilizados e políticas permissivas múltiplas. Não remover índices apenas por ainda não terem utilização; rever com carga representativa e migrations próprias.
 - Nenhuma alteração remota foi feita durante esta consulta.
+
+## Lote local 0.2.5 em preparação
+
+- Registos de trabalho e clientes abrem por duplo clique; `Enter` numa linha focada mantém acesso equivalente por teclado.
+- A ficha de cliente abre inicialmente para consulta e permite mudar explicitamente para edição e guardar alterações.
+- Dados gerais da ficha: nome, estado, vertentes/códigos, denominação legal, NIF, correio electrónico, telefone, morada e notas.
+- Documentos do cliente são consultáveis na ficha; o carregamento só aparece durante a edição.
+- Migração local preparada para identificadores múltiplos e flexíveis (`client_identifiers`), ainda não aplicada ao remoto até reconciliar o histórico de migrações.
+
+- Duplo clique numa linha dos Registos de trabalho abre directamente o modal de edição desse movimento.
+- A mesma acção é acessível por teclado com `Enter` quando a linha tem foco.
+- Produção mantém `0.2.4`; não efectuar push deste lote até controlar os builds automáticos Cloudflare.
 
 ## Implementado localmente
 
