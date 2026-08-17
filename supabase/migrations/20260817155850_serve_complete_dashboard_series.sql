@@ -28,6 +28,8 @@ with scope_access as materialized (
     sum(effective_amount) filter(where is_paid) paid,count(*) filter(where not is_invoiced) uninvoiced_count,
     count(*) filter(where is_invoiced and not is_paid) unpaid_count,count(*) filter(where effective_hourly_rate is null) missing_price,
     count(*) filter(where has_manual_override) overrides,count(distinct client_id) active_clients from entries
+), missing_billing as (
+  select count(*) value from entries where billing_entity_id is null
 ), annual_totals as (
   select extract(year from work_date)::int label,round(sum(effective_amount),2) value,sum(duration_minutes) minutes from entries group by 1
 ), annual as (
@@ -68,7 +70,7 @@ select jsonb_build_object(
     'receivable',case when t.invoiced is null then null else t.invoiced-coalesce(t.paid,0) end,
     'uninvoicedCount',t.uninvoiced_count,'unpaidCount',t.unpaid_count,
     'averageRate',case when t.minutes=0 or t.worked is null then null else round(t.worked*60/t.minutes,2) end,
-    'activeClients',t.active_clients,'missingPrice',t.missing_price,'overrides',t.overrides,
+    'activeClients',t.active_clients,'missingPrice',t.missing_price,'missingBilling',(select value from missing_billing),'overrides',t.overrides,
     'importErrors',(select count(*) from public.imports i where i.invalid_rows>0 and private.is_firm_member(i.firm_id))),
   'annual',coalesce((select jsonb_agg(to_jsonb(annual)) from annual),'[]'::jsonb),
   'monthly',coalesce((select jsonb_agg(to_jsonb(monthly)) from monthly),'[]'::jsonb),

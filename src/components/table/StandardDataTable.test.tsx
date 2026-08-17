@@ -36,6 +36,17 @@ describe('StandardDataTable',()=>{
     expect(loadExportRows).toHaveBeenCalledTimes(1)
   })
 
+  test('filtra e ordena sobre todo o universo carregado, não apenas sobre a página inicial',async()=>{
+    const user=userEvent.setup(),loadAllRows=vi.fn(async()=>[...rows,{id:'4',name:'Duarte',amount:5,active:true}])
+    render(<StandardDataTable id="full-universe" label="Universo integral" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadAllRows={loadAllRows}/>)
+    expect(await screen.findByText('4 resultados de 4')).toBeInTheDocument()
+    await user.click(screen.getByRole('button',{name:'Ordenar Valor por ordem ascendente'}))
+    expect(within(screen.getByRole('table').querySelector('tbody')!).getAllByRole('row')[0]).toHaveTextContent('Duarte')
+    await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'Beatriz')
+    expect(screen.getByText('1 resultados de 4')).toBeInTheDocument()
+    expect(screen.getByRole('option',{name:'Todas'})).toBeInTheDocument()
+  })
+
   test('abre uma linha com duplo clique ou Enter quando existe acção configurada',async()=>{
     const user=userEvent.setup(),onOpen=vi.fn()
     render(<StandardDataTable id="open-row" label="Tabela editável" rows={rows} columns={columns} rowKey={row=>row.id} onRowDoubleClick={onOpen}/>)

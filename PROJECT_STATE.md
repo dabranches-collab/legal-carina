@@ -4,6 +4,15 @@ Actualizado em: 2026-08-17
 
 ## Regra de entrega
 
+### Publicação 0.2.7
+
+- Branch `codex/reconcile-full-import` reconciliada por merge com o lote remoto 0.2.6 que estava publicado.
+- Importação canónica concluída com 7 198 movimentos activos; as importações seguintes comparam todas as linhas e actualizam movimentos já existentes quando a origem mudou.
+- Dashboards, atalhos de acompanhamento, 12 meses móveis, comparação por sociedade, tooltips por período, landing de clientes e tabelas compactas estão implementados.
+- A tabela de movimentos carrega o universo autorizado completo para pesquisa, filtros, ordenações e `Todas`; o backend integral recebe exactamente os mesmos filtros, incluindo `Sem sociedade`.
+- Supabase: migrations funcionais aplicadas isoladamente, incluindo `20260817173000_extend_work_export_universe.sql`; `db push` global continua bloqueado pela divergência histórica conhecida.
+- Validação local: `pnpm check` verde, 51/51 testes, build e dry-run Cloudflare verdes. A matriz Playwright percorreu os 24 cenários, mas o runner ficou aberto após iniciar o último e teve de ser interrompido.
+
 - Alterações acumuladas apenas no checkout local `C:\Projetos\legal-carina`.
 - Versão publicada: `0.2.6`.
 - A Cloudflare publicou automaticamente a versão `0.2.6` após o push da branch `codex/client-identifiers-documents-0.2.6`; a produção foi confirmada directamente no browser integrado.

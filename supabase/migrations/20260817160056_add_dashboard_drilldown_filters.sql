@@ -1,11 +1,12 @@
 drop function if exists public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,text,text);
 drop function if exists public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,text,text);
+drop function if exists public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,boolean,text,text);
 
 create function public.search_work_entries(
   p_page integer default 1,p_page_size integer default 25,p_search text default null,p_year integer default null,
   p_professional_id uuid default null,p_billing_entity_id uuid default null,p_invoiced boolean default null,
   p_paid boolean default null,p_archive text default null,p_review_only boolean default false,
-  p_missing_price boolean default false,p_client_type text default null,p_client_id uuid default null,p_sort text default 'work_date',p_direction text default 'desc'
+  p_missing_price boolean default false,p_client_type text default null,p_client_id uuid default null,p_missing_society boolean default false,p_sort text default 'work_date',p_direction text default 'desc'
 ) returns jsonb language sql stable security invoker set search_path='' as $$
 with filtered as materialized (
  select w.id,w.work_date,w.activity_description,w.duration_minutes,w.effective_hourly_rate,w.effective_amount,w.is_invoiced,
@@ -21,6 +22,7 @@ with filtered as materialized (
   and(p_archive is null or w.archive_status=p_archive) and(not p_missing_price or w.effective_hourly_rate is null)
   and(p_client_type is null or exists(select 1 from public.client_profiles cp where cp.id=w.client_profile_id and cp.client_type=p_client_type))
   and(p_client_id is null or w.client_id=p_client_id)
+  and(not p_missing_society or w.billing_entity_id is null)
   and(not p_review_only or w.has_historical_state_exception or exists(select 1 from public.import_rows rr where rr.id=w.import_row_id and jsonb_array_length(coalesce(rr.validation_warnings,'[]'::jsonb))>0))
 ), paged as (
  select f.* from filtered f order by
@@ -30,7 +32,7 @@ with filtered as materialized (
   case when p_sort='client' and p_direction='desc' then(select c.display_name from public.clients c where c.id=f.client_id)end desc,
   case when p_sort='amount' and p_direction='asc' then f.effective_amount end asc,
   case when p_sort='amount' and p_direction='desc' then f.effective_amount end desc,f.work_date desc,f.id
- offset(greatest(p_page,1)-1)*least(greatest(p_page_size,10),100) limit least(greatest(p_page_size,10),100)
+ offset(greatest(p_page,1)-1)*least(greatest(p_page_size,10),10000) limit least(greatest(p_page_size,10),10000)
 ), items as (
  select p.id,p.work_date,p.activity_description,p.duration_minutes,p.effective_hourly_rate,p.effective_amount,p.is_invoiced,
   p.invoice_date,p.is_paid,p.archive_status,p.observations,p.source_type,p.has_manual_override,p.has_historical_state_exception,
@@ -41,13 +43,13 @@ with filtered as materialized (
  left join public.invoice_lines invoice_line on invoice_line.work_entry_id=p.id left join public.invoices invoice on invoice.id=invoice_line.invoice_id
 )
 select jsonb_build_object('items',coalesce((select jsonb_agg(to_jsonb(items)) from items),'[]'::jsonb),'total',(select count(*) from filtered),
- 'page',greatest(p_page,1),'pageSize',least(greatest(p_page_size,10),100),
+ 'page',greatest(p_page,1),'pageSize',least(greatest(p_page_size,10),10000),
  'professionals',(select coalesce(jsonb_agg(jsonb_build_object('id',id,'label',display_name)order by display_name),'[]'::jsonb)from public.professionals),
  'billingEntities',(select coalesce(jsonb_agg(jsonb_build_object('id',id,'label',name)order by name),'[]'::jsonb)from public.billing_entities));
 $$;
 
-revoke all on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,text,text) from public,anon;
-grant execute on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,text,text) to authenticated;
+revoke all on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,boolean,text,text) from public,anon;
+grant execute on function public.search_work_entries(integer,integer,text,integer,uuid,uuid,boolean,boolean,text,boolean,boolean,text,uuid,boolean,text,text) to authenticated;
 
 create or replace function public.get_entity_dashboard_rolling(p_kind text,p_entity_id uuid default null)
 returns jsonb language plpgsql stable security definer set search_path='' as $$

@@ -19,6 +19,7 @@ describe('DonutChart',()=>{
     render(<MonthlyValueChart data={data} allowSocietyComparison/>)
     expect(screen.getByText('Últimos 12 meses agregados')).toBeInTheDocument()
     expect(screen.getAllByText(/25|26/)).toHaveLength(12)
+    expect(screen.getAllByTitle(/Total:/)[0]).toHaveAttribute('title',expect.stringContaining('Carina Santos:'))
     fireEvent.click(screen.getByRole('button',{name:'Por sociedade'}))
     expect(screen.getByText('Últimos 12 meses por sociedade')).toBeInTheDocument()
     expect(screen.getByRole('img',{name:'Valor mensal por sociedade'}).querySelectorAll('path[stroke]')).toHaveLength(3)
