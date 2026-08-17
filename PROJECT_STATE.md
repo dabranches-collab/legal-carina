@@ -32,6 +32,7 @@ Actualizado em: 2026-08-17
 ## Lote local 0.2.5 em preparação
 
 - Registos de trabalho e clientes abrem por duplo clique; `Enter` numa linha focada mantém acesso equivalente por teclado.
+- Corrigida a abertura dos movimentos enquanto as RPC `get_work_entry_form_options`, `get_work_entry_for_edit` e `update_work_entry_details` ainda não existem no Supabase remoto: existe fallback compatível, sempre sujeito às permissões/RLS actuais.
 - A ficha de cliente abre inicialmente para consulta e permite mudar explicitamente para edição e guardar alterações.
 - Dados gerais da ficha: nome, estado, vertentes/códigos, denominação legal, NIF, correio electrónico, telefone, morada e notas.
 - Documentos do cliente são consultáveis na ficha; o carregamento só aparece durante a edição.
