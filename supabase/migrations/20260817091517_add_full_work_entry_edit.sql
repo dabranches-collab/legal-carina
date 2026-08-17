@@ -1,4 +1,4 @@
-create or replace function public.update_work_entry_full(p_work_entry_id uuid,p_values jsonb,p_reason text)
+create or replace function private.update_work_entry_full(p_work_entry_id uuid,p_values jsonb,p_reason text)
 returns void language plpgsql security definer set search_path='' as $$
 declare e public.work_entries%rowtype;target_client uuid;new_invoiced boolean;new_paid boolean;new_invoice_date date;
 begin
@@ -16,10 +16,14 @@ begin
   if btrim(coalesce(p_reason,''))<>'' then insert into public.manual_overrides(firm_id,work_entry_id,field_name,previous_value,calculated_value,override_value,reason,created_by) values(e.firm_id,e.id,'full_record',to_jsonb(e),null,p_values,btrim(p_reason),auth.uid());end if;
 end;$$;
 
+revoke all on function private.update_work_entry_full(uuid,jsonb,text) from public,anon;
+grant execute on function private.update_work_entry_full(uuid,jsonb,text) to authenticated;
+create or replace function public.update_work_entry_full(p_work_entry_id uuid,p_values jsonb,p_reason text)
+returns void language sql security invoker set search_path='' as $$select private.update_work_entry_full(p_work_entry_id,p_values,p_reason);$$;
 revoke all on function public.update_work_entry_full(uuid,jsonb,text) from public,anon;
 grant execute on function public.update_work_entry_full(uuid,jsonb,text) to authenticated;
 
-create or replace function public.delete_work_entry(p_work_entry_id uuid,p_reason text)
+create or replace function private.delete_work_entry(p_work_entry_id uuid,p_reason text)
 returns void language plpgsql security definer set search_path='' as $$
 declare e public.work_entries%rowtype;
 begin
@@ -34,5 +38,9 @@ begin
   delete from public.work_entries where id=e.id;
 end;$$;
 
+revoke all on function private.delete_work_entry(uuid,text) from public,anon;
+grant execute on function private.delete_work_entry(uuid,text) to authenticated;
+create or replace function public.delete_work_entry(p_work_entry_id uuid,p_reason text)
+returns void language sql security invoker set search_path='' as $$select private.delete_work_entry(p_work_entry_id,p_reason);$$;
 revoke all on function public.delete_work_entry(uuid,text) from public,anon;
 grant execute on function public.delete_work_entry(uuid,text) to authenticated;
