@@ -21,6 +21,7 @@ Data: 17/08/2026
 - Exportação XLSX integral dos Registos de trabalho em implementação e validação; é executada apenas após pedido do utilizador.
 - Regras permanentes de continuidade e protocolo de computador novo acrescentados ao repositório.
 - `pnpm check`: aprovado, 47/47 testes; E2E local: 23 aprovados e 1 teste de preview de produção omitido como previsto.
+- GitHub: PR rascunho `#5`; `CI` e `Secret scan` do commit `67797f9` concluídos com sucesso.
 - Advisors Supabase consultados apenas em leitura; os avisos de RLS sem políticas directas, funções `SECURITY DEFINER`, passwords comprometidas e desempenho estão registados em `PROJECT_STATE.md`.
 - Produção permanece em `0.2.3`; nenhuma alteração Cloudflare, Edge Function ou migration remota foi publicada neste lote.
 

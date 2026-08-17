@@ -19,6 +19,7 @@ Actualizado em: 2026-08-17
 - O deployment Cloudflare activo e a limitação da associação ao commit ficaram documentados.
 - Validação local: `pnpm check` aprovado com 47/47 testes; E2E local com 23 aprovados e 1 cenário exclusivo do preview de produção omitido como previsto.
 - Browser integrado: versão `0.2.4`, exportação visível, claro/escuro e viewport iPhone compacto sem overflow horizontal.
+- GitHub: PR rascunho `#5`; `CI` e `Secret scan` do commit funcional `67797f9` verdes.
 
 ## Advisors Supabase consultados em 2026-08-17
 
