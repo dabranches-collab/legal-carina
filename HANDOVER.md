@@ -2,6 +2,69 @@
 
 Data: 17/08/2026
 
+> Estado actual para retoma noutro computador. As secções históricas abaixo deste bloco são apenas memória de lotes anteriores; em caso de conflito prevalece este bloco.
+
+## Retoma actual — 0.2.6
+
+- Repositório: `https://github.com/dabranches-collab/legal-carina`
+- Directório obrigatório: `C:\Projetos\legal-carina`, fora do OneDrive.
+- Branch: `codex/client-identifiers-documents-0.2.6`
+- Commit funcional: `1f05f59 feat: activar identificadores e documentos de clientes`
+- Versão local: `0.2.6`; versão publicada/Cloudflare: `0.2.5`.
+- O frontend 0.2.6 não foi publicado, não foi fundido em `main` e ainda não tem PR/CI.
+- O código foi enviado apenas para a branch de desenvolvimento no GitHub.
+- Supabase `vtvvqyebigflgqccbqsw`: identificadores, documentos, bucket privado e Edge Function `client-documents` já estão activos remotamente.
+
+## O que ficou implementado
+
+- Identificadores: consultar, criar, editar e eliminar CC/BI, passaporte, título de residência, registo comercial, fiscal ou outro.
+- Documentos: carregar, consultar, arquivar, reactivar e eliminar.
+- Bucket `client-documents` privado, limite 20 MB, PDF/JPG/PNG/DOCX/XLSX e ligações assinadas de 60 segundos.
+- Upload e mutações passam pela Edge Function autenticada; a service role não entra no frontend.
+- RLS activa e privilégios directos reduzidos ao mínimo.
+- Migrations remotas isoladas: `20260817095147`, `20260817095157`, `20260817095206` e `20260817095316`. Não foi executado `db push`.
+- Edge Function `client-documents` versão 1 activa com `verify_jwt=true`.
+
+## Validação deste lote
+
+- `pnpm security:files`, lint, typecheck e build aprovados.
+- 49/49 testes aprovados.
+- Browser integrado confirmado na versão local 0.2.6, mas a sessão autenticada expirou. Falta validar visualmente a ficha depois de iniciar sessão; não pedir, inventar ou expor PINs.
+- Servidor local: `pnpm dev --host 127.0.0.1 --port 5173`.
+
+## Importação e base de dados
+
+- A base não foi limpa nem reiniciada.
+- O ficheiro documentado `20260407 HORAS ESCRITÓRIO.xlsx` é antigo e não deve ser assumido como o mais recente.
+- Antes de limpar: localizar o ficheiro mais recente, confirmar data/tamanho/SHA-256/linhas, comparar alterações e duplicados, verificar backup/PITR e simular a importação.
+- A limpeza é destrutiva e exige autorização específica depois dessa verificação.
+- Depois da importação inicial validada, o fluxo normal deverá ser incremental por hash e detecção de duplicados.
+- Nunca usar dados reais em testes ou preview.
+
+## Próximo trabalho recomendado
+
+1. Iniciar sessão localmente e testar identificadores e documentos com ficheiros sintéticos.
+2. Validar desktop, tablet, iPhone/PWA, claro/escuro, contraste e safe areas.
+3. Localizar e analisar o ficheiro mais recente e preparar backup, limpeza e importação.
+4. Executar pgTAP das políticas de RLS, Storage e importação num ambiente autorizado.
+5. Reconciliar as migrations locais antigas `20260816180000` a `20260816198000`; nunca executar `supabase db push` indiscriminadamente.
+6. Rever os avisos antigos do Supabase e testar passkeys/Windows Hello/Face ID em equipamento real.
+7. Quando o lote estiver pronto, abrir PR para arrancar CI. Publicar apenas após pedido explícito “publica”.
+
+## Comandos para retomar
+
+1. Confirmar o repositório e executar os comandos de diagnóstico exigidos em `AGENTS.md`.
+2. Se estiver limpo: `git pull --ff-only`.
+3. `git switch codex/client-identifiers-documents-0.2.6`.
+4. Criar `.env.local` apenas com URL e chave publicável do Supabase; não transportar segredos nem `node_modules`.
+5. `pnpm install --frozen-lockfile`.
+6. `pnpm dev --host 127.0.0.1 --port 5173`.
+7. Abrir `http://127.0.0.1:5173/` e confirmar a versão 0.2.6.
+
+---
+
+## Histórico anterior
+
 ## Estado confirmado
 
 - Repositório oficial: `https://github.com/dabranches-collab/legal-carina`
