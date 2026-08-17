@@ -6,6 +6,13 @@ Actualizado em: 2026-08-17
 
 ### Publicação 0.2.7
 
+### Hotfix 0.2.8
+
+- Corrigido o arranque/reabertura do PWA Windows para regressar sempre à Visão geral, em vez de reutilizar o último dashboard de Sociedade.
+- Atalhos do acompanhamento, incluindo `Sem sociedade`, navegam sem refresh completo e preservam a sessão.
+- Restauradas isoladamente as RPCs/permissões remotas necessárias ao refresh, dashboard e pesquisa de movimentos através de `20260817173743_restore_dashboard_rpc_permissions.sql`.
+- Sessão autenticada confirmada após refresh; atalho `Sem sociedade` confirmado com 127 movimentos e sem logout.
+
 - Branch `codex/reconcile-full-import` reconciliada por merge com o lote remoto 0.2.6 que estava publicado.
 - Importação canónica concluída com 7 198 movimentos activos; as importações seguintes comparam todas as linhas e actualizam movimentos já existentes quando a origem mudou.
 - Dashboards, atalhos de acompanhamento, 12 meses móveis, comparação por sociedade, tooltips por período, landing de clientes e tabelas compactas estão implementados.

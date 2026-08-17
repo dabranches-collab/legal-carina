@@ -13,6 +13,13 @@ const windowsViewports = [
   { name:'Windows 2560×1440', width:2560, height:1440 },
 ]
 
+test('arranque standalone ignora o último submenu e abre a Visão geral',async({page})=>{
+  await page.addInitScript(()=>{const original=window.matchMedia.bind(window);Object.defineProperty(window,'matchMedia',{configurable:true,value:(query:string)=>query==='(display-mode: standalone)'?{matches:true,media:query,onchange:null,addListener:()=>undefined,removeListener:()=>undefined,addEventListener:()=>undefined,removeEventListener:()=>undefined,dispatchEvent:()=>true}:original(query)})})
+  await page.goto('/?qa-iphone=1&view=billing&society=MASSIVE+SEARCH')
+  await expect(page).toHaveURL(/\?view=overview$/)
+  await expect(page.getByRole('heading',{name:'Visão geral',level:1})).toBeVisible()
+})
+
 for (const viewport of windowsViewports) {
   test(`${viewport.name}: sidebar, versão e overflow`, async ({ page }) => {
     await page.setViewportSize(viewport)

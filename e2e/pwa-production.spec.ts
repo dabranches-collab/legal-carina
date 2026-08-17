@@ -1,4 +1,13 @@
 import { expect, test } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+
+const manifest=JSON.parse(readFileSync(new URL('../public/manifest.webmanifest',import.meta.url),'utf8')) as {id:string;start_url:string;launch_handler:{client_mode:string}}
+
+test('manifest abre e reabre o PWA na Visão geral',()=>{
+  expect(manifest.id).toBe('/')
+  expect(manifest.start_url).toBe('/?view=overview')
+  expect(manifest.launch_handler.client_mode).toBe('navigate-existing')
+})
 
 test.skip(!process.env.PWA_PRODUCTION_QA, 'Executado apenas contra o preview de produção local.')
 

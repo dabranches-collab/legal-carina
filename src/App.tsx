@@ -26,8 +26,19 @@ function readLocation() {
   return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'?requestedEntity:null) as 'clients'|'billing_entities'|null }
 }
 
+function isStandaloneLaunch() {
+  return Boolean(window.matchMedia?.('(display-mode: standalone)').matches) || Boolean((navigator as Navigator & {standalone?:boolean}).standalone)
+}
+
+function overviewLocation() {
+  const url=new URL(window.location.href)
+  url.search=''
+  url.searchParams.set('view','overview')
+  window.history.replaceState({},'',url)
+}
+
 export function AuthenticatedApplication() {
-  const initial = readLocation()
+  const [initial] = useState(()=>{if(isStandaloneLaunch()&&new URLSearchParams(window.location.search).get('view')!=='overview')overviewLocation();return readLocation()})
   const [view, setView] = useState<ViewId>(initial.view)
   const [society,setSociety] = useState<string|null>(initial.society)
   const [clientType,setClientType] = useState<'individual'|'company'|'mixed'|null>(initial.clientType)

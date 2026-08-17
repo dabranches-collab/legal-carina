@@ -1,9 +1,11 @@
 {
   "name": "Carina - Legal",
   "short_name": "Carina Legal",
+  "id": "/",
   "description": "Gestão segura de horas, clientes, facturação e recebimentos.",
-  "start_url": "/",
+  "start_url": "/?view=overview",
   "scope": "/",
+  "launch_handler": { "client_mode": "navigate-existing" },
   "display": "standalone",
   "orientation": "any",
   "background_color": "#f6f5f1",
