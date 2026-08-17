@@ -51,6 +51,7 @@ Actualizado em: 2026-08-17
 - Linhas ausentes não são apagadas. Conflitos com alterações manuais bloqueiam a transacção.
 - RPCs base e reconciliadoras aplicadas isoladamente ao Supabase remoto em 2026-08-17. Nenhuma outra migration pendente, Edge Function ou publicação Cloudflare foi executada.
 - A análise reconciliadora foi otimizada em `20260817162500_optimize_import_candidate_analysis.sql` depois de o ficheiro real exceder o `statement_timeout`; a versão remota agora agrega e classifica as linhas em bloco, sem concatenação JSON quadrática.
+- Nova linha de base concluída a partir de `20260817 HORAS ESCRITÓRIO.xlsx`: 7 198 movimentos activos e 6 linhas inválidas apenas na revisão da importação. Verificação idempotente: 7 198 inalterados, 0 alterados, hash remoto confirmado.
 - Aplicação directa confirmada por catálogo e privilégios: RPCs apenas para `authenticated`, helper privado sem execução para clientes. Os carimbos locais permanecem ausentes do histórico remoto e devem ser reconciliados sem `migration repair` por suposição.
 
 ## Implementado localmente

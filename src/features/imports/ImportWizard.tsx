@@ -59,7 +59,10 @@ export function ImportWizard() {
       const {data,error:failure}=await supabase.rpc('commit_validated_import',{p_payload:payload})
       if(failure)throw failure
       setProgress(100);setImportResult(data as {importId:string;newRows:number;updatedRows:number;unchangedRows:number;invalidRows:number;missingRows:number;status:string})
-    }catch(reason){setProgress(0);setError(reason instanceof Error?reason.message:'Não foi possível concluir a importação.')}
+    }catch(reason){
+      const message=reason instanceof Error?reason.message:reason&&typeof reason==='object'&&'message' in reason&&typeof reason.message==='string'?reason.message:'Não foi possível concluir a importação.'
+      setProgress(0);setError(message)
+    }
     finally{setBusy(false)}
   }
 
