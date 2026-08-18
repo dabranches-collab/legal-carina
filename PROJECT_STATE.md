@@ -4,6 +4,7 @@
 
 - Os gráficos `Valor por ano` e `Valor por mês` da Visão Geral voltaram a ocupar conjuntamente toda a largura disponível, em duas colunas iguais, sem a metade vazia introduzida pela grelha de quatro colunas.
 - Correcção confirmada visualmente nos modos claro e escuro antes da publicação urgente solicitada.
+- Produção e actualização PWA confirmadas em `0.3.3`; commit `e03f6e77411fc00a77b88dfb49c8bba27febe01d`, Cloudflare Version ID `c74b9fb3-5614-4cb8-bdfa-fa74e317295d`.
 
 ## Lote local 0.3.2 — em curso
 

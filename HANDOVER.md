@@ -4,6 +4,7 @@
 
 - Corrigida a grelha de `Análise e tendências`: `Valor por ano` e `Valor por mês` ocupam agora 50% cada e preenchem 100% da largura disponível.
 - Validado visualmente em claro e escuro; publicação urgente autorizada pelo utilizador.
+- Publicado a partir do commit `e03f6e77411fc00a77b88dfb49c8bba27febe01d`; Cloudflare Version ID `c74b9fb3-5614-4cb8-bdfa-fa74e317295d`. Assets, service worker e fluxo `Actualizar aplicação` confirmados em `0.3.3`.
 
 ## Lote local 0.3.2 — correcções pós-publicação
 
