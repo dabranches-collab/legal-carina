@@ -2,7 +2,8 @@
 
 ## Lote local 0.3.2 — em curso
 
-- Produção permanece em `0.3.0`; a próxima versão local é `0.3.2`.
+- Versão `0.3.2` publicada em 2026-08-18 a partir do commit `25fc7cee980badadb9ece6a2930ae6c1238be345` da branch `codex/reconcile-full-import`.
+- Produção confirmada visualmente em `https://legal-carina.dabranches.workers.dev/`; Cloudflare Version ID `c34073d9-d160-43c2-8ba1-d40f1e066621` e versão visível `0.3.2`.
 - Pesquisa de Registos optimizada no Supabase: primeira página autenticada reduziu de cerca de 7 s para 1,7 s; foram acrescentados índices de paginação, estados e ligação à factura, preservando âmbito e mascaramento financeiro.
 - Cache temporária em memória prepara os 7 198 movimentos numa chamada e é invalidada após criação/edição. As tabelas passaram a usar o scroll vertical da página, têm opção 100 e mantêm `Todas` virtualizada.
 - Retirada a coluna `Alteração manual`; `N.º factura` é editável na linha. Cliente apresenta apenas o nome, mantendo código e vertente nas colunas próprias.
