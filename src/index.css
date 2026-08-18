@@ -22,6 +22,7 @@
   --color-text-secondary: #637083;
   --color-border: #dfe3e6;
   --color-border-strong: #c7cdd2;
+  --color-row-selected: #cbdadd;
   --color-chart-1: #17636a;
   --color-chart-2: #b68a3a;
   --color-chart-3: #5d7994;
@@ -77,6 +78,7 @@ button:disabled { cursor: not-allowed; }
 .control:hover { border-color: var(--color-secondary); }
 .control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 3px var(--color-secondary-soft); outline: 0; }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
+.table-row-active, .table-row-active > td { background: var(--color-row-selected) !important; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
@@ -84,28 +86,31 @@ button:disabled { cursor: not-allowed; }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); padding-left: var(--safe-left); }
 .app-shell-sidebar [aria-current="page"] { color: var(--color-navigation) !important; }
+.app-shell-main > div > .space-y-5 > header:first-child > h2.font-display { display: none; }
+.period-breakdown-trigger::before { content: ""; position: absolute; z-index: 10; right: 0; bottom: 0; left: 0; height: 14rem; }
 .financial-value { display: inline-block; min-width: 4ch; }
+.metric-card-value, .metric-card-detail { display: block; }
 html[data-financial-values="hidden"] .financial-value { color: transparent !important; font-size: 0 !important; letter-spacing: 0 !important; text-shadow: none !important; user-select: none; }
 html[data-financial-values="hidden"] .financial-value::after { content: "••••"; color: var(--color-text-primary); font-size: .875rem; font-weight: 700; letter-spacing: .08em; }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-qa-theme="light"]):not([data-theme="light"]) {
-    --color-background: #0d1826; --color-surface: #152437; --color-surface-subtle: #1c2d42;
+    --color-background: #172638; --color-surface: #24384f; --color-surface-subtle: #304861;
     --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
     --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
     --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
     --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
-    --color-text-primary: #edf3f8; --color-text-secondary: #aebdcc; --color-border: #30445a;
-    --color-border-strong: #486078; --shadow-card: 0 1px 2px rgb(0 0 0 / .2), 0 8px 24px rgb(0 0 0 / .18);
+    --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580;
+    --color-border-strong: #66819b; --color-row-selected: #132b40; --shadow-card: 0 1px 2px rgb(0 0 0 / .16), 0 8px 24px rgb(0 0 0 / .13);
   }
 }
 html[data-qa-theme="dark"], html[data-theme="dark"] {
-  --color-background: #0d1826; --color-surface: #152437; --color-surface-subtle: #1c2d42;
+  --color-background: #172638; --color-surface: #24384f; --color-surface-subtle: #304861;
   --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
   --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
   --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
   --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
-  --color-text-primary: #edf3f8; --color-text-secondary: #aebdcc; --color-border: #30445a; --color-border-strong: #486078;
+  --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580; --color-border-strong: #66819b; --color-row-selected: #132b40;
 }
 @media (max-width: 480px) { .control, button { min-width: 2.75rem; min-height: 2.75rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }

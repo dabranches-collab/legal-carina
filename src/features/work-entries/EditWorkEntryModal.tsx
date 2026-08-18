@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "../../lib/supabase";
 import { useModalLifecycle } from "../../hooks/useModalLifecycle";
+import { DurationSelect } from "./DurationSelect";
 import {
   deleteWorkEntry,
   getWorkEntryForEdit,
@@ -289,20 +290,8 @@ export function EditWorkEntryModal({
               />
             </label>
             <label className="text-sm">
-              Duração (minutos)
-              <input
-                required
-                type="number"
-                min="0"
-                value={entry.duration_minutes}
-                onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    duration_minutes: Number(e.target.value),
-                  })
-                }
-                className="control mt-1 w-full px-3"
-              />
+              Duração
+              <DurationSelect value={entry.duration_minutes} onChange={(duration_minutes)=>setEntry({...entry,duration_minutes})}/>
             </label>
             <label className="text-sm">
               Preço/hora efectivo

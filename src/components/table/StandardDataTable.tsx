@@ -24,6 +24,9 @@ export type TableColumn<Row> = {
   render?: (row: Row) => ReactNode;
   kind?: "text" | "number" | "date" | "money" | "boolean";
   filterOptions?: Array<{ value: string; label: string }>;
+  suggestOptions?: boolean;
+  textSuggestions?: string[];
+  filterValues?: (row: Row) => string[];
   essential?: boolean;
   sticky?: boolean;
   align?: "left" | "center" | "right";
@@ -48,7 +51,8 @@ type Props<Row> = {
   onSelectionChange?: (ids: string[]) => void;
   emptyMessage?: string;
   loadExportRows?: () => Promise<Row[]>;
-  loadAllRows?: () => Promise<Row[]>;
+  loadAllRows?: (onProgress?: (loaded: number, total: number) => void) => Promise<Row[]>;
+  totalRows?: number;
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
 };
@@ -114,8 +118,10 @@ function matchesFilter<Row>(
 ) {
   const value = column.value(row);
   if (filter.text && !fold(value).includes(fold(filter.text))) return false;
-  if (filter.selected !== undefined && !filter.selected.includes(String(value)))
-    return false;
+  if (filter.selected !== undefined) {
+    const values = column.filterValues?.(row) ?? [String(value)];
+    if (!values.some((candidate) => filter.selected!.includes(candidate))) return false;
+  }
   if (filter.min) {
     const candidate =
       column.kind === "date"
@@ -201,20 +207,17 @@ function FilterPanel<Row>({
     options?.filter((option) =>
       fold(option.label).includes(fold(optionQuery)),
     ) ?? [];
+  const typed=fold(value.text??""),textSuggestions=typed.length<2?[]:(column.textSuggestions??[]).filter(item=>fold(item).includes(typed)).slice(0,10);
   const selected = value.selected ?? options?.map((item) => item.value) ?? [];
-  const selectVisible = () =>
+  const normalizedSelection=(next:string[])=>options&&next.length===options.length&&options.every(option=>next.includes(option.value))?undefined:next;
+  const selectVisible = () => {
+    const next=[...new Set([...selected,...visibleOptions.map(item=>item.value)])];
+    onChange({...value,selected:normalizedSelection(next)});
+  };
+  const clearAll = () =>
     onChange({
       ...value,
-      selected: [
-        ...new Set([...selected, ...visibleOptions.map((item) => item.value)]),
-      ],
-    });
-  const clearVisible = () =>
-    onChange({
-      ...value,
-      selected: selected.filter(
-        (item) => !visibleOptions.some((option) => option.value === item),
-      ),
+      selected: [],
     });
   const invertVisible = () =>
     onChange({
@@ -234,7 +237,7 @@ function FilterPanel<Row>({
       role="dialog"
       aria-label={`Filtro ${column.label}`}
       style={style}
-      className="fixed z-[120] max-h-[min(20rem,calc(100dvh-1rem))] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
+      className="fixed z-[120] max-h-[calc(100dvh-1rem)] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
       onKeyDown={(event) => {
         if (event.key === "Escape") {
           event.stopPropagation();
@@ -257,34 +260,34 @@ function FilterPanel<Row>({
               />
             </label>
           )}
-          <div className="flex flex-wrap gap-x-3 text-xs">
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               type="button"
-              className="min-h-11 font-semibold text-primary"
+              className="min-h-8 rounded-md border border-primary px-2 font-semibold text-primary"
               onClick={selectVisible}
             >
-              {optionQuery ? "Seleccionar encontrados" : "Seleccionar todos"}
+              {optionQuery ? "Todos os encontrados" : "Todos"}
             </button>
             <button
               type="button"
-              className="min-h-11 font-semibold text-secondary"
-              onClick={clearVisible}
+              className="min-h-8 rounded-md border border-border px-2 font-semibold text-secondary"
+              onClick={clearAll}
             >
               Limpar
             </button>
             <button
               type="button"
-              className="min-h-11 font-semibold text-secondary"
+              className="col-span-2 min-h-7 font-semibold text-secondary"
               onClick={invertVisible}
             >
               Inverter
             </button>
           </div>
-          <div className="mt-2 space-y-1">
+          <div className="scrollbar-thin mt-2 max-h-[min(26.25rem,calc(100dvh-12rem))] overflow-y-auto overscroll-contain pr-1">
             {visibleOptions.map((option) => (
               <label
                 key={option.value}
-                className="flex min-h-11 items-center gap-2"
+                className="flex h-7 items-center gap-2 border-b border-border/60 px-1 text-xs last:border-b-0 hover:bg-surface-subtle"
               >
                 <input
                   type="checkbox"
@@ -292,9 +295,9 @@ function FilterPanel<Row>({
                   onChange={(event) =>
                     onChange({
                       ...value,
-                      selected: event.target.checked
+                      selected: normalizedSelection(event.target.checked
                         ? [...new Set([...selected, option.value])]
-                        : selected.filter((item) => item !== option.value),
+                        : selected.filter((item) => item !== option.value)),
                     })
                   }
                 />
@@ -336,7 +339,7 @@ function FilterPanel<Row>({
           </label>
         </div>
       ) : (
-        <label className="text-xs font-semibold">
+        <div><label className="text-xs font-semibold">
           Texto
           <input
             value={value.text ?? ""}
@@ -346,7 +349,7 @@ function FilterPanel<Row>({
             className="control mt-1 w-full px-2"
             placeholder="Filtrar…"
           />
-        </label>
+        </label>{typed.length>=2&&<div className="scrollbar-thin mt-2 max-h-[26.25rem] overflow-y-auto rounded-lg border border-border bg-background"><p className="px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-text-secondary">Sugestões</p>{textSuggestions.map(suggestion=><button key={suggestion} type="button" onClick={()=>onChange({...value,text:suggestion})} className="block h-7 w-full truncate border-b border-border px-2 text-left text-xs text-text-primary last:border-b-0 hover:bg-secondary-soft" title={suggestion}>{suggestion}</button>)}{!textSuggestions.length&&<p className="p-2 text-xs text-text-secondary">Sem sugestões. O texto livre continua válido.</p>}</div>}</div>
       )}
       <div className="mt-3 flex justify-between">
         <button
@@ -384,6 +387,7 @@ export function StandardDataTable<Row>({
   emptyMessage = "Não existem dados.",
   loadExportRows,
   loadAllRows,
+  totalRows,
   universeKey = "",
   onRowDoubleClick,
 }: Props<Row>) {
@@ -415,16 +419,20 @@ export function StandardDataTable<Row>({
   const [page, setPage] = useState<number>(Number(saved.page ?? 1));
   const [columnsOpen, setColumnsOpen] = useState(false),
     [openFilter, setOpenFilter] = useState<string | null>(null);
+  const [activeRow, setActiveRow] = useState<string | null>(null);
+  const [virtualStart,setVirtualStart]=useState(0);
   const [exporting, setExporting] = useState(false),
     [exportStatus, setExportStatus] = useState("");
   const [universeRows, setUniverseRows] = useState<Row[] | null>(null),
     [universeLoading, setUniverseLoading] = useState(Boolean(loadAllRows)),
-    [universeError, setUniverseError] = useState("");
+    [universeError, setUniverseError] = useState(""),
+    [universeProgress,setUniverseProgress]=useState<{loaded:number;total:number}|null>(null);
   const [columnsStyle, setColumnsStyle] = useState<CSSProperties>({
     visibility: "hidden",
   });
   const columnsButton = useRef<HTMLButtonElement>(null),
     columnsPanel = useRef<HTMLDivElement>(null),
+    scrollContainer = useRef<HTMLDivElement>(null),
     filterButtons = useRef<Record<string, HTMLButtonElement | null>>({}),
     draggedColumn = useRef<string | null>(null);
   const ordered = [...columns].sort((a, b) => {
@@ -435,7 +443,25 @@ export function StandardDataTable<Row>({
   const visible = ordered.filter(
     (column) => column.essential || !hidden.includes(column.id),
   );
-  const hasFilter = (id: string) => hasFilterValue(filters[id]);
+  const optionsFor = (column: TableColumn<Row>): TableColumn<Row> => {
+    if(column.filterOptions||column.kind==="boolean"||column.kind==="number"||column.kind==="money"||column.kind==="date")return column;
+    const values = new Map<string,string>();
+    for (const row of sourceRows) {
+      const candidates=column.filterValues?.(row)??[String(column.value(row)??"")];
+      for(const candidate of candidates){const value=String(candidate??"");values.set(value,value||"Sem preenchimento")}
+    }
+    if(column.suggestOptions===false||(column.suggestOptions!==true&&values.size>500))return {...column,textSuggestions:[...values.values()]};
+    return {...column,filterOptions:[...values.entries()].map(([value,label])=>({value,label})).sort((left,right)=>left.label.localeCompare(right.label,"pt-PT"))};
+  };
+  const hasFilter = (id: string) => {
+    const value=filters[id],column=columns.find(item=>item.id===id);
+    if(!value)return false;
+    if(value.selected!==undefined&&column){
+      const effective=optionsFor(column),options=effective.filterOptions??(effective.kind==="boolean"?[{value:"true"},{value:"false"}]:undefined);
+      if(options&&value.selected.length===options.length&&options.every(option=>value.selected!.includes(option.value)))return false;
+    }
+    return hasFilterValue(value);
+  };
   const stickyOffset = (index: number) => {
     let left = 0;
     for (let cursor = 0; cursor < index; cursor += 1) {
@@ -446,6 +472,7 @@ export function StandardDataTable<Row>({
     return left;
   };
   const sourceRows = universeRows ?? rows;
+  const reportedTotal = universeRows ? sourceRows.length : (totalRows ?? sourceRows.length);
   const processed = useMemo(() => {
     const words = fold(query).split(/\s+/).filter(Boolean);
     const result = sourceRows.filter(
@@ -487,6 +514,12 @@ export function StandardDataTable<Row>({
     pageSize === "all"
       ? processed
       : processed.slice((validPage - 1) * pageSize, validPage * pageSize);
+  const virtualized=pageSize==="all"&&shown.length>250,
+    virtualCount=40,
+    rendered=virtualized?shown.slice(virtualStart,Math.min(shown.length,virtualStart+virtualCount)):shown,
+    virtualTop=virtualized?virtualStart*34:0,
+    virtualBottom=virtualized?Math.max(0,(shown.length-virtualStart-rendered.length)*34):0;
+  useEffect(()=>{setVirtualStart(0);if(scrollContainer.current)scrollContainer.current.scrollTop=0},[pageSize,query,filters,sorts,universeKey]);
   useEffect(() => {
     localStorage.setItem(
       storageKey,
@@ -525,8 +558,9 @@ export function StandardDataTable<Row>({
     }
     setUniverseRows(null);
     setUniverseLoading(true);
+    setUniverseProgress(null);
     setUniverseError("");
-    void loadAllRows()
+    void loadAllRows((loaded,total)=>{if(active)setUniverseProgress({loaded,total})})
       .then((result) => {
         if (active) setUniverseRows(result);
       })
@@ -868,12 +902,13 @@ export function StandardDataTable<Row>({
       <div className="px-3 py-2 text-xs text-text-secondary" role="status">
         {updating ? "A actualizar… · " : ""}
         {universeLoading
-          ? `A carregar todo o universo (${rows.length} já disponíveis)…`
+          ? `A carregar todo o universo (${universeProgress?.loaded??rows.length} de ${universeProgress?.total??reportedTotal})…`
           : `${processed.length} resultados de ${sourceRows.length}`}
         {selected.length ? ` · ${selected.length} seleccionados` : ""}
         {universeError ? ` · ${universeError}` : ""}
+        {universeLoading&&<progress aria-label="Progresso do carregamento da tabela" className="mt-2 block h-2 w-full accent-secondary" value={universeProgress?.loaded??rows.length} max={Math.max(1,universeProgress?.total??reportedTotal)}/>}
       </div>
-      <div className="scrollbar-thin max-h-[42rem] overflow-auto overscroll-contain">
+      <div ref={scrollContainer} onScroll={event=>{if(virtualized)setVirtualStart(Math.max(0,Math.min(shown.length-virtualCount,Math.floor(event.currentTarget.scrollTop/34)-8)))}} className="scrollbar-thin max-h-[42rem] overflow-auto overscroll-contain">
         <table className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
           <thead className="sticky top-0 z-30 bg-surface">
@@ -957,20 +992,23 @@ export function StandardDataTable<Row>({
                               }}
                               type="button"
                               aria-expanded={openFilter === column.id}
+                              disabled={universeLoading}
                               onClick={() =>
                                 setOpenFilter((current) =>
                                   current === column.id ? null : column.id,
                                 )
                               }
-                              className={`min-h-8 w-full rounded border px-2 text-left text-xs ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
+                              className={`min-h-8 w-full rounded border px-2 text-left text-xs disabled:cursor-wait disabled:opacity-60 ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
                             >
-                              {hasFilter(column.id)
+                              {universeLoading
+                                ? "A carregar opções…"
+                                : hasFilter(column.id)
                                 ? "Filtro activo"
                                 : "Filtrar…"}
                             </button>
                             {openFilter === column.id && (
                               <FilterPanel
-                                column={column}
+                                column={optionsFor(column)}
                                 value={filters[column.id] ?? {}}
                                 onChange={(next) => {
                                   setFilters((current) => ({
@@ -1033,14 +1071,19 @@ export function StandardDataTable<Row>({
             </tr>
           </thead>
           <tbody>
+            {virtualTop>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:virtualTop,padding:0,border:0}}/></tr>}
             {!loading &&
-              shown.map((row) => {
+              rendered.map((row) => {
                 const key = rowKey(row),
-                  isSelected = selected.includes(key);
+                  isActive = activeRow === key,
+                  isSelected = selected.includes(key) || isActive;
                 return (
                   <tr
                     key={key}
                     tabIndex={0}
+                    aria-selected={isSelected}
+                    onClickCapture={() => setActiveRow(key)}
+                    onFocus={() => setActiveRow(key)}
                     onDoubleClick={() => onRowDoubleClick?.(row)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" && onRowDoubleClick) {
@@ -1059,13 +1102,13 @@ export function StandardDataTable<Row>({
                         sibling.focus();
                       }
                     }}
-                    className={`group h-12 ${isSelected ? "bg-secondary-soft outline outline-1 outline-secondary" : "hover:bg-surface-subtle"} ${onRowDoubleClick ? "cursor-pointer" : ""} focus-visible:outline focus-visible:outline-2 focus-visible:outline-secondary`}
+                    className={`group h-[2.125rem] odd:bg-surface-subtle even:bg-surface hover:bg-secondary-soft ${isActive ? "table-row-active outline outline-1 outline-secondary" : ""} ${onRowDoubleClick ? "cursor-pointer" : ""} focus-visible:outline focus-visible:outline-2 focus-visible:outline-secondary`}
                     aria-label={onRowDoubleClick ? `Abrir ${key}` : undefined}
                   >
                     {onSelectionChange && (
                       <td
                         style={{ width: 48, minWidth: 48 }}
-                        className="border-b border-border bg-inherit px-3 py-2 text-center"
+                        className="border-b border-border bg-inherit px-3 py-0.5 text-center"
                       >
                         <input
                           type="checkbox"
@@ -1095,7 +1138,7 @@ export function StandardDataTable<Row>({
                             maxWidth: width,
                             left: sticky ? stickyOffset(index) : undefined,
                           }}
-                          className={`border-b border-border px-3 py-2 ${column.kind === "money" ? "text-right tabular-nums" : "text-center"} ${sticky ? `sticky z-10 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)] ${isSelected ? "bg-secondary-soft" : "bg-surface group-hover:bg-surface-subtle"}` : "bg-inherit"}`}
+                          className={`border-b border-border px-3 py-0.5 ${column.kind === "money" ? "text-right tabular-nums" : "text-center"} ${sticky ? "sticky z-10 bg-inherit shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "bg-inherit"}`}
                         >
                           <div
                             className="overflow-hidden text-ellipsis whitespace-nowrap"
@@ -1111,6 +1154,7 @@ export function StandardDataTable<Row>({
                   </tr>
                 );
               })}
+            {virtualBottom>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:virtualBottom,padding:0,border:0}}/></tr>}
           </tbody>
         </table>
         {loading && (
@@ -1150,7 +1194,7 @@ export function StandardDataTable<Row>({
       </div>
       <div className="table-pagination flex flex-wrap items-center justify-between gap-3 border-t border-border p-3 text-sm">
         <label>
-          Linhas{" "}
+          Linhas por página{" "}
           <select
             value={pageSize}
             onChange={(event) => {
@@ -1166,12 +1210,14 @@ export function StandardDataTable<Row>({
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
-            {!universeLoading && <option value="all">Todas</option>}
+            <option value="all" disabled={universeLoading||Boolean(universeError)}>Todas</option>
           </select>
         </label>
         <span>
-          {processed.length
-            ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? processed.length : Math.min(validPage * pageSize, processed.length)} de ${processed.length}`
+          {pageSize === "all" && universeLoading
+            ? `A carregar ${universeProgress?.loaded ?? rows.length} de ${universeProgress?.total ?? reportedTotal} para mostrar todas…`
+            : processed.length
+            ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? processed.length : Math.min(validPage * pageSize, processed.length)} de ${universeRows ? processed.length : reportedTotal}`
             : "0 resultados"}
         </span>
         <div className="flex gap-2">

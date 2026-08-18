@@ -74,8 +74,19 @@ describe('StandardDataTable',()=>{
     expect(within(dialog).getByText('2 opções seleccionadas')).toBeInTheDocument()
     await user.click(within(dialog).getByRole('button',{name:'Limpar'}))
     expect(screen.getByText('0 resultados de 3')).toBeInTheDocument()
-    await user.click(within(dialog).getByRole('button',{name:'Seleccionar todos'}))
+    await user.click(within(dialog).getByRole('button',{name:'Todos'}))
     expect(screen.getByText('3 resultados de 3')).toBeInTheDocument()
+  })
+
+  test('alterna o fundo e permite destacar uma linha com um clique',async()=>{
+    const user=userEvent.setup()
+    render(<StandardDataTable id="selected-row" label="Tabela seleccionável" rows={rows} columns={columns} rowKey={row=>row.id}/> )
+    const renderedRows=screen.getAllByRole('row').slice(1)
+    expect(renderedRows[0]).toHaveClass('odd:bg-surface-subtle')
+    expect(renderedRows[0]).toHaveClass('even:bg-surface')
+    await user.click(within(renderedRows[1]).getByText('Beatriz'))
+    expect(renderedRows[1]).toHaveAttribute('aria-selected','true')
+    expect(renderedRows[1]).toHaveClass('table-row-active')
   })
 
   test('selector de colunas mantém-se aberto, protege a coluna essencial e devolve o foco ao fechar',async()=>{

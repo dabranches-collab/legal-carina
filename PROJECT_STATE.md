@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Lote 0.3.0 — preparado para publicação em 2026-08-18
+
+- Versão local: `0.3.0`; branch `codex/reconcile-full-import`.
+- Inclui a reorganização transversal de dashboards, tabelas e filtros, edição individual de movimentos, criação de movimentos, ficha de cliente móvel, contactos múltiplos e códigos de cliente por vertente.
+- Gates verdes: ficheiros sensíveis, lint, TypeScript, 52 testes, build, 24 E2E aprovados e dry-run Cloudflare. Dois testes dependentes de produção foram omitidos como previsto.
+- Supabase: manter aplicação isolada de SQL e reconciliação cautelosa do histórico; `db push` global permanece bloqueado.
+- A confirmação de produção e dos PWA deve acrescentar deployment/version ID depois do deploy.
+
 Actualizado em: 2026-08-17
 
 ## Regra de entrega

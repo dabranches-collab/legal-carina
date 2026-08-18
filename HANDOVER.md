@@ -1,5 +1,16 @@
 # Legal Carina — handover
 
+## Publicação 0.3.0 — preparada em 2026-08-18
+
+- Branch: `codex/reconcile-full-import`; lote local validado antes do commit e deploy.
+- Navegação reorganizada com dashboards de entrada de Clientes, Sociedades e Responsáveis; nas categorias de cliente, o dashboard abre no próprio item e apenas `Lista` surge como submenu.
+- Tabelas compactas, filtros/ordenação sobre o universo integral, opção `Todas`, zebra, selecção de linha, Cliente sticky, impressão isolada e edição individual de movimentos.
+- Dashboards apresentam estrutura imediatamente e valores em processamento; a RPC de Responsáveis foi optimizada isoladamente no remoto.
+- Ficha de cliente responsiva, com vários correios electrónicos, vários telefones, identificadores e documentos. Criação exige vertente Particular/Empresa e sugere códigos contínuos `02.xxxx`/`01.xxxx`; clientes Mistos recebem as duas vertentes.
+- Validação: segurança de ficheiros, lint, TypeScript, 52/52 testes, build e E2E (24 aprovados, 2 exclusivos de produção omitidos). Dry-run Wrangler 4.123.0 aprovado sobre 30 assets.
+- Histórico Supabase continua divergente; não executar `db push`. As migrations `20260818132714`, `20260818132947` e `20260818133428` foram tratadas isoladamente e exigem reconciliação documental posterior.
+- Após confirmar produção, registar neste bloco commit, URL, deployment ID e version ID.
+
 Data: 17/08/2026
 
 > Estado actual para retoma noutro computador. As secções históricas abaixo deste bloco são apenas memória de lotes anteriores; em caso de conflito prevalece este bloco.
