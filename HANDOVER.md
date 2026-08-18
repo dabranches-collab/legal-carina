@@ -9,7 +9,10 @@
 - Ficha de cliente responsiva, com vários correios electrónicos, vários telefones, identificadores e documentos. Criação exige vertente Particular/Empresa e sugere códigos contínuos `02.xxxx`/`01.xxxx`; clientes Mistos recebem as duas vertentes.
 - Validação: segurança de ficheiros, lint, TypeScript, 52/52 testes, build e E2E (24 aprovados, 2 exclusivos de produção omitidos). Dry-run Wrangler 4.123.0 aprovado sobre 30 assets.
 - Histórico Supabase continua divergente; não executar `db push`. As migrations `20260818132714`, `20260818132947` e `20260818133428` foram tratadas isoladamente e exigem reconciliação documental posterior.
-- Após confirmar produção, registar neste bloco commit, URL, deployment ID e version ID.
+- Commit funcional publicado: `72906a06ead13ae7896c3b7d5ad810fa6a698b45`, enviado para `origin/codex/reconcile-full-import`.
+- Produção confirmada visualmente em `https://legal-carina.dabranches.workers.dev/`: `Versão 0.3.0`.
+- Cloudflare Version ID: `6c8c8099-0169-4a92-a9c5-0777b91cc3fe`, 100% do tráfego, mensagem `Release 0.3.0: plataforma operacional`.
+- `sw.js` público confirmado com cache `carina-legal-shell-0.3.0`; uma instalação PWA antiga mostrou `Actualização disponível`, actualizou e deixou de apresentar o aviso após activar a nova versão.
 
 Data: 17/08/2026
 

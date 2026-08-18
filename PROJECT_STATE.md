@@ -6,7 +6,7 @@
 - Inclui a reorganização transversal de dashboards, tabelas e filtros, edição individual de movimentos, criação de movimentos, ficha de cliente móvel, contactos múltiplos e códigos de cliente por vertente.
 - Gates verdes: ficheiros sensíveis, lint, TypeScript, 52 testes, build, 24 E2E aprovados e dry-run Cloudflare. Dois testes dependentes de produção foram omitidos como previsto.
 - Supabase: manter aplicação isolada de SQL e reconciliação cautelosa do histórico; `db push` global permanece bloqueado.
-- A confirmação de produção e dos PWA deve acrescentar deployment/version ID depois do deploy.
+- Produção e PWA confirmados na versão `0.3.0`: commit funcional `72906a0`, Cloudflare Version ID `6c8c8099-0169-4a92-a9c5-0777b91cc3fe`; o fluxo `Actualização disponível` → `Actualizar aplicação` foi validado directamente.
 
 Actualizado em: 2026-08-17
 
