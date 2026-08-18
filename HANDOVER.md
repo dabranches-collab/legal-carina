@@ -175,4 +175,5 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - A sessão local mostra `Versão 0.2.9`; o Vite observa agora o `package.json` e reinicia quando a versão é alterada.
 - Validação anterior à publicação: segurança de ficheiros, lint, TypeScript, 51 testes unitários, build e E2E (24 aprovados, 2 opcionais omitidos).
 - Aplicar remotamente apenas `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`; publicar a Edge Function `admin-users` e o Worker. Não usar `supabase db push`.
-- Versão preparada: `0.2.9`. Confirmar e registar no fecho o commit remoto, version/deployment ID da Cloudflare e catálogo Supabase.
+- Versão `0.2.9` publicada em 2026-08-18 a partir do commit funcional `4d6729bc455aabdb7da745613b784679da01dbe7`.
+- Cloudflare Worker confirmado em `https://legal-carina.dabranches.workers.dev`, Version ID `e6931985-c3b5-4c6b-86bf-a5daf4507fc4`, resposta HTTPS `200 OK`.
