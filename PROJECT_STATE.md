@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## Hotfix 0.3.3 — grelha dos gráficos principais
+
+- Os gráficos `Valor por ano` e `Valor por mês` da Visão Geral voltaram a ocupar conjuntamente toda a largura disponível, em duas colunas iguais, sem a metade vazia introduzida pela grelha de quatro colunas.
+- Correcção confirmada visualmente nos modos claro e escuro antes da publicação urgente solicitada.
+
 ## Lote local 0.3.2 — em curso
 
 - Versão `0.3.2` publicada em 2026-08-18 a partir do commit `25fc7cee980badadb9ece6a2930ae6c1238be345` da branch `codex/reconcile-full-import`.

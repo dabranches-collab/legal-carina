@@ -355,7 +355,7 @@ export function OverviewPage() {
           </p>
         ) : (
           <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2">
               <AnnualValueChart data={data.annual} allowSocietyComparison />
               <MonthlyValueChart data={data.monthly} allowSocietyComparison />
             </div>

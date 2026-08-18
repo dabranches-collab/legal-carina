@@ -83,4 +83,14 @@ describe('interface principal', () => {
     expect(screen.queryByRole('button',{name:'Definições'})).not.toBeInTheDocument()
     expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
   })
+
+  it('bloqueia URLs administrativas ao Operador e mantém os Registos operacionais disponíveis', async()=>{
+    window.history.replaceState({},'', '/?view=admin-users')
+    renderApp('operator')
+    expect(window.location.search).toBe('?view=overview')
+    expect(screen.queryByRole('button',{name:'Definições'})).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button',{name:'Registos'}))
+    expect(await screen.findByRole('table',{name:'Registos de trabalho'},{timeout:5000})).toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Criar movimento'})).toBeInTheDocument()
+  },15000)
 })

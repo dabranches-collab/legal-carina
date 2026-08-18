@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## Hotfix 0.3.3 — gráficos da Visão Geral
+
+- Corrigida a grelha de `Análise e tendências`: `Valor por ano` e `Valor por mês` ocupam agora 50% cada e preenchem 100% da largura disponível.
+- Validado visualmente em claro e escuro; publicação urgente autorizada pelo utilizador.
+
 ## Lote local 0.3.2 — correcções pós-publicação
 
 - A versão `0.3.2` foi publicada em 2026-08-18 a partir do commit `25fc7cee980badadb9ece6a2930ae6c1238be345` da branch `codex/reconcile-full-import`.
