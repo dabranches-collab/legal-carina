@@ -80,6 +80,14 @@ export function MasterDataPage({initialSection='clients',clientTypeFilter=null}:
     setSaving(true);setError('');const name=editName.trim()
     if(section==='clients'&&!profiles.some(item=>item.active)){setError('Active pelo menos uma vertente: Particular ou Empresa.');setSaving(false);return}
     if(section==='clients'&&profiles.some(item=>item.active&&!item.client_code.trim())){setError('Indique o código de cada vertente activa.');setSaving(false);return}
+    if(section==='clients'){
+      const activeProfiles=profiles.filter(item=>item.active),invalid=activeProfiles.find(item=>!new RegExp(item.client_type==='individual'?'^02\\.\\d+$':'^01\\.\\d+$').test(item.client_code.trim()))
+      if(invalid){setError(`O código de ${invalid.client_type==='individual'?'Particular':'Empresa'} deve começar por ${invalid.client_type==='individual'?'02.':'01.'}`);setSaving(false);return}
+      const codes=activeProfiles.map(item=>item.client_code.trim()),duplicates=await supabase.from('client_profiles').select('client_id,client_code').eq('firm_id',firmId).in('client_code',codes)
+      if(duplicates.error){setError(`Não foi possível validar os códigos: ${duplicates.error.message}`);setSaving(false);return}
+      const conflict=(duplicates.data??[]).find(item=>item.client_id!==editing?.id)
+      if(conflict){setError(`O código ${conflict.client_code} já está atribuído. Feche e volte a abrir a criação para obter a sugestão seguinte.`);setSaving(false);return}
+    }
     const savedDetails={...details,email:storedContacts(emails),phone:storedContacts(phones)}
     let targetId=editing?.id
     if(creating){
@@ -97,7 +105,7 @@ export function MasterDataPage({initialSection='clients',clientTypeFilter=null}:
       const{error:updateError}=await supabase.from(section).update(updatePayload).eq('id',editing!.id)
       if(updateError){setError(updateError.message);setSaving(false);return}
     }
-    if(section==='clients'&&targetId){for(const item of profiles){const payload={firm_id:firmId,client_id:targetId,client_type:item.client_type,client_code:item.client_code.trim(),active:item.active};const result=item.id?await supabase.from('client_profiles').update(payload).eq('id',item.id):await supabase.from('client_profiles').insert(payload);if(result.error){setError(result.error.message);setSaving(false);return}}}
+    if(section==='clients'&&targetId){for(const item of profiles.filter(value=>value.active||value.id)){const payload={firm_id:firmId,client_id:targetId,client_type:item.client_type,client_code:item.client_code.trim(),active:item.active};const result=item.id?await supabase.from('client_profiles').update(payload).eq('id',item.id):await supabase.from('client_profiles').insert(payload);if(result.error){setError(result.error.message);setSaving(false);return}}}
     if(section==='clients'&&targetId&&identifiersAvailable){for(const item of identifiers.filter(value=>value.identifier_number.trim())){const payload={firm_id:firmId,client_id:targetId,identifier_type:item.identifier_type,identifier_number:item.identifier_number.trim(),issuing_country:item.issuing_country.trim()||null,issuing_authority:item.issuing_authority.trim()||null,issued_on:item.issued_on||null,expires_on:item.expires_on||null,notes:item.notes.trim()||null};const result=item.id?await supabase.from('client_identifiers').update(payload).eq('id',item.id):await supabase.from('client_identifiers').insert(payload);if(result.error){setError(result.error.message);setSaving(false);return}}}
     setNotice(`${name} ${creating?'criado':'actualizado'}.`);setSaving(false);closeEditor();await load()
   }

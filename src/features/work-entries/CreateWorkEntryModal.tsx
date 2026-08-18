@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useModalLifecycle } from '../../hooks/useModalLifecycle'
 import { DurationSelect } from './DurationSelect'
+import { getWorkEntryOptions } from './workEntryCompatibility'
 
 type OptionData={
   societies:Array<{id:string;name:string}>
@@ -16,7 +17,7 @@ export function CreateWorkEntryModal({onClose,onCreated}:{onClose:()=>void;onCre
   const [activity,setActivity]=useState(''),[duration,setDuration]=useState(0),[observations,setObservations]=useState('')
   const [loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[error,setError]=useState('')
   useModalLifecycle(onClose,saving)
-  useEffect(()=>{let active=true;void(async()=>{if(!supabase){setError('Ligação ao Supabase indisponível.');setLoading(false);return}const result=await supabase.rpc('get_work_entry_form_options');if(!active)return;if(result.error)setError(result.error.message);else setOptions(result.data as OptionData);setLoading(false)})();return()=>{active=false}},[])
+  useEffect(()=>{let active=true;void(async()=>{const result=await getWorkEntryOptions();if(!active)return;if(result.error)setError(result.error.message);else if(result.data)setOptions(result.data);setLoading(false)})();return()=>{active=false}},[])
   const selectedClient=options.clientProfiles.find(item=>item.id===profile)?.client_id
   const processes=useMemo(()=>options.processes.filter(item=>!selectedClient||item.client_id===selectedClient),[options.processes,selectedClient])
   async function submit(event:FormEvent){event.preventDefault();if(!supabase||duration<1)return;setSaving(true);setError('');const result=await supabase.rpc('create_work_entry',{p_work_date:date,p_client_profile_id:profile,p_matter_id:matter||null,p_professional_id:responsible,p_billing_entity_id:society||null,p_activity_description:activity,p_duration_minutes:duration,p_observations:observations||null});if(result.error){setError(result.error.message);setSaving(false);return}onCreated()}

@@ -36,6 +36,7 @@ type Entry = {
 };
 type Option = { id: string; label: string };
 type SearchMeta = {
+  pageSize?: number;
   items: Entry[];
   total: number;
   professionals: Option[];
@@ -324,13 +325,13 @@ export function WorkEntriesPage() {
       p_direction: "desc",
     };
     if (clientType === "mixed") {const items=(await searchMixedClientEntries(exportArgs)).items;onProgress?.(items.length,items.length);return items;}
-    const pageSize=100;
-    const first = await supabase.rpc("search_work_entries", {...exportArgs,p_page:1,p_page_size:pageSize});
+    const requestedPageSize=100;
+    const first = await supabase.rpc("search_work_entries", {...exportArgs,p_page:1,p_page_size:requestedPageSize});
     if(first.error)throw new Error(first.error.message??"Não foi possível carregar os movimentos.");
-    const firstPage=first.data as SearchMeta,total=firstPage.total??0,pages=Math.ceil(total/pageSize),items=[...(firstPage.items??[])];
+    const firstPage=first.data as SearchMeta,total=firstPage.total??0,pageSize=Math.max(1,firstPage.pageSize??requestedPageSize),pages=Math.ceil(total/pageSize),items=[...(firstPage.items??[])];
     onProgress?.(items.length,total);
     for(let start=2;start<=pages;start+=6){
-      const batch=await Promise.all(Array.from({length:Math.min(6,pages-start+1)},(_,index)=>supabase!.rpc("search_work_entries",{...exportArgs,p_page:start+index,p_page_size:pageSize})));
+      const batch=await Promise.all(Array.from({length:Math.min(6,pages-start+1)},(_,index)=>supabase!.rpc("search_work_entries",{...exportArgs,p_page:start+index,p_page_size:requestedPageSize})));
       const failure=batch.find(response=>response.error)?.error;if(failure)throw new Error(failure.message);
       items.push(...batch.flatMap(response=>((response.data as SearchMeta).items??[])));
       onProgress?.(items.length,total);

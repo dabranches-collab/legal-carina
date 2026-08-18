@@ -1,5 +1,16 @@
 # Estado do projecto
 
+## Lote local 0.3.1 — em curso
+
+- Produção permanece em `0.3.0`; a próxima versão local é `0.3.1`.
+- Primeira correcção: fallback seguro quando `get_work_entry_form_options` responde sem opções; confirmado com 225 vertentes disponíveis e sem escrita de teste.
+- Atalhos dos dashboards e listas passaram para navegação SPA partilhada; o fluxo autenticado `Particulares > Por facturar` manteve a sessão e conciliou 559 no cartão e na tabela integral.
+- Corrigida a persistência de perfis de cliente: vertentes novas desactivadas não são inseridas com código vazio; prefixos e duplicados são validados antes da escrita.
+- Validação autenticada conciliou atalhos de Clientes, Sociedades, Responsáveis e Sem sociedade com as tabelas (559, 243, 39 e 127), sem logout.
+- A tabela integral terminou em `1–7198 de 7198`; o filtro Cliente apresentou as 201 opções do universo e regressou a 7 198 ao limpar. A leitura integral mantém blocos remotos de 100 porque blocos maiores excedem o `statement_timeout` conhecido.
+- Balões dos gráficos e editor directo Dias/Horas/Minutos confirmados visualmente em modo escuro; sem gravações de teste.
+- Gates finais 0.3.1: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build e 24 E2E aprovados (2 exclusivos de produção omitidos), cobrindo iPhone/PWA, Windows, claro/escuro, rotação e safe areas.
+
 ## Lote 0.3.0 — preparado para publicação em 2026-08-18
 
 - Versão local: `0.3.0`; branch `codex/reconcile-full-import`.

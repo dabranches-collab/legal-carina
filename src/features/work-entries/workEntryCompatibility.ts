@@ -13,8 +13,9 @@ const missingFunction=(error:{code?:string;message?:string}|null)=>error?.code==
 export async function getWorkEntryOptions():Promise<{data:WorkEntryOptions|null;error:{message:string}|null}> {
   if(!supabase)return{data:null,error:{message:'Ligação ao Supabase indisponível.'}}
   const rpc=await supabase.rpc('get_work_entry_form_options')
-  if(!rpc.error)return{data:rpc.data as WorkEntryOptions,error:null}
-  if(!missingFunction(rpc.error))return{data:null,error:rpc.error}
+  const rpcData=rpc.data as WorkEntryOptions|null
+  if(!rpc.error&&rpcData?.clientProfiles?.length&&rpcData?.responsibles?.length)return{data:rpcData,error:null}
+  if(rpc.error&&!missingFunction(rpc.error))return{data:null,error:rpc.error}
   const [societies,profiles,clients,responsibles,processes]=await Promise.all([
     supabase.from('billing_entities').select('id,name').eq('active',true).order('name'),
     supabase.from('client_profiles').select('id,client_id,client_type,client_code').eq('active',true).order('client_code'),
