@@ -144,8 +144,13 @@ Actualizado em: 2026-08-17
 - Evolução anual das Sociedades apresenta uma linha por Sociedade com mini-barras verticais, valores e anos, sem scroll horizontal em desktop; inclui uma linha final Total com a soma anual.
 - Valor por mês mostra, em Agregado e Por sociedade, uma janela por período com o total e todos os valores por Sociedade.
 - Os alertas de Acompanhamento usam agora fundo, contorno, ícone, título e atalho vermelhos para evidenciarem trabalho pendente.
-- Os três gráficos finais ocupam uma grelha completa de três colunas, com a mesma altura e sem espaços vazios em desktop.
+- Nos gráficos finais, a Evolução anual ocupa a coluna larga da esquerda; Arquivo e Distribuição das sociedades ficam empilhados à direita, sem espaços vazios em desktop.
 - Nas tabelas comuns, todas as células não monetárias ficam centradas; apenas os valores monetários permanecem alinhados à direita.
+- No scroll horizontal dos Registos de trabalho, a Data e a selecção deslocam-se normalmente; apenas o nome do Cliente permanece fixo.
+- A coluna Cliente usa fundo opaco nos estados normal, hover e seleccionado, impedindo a sobreposição visual das restantes células durante o scroll.
+- Imprimir/PDF isola o resultado da tabela, usa orientação horizontal e ajusta todas as colunas a uma única página de largura.
+- A edição em massa foi retirada dos Registos de trabalho; não existem caixas de selecção nem acções colectivas, mantendo-se apenas a edição individual por duplo clique/Enter.
+- Acima dos filtros normais existe um bloco vermelho de pré-filtros de atenção: Sem sociedade, Sem preço, Por facturar, Facturados não pagos e Facturados sem data/estados históricos. Cada botão limpa os filtros correntes e consulta o universo integral.
 - A versão local passa a acompanhar automaticamente o `package.json` quando este muda, através do reinício observado pelo Vite.
 - Evolução anual dos dashboards de Sociedade usa também barras verticais compactas.
 - Validação local: `pnpm check` aprovado (51/51 testes); E2E 24 aprovados e 2 opcionais omitidos.

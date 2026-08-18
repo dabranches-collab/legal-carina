@@ -112,17 +112,20 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
 @media print {
   @page { size: landscape; margin: 12mm; }
   body { background: #fff !important; color: #000 !important; }
+  body:has(.table-standard) * { visibility: hidden !important; }
+  body:has(.table-standard) .table-standard,
+  body:has(.table-standard) .table-standard * { visibility: visible !important; }
   aside, header, .table-tools, .table-pagination, button { display: none !important; }
   main { margin: 0 !important; padding: 0 !important; }
-  .table-standard { border: 0 !important; box-shadow: none !important; }
+  .table-standard { position: absolute !important; inset: 0 auto auto 0 !important; width: 100% !important; border: 0 !important; box-shadow: none !important; }
   .app-safe-fixed:has(.table-standard) { position: static !important; display: block !important; overflow: visible !important; padding: 0 !important; background: #fff !important; }
   .print-table-heading { display: block !important; margin-bottom: 8mm; }
   .print-table-heading h2 { font-size: 16pt; font-weight: 700; }
   .print-table-heading p { margin-top: 2mm; font-size: 9pt; }
   .table-standard > div { max-height: none !important; overflow: visible !important; }
-  .table-standard table { width: 100% !important; min-width: 0 !important; border-collapse: collapse !important; font-size: 8pt !important; }
+  .table-standard table { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; border-collapse: collapse !important; font-size: 8pt !important; }
   .table-standard thead { display: table-header-group; position: static !important; }
-  .table-standard th, .table-standard td { position: static !important; width: auto !important; min-width: 0 !important; max-width: none !important; border: 1px solid #777 !important; color: #000 !important; background: #fff !important; }
+  .table-standard th, .table-standard td { position: static !important; width: auto !important; min-width: 0 !important; max-width: none !important; overflow: hidden !important; border: 1px solid #777 !important; color: #000 !important; background: #fff !important; }
   .table-standard tr { break-inside: avoid; }
 }
 

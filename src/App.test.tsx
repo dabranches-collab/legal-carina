@@ -31,15 +31,16 @@ describe('interface principal', () => {
     expect(screen.getByText('Dados reais — acesso restrito')).toBeInTheDocument()
   })
 
-  it('navega para a tabela de registos e seleciona linhas', async () => {
+  it('navega para os registos sem edição em massa e mostra pendências', async () => {
     render(<App />)
     await userEvent.click(screen.getByRole('button', { name: 'Registos de trabalho' }))
     expect(screen.getByRole('heading', { level: 1, name: 'Registos de trabalho' })).toBeInTheDocument()
     expect(
       await screen.findByRole('table', { name: 'Registos de trabalho' }),
     ).toBeInTheDocument()
-    await userEvent.click(await screen.findByRole('checkbox', { name: 'Seleccionar LC-1048' }))
-    expect(screen.getByText('1 seleccionados')).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: 'Seleccionar LC-1048' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Sem sociedade'})).toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Facturados não pagos'})).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Criar movimento'}))
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(screen.getByText(/preço e o valor são resolvidos no backend/i)).toBeInTheDocument()

@@ -166,7 +166,12 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Branch de origem: `codex/reconcile-full-import`.
 - Perfil Operador acrescentado ao frontend, função administrativa e modelo de autorização por Sociedade.
 - Dashboards: mini-barras anuais verticais por Sociedade, linha Total anual, detalhe mensal por Sociedade e widgets agrupados com subtotais.
-- Ajustes finais confirmados visualmente: alertas de Acompanhamento vermelhos; três gráficos finais alinhados numa só linha com dimensões iguais; células não monetárias centradas e monetárias à direita.
+- Ajustes finais confirmados visualmente: alertas de Acompanhamento vermelhos; Evolução anual larga à esquerda e os dois gráficos curtos empilhados à direita; células não monetárias centradas e monetárias à direita.
+- O scroll horizontal dos Registos de trabalho fixa apenas Cliente; Data e selecção deixam de ficar presas à margem.
+- A coluna Cliente fixa tem fundo opaco, validado visualmente depois de deslocar a tabela até às últimas colunas.
+- Print/PDF oculta o resto da página e ajusta apenas a tabela a uma página de largura em landscape.
+- As caixas e acções de edição em massa foram removidas; a edição dos movimentos é exclusivamente individual.
+- Os Registos de trabalho apresentam pré-filtros vermelhos de pendências por cima dos filtros normais; o teste autenticado de “Sem sociedade” devolveu as 127 linhas do universo completo.
 - A sessão local mostra `Versão 0.2.9`; o Vite observa agora o `package.json` e reinicia quando a versão é alterada.
 - Validação anterior à publicação: segurança de ficheiros, lint, TypeScript, 51 testes unitários, build e E2E (24 aprovados, 2 opcionais omitidos).
 - Aplicar remotamente apenas `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`; publicar a Edge Function `admin-users` e o Worker. Não usar `supabase db push`.
