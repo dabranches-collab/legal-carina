@@ -161,3 +161,11 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Implementar exportação XLSX integral sob pedido sem bloquear a abertura dos Registos de trabalho.
 - Continuar validação visual das tabelas e dashboards nas matrizes Windows/iPhone.
 - Manter o incremento SemVer visível na versão local antes de cada lote e publicar apenas quando solicitado.
+# Publicação 0.2.9
+
+- Branch de origem: `codex/reconcile-full-import`.
+- Perfil Operador acrescentado ao frontend, função administrativa e modelo de autorização por Sociedade.
+- Dashboards: mini-barras anuais verticais por Sociedade, linha Total anual, detalhe mensal por Sociedade e widgets agrupados com subtotais.
+- Validação anterior à publicação: segurança de ficheiros, lint, TypeScript, 51 testes unitários, build e E2E (24 aprovados, 2 opcionais omitidos).
+- Aplicar remotamente apenas `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`; publicar a Edge Function `admin-users` e o Worker. Não usar `supabase db push`.
+- Versão preparada: `0.2.9`. Confirmar e registar no fecho o commit remoto, version/deployment ID da Cloudflare e catálogo Supabase.

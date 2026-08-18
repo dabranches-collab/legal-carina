@@ -107,7 +107,7 @@ Deno.serve(async (request) => {
       const displayName = normalizeDisplayName(input.displayName)
       const pin = String(input.pin ?? '')
       const role = String(input.role ?? '')
-      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'operator', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId)
         || !allowedRoles.includes(role)
         || displayName.length < 1 || displayName.length > 100
@@ -224,7 +224,7 @@ Deno.serve(async (request) => {
       const userId = String(input.userId ?? '')
       const role = String(input.role ?? '')
       const active = Boolean(input.active)
-      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'operator', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId) || !allowedRoles.includes(role)) return json(request, { error: 'Alteração inválida.' }, 400)
       const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target || target.role === 'owner') return json(request, { error: 'O proprietário não pode ser alterado por esta operação.' }, 400)

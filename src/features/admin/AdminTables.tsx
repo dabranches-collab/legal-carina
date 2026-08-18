@@ -3,7 +3,7 @@ import { StandardDataTable, type TableColumn } from '../../components/table/Stan
 type UserRow={userId:string;username:string;displayName:string;pinConfigured:boolean;role:string;active:boolean;lastSignInAt:string|null}
 type LoginRow={userId:string;username:string;displayName:string;firstAt:string;lastAt:string;count:number;events:string[]}
 
-const roles:Record<string,string>={owner:'Proprietário',admin:'Administrador',manager:'Gestor',billing:'Financeiro',professional:'Advogado',viewer:'Consulta',auditor:'Auditor'}
+const roles:Record<string,string>={owner:'Proprietário',admin:'Administrador',manager:'Gestor',operator:'Operador',billing:'Financeiro',professional:'Advogado',viewer:'Consulta',auditor:'Auditor'}
 
 export function AdminUsersTable({rows,loading,onConfigure}:{rows:UserRow[];loading:boolean;onConfigure:(row:UserRow)=>void}){
   const columns:TableColumn<UserRow>[]=[

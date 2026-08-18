@@ -4,7 +4,7 @@ export interface FirmMemberRow {
   id: string
   firm_id: string
   user_id: string
-  role: 'owner' | 'admin' | 'manager' | 'billing' | 'professional' | 'viewer' | 'auditor'
+  role: 'owner' | 'admin' | 'manager' | 'operator' | 'billing' | 'professional' | 'viewer' | 'auditor'
   active: boolean
 }
 

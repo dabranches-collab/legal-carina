@@ -135,3 +135,14 @@ Actualizado em: 2026-08-17
 - Os dashboards das Sociedades apresentam os 12 meses até ao último registo disponível.
 - O gráfico mensal deixa de exigir scroll horizontal em resoluções desktop, mantendo comportamento adaptado em ecrãs pequenos.
 - O servidor de desenvolvimento remove service workers antigos para mostrar sempre a versão local em preparação.
+# Versão 0.2.9 — perfil Operador e leitura operacional
+
+- Novo perfil **Operador**, limitado às Sociedades explicitamente atribuídas, com edição dos movimentos e sem administração de utilizadores, importações ou configurações.
+- A autorização financeira continua independente por Sociedade; criação e alteração do perfil são validadas no backend e auditadas.
+- Visão geral reorganizada em dois grupos lado a lado, cada um com duas colunas: Resumo operacional e Acompanhamento. O indicador redundante Total de minutos foi retirado.
+- Widgets preparados com total e subtotais exactos por Sociedade, calculados no Supabase sob as mesmas regras de âmbito e ocultação financeira.
+- Evolução anual das Sociedades apresenta uma linha por Sociedade com mini-barras verticais, valores e anos, sem scroll horizontal em desktop; inclui uma linha final Total com a soma anual.
+- Valor por mês mostra, em Agregado e Por sociedade, uma janela por período com o total e todos os valores por Sociedade.
+- Evolução anual dos dashboards de Sociedade usa também barras verticais compactas.
+- Validação local: `pnpm check` aprovado (51/51 testes); E2E 24 aprovados e 2 opcionais omitidos.
+- Migrations isoladas deste lote: `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`. Não executar `db push` devido à divergência histórica conhecida.
