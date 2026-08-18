@@ -91,13 +91,6 @@ export function EditWorkEntryModal({
       active = false;
     };
   }, [entryId]);
-  const profile = options?.clientProfiles.find(
-    (item) => item.id === entry?.client_profile_id,
-  );
-  const processes =
-    options?.processes.filter(
-      (item) => item.client_id === profile?.client_id,
-    ) ?? [];
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!supabase || !entry) return;
@@ -247,23 +240,6 @@ export function EditWorkEntryModal({
                       ? "Particular"
                       : "Empresa"}{" "}
                     · {item.client_code}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm sm:col-span-2 lg:col-span-3">
-              Processo
-              <select
-                value={entry.matter_id ?? ""}
-                onChange={(e) =>
-                  setEntry({ ...entry, matter_id: e.target.value || null })
-                }
-                className="control mt-1 w-full px-3"
-              >
-                <option value="">Sem processo</option>
-                {processes.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.matter_code} · {item.title}
                   </option>
                 ))}
               </select>

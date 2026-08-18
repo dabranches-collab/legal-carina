@@ -6,6 +6,7 @@ import { authErrorMessage } from './messages'
 import { LoginPage } from './LoginPage'
 import { ResetPasswordPage } from './ResetPasswordPage'
 import { InitialPinChangePage } from './InitialPinChangePage'
+import type { ApplicationRole } from '../../types/database.types'
 
 const passkeyOriginError=()=>{
   const host=window.location.hostname
@@ -23,18 +24,23 @@ async function recordSecurityEvent(eventType: string, email?: string) {
 }
 
 async function getAccessStatus(currentUser?:User|null) {
-  if (!supabase) return { active:false,mustChangePin:false }
-  const {data,error}=await supabase.rpc('get_my_access_status')
+  if (!supabase) return { active:false,mustChangePin:false,role:null as ApplicationRole|null }
+  const [{data,error},membership]=await Promise.all([
+    supabase.rpc('get_my_access_status'),
+    supabase.from('firm_members').select('role').eq('user_id',currentUser?.id??'').eq('active',true).limit(1).maybeSingle(),
+  ])
   const status=Array.isArray(data)?data[0]:data
-  if(error&&import.meta.env.DEV)return {active:true,mustChangePin:currentUser?.app_metadata?.must_change_pin===true}
-  if(error||!status||status.active!==true)return {active:false,mustChangePin:false}
-  return {active:true,mustChangePin:status.must_change_pin===true}
+  const role=(membership.data?.role??null) as ApplicationRole|null
+  if(error&&import.meta.env.DEV)return {active:true,mustChangePin:currentUser?.app_metadata?.must_change_pin===true,role}
+  if(error||membership.error||!status||status.active!==true||!role)return {active:false,mustChangePin:false,role:null}
+  return {active:true,mustChangePin:status.must_change_pin===true,role}
 }
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [role, setRole] = useState<ApplicationRole | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -59,6 +65,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (!accessStatus.active) { if(!import.meta.env.DEV)await client.auth.signOut();setLoading(false);return }
       setSession(initialSession); setUser(verifiedUser)
+      setRole(accessStatus.role)
       setMustChangePin(accessStatus.mustChangePin)
       if (active) setLoading(false)
     }
@@ -67,7 +74,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
       setSession(nextSession); setUser(nextSession?.user ?? null)
-      if (!nextSession) { setMustChangePin(false); setLoading(false) }
+      if (!nextSession) { setRole(null); setMustChangePin(false); setLoading(false) }
     })
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
@@ -87,8 +94,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setBusy(false)
       return
     }
-    setUser(sessionData.user); setSession(sessionData.session)
-    setMustChangePin(data.mustChangePin === true || sessionData.user.app_metadata?.must_change_pin === true)
+    const accessStatus=await getAccessStatus(sessionData.user)
+    if(!accessStatus.active){await supabase.auth.signOut();setError('Este acesso está suspenso ou deixou de estar autorizado.');setBusy(false);return}
+    setUser(sessionData.user); setSession(sessionData.session);setRole(accessStatus.role)
+    setMustChangePin(data.mustChangePin === true || accessStatus.mustChangePin || sessionData.user.app_metadata?.must_change_pin === true)
     setBusy(false)
   }
 
@@ -112,7 +121,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     else {
       const accessStatus=await getAccessStatus(data.user)
       if(!accessStatus.active){await supabase.auth.signOut();setError('Este acesso está suspenso ou deixou de estar autorizado.')}
-      else { setUser(data.user); setSession(data.session); setMustChangePin(accessStatus.mustChangePin); await recordSecurityEvent('login_succeeded') }
+      else { setUser(data.user); setSession(data.session); setRole(accessStatus.role); setMustChangePin(accessStatus.mustChangePin); await recordSecurityEvent('login_succeeded') }
     }
     setBusy(false)
   }
@@ -149,7 +158,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
-    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setMustChangePin(false)
+    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setRole(null); setMustChangePin(false)
   }
 
   async function changeInitialPin(currentPin:string,newPin:string) {
@@ -168,5 +177,5 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={async (password) => { await updatePassword(password) }} />
   if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onPinLogin={loginWithPin} onRecover={recover} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
   if (mustChangePin) return <InitialPinChangePage busy={busy} error={error} onSubmit={changeInitialPin} onLogout={signOut}/>
-  return <AuthContext.Provider value={{ user, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, role, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>
 }

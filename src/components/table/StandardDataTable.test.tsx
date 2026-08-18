@@ -39,8 +39,8 @@ describe('StandardDataTable',()=>{
   test('filtra e ordena sobre todo o universo carregado, não apenas sobre a página inicial',async()=>{
     const user=userEvent.setup(),loadAllRows=vi.fn(async()=>[...rows,{id:'4',name:'Duarte',amount:5,active:true}])
     render(<StandardDataTable id="full-universe" label="Universo integral" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadAllRows={loadAllRows}/>)
-    expect(await screen.findByText('4 resultados de 4')).toBeInTheDocument()
     await user.click(screen.getByRole('button',{name:'Ordenar Valor por ordem ascendente'}))
+    expect(await screen.findByText('4 resultados de 4')).toBeInTheDocument()
     expect(within(screen.getByRole('table').querySelector('tbody')!).getAllByRole('row')[0]).toHaveTextContent('Duarte')
     await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'Beatriz')
     expect(screen.getByText('1 resultados de 4')).toBeInTheDocument()
@@ -104,18 +104,19 @@ describe('StandardDataTable',()=>{
     expect(trigger).toHaveFocus()
   })
 
-  test('persiste pesquisa, ordenação e colunas visíveis ao voltar a montar a tabela',async()=>{
+  test('persiste apenas as preferências visuais e limpa pesquisa e ordenação ao voltar a montar',async()=>{
     const user=userEvent.setup()
     const first=render(<StandardDataTable id="persistent-table" label="Tabela persistente" rows={rows} columns={columns} rowKey={row=>row.id}/>)
     await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'beatriz')
     await user.click(screen.getByRole('button',{name:'Valor'}))
     await user.click(screen.getByRole('button',{name:'Colunas · 3/3'}))
     await user.click(within(screen.getByRole('dialog',{name:'Colunas visíveis em Tabela persistente'})).getByRole('checkbox',{name:'Activo'}))
-    await waitFor(()=>expect(localStorage.getItem('carina.table.persistent-table')).toContain('beatriz'))
+    await waitFor(()=>expect(localStorage.getItem('carina.table.anonymous.persistent-table')).toContain('"hidden":["active"]'))
     first.unmount()
     render(<StandardDataTable id="persistent-table" label="Tabela persistente" rows={rows} columns={columns} rowKey={row=>row.id}/>)
-    expect(screen.getByPlaceholderText('Pesquisar em todas as colunas…')).toHaveValue('beatriz')
+    expect(screen.getByPlaceholderText('Pesquisar em todas as colunas…')).toHaveValue('')
     expect(screen.getByRole('button',{name:'Colunas · 2/3'})).toBeInTheDocument()
-    expect(screen.getByText('1 resultados de 3')).toBeInTheDocument()
+    expect(screen.getByText('3 resultados de 3')).toBeInTheDocument()
+    expect(screen.getByRole('columnheader',{name:/Valor/})).toHaveAttribute('aria-sort','none')
   })
 })

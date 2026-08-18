@@ -43,4 +43,14 @@ describe('DonutChart',()=>{
     rerender(<AnnualValueChart data={data} allowSocietyComparison/>)
     expect(screen.getByRole('button',{name:'Por sociedade'})).toBeInTheDocument()
   })
+
+  it('permite que um dashboard de sociedade seja desagregado por responsável',()=>{
+    const data=[{label:2026,value:30,societies:{CARINA:20,PAULA:10}}]
+    render(<AnnualValueChart data={data} allowSocietyComparison comparisonLabel="responsável" comparisonPlural="responsáveis"/>)
+    expect(screen.getByText('Todos os responsáveis agregados')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button',{name:'Por responsável'}))
+    expect(screen.getByText('Responsáveis representados individualmente')).toBeInTheDocument()
+    expect(screen.getAllByText('CARINA').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('PAULA').length).toBeGreaterThan(0)
+  })
 })

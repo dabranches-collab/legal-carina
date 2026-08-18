@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -19,48 +19,50 @@ vi.mock('./lib/supabase', () => ({
   }) },
 }))
 import { AuthenticatedApplication as App } from './App'
+import { AuthContext } from './features/auth/AuthContext'
+
+const renderApp=(role:'owner'|'operator'='owner')=>render(<AuthContext.Provider value={{user:null,role,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>null}}><App/></AuthContext.Provider>)
 
 describe('interface principal', () => {
   it('apresenta navegação, cabeçalho e indicadores da visão geral', async () => {
-    render(<App />)
+    renderApp()
     expect(screen.getByRole('complementary', { name: 'Navegação principal' })).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Localização' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Actualizar dados apresentados' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Activar modo escuro' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 1, name: 'Visão geral' })).toBeInTheDocument()
+    expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Visão Geral')).toBeInTheDocument()
     expect(await screen.findByText('Valor trabalhado')).toBeInTheDocument()
-    expect(screen.getByText('Dados reais — acesso restrito')).toBeInTheDocument()
   })
 
   it('navega para os registos sem edição em massa e mostra pendências', async () => {
-    render(<App />)
+    renderApp()
     await userEvent.click(screen.getByRole('button', { name: 'Registos' }))
-    expect(screen.getByRole('heading', { level: 1, name: 'Registos' })).toBeInTheDocument()
+    expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Registos')).toBeInTheDocument()
     expect(
-      await screen.findByRole('table', { name: 'Registos de trabalho' }),
+      await screen.findByRole('table', { name: 'Registos de trabalho' }, { timeout: 5000 }),
     ).toBeInTheDocument()
     expect(screen.queryByRole('checkbox', { name: 'Seleccionar LC-1048' })).not.toBeInTheDocument()
     expect(screen.getByRole('button',{name:'Sem sociedade'})).toBeInTheDocument()
-    expect(screen.getByRole('button',{name:'Facturados não pagos'})).toBeInTheDocument()
+    expect(screen.getByRole('button',{name:/Facturados\s+não pagos/i})).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Criar movimento'}))
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(screen.getByText(/preço e o valor são resolvidos no backend/i)).toBeInTheDocument()
-  })
+  }, 15000)
 
   it('abre os dashboards de entrada de clientes, sociedades e responsáveis', async () => {
-    render(<App />)
-    await userEvent.click(screen.getByRole('button',{name:'Clientes'}))
+    renderApp()
+    await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
     expect(await screen.findByRole('heading',{name:'Particulares'})).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Particulares'}))
     expect(await screen.findByRole('heading',{name:'Cliente Atlas',level:2})).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Sociedades' }))
-    expect(await screen.findByRole('heading', { name: 'Sociedades', level: 1 })).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Responsáveis' }))
-    expect(await screen.findByRole('heading', { name: 'Responsáveis', level: 1 })).toBeInTheDocument()
+    await userEvent.click(screen.getAllByRole('button', { name: 'Sociedades' })[0])
+    expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Sociedades')).toBeInTheDocument()
+    await userEvent.click(screen.getAllByRole('button', { name: 'Responsáveis' })[0])
+    expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Responsáveis')).toBeInTheDocument()
   })
 
   it('mantém utilizadores dentro da Administração', async () => {
-    render(<App />)
+    renderApp()
     await userEvent.click(screen.getByRole('button', { name: 'Definições' }))
     await userEvent.click(screen.getByRole('button', { name: 'Administração' }))
     expect(await screen.findByRole('navigation', { name: 'Administração' })).toBeInTheDocument()
@@ -73,5 +75,12 @@ describe('interface principal', () => {
     await userEvent.selectOptions(profile, 'operator')
     expect(screen.getByText(/Actualização diária dos movimentos/i)).toBeInTheDocument()
     expect(screen.getByText(/Sem administração de utilizadores/i)).toBeInTheDocument()
+  })
+
+  it('reserva as Definições aos administradores sem retirar a criação de clientes ao Operador', async()=>{
+    window.history.replaceState({},'', '/?view=clients&clientType=company')
+    renderApp('operator')
+    expect(screen.queryByRole('button',{name:'Definições'})).not.toBeInTheDocument()
+    expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
   })
 })

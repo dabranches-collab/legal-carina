@@ -1,15 +1,21 @@
 # Estado do projecto
 
-## Lote local 0.3.1 — em curso
+## Lote local 0.3.2 — em curso
 
-- Produção permanece em `0.3.0`; a próxima versão local é `0.3.1`.
+- Produção permanece em `0.3.0`; a próxima versão local é `0.3.2`.
+- Pesquisa de Registos optimizada no Supabase: primeira página autenticada reduziu de cerca de 7 s para 1,7 s; foram acrescentados índices de paginação, estados e ligação à factura, preservando âmbito e mascaramento financeiro.
+- Cache temporária em memória prepara os 7 198 movimentos numa chamada e é invalidada após criação/edição. As tabelas passaram a usar o scroll vertical da página, têm opção 100 e mantêm `Todas` virtualizada.
+- Retirada a coluna `Alteração manual`; `N.º factura` é editável na linha. Cliente apresenta apenas o nome, mantendo código e vertente nas colunas próprias.
+- Base sem clientes mistos activos após reclassificação explícita dos 24 casos.
 - Primeira correcção: fallback seguro quando `get_work_entry_form_options` responde sem opções; confirmado com 225 vertentes disponíveis e sem escrita de teste.
 - Atalhos dos dashboards e listas passaram para navegação SPA partilhada; o fluxo autenticado `Particulares > Por facturar` manteve a sessão e conciliou 559 no cartão e na tabela integral.
 - Corrigida a persistência de perfis de cliente: vertentes novas desactivadas não são inseridas com código vazio; prefixos e duplicados são validados antes da escrita.
 - Validação autenticada conciliou atalhos de Clientes, Sociedades, Responsáveis e Sem sociedade com as tabelas (559, 243, 39 e 127), sem logout.
-- A tabela integral terminou em `1–7198 de 7198`; o filtro Cliente apresentou as 201 opções do universo e regressou a 7 198 ao limpar. A leitura integral mantém blocos remotos de 100 porque blocos maiores excedem o `statement_timeout` conhecido.
+- A tabela integral terminou em `1–7198 de 7198`; o filtro Cliente apresentou as opções do universo e regressou a 7 198 ao limpar. A leitura integral passou a uma chamada de 10 000 após optimização do RPC e deixou de exceder o timeout no ensaio autenticado.
 - Balões dos gráficos e editor directo Dias/Horas/Minutos confirmados visualmente em modo escuro; sem gravações de teste.
-- Gates finais 0.3.1: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build e 24 E2E aprovados (2 exclusivos de produção omitidos), cobrindo iPhone/PWA, Windows, claro/escuro, rotação e safe areas.
+- Gates finais 0.3.2: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build, dry-run Cloudflare e 24 E2E aprovados (2 exclusivos de produção omitidos), cobrindo iPhone/PWA, Windows, claro/escuro, rotação e safe areas.
+- Fecho do lote: permissões de Definições limitadas a proprietário/administrador, criação de cliente com uma única vertente obrigatória, dashboards de Sociedade/Responsável com seis indicadores e quatro alertas, e contraste próprio dos gráficos no modo escuro.
+- Validação final actualizada: 56/56 testes unitários; dry-run Cloudflare aprovado; 22/22 cenários locais de iPhone/Windows aprovados. O processo Playwright continua a não encerrar sozinho depois do último cenário e foi terminado apenas após confirmar todos os resultados.
 
 ## Lote 0.3.0 — preparado para publicação em 2026-08-18
 
@@ -174,3 +180,14 @@ Actualizado em: 2026-08-17
 - Evolução anual dos dashboards de Sociedade usa também barras verticais compactas.
 - Validação local: `pnpm check` aprovado (51/51 testes); E2E 24 aprovados e 2 opcionais omitidos.
 - Migrations isoladas deste lote: `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`. Não executar `db push` devido à divergência histórica conhecida.
+
+# Versão 0.3.2 — auditoria das dimensões e tabelas
+
+- Os dashboards de uma Sociedade usam a Sociedade como universo e desagregam os gráficos por Responsável; os dashboards de um Responsável usam o Responsável como universo e desagregam por Sociedade. A Visão geral mantém a desagregação por Sociedade e os dashboards de categoria de Cliente permanecem agregados.
+- A função `get_entity_dashboard_rolling` foi corrigida e aplicada isoladamente através de `20260818190000_correct_entity_dashboard_breakdowns.sql`; não foi usado `db push`.
+- Os atalhos filtrados deixam de herdar pesquisa, filtros, ordenação e página de uma consulta anterior. Apenas ordem, largura e visibilidade de colunas, além do tamanho de página, permanecem como preferências visuais do utilizador.
+- A paginação distingue o total remoto do lote inicialmente carregado: o caso Sem sociedade foi validado visualmente com 127 resultados, páginas 1–100 e 101–127.
+- Alertas de dashboard com contagem zero desaparecem; reaparecem quando a contagem volta a ser positiva.
+- Auditoria visual confirmada em Visão geral, Clientes/Particulares, MASSIVE SEARCH e PAULA. Validação local: lint e TypeScript aprovados, 55/55 testes aprovados e build de produção aprovado.
+- Estado: apenas local/Supabase isolado; não publicar sem nova ordem explícita do utilizador.
+- Corrigida ainda a reutilização indevida do identificador ao navegar entre submenus: cada Sociedade ou Responsável remonta o dashboard antes da consulta. Sequência visual confirmada: CARINA SANTOS 149 227,50 €, LEGAL TEAM 417 509,50 € e MASSIVE SEARCH 127 337,50 €.

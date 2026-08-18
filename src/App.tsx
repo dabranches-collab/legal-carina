@@ -4,6 +4,7 @@ import { PlaceholderPage } from './components/feedback/PlaceholderPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
 import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
+import { useAuth } from './features/auth/AuthContext'
 
 const OverviewPage=lazy(()=>import('./pages/OverviewPage').then(module=>({default:module.OverviewPage})))
 const WorkEntriesPage=lazy(()=>import('./features/work-entries/WorkEntriesPage').then(module=>({default:module.WorkEntriesPage})))
@@ -18,6 +19,7 @@ const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
 
 const validViews:ViewId[] = ['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users']
+const restrictedViews:ViewId[]=['imports','import-review','master-data','admin','admin-users']
 function readLocation() {
   const params = new URLSearchParams(window.location.search)
   const requested = params.get('view') as ViewId|null
@@ -38,7 +40,9 @@ function overviewLocation() {
 }
 
 export function AuthenticatedApplication() {
-  const [initial] = useState(()=>{if(isStandaloneLaunch()&&new URLSearchParams(window.location.search).get('view')!=='overview')overviewLocation();return readLocation()})
+  const {role}=useAuth()
+  const canManageSettings=role==='owner'||role==='admin'
+  const [initial] = useState(()=>{if(isStandaloneLaunch()&&new URLSearchParams(window.location.search).get('view')!=='overview')overviewLocation();const location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();return readLocation()}return location})
   const [view, setView] = useState<ViewId>(initial.view)
   const [society,setSociety] = useState<string|null>(initial.society)
   const [professional,setProfessional] = useState<string|null>(initial.professional)
@@ -46,8 +50,10 @@ export function AuthenticatedApplication() {
   const [clientMode,setClientMode] = useState<'dashboard'|'list'>(initial.clientMode)
   const [settingsEntity,setSettingsEntity] = useState<'clients'|'billing_entities'|null>(initial.settingsEntity)
   const [refreshKey,setRefreshKey] = useState(0)
-  useEffect(() => { const sync=()=>{const location=readLocation();setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [])
+  useEffect(()=>{const timer=window.setTimeout(()=>{void import('./features/work-entries/WorkEntriesPage').then(module=>module.prefetchWorkEntries()).catch(()=>undefined)},1200);return()=>window.clearTimeout(timer)},[])
+  useEffect(() => { const sync=()=>{let location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();location=readLocation()}setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [canManageSettings])
   function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|null=null,nextProfessional:string|null=null) {
+    if(restrictedViews.includes(nextView)&&!canManageSettings){nextView='overview';nextSociety=null;nextClientType=null;nextEntity=null;nextProfessional=null}
     const url=new URL(window.location.href); url.searchParams.set('view',nextView)
     if(nextSociety) url.searchParams.set('society',nextSociety); else url.searchParams.delete('society')
     if(nextClientType) url.searchParams.set('clientType',nextClientType); else url.searchParams.delete('clientType')
@@ -60,8 +66,8 @@ export function AuthenticatedApplication() {
   if (view === 'overview') content = <OverviewPage />
   else if (view === 'work') content = <WorkEntriesPage />
   else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')}/>
-  else if (view === 'billing') content = society?<EntityDashboard kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
-  else if (view === 'professionals') content = professional?<EntityDashboard kind="professional" initialSelectionLabel={professional} />:<ProfessionalLandingPage onSelect={(name)=>navigate('professionals',null,null,null,name)}/>
+  else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
+  else if (view === 'professionals') content = professional?<EntityDashboard key={`professional-${professional}`} kind="professional" initialSelectionLabel={professional} />:<ProfessionalLandingPage onSelect={(name)=>navigate('professionals',null,null,null,name)}/>
   else if (view === 'imports') content = <ImportWizard />
   else if (view === 'import-review') content = <ImportReviewPage />
   else if (view === 'master-data') content = <MasterDataPage initialSection={settingsEntity??'clients'} />

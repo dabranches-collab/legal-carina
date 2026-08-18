@@ -103,10 +103,12 @@ function SeriesToggle({
   individual,
   onChange,
   label,
+  optionLabel = "sociedade",
 }: {
   individual: boolean;
   onChange: (value: boolean) => void;
   label: string;
+  optionLabel?: string;
 }) {
   return (
     <div
@@ -128,7 +130,7 @@ function SeriesToggle({
         onClick={() => onChange(true)}
         className={`h-6 rounded-r border px-1.5 text-[0.6rem] font-semibold leading-none ${individual ? "border-secondary bg-secondary text-surface" : "border-border bg-surface text-text-secondary"}`}
       >
-        Por sociedade
+        Por {optionLabel}
       </button>
     </div>
   );
@@ -137,10 +139,12 @@ function PeriodBreakdown({
   label,
   total,
   entries,
+  emptyLabel = "Sociedade",
 }: {
   label: string;
   total: number;
   entries: [string, number][];
+  emptyLabel?: string;
 }) {
   return (
     <span className="group relative block">
@@ -173,7 +177,7 @@ function PeriodBreakdown({
                 </span>
               ))
           ) : (
-            <span>Sem detalhe por Sociedade.</span>
+            <span>Sem detalhe por {emptyLabel}.</span>
           )}
         </span>
       </span>
@@ -185,10 +189,14 @@ export function AnnualValueChart({
   data,
   societyData = [],
   allowSocietyComparison = false,
+  comparisonLabel = "sociedade",
+  comparisonPlural = "sociedades",
 }: {
   data: ChartPoint[];
   societyData?: SocietyYearPoint[];
   allowSocietyComparison?: boolean;
+  comparisonLabel?: string;
+  comparisonPlural?: string;
 }) {
   const [individual, setIndividual] = useState(false);
   const max = Math.max(...data.map((point) => point.value), 1);
@@ -224,16 +232,20 @@ export function AnnualValueChart({
       title="Valor por ano"
       subtitle={
         individual
-          ? "Sociedades representadas individualmente"
-          : "Todas as sociedades agregadas"
+          ? `${comparisonPlural.charAt(0).toUpperCase()}${comparisonPlural.slice(1)} ${comparisonLabel === "sociedade" ? "representadas" : "representados"} individualmente`
+          : allowSocietyComparison
+            ? comparisonLabel === "sociedade"
+              ? "Todas as sociedades agregadas"
+              : `Todos os ${comparisonPlural} agregados`
+            : "Valores agregados por ano"
       }
-      className="lg:col-span-2"
     >
       {canCompareSocieties && (
         <SeriesToggle
           individual={individual}
           onChange={setIndividual}
           label="valor por ano"
+          optionLabel={comparisonLabel}
         />
       )}
       {individual ? (
@@ -302,6 +314,7 @@ export function AnnualValueChart({
                             item.society === society,
                         )?.value ?? 0,
                       ])}
+                      emptyLabel={comparisonLabel}
                     />
                   </span>
                 </div>
@@ -344,10 +357,12 @@ export function MonthlyValueChart({
   data,
   societyData = [],
   allowSocietyComparison = false,
+  comparisonLabel = "sociedade",
 }: {
   data: ChartPoint[];
   societyData?: SocietyMonthPoint[];
   allowSocietyComparison?: boolean;
+  comparisonLabel?: string;
 }) {
   const [individual, setIndividual] = useState(false);
   const rolling = data.some((point) =>
@@ -421,7 +436,6 @@ export function MonthlyValueChart({
         subtitle={
           rolling ? "Últimos 12 meses" : "Distribuição mensal disponível"
         }
-        className="lg:col-span-2"
       >
         <div className="overflow-x-auto pb-1">
           <div className="h-56 min-w-[42rem]">
@@ -497,17 +511,17 @@ export function MonthlyValueChart({
       title="Valor por mês"
       subtitle={
         individual
-          ? "Últimos 12 meses por sociedade"
+          ? `Últimos 12 meses por ${comparisonLabel}`
           : rolling
             ? "Últimos 12 meses agregados"
             : "Distribuição mensal disponível"
       }
-      className="lg:col-span-2"
     >
       <SeriesToggle
         individual={individual}
         onChange={setIndividual}
         label="valor por mês"
+        optionLabel={comparisonLabel}
       />
       {individual ? (
         <>
@@ -570,6 +584,7 @@ export function MonthlyValueChart({
                     label={month}
                     total={pointsData[index].value}
                     entries={breakdownFor(index)}
+                    emptyLabel={comparisonLabel}
                   />
                 ))}
               </div>
@@ -632,6 +647,7 @@ export function MonthlyValueChart({
                 label={month}
                 total={pointsData[index].value}
                 entries={breakdownFor(index)}
+                emptyLabel={comparisonLabel}
               />
             ))}
           </div>

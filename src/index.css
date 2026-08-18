@@ -102,6 +102,8 @@ html[data-financial-values="hidden"] .financial-value::after { content: "••�
     --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
     --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580;
     --color-border-strong: #66819b; --color-row-selected: #132b40; --shadow-card: 0 1px 2px rgb(0 0 0 / .16), 0 8px 24px rgb(0 0 0 / .13);
+    --color-chart-1: #74d6d2; --color-chart-2: #f0c56f; --color-chart-3: #9fc7ec;
+    --color-chart-4: #d2a9dc; --color-chart-5: #9bd5a7;
   }
 }
 html[data-qa-theme="dark"], html[data-theme="dark"] {
@@ -111,6 +113,8 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
   --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
   --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
   --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580; --color-border-strong: #66819b; --color-row-selected: #132b40;
+  --color-chart-1: #74d6d2; --color-chart-2: #f0c56f; --color-chart-3: #9fc7ec;
+  --color-chart-4: #d2a9dc; --color-chart-5: #9bd5a7;
 }
 @media (max-width: 480px) { .control, button { min-width: 2.75rem; min-height: 2.75rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
@@ -137,3 +141,14 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
 /* Table scroll must hand control back to the page at its boundaries. */
 .table-standard .overscroll-contain,
 main .overscroll-contain { overscroll-behavior: auto; }
+
+@media (min-width: 64rem) {
+  .app-shell-sidebar nav > ul > li > ul {
+    margin-left: 1.25rem;
+    margin-right: .5rem;
+  }
+
+  .app-shell-sidebar nav ul.hidden {
+    display: none !important;
+  }
+}

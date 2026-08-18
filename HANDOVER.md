@@ -1,15 +1,21 @@
 # Legal Carina — handover
 
-## Lote local 0.3.1 — correcções pós-publicação
+## Lote local 0.3.2 — correcções pós-publicação
 
-- A versão local avançou para `0.3.1` imediatamente depois de confirmar a publicação `0.3.0`.
+- A versão local avançou para `0.3.2`; produção permanece em `0.3.0` até publicação explícita deste lote.
+- Registos optimizados no Supabase com controlo de âmbito explícito, índices de paginação/estado/factura e carregamento integral numa única chamada; medição autenticada da primeira página melhorou de cerca de 7 s para 1,7 s.
+- Tabelas usam apenas o scroll vertical da página, oferecem 100 linhas e mantêm a vista `Todas` virtualizada sobre 7 198 movimentos; filtros e ordenações continuam a usar o universo integral em cache de memória, invalidado após qualquer escrita.
+- A coluna técnica `Alteração manual` foi retirada. `N.º factura` passou a ser editável na linha através de endpoint protegido; o nome do Cliente já não repete código nem vertente.
+- Os 24 clientes anteriormente mistos foram resolvidos na base: Juan Cartaya, Fred Schaner e Donovan ficaram Particulares; os restantes 21 ficaram Empresas; zero perfis mistos activos.
 - `Criar movimento` deixa de aceitar silenciosamente uma RPC de opções vazia: recorre às tabelas protegidas por RLS e volta a apresentar clientes/vertentes, responsáveis, Sociedades e processos.
 - Verificação autenticada local: 225 opções de cliente/vertente; formulário habilitado com dados sintéticos e fechado sem gravar.
 - Atalhos internos dos cartões/listas usam navegação SPA comum: validado `Particulares > Por facturar`, preservando a sessão e conciliando o cartão de 559 com `1–559 de 559` na tabela após progresso explícito.
 - Criação/edição de clientes deixa de tentar inserir uma vertente desactivada com código vazio; valida prefixos e códigos repetidos antes da gravação.
 - Auditoria autenticada adicional: Sociedade 243/243, Responsável 39/39, Sem sociedade 127/127 e universo integral 7 198/7 198; filtros usam as 201 opções de cliente e o estado só fica activo quando a selecção diverge de todas.
 - Edição directa da duração confirmada visualmente com Dias/Horas/Minutos dentro do viewport; balões mensal agregado/por Sociedade e anual empilhado confirmados com total e decomposição completa.
-- Gates finais do lote: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build e E2E sintético com 24 aprovados/2 exclusivos de produção omitidos; matriz inclui 11 iPhones, 7 resoluções Windows, modo escuro, rotação e safe areas.
+- Gates finais do lote: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build, dry-run Cloudflare e E2E sintético com 24 aprovados/2 exclusivos de produção omitidos; matriz inclui 11 iPhones, 7 resoluções Windows, modo escuro, rotação e safe areas.
+- Último fecho antes da publicação: 56/56 testes unitários e 22/22 cenários locais iPhone/Windows aprovados; testes E2E alinhados com o título movido para a barra superior. O runner mantém a anomalia de não terminar depois do último resultado, tendo sido interrompido apenas depois de todos os cenários passarem.
+- Gráficos foram inspeccionados visualmente no modo escuro em Visão Geral, Clientes, Sociedades e Responsáveis; as séries usam tokens claros próprios do tema escuro. Definições ficaram exclusivas de proprietário/administrador, sem retirar ao Operador a criação operacional de clientes.
 
 ## Publicação 0.3.0 — preparada em 2026-08-18
 
@@ -186,6 +192,17 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Implementar exportação XLSX integral sob pedido sem bloquear a abertura dos Registos de trabalho.
 - Continuar validação visual das tabelas e dashboards nas matrizes Windows/iPhone.
 - Manter o incremento SemVer visível na versão local antes de cada lote e publicar apenas quando solicitado.
+
+## Correcção 0.3.2 em preparação — dimensões dos dashboards
+
+- Corrigida a inversão conceptual: Sociedade seleccionada é analisada por Responsável; Responsável seleccionado é analisado por Sociedade. Visão geral continua por Sociedade e Clientes não recebe uma dimensão artificial.
+- `20260818190000_correct_entity_dashboard_breakdowns.sql` foi aplicado isoladamente ao Supabase remoto depois de rever a lista de migrations. A divergência histórica permanece; não usar `supabase db push`.
+- Atalhos e tabelas já não recuperam filtros, pesquisa, ordenação ou página antigos. Preferências puramente visuais de colunas continuam persistentes por utilizador.
+- Contagem e paginação foram corrigidas para o universo remoto. Verificação autenticada: Sem sociedade mostra 127/127, depois 1–100 e 101–127.
+- Alertas com zero ocorrências são ocultados. A abertura de dashboards por nome evita a consulta integral preliminar e faz apenas uma resolução leve do identificador.
+- Verificação visual autenticada: MASSIVE SEARCH apresenta CARINA/PAULA e botões Por responsável; PAULA apresenta as três Sociedades e botões Por sociedade; Visão geral mantém Por sociedade; Particulares não mostra comparação indevida.
+- Validação: `pnpm lint`, `pnpm typecheck`, 55/55 testes e `pnpm build` aprovados. Não publicado por instrução expressa do utilizador.
+- Após detectar que a navegação entre submenus conservava o `selectedId` anterior, `App.tsx` passou a identificar cada dashboard pela Sociedade/Responsável seleccionado. Teste visual por cliques sucessivos confirmou totais distintos: CARINA SANTOS 149 227,50 €, LEGAL TEAM 417 509,50 € e MASSIVE SEARCH 127 337,50 €; widgets e séries mudam em conjunto.
 # Publicação 0.2.9
 
 - Branch de origem: `codex/reconcile-full-import`.

@@ -2,10 +2,9 @@ create or replace function public.get_work_entry_form_options()
 returns jsonb language sql stable security definer set search_path='' as $$
 with firms as(select firm_id from public.firm_members where user_id=auth.uid() and active),
 societies as(select b.id,b.name from public.billing_entities b join firms f on f.firm_id=b.firm_id where b.active and private.has_scope_access(b.firm_id,b.id,null,null,'edit') order by b.name),
-profiles as(select cp.id,cp.client_id,cp.client_type,cp.client_code,c.display_name from public.client_profiles cp join public.clients c on c.id=cp.client_id join firms f on f.firm_id=cp.firm_id where cp.active and c.active and private.can_read_client(cp.firm_id,cp.client_id) order by c.display_name,cp.client_type),
-responsibles as(select p.id,p.display_name from public.professionals p join firms f on f.firm_id=p.firm_id where p.active order by p.display_name),
-processes as(select m.id,m.client_id,m.matter_code,m.title from public.matters m join firms f on f.firm_id=m.firm_id where private.has_scope_access(m.firm_id,m.billing_entity_id,m.client_id,m.id,'edit') order by m.matter_code)
-select jsonb_build_object('societies',coalesce((select jsonb_agg(to_jsonb(societies))from societies),'[]'::jsonb),'clientProfiles',coalesce((select jsonb_agg(to_jsonb(profiles))from profiles),'[]'::jsonb),'responsibles',coalesce((select jsonb_agg(to_jsonb(responsibles))from responsibles),'[]'::jsonb),'processes',coalesce((select jsonb_agg(to_jsonb(processes))from processes),'[]'::jsonb));$$;
+profiles as(select cp.id,cp.client_id,cp.client_type,cp.client_code,c.display_name from public.client_profiles cp join public.clients c on c.id=cp.client_id join firms f on f.firm_id=cp.firm_id where cp.active and c.active and private.has_scope_access(cp.firm_id,null,cp.client_id,null,'view') order by c.display_name,cp.client_type,cp.client_code),
+responsibles as(select p.id,p.display_name from public.professionals p join firms f on f.firm_id=p.firm_id where p.active order by p.display_name)
+select jsonb_build_object('societies',coalesce((select jsonb_agg(to_jsonb(societies))from societies),'[]'::jsonb),'clientProfiles',coalesce((select jsonb_agg(to_jsonb(profiles))from profiles),'[]'::jsonb),'responsibles',coalesce((select jsonb_agg(to_jsonb(responsibles))from responsibles),'[]'::jsonb),'processes','[]'::jsonb);$$;
 
 create or replace function public.create_work_entry(p_work_date date,p_client_profile_id uuid,p_matter_id uuid,p_professional_id uuid,p_billing_entity_id uuid,p_activity_description text,p_duration_minutes integer,p_observations text default null)
 returns uuid language plpgsql security definer set search_path='' as $$

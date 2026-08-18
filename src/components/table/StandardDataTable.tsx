@@ -8,6 +8,8 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
+import { useAuth } from "../../features/auth/AuthContext";
 
 type Scalar = string | number | boolean | Date | null | undefined;
 type FilterValue = {
@@ -46,7 +48,7 @@ type Props<Row> = {
   updating?: boolean;
   error?: string;
   onRetry?: () => void;
-  defaultPageSize?: 10 | 20 | 50 | "all";
+  defaultPageSize?: 10 | 20 | 50 | 100 | "all";
   selected?: string[];
   onSelectionChange?: (ids: string[]) => void;
   emptyMessage?: string;
@@ -55,6 +57,8 @@ type Props<Row> = {
   totalRows?: number;
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
+  stickyHeaderOffset?: number;
+  showSearch?: boolean;
 };
 
 const fold = (value: Scalar) =>
@@ -149,11 +153,13 @@ function matchesFilter<Row>(
 
 function FilterPanel<Row>({
   column,
+  anchor,
   value,
   onChange,
   onClose,
 }: {
   column: TableColumn<Row>;
+  anchor: HTMLElement | null;
   value: FilterValue;
   onChange: (next: FilterValue) => void;
   onClose: () => void;
@@ -166,8 +172,6 @@ function FilterPanel<Row>({
   }, []);
   useLayoutEffect(() => {
     const update = () => {
-      const anchor =
-        panel.current?.parentElement?.querySelector<HTMLElement>("button");
       if (!anchor || !panel.current) return;
       const rect = anchor.getBoundingClientRect(),
         panelRect = panel.current.getBoundingClientRect(),
@@ -194,7 +198,7 @@ function FilterPanel<Row>({
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
     };
-  }, []);
+  }, [anchor]);
   const options =
     column.filterOptions ??
     (column.kind === "boolean"
@@ -231,9 +235,10 @@ function FilterPanel<Row>({
           .map((option) => option.value),
       ],
     });
-  return (
+  return createPortal(
     <div
       ref={panel}
+      data-filter-panel={column.id}
       role="dialog"
       aria-label={`Filtro ${column.label}`}
       style={style}
@@ -367,7 +372,8 @@ function FilterPanel<Row>({
           Concluir
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -390,41 +396,44 @@ export function StandardDataTable<Row>({
   totalRows,
   universeKey = "",
   onRowDoubleClick,
+  stickyHeaderOffset = 104,
+  showSearch = true,
 }: Props<Row>) {
-  const storageKey = `carina.table.${id}`;
+  const { user } = useAuth();
+  const legacyStorageKey = `carina.table.${id}`;
+  const storageKey = `carina.table.${user?.id ?? "anonymous"}.${id}`;
   const saved = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem(storageKey) ?? "{}");
+      return JSON.parse(localStorage.getItem(storageKey) ?? localStorage.getItem(legacyStorageKey) ?? "{}");
     } catch {
       return {};
     }
-  }, [storageKey]);
-  const [query, setQuery] = useState<string>(saved.query ?? "");
-  const [sorts, setSorts] = useState<SortRule[]>(
-    saved.sorts ?? (saved.sort ? [saved.sort] : []),
-  );
+  }, [legacyStorageKey, storageKey]);
+  const [query, setQuery] = useState("");
+  const [sorts, setSorts] = useState<SortRule[]>([]);
   const [hidden, setHidden] = useState<string[]>(saved.hidden ?? []);
-  const [filters, setFilters] = useState<Record<string, FilterValue>>(
-    saved.filters ?? {},
-  );
+  const [filters, setFilters] = useState<Record<string, FilterValue>>({});
   const [order, setOrder] = useState<string[]>(
     saved.order ?? columns.map((column) => column.id),
   );
   const [widths, setWidths] = useState<Record<string, number>>(
     saved.widths ?? {},
   );
-  const [pageSize, setPageSize] = useState<10 | 20 | 50 | "all">(
-    saved.pageSize ?? defaultPageSize,
+  const [pageSize, setPageSize] = useState<10 | 20 | 50 | 100 | "all">(
+    saved.pageSize === "all" ? defaultPageSize : (saved.pageSize ?? defaultPageSize),
   );
-  const [page, setPage] = useState<number>(Number(saved.page ?? 1));
+  const [page, setPage] = useState(1);
   const [columnsOpen, setColumnsOpen] = useState(false),
     [openFilter, setOpenFilter] = useState<string | null>(null);
   const [activeRow, setActiveRow] = useState<string | null>(null);
+  const [headerTranslate, setHeaderTranslate] = useState(0);
+  const [toolsHeight, setToolsHeight] = useState(36);
   const [virtualStart,setVirtualStart]=useState(0);
   const [exporting, setExporting] = useState(false),
     [exportStatus, setExportStatus] = useState("");
   const [universeRows, setUniverseRows] = useState<Row[] | null>(null),
-    [universeLoading, setUniverseLoading] = useState(Boolean(loadAllRows)),
+    [universeRequested, setUniverseRequested] = useState(false),
+    [universeLoading, setUniverseLoading] = useState(false),
     [universeError, setUniverseError] = useState(""),
     [universeProgress,setUniverseProgress]=useState<{loaded:number;total:number}|null>(null);
   const [columnsStyle, setColumnsStyle] = useState<CSSProperties>({
@@ -432,7 +441,10 @@ export function StandardDataTable<Row>({
   });
   const columnsButton = useRef<HTMLButtonElement>(null),
     columnsPanel = useRef<HTMLDivElement>(null),
+    toolsElement = useRef<HTMLDivElement>(null),
     scrollContainer = useRef<HTMLDivElement>(null),
+    tableElement = useRef<HTMLTableElement>(null),
+    headerElement = useRef<HTMLTableSectionElement>(null),
     filterButtons = useRef<Record<string, HTMLButtonElement | null>>({}),
     draggedColumn = useRef<string | null>(null);
   const ordered = [...columns].sort((a, b) => {
@@ -505,10 +517,12 @@ export function StandardDataTable<Row>({
       });
     return result;
   }, [sourceRows, columns, query, filters, sorts]);
+  const hasLocalFilters = Boolean(query.trim()) || columns.some((column) => hasFilter(column.id));
+  const resultTotal = universeRows || hasLocalFilters ? processed.length : reportedTotal;
   const pageCount =
       pageSize === "all"
         ? 1
-        : Math.max(1, Math.ceil(processed.length / pageSize)),
+        : Math.max(1, Math.ceil(resultTotal / pageSize)),
     validPage = Math.min(page, pageCount);
   const shown =
     pageSize === "all"
@@ -519,38 +533,76 @@ export function StandardDataTable<Row>({
     rendered=virtualized?shown.slice(virtualStart,Math.min(shown.length,virtualStart+virtualCount)):shown,
     virtualTop=virtualized?virtualStart*34:0,
     virtualBottom=virtualized?Math.max(0,(shown.length-virtualStart-rendered.length)*34):0;
-  useEffect(()=>{setVirtualStart(0);if(scrollContainer.current)scrollContainer.current.scrollTop=0},[pageSize,query,filters,sorts,universeKey]);
+  useEffect(()=>{setVirtualStart(0)},[pageSize,query,filters,sorts,universeKey]);
+  useEffect(()=>{
+    if(!virtualized)return;
+    const updateVirtualWindow=()=>{
+      const container=scrollContainer.current;if(!container)return;
+      const documentTop=container.getBoundingClientRect().top+window.scrollY;
+      const relativeTop=Math.max(0,window.scrollY-documentTop);
+      setVirtualStart(Math.max(0,Math.min(shown.length-virtualCount,Math.floor(relativeTop/34)-8)));
+    };
+    updateVirtualWindow();
+    window.addEventListener("scroll",updateVirtualWindow,{passive:true});
+    window.addEventListener("resize",updateVirtualWindow);
+    return()=>{window.removeEventListener("scroll",updateVirtualWindow);window.removeEventListener("resize",updateVirtualWindow)};
+  },[virtualized,shown.length]);
+  useEffect(() => {
+    const tools = toolsElement.current;
+    if (!tools) return;
+    const update = () => setToolsHeight(Math.ceil(tools.getBoundingClientRect().height));
+    update();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", update);
+      return () => window.removeEventListener("resize", update);
+    }
+    const observer = new ResizeObserver(update);
+    observer.observe(tools);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    const updateHeader = () => {
+      const header = headerElement.current;
+      const table = tableElement.current;
+      if (!header || !table) return;
+      setHeaderTranslate((current) => {
+        const naturalTop = header.getBoundingClientRect().top - current;
+        const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
+        return Math.min(maximum, Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop));
+      });
+    };
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    window.addEventListener("resize", updateHeader);
+    return () => {
+      window.removeEventListener("scroll", updateHeader);
+      window.removeEventListener("resize", updateHeader);
+    };
+  }, [stickyHeaderOffset, shown.length, toolsHeight]);
   useEffect(() => {
     localStorage.setItem(
       storageKey,
       JSON.stringify({
-        query,
-        filters,
-        sorts,
         hidden,
-        pageSize,
-        page: validPage,
+        pageSize: pageSize === "all" ? defaultPageSize : pageSize,
         order,
         widths,
       }),
     );
   }, [
     storageKey,
-    query,
-    filters,
-    sorts,
     hidden,
     pageSize,
-    validPage,
     order,
     widths,
+    defaultPageSize,
   ]);
   useEffect(() => {
     if (page > pageCount) setPage(pageCount);
   }, [page, pageCount]);
   useEffect(() => {
     let active = true;
-    if (!loadAllRows) {
+    if (!loadAllRows || !universeRequested) {
       setUniverseRows(null);
       setUniverseLoading(false);
       setUniverseError("");
@@ -578,7 +630,7 @@ export function StandardDataTable<Row>({
     return () => {
       active = false;
     };
-  }, [loadAllRows, universeKey]);
+  }, [loadAllRows, universeKey, universeRequested]);
   useEffect(() => {
     if (!columnsOpen) return;
     const outside = (event: MouseEvent) => {
@@ -768,7 +820,7 @@ export function StandardDataTable<Row>({
   );
   return (
     <section
-      className="table-standard card overflow-visible"
+      className="table-standard card relative isolate z-0 overflow-visible"
       aria-label={label}
     >
       <div className="print-table-heading hidden">
@@ -779,16 +831,21 @@ export function StandardDataTable<Row>({
           filtros por coluna{query ? ` · Pesquisa: ${query}` : ""}
         </p>
       </div>
-      <div className="table-tools flex flex-wrap items-center gap-2 border-b border-border p-3">
-        <label className="relative min-w-52 flex-1">
+      <div
+        ref={toolsElement}
+        style={{ top: stickyHeaderOffset }}
+        className="table-tools sticky z-40 flex min-h-9 flex-wrap items-center gap-1 border-b border-border bg-surface px-2 py-1 shadow-sm"
+      >
+        {showSearch && <label className="relative min-w-52 flex-1">
           <span className="sr-only">Pesquisar em {label}</span>
           <input
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
+              if (event.target.value && loadAllRows) setUniverseRequested(true);
               setPage(1);
             }}
-            className="control w-full px-3 pr-10 text-sm"
+            className="control min-h-8 w-full px-2.5 pr-9 text-xs"
             placeholder="Pesquisar em todas as colunas…"
           />
           {query && (
@@ -801,7 +858,7 @@ export function StandardDataTable<Row>({
               ×
             </button>
           )}
-        </label>
+        </label>}
         <button
           type="button"
           onClick={() => {
@@ -809,7 +866,7 @@ export function StandardDataTable<Row>({
             setQuery("");
             setPage(1);
           }}
-          className="control px-3 text-sm font-semibold"
+          className="control min-h-6 px-1.5 text-[10px] font-semibold"
         >
           Limpar filtros
         </button>
@@ -819,7 +876,7 @@ export function StandardDataTable<Row>({
             type="button"
             aria-expanded={columnsOpen}
             onClick={() => setColumnsOpen((value) => !value)}
-            className="control px-3 text-sm font-semibold"
+            className={`control min-h-6 px-1.5 text-[10px] font-semibold ${hidden.length ? "border-danger bg-danger-soft text-danger" : ""}`}
           >
             Colunas · {visible.length}/{columns.length}
           </button>
@@ -879,14 +936,14 @@ export function StandardDataTable<Row>({
           type="button"
           disabled={exporting}
           onClick={() => void exportXlsx()}
-          className="control px-3 text-sm font-semibold disabled:opacity-50"
+          className="control min-h-6 px-1.5 text-[10px] font-semibold disabled:opacity-50"
         >
           {exporting ? "A preparar XLSX…" : "XLSX"}
         </button>
         <button
           type="button"
           onClick={() => window.print()}
-          className="control px-3 text-sm font-semibold"
+          className="control min-h-6 px-1.5 text-[10px] font-semibold"
         >
           Imprimir / PDF
         </button>
@@ -903,15 +960,15 @@ export function StandardDataTable<Row>({
         {updating ? "A actualizar… · " : ""}
         {universeLoading
           ? `A carregar todo o universo (${universeProgress?.loaded??rows.length} de ${universeProgress?.total??reportedTotal})…`
-          : `${processed.length} resultados de ${sourceRows.length}`}
+          : `${resultTotal} resultados de ${reportedTotal}`}
         {selected.length ? ` · ${selected.length} seleccionados` : ""}
         {universeError ? ` · ${universeError}` : ""}
         {universeLoading&&<progress aria-label="Progresso do carregamento da tabela" className="mt-2 block h-2 w-full accent-secondary" value={universeProgress?.loaded??rows.length} max={Math.max(1,universeProgress?.total??reportedTotal)}/>}
       </div>
-      <div ref={scrollContainer} onScroll={event=>{if(virtualized)setVirtualStart(Math.max(0,Math.min(shown.length-virtualCount,Math.floor(event.currentTarget.scrollTop/34)-8)))}} className="scrollbar-thin max-h-[42rem] overflow-auto overscroll-contain">
-        <table className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
+      <div ref={scrollContainer} className="scrollbar-thin overflow-x-auto">
+        <table ref={tableElement} className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
-          <thead className="sticky top-0 z-30 bg-surface">
+          <thead ref={headerElement} style={{ transform: `translateY(${headerTranslate}px)` }} className="relative z-30 bg-surface shadow-sm will-change-transform">
             <tr>
               {onSelectionChange && (
                 <th
@@ -960,13 +1017,13 @@ export function StandardDataTable<Row>({
                           : "descending"
                         : "none"
                     }
-                    className={`relative border-b border-border bg-surface px-3 py-2 align-bottom ${sticky ? "sticky z-40 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "cursor-grab"}`}
+                    className={`relative border-b border-border bg-surface px-2 py-1 align-bottom ${sticky ? "sticky z-10 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "cursor-grab"}`}
                   >
                     <button
                       type="button"
                       disabled={column.sortable === false}
                       onClick={(event) => toggleSort(column, event.shiftKey)}
-                      className="flex min-h-8 w-full items-center gap-2 font-semibold disabled:cursor-default"
+                      className="flex min-h-6 w-full items-center gap-1.5 text-xs font-semibold disabled:cursor-default"
                     >
                       <span>{column.label}</span>
                       {sortIndex >= 0 && (
@@ -979,13 +1036,10 @@ export function StandardDataTable<Row>({
                         </span>
                       )}
                     </button>
-                    <div className="mt-1 flex items-center gap-1">
+                      <div className="mt-0.5 flex items-center gap-0.5">
                       {column.filterable !== false &&
                         column.searchable !== false && (
-                          <div
-                            className="relative min-w-0 flex-1"
-                            data-filter-panel={column.id}
-                          >
+                          <div className="relative min-w-0 flex-1">
                             <button
                               ref={(node) => {
                                 filterButtons.current[column.id] = node;
@@ -993,12 +1047,13 @@ export function StandardDataTable<Row>({
                               type="button"
                               aria-expanded={openFilter === column.id}
                               disabled={universeLoading}
-                              onClick={() =>
+                              onClick={() => {
+                                if (loadAllRows && !universeRows) setUniverseRequested(true);
                                 setOpenFilter((current) =>
                                   current === column.id ? null : column.id,
-                                )
-                              }
-                              className={`min-h-8 w-full rounded border px-2 text-left text-xs disabled:cursor-wait disabled:opacity-60 ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
+                                );
+                              }}
+                              className={`min-h-7 w-full rounded border px-1.5 text-left text-[0.6875rem] disabled:cursor-wait disabled:opacity-60 ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
                             >
                               {universeLoading
                                 ? "A carregar opções…"
@@ -1009,6 +1064,7 @@ export function StandardDataTable<Row>({
                             {openFilter === column.id && (
                               <FilterPanel
                                 column={optionsFor(column)}
+                                anchor={filterButtons.current[column.id]}
                                 value={filters[column.id] ?? {}}
                                 onChange={(next) => {
                                   setFilters((current) => ({
@@ -1034,10 +1090,11 @@ export function StandardDataTable<Row>({
                               sortIndex >= 0 &&
                               sorts[sortIndex].direction === "asc"
                             }
-                            onClick={(event) =>
-                              setColumnSort(column, "asc", event.shiftKey)
-                            }
-                            className={`grid size-8 place-items-center text-sm ${sortIndex >= 0 && sorts[sortIndex].direction === "asc" ? "bg-secondary text-surface" : "text-text-secondary hover:bg-secondary-soft"}`}
+                            onClick={(event) => {
+                              if (loadAllRows && !universeRows) setUniverseRequested(true);
+                              setColumnSort(column, "asc", event.shiftKey);
+                            }}
+                            className={`grid size-7 place-items-center text-xs ${sortIndex >= 0 && sorts[sortIndex].direction === "asc" ? "bg-secondary text-surface" : "text-text-secondary hover:bg-secondary-soft"}`}
                           >
                             ↑
                           </button>
@@ -1048,10 +1105,11 @@ export function StandardDataTable<Row>({
                               sortIndex >= 0 &&
                               sorts[sortIndex].direction === "desc"
                             }
-                            onClick={(event) =>
-                              setColumnSort(column, "desc", event.shiftKey)
-                            }
-                            className={`grid size-8 place-items-center border-l border-border text-sm ${sortIndex >= 0 && sorts[sortIndex].direction === "desc" ? "bg-secondary text-surface" : "text-text-secondary hover:bg-secondary-soft"}`}
+                            onClick={(event) => {
+                              if (loadAllRows && !universeRows) setUniverseRequested(true);
+                              setColumnSort(column, "desc", event.shiftKey);
+                            }}
+                            className={`grid size-7 place-items-center border-l border-border text-xs ${sortIndex >= 0 && sorts[sortIndex].direction === "desc" ? "bg-secondary text-surface" : "text-text-secondary hover:bg-secondary-soft"}`}
                           >
                             ↓
                           </button>
@@ -1198,10 +1256,11 @@ export function StandardDataTable<Row>({
           <select
             value={pageSize}
             onChange={(event) => {
+              if (event.target.value === "all" && loadAllRows) setUniverseRequested(true);
               setPageSize(
                 event.target.value === "all"
                   ? "all"
-                  : (Number(event.target.value) as 10 | 20 | 50),
+                  : (Number(event.target.value) as 10 | 20 | 50 | 100),
               );
               setPage(1);
             }}
@@ -1210,14 +1269,15 @@ export function StandardDataTable<Row>({
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
+            <option value={100}>100</option>
             <option value="all" disabled={universeLoading||Boolean(universeError)}>Todas</option>
           </select>
         </label>
         <span>
           {pageSize === "all" && universeLoading
             ? `A carregar ${universeProgress?.loaded ?? rows.length} de ${universeProgress?.total ?? reportedTotal} para mostrar todas…`
-            : processed.length
-            ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? processed.length : Math.min(validPage * pageSize, processed.length)} de ${universeRows ? processed.length : reportedTotal}`
+            : resultTotal
+            ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? resultTotal : Math.min(validPage * pageSize, resultTotal)} de ${resultTotal}`
             : "0 resultados"}
         </span>
         <div className="flex gap-2">
@@ -1232,7 +1292,10 @@ export function StandardDataTable<Row>({
           <button
             type="button"
             disabled={validPage >= pageCount}
-            onClick={() => setPage((value) => value + 1)}
+            onClick={() => {
+              if (loadAllRows && !universeRows) setUniverseRequested(true);
+              setPage((value) => value + 1);
+            }}
             className="control min-h-9 px-3 disabled:opacity-40"
           >
             Seguinte

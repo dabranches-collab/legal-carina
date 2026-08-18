@@ -9,6 +9,7 @@ import { supabase } from "../../lib/supabase";
 import { CreateWorkEntryModal } from "./CreateWorkEntryModal";
 import { EditWorkEntryModal } from "./EditWorkEntryModal";
 import { DurationSelect } from "./DurationSelect";
+import { getWorkEntryOptions } from "./workEntryCompatibility";
 
 type Entry = {
   id: string;
@@ -23,6 +24,7 @@ type Entry = {
   effective_hourly_rate: number | null;
   effective_amount: number | null;
   billing_entity_name: string | null;
+  status: string;
   is_invoiced: boolean;
   invoice_number: string | null;
   invoice_date: string | null;
@@ -35,6 +37,7 @@ type Entry = {
   validation_warnings: string[];
 };
 type Option = { id: string; label: string };
+type ClientProfileOption = { id: string; client_type: "individual" | "company"; client_code: string; display_name: string };
 type SearchMeta = {
   pageSize?: number;
   items: Entry[];
@@ -43,6 +46,9 @@ type SearchMeta = {
   billingEntities: Option[];
 };
 type SearchArgs = Record<string, string | number | boolean | null>;
+const workUniverseCache = new Map<string, { rows: Entry[]; expiresAt: number }>();
+const workUniverseRequests = new Map<string, Promise<Entry[]>>();
+let backgroundPrefetch: Promise<Entry[]> | null = null;
 
 async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchMeta> {
   if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
@@ -92,6 +98,43 @@ async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchM
     billingEntities: responses[0]?.billingEntities ?? [],
   };
 }
+async function loadWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,total:number)=>void) {
+  if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
+  const cacheKey=JSON.stringify(searchArgs),cached=workUniverseCache.get(cacheKey);
+  if(cached&&cached.expiresAt>Date.now()){onProgress?.(cached.rows.length,cached.rows.length);return cached.rows;}
+  if(searchArgs.p_client_type==="mixed"){
+    const items=(await searchMixedClientEntries(searchArgs)).items;
+    workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});onProgress?.(items.length,items.length);return items;
+  }
+  const requestedPageSize=10000;
+  const first=await supabase.rpc("search_work_entries",{...searchArgs,p_page:1,p_page_size:requestedPageSize});
+  if(first.error)throw new Error(first.error.message??"Não foi possível carregar os movimentos.");
+  const firstPage=first.data as SearchMeta,total=firstPage.total??0,pageSize=Math.max(1,firstPage.pageSize??requestedPageSize),pages=Math.ceil(total/pageSize),items=[...(firstPage.items??[])];
+  onProgress?.(items.length,total);
+  for(let start=2;start<=pages;start+=3){
+    const batch=await Promise.all(Array.from({length:Math.min(3,pages-start+1)},(_,index)=>supabase!.rpc("search_work_entries",{...searchArgs,p_page:start+index,p_page_size:requestedPageSize})));
+    const failure=batch.find(response=>response.error)?.error;if(failure)throw new Error(failure.message);
+    items.push(...batch.flatMap(response=>((response.data as SearchMeta).items??[])));onProgress?.(items.length,total);
+  }
+  if(items.length!==total)throw new Error(`Foram recebidos ${items.length} de ${total} movimentos. Tente novamente.`);
+  workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});return items;
+}
+function fetchWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,total:number)=>void) {
+  const cacheKey=JSON.stringify(searchArgs),cached=workUniverseCache.get(cacheKey);
+  if(cached&&cached.expiresAt>Date.now()){onProgress?.(cached.rows.length,cached.rows.length);return Promise.resolve(cached.rows)}
+  const active=workUniverseRequests.get(cacheKey);
+  if(active)return active.then(rows=>{onProgress?.(rows.length,rows.length);return rows});
+  const request=loadWorkUniverse(searchArgs,onProgress).finally(()=>workUniverseRequests.delete(cacheKey));
+  workUniverseRequests.set(cacheKey,request);
+  return request;
+}
+const baseUniverseArgs:SearchArgs={p_search:null,p_year:null,p_professional_id:null,p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_archive:null,p_review_only:false,p_missing_price:false,p_client_type:null,p_client_id:null,p_missing_society:false,p_sort:"work_date",p_direction:"desc"};
+// eslint-disable-next-line react/only-export-components -- arranque antecipado partilha deliberadamente a cache deste módulo
+export function prefetchWorkEntries(){
+  backgroundPrefetch??=fetchWorkUniverse(baseUniverseArgs).finally(()=>{backgroundPrefetch=null});
+  return backgroundPrefetch;
+}
+function invalidateWorkUniverse(){workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
 const money = new Intl.NumberFormat("pt-PT", {
     style: "currency",
     currency: "EUR",
@@ -116,6 +159,7 @@ export function WorkEntriesPage() {
     }),
     [loading, setLoading] = useState(true),
     [error, setError] = useState("");
+  const [clientProfiles, setClientProfiles] = useState<ClientProfileOption[]>([]);
   const [search, setSearch] = useState(""),
     [query, setQuery] = useState(""),
     [year, setYear] = useState(""),
@@ -145,17 +189,35 @@ export function WorkEntriesPage() {
   const saveInline = useCallback(async (row: Entry, field: string, value: string) => {
     if (!supabase) return;
     setError("");
-    const result = await supabase.rpc("update_work_entry_inline", {
-      p_work_entry_id: row.id,
-      p_field: field,
-      p_value: value,
-    });
+    const result = field === "invoice_number"
+      ? await supabase.rpc("update_work_entry_invoice_number", {
+          p_work_entry_id: row.id,
+          p_invoice_number: value,
+        })
+      : field === "collection_status"
+        ? await supabase.rpc("update_work_entry_collection_status", {
+            p_work_entry_id: row.id,
+            p_state: value,
+          })
+      : await supabase.rpc("update_work_entry_inline", {
+          p_work_entry_id: row.id,
+          p_field: field,
+          p_value: value,
+        });
     if (result.error) {
       setError(result.error.message ?? "Não foi possível guardar a alteração.");
       return;
     }
+    invalidateWorkUniverse();
     setNotice("Alteração guardada e registada na auditoria.");
     setRefreshToken((current) => current + 1);
+  }, []);
+  useEffect(() => {
+    let active = true;
+    void getWorkEntryOptions().then((result) => {
+      if (active && result.data) setClientProfiles([...result.data.clientProfiles].sort((left,right)=>left.display_name.localeCompare(right.display_name,"pt-PT",{sensitivity:"base"})||left.client_type.localeCompare(right.client_type)||left.client_code.localeCompare(right.client_code,"pt-PT",{numeric:true})));
+    });
+    return () => { active = false; };
   }, []);
   useEffect(() => {
     const timer = setTimeout(() => setQuery(search.trim()), 300);
@@ -324,20 +386,7 @@ export function WorkEntriesPage() {
       p_sort: "work_date",
       p_direction: "desc",
     };
-    if (clientType === "mixed") {const items=(await searchMixedClientEntries(exportArgs)).items;onProgress?.(items.length,items.length);return items;}
-    const requestedPageSize=100;
-    const first = await supabase.rpc("search_work_entries", {...exportArgs,p_page:1,p_page_size:requestedPageSize});
-    if(first.error)throw new Error(first.error.message??"Não foi possível carregar os movimentos.");
-    const firstPage=first.data as SearchMeta,total=firstPage.total??0,pageSize=Math.max(1,firstPage.pageSize??requestedPageSize),pages=Math.ceil(total/pageSize),items=[...(firstPage.items??[])];
-    onProgress?.(items.length,total);
-    for(let start=2;start<=pages;start+=6){
-      const batch=await Promise.all(Array.from({length:Math.min(6,pages-start+1)},(_,index)=>supabase!.rpc("search_work_entries",{...exportArgs,p_page:start+index,p_page_size:requestedPageSize})));
-      const failure=batch.find(response=>response.error)?.error;if(failure)throw new Error(failure.message);
-      items.push(...batch.flatMap(response=>((response.data as SearchMeta).items??[])));
-      onProgress?.(items.length,total);
-    }
-    if(items.length!==total)throw new Error(`Foram recebidos ${items.length} de ${total} movimentos. Tente novamente.`);
-    return items;
+    return fetchWorkUniverse(exportArgs,onProgress);
   }, [
     query,
     year,
@@ -369,8 +418,12 @@ export function WorkEntriesPage() {
       sticky: true,
       suggestOptions: true,
       value: (row) => row.client_name,
+      render: (row) => {
+        const selected=clientProfiles.find(option=>option.client_code===row.client_code&&option.display_name===row.client_name);
+        return <InlineSelect value={selected?.id??""} options={clientProfiles.map(option=>[option.id,`${option.display_name} · ${option.client_code} · ${option.client_type==="individual"?"Particular":"Empresa"}`])} placeholder="Seleccionar cliente…" displayValue={row.client_name} onCommit={(value)=>value&&saveInline(row,"client_profile_id",value)}/>;
+      },
     },
-    { id: "code", label: "Código", suggestOptions:true, value: (row) => row.client_code },
+    { id: "code", label: "Código (automático)", suggestOptions:true, value: (row) => row.client_code },
     {
       id: "activity",
       label: "Actividade",
@@ -419,15 +472,16 @@ export function WorkEntriesPage() {
     {
       id: "invoiced",
       label: "Facturado",
-      kind: "boolean",
-      value: (row) => row.is_invoiced,
-      render: (row) => <InlineSelect value={String(row.is_invoiced)} options={[["true","Sim"],["false","Não"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,"is_invoiced",value)}/>,
+      filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
+      value: (row) => row.status === "uncollectible" ? "Incobrável" : row.is_invoiced ? "Sim" : "Não",
+      render: (row) => <InlineSelect value={row.status === "uncollectible" ? "uncollectible" : String(row.is_invoiced)} options={[["true","Sim"],["false","Não"],["uncollectible","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible" ? "collection_status" : "is_invoiced",value)}/>,
     },
     {
       id: "invoiceNumber",
       label: "N.º factura",
       suggestOptions: true,
       value: (row) => row.invoice_number,
+      render: (row) => <InlineInput value={row.invoice_number??""} onCommit={(value)=>saveInline(row,"invoice_number",value)}/>,
     },
     {
       id: "invoiceDate",
@@ -439,20 +493,12 @@ export function WorkEntriesPage() {
     {
       id: "paid",
       label: "Pago",
-      kind: "boolean",
-      value: (row) => row.is_paid,
-      render: (row) => <InlineSelect value={String(row.is_paid)} options={[["true","Sim"],["false","Não"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,"is_paid",value)}/>,
+      filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
+      value: (row) => row.status === "uncollectible" ? "Incobrável" : row.is_paid ? "Sim" : "Não",
+      render: (row) => <InlineSelect value={row.status === "uncollectible" ? "uncollectible" : String(row.is_paid)} options={[["true","Sim"],["false","Não"],["uncollectible","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible" ? "collection_status" : "is_paid",value)}/>,
     },
     { id: "archive", label: "Arquivo", filterOptions:[{value:"",label:"Sem arquivo"},...archives.map(([value,label])=>({value,label}))], value: (row) => row.archive_status, render:(row)=><InlineSelect value={row.archive_status??""} options={archives} placeholder="Sem arquivo" onCommit={(value)=>saveInline(row,"archive_status",value)}/> },
     { id: "notes", label: "Observações", suggestOptions:false, value: (row) => row.observations, render:(row)=><InlineInput value={row.observations??""} onCommit={(value)=>saveInline(row,"observations",value)}/> },
-    {
-      id: "override",
-      label: "Override",
-      kind: "boolean",
-      value: (row) => row.has_manual_override,
-      render: (row) =>
-        row.has_manual_override ? "Alterado manualmente" : "Não",
-    },
   ];
   return (
     <div className="space-y-4">
@@ -464,37 +510,37 @@ export function WorkEntriesPage() {
           {notice}
         </p>
       )}
-      <section
+      <div className="sticky top-16 z-50 grid gap-2 bg-background pb-2 lg:top-[6.5rem] lg:grid-cols-[minmax(0,1fr)_7.5rem]">
+      <section aria-label="Filtros dos registos" className="card p-2 shadow-sm">
+      <div
         aria-labelledby="review-issues-title"
-        className="card card-danger p-4"
+        className="mb-2 flex flex-col gap-1.5 rounded-lg border border-danger/40 bg-danger-soft px-2 py-1.5 lg:flex-row lg:items-center lg:justify-between"
       >
-        <div>
-          <h2 id="review-issues-title" className="font-semibold text-danger">
+        <div className="min-w-0 shrink-0">
+          <h2 id="review-issues-title" className="text-sm font-semibold leading-tight text-danger">
             Pendências a corrigir
           </h2>
-          <p className="mt-1 text-xs text-text-secondary">
-            Pré-filtros aplicados ao universo completo dos movimentos.
-          </p>
+          <p className="text-[10px] leading-tight text-text-secondary">Pré-filtros do universo completo.</p>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:ml-auto lg:w-[72%] lg:grid-cols-5">
           {Object.entries(reviewLabels).map(([value, label]) => {
             const active = reviewIssue === value;
             return (
               <button
                 key={value}
                 type="button"
+                aria-label={label}
                 aria-pressed={active}
                 onClick={() => selectReviewIssue(value)}
-                className={`min-h-10 rounded-lg border border-danger px-3 text-sm font-semibold transition ${active ? "bg-danger text-surface shadow-sm" : "bg-surface text-danger hover:bg-danger-soft"}`}
+                className={`min-h-7 rounded-md border border-danger px-1.5 py-0.5 text-[10px] font-semibold leading-tight transition ${active ? "bg-danger text-surface shadow-sm" : "bg-surface text-danger hover:bg-danger-soft"}`}
               >
-                {label}
+                {value === "unpaid" ? <>Facturados<br />não pagos</> : label}
               </button>
             );
           })}
         </div>
-      </section>
-      <section aria-label="Filtros dos registos" className="card p-4">
-        <div className="grid gap-3 lg:grid-cols-[minmax(15rem,2fr)_repeat(3,minmax(9rem,1fr))]">
+      </div>
+        <div className="grid gap-2 lg:grid-cols-[minmax(15rem,2fr)_repeat(3,minmax(9rem,1fr))]">
           <div className="relative">
             <Icon
               name="search"
@@ -504,7 +550,7 @@ export function WorkEntriesPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               aria-label="Pesquisar registos"
-              className="control w-full py-2 pl-10 pr-3 text-sm"
+              className="control min-h-9 w-full py-1.5 pl-10 pr-3 text-sm"
               placeholder="Cliente, código, actividade ou observação…"
             />
           </div>
@@ -512,7 +558,7 @@ export function WorkEntriesPage() {
             aria-label="Ano"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Todos os anos</option>
             {Array.from({ length: 9 }, (_, i) => 2026 - i).map((value) => (
@@ -523,7 +569,7 @@ export function WorkEntriesPage() {
             aria-label="Responsável"
             value={professional}
             onChange={(e) => setProfessional(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Todos os responsáveis</option>
             {meta.professionals.map((option) => (
@@ -536,7 +582,7 @@ export function WorkEntriesPage() {
             aria-label="Sociedade"
             value={billing}
             onChange={(e) => setBilling(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Todas as sociedades</option>
             {meta.billingEntities.map((option) => (
@@ -546,12 +592,12 @@ export function WorkEntriesPage() {
             ))}
           </select>
         </div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <select
             aria-label="Estado de facturação"
             value={invoiced}
             onChange={(e) => setInvoiced(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Facturados e não facturados</option>
             <option value="true">Facturados</option>
@@ -561,7 +607,7 @@ export function WorkEntriesPage() {
             aria-label="Pagamento"
             value={paid}
             onChange={(e) => setPaid(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Pagos e pendentes</option>
             <option value="true">Pagos</option>
@@ -571,7 +617,7 @@ export function WorkEntriesPage() {
             aria-label="Arquivo"
             value={archive}
             onChange={(e) => setArchive(e.target.value)}
-            className="control px-3 text-sm"
+            className="control min-h-9 px-3 text-sm"
           >
             <option value="">Todos os arquivos</option>
             {archives.map(([value, label]) => (
@@ -582,13 +628,13 @@ export function WorkEntriesPage() {
           </select>
           <button
             onClick={clear}
-            className="control px-3 text-sm font-semibold"
+            className="control min-h-9 px-3 text-sm font-semibold"
           >
             Limpar filtros
           </button>
         </div>
         {activeFilters.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2 border-t border-border pt-3">
+          <div className="mt-2 flex flex-wrap gap-1.5 border-t border-border pt-2">
             {activeFilters.map((filter) => (
               <span
                 key={filter}
@@ -599,19 +645,19 @@ export function WorkEntriesPage() {
             ))}
           </div>
         )}
-      </section>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-text-secondary">
+        <p className="mt-1.5 text-[11px] leading-tight text-text-secondary">
           {loading
             ? "A actualizar…"
             : `${number.format(meta.total)} movimentos acessíveis`}
         </p>
+      </section>
         <button
           type="button"
+          aria-label="Criar movimento"
           onClick={() => setCreating(true)}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-surface"
+          className="flex min-h-20 items-center justify-center rounded-xl border border-secondary bg-secondary px-3 py-3 text-center text-sm font-semibold leading-tight text-white shadow-sm transition hover:brightness-110 lg:h-full lg:min-h-0"
         >
-          Criar movimento
+          <span><span className="mb-1 block text-xl leading-none" aria-hidden="true">＋</span>Criar<br />movimento</span>
         </button>
       </div>
       <StandardDataTable
@@ -624,18 +670,21 @@ export function WorkEntriesPage() {
         updating={loading && rows.length > 0}
         error={error || undefined}
         onRetry={() => setRefreshToken((value) => value + 1)}
-        defaultPageSize={50}
+        defaultPageSize={100}
         emptyMessage="Ainda não existem movimentos acessíveis."
         loadExportRows={loadExportRows}
         loadAllRows={loadAllTableRows}
         totalRows={meta.total}
         universeKey={JSON.stringify(searchArgs)}
+        stickyHeaderOffset={304}
+        showSearch={false}
         onRowDoubleClick={(row) => setEditingId(row.id)}
       />
       {creating && (
         <CreateWorkEntryModal
           onClose={() => setCreating(false)}
           onCreated={() => {
+            invalidateWorkUniverse();
             setCreating(false);
             setNotice("Movimento criado e registado na auditoria.");
             setRefreshToken((value) => value + 1);
@@ -647,6 +696,7 @@ export function WorkEntriesPage() {
           entryId={editingId}
           onClose={() => setEditingId(null)}
           onSaved={() => {
+            invalidateWorkUniverse();
             setEditingId(null);
             setNotice("Movimento actualizado e registado na auditoria.");
             setRefreshToken((value) => value + 1);
@@ -661,7 +711,7 @@ function InlineInput({value,onCommit,type="text"}:{value:string;onCommit:(value:
  const [draft,setDraft]=useState(value)
  const [editing,setEditing]=useState(false)
  useEffect(()=>setDraft(value),[value])
- if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 max-w-44 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{type==='date'&&value?new Date(`${value}T00:00:00`).toLocaleDateString('pt-PT'):value||'—'}</button>
+ if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 w-full min-w-0 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{type==='date'&&value?new Date(`${value}T00:00:00`).toLocaleDateString('pt-PT'):value||'—'}</button>
  return <input autoFocus type={type} value={draft} onClick={event=>event.stopPropagation()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1.5 text-center text-xs"/>
 }
 function InlineMoney({value,onCommit}:{value:number|null;onCommit:(value:string)=>void}){
@@ -671,11 +721,11 @@ function InlineMoney({value,onCommit}:{value:number|null;onCommit:(value:string)
  if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="financial-value min-h-7 whitespace-nowrap px-1 text-xs hover:rounded hover:bg-secondary-soft">{value==null?'—':money.format(value)}</button>
  return <span className="inline-flex items-center gap-1"><input autoFocus type="number" min="0" step="0.01" inputMode="decimal" value={draft} onClick={event=>event.stopPropagation()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==(value==null?'':String(value)))onCommit(draft)}} className="control financial-value h-7 w-20 px-1.5 text-right text-xs"/><span className="financial-value text-[0.65rem]">EUR</span></span>
 }
-function InlineSelect({value,options,placeholder,onCommit}:{value:string;options:readonly (readonly [string,string])[];placeholder:string;onCommit:(value:string)=>void}){
+function InlineSelect({value,options,placeholder,displayValue,onCommit}:{value:string;options:readonly (readonly [string,string])[];placeholder:string;displayValue?:string;onCommit:(value:string)=>void}){
  const [editing,setEditing]=useState(false)
- const label=options.find(([optionValue])=>optionValue===value)?.[1]??placeholder
- if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 max-w-36 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{label}</button>
- return <select autoFocus value={value} onClick={event=>event.stopPropagation()} onBlur={()=>setEditing(false)} onChange={event=>{setEditing(false);onCommit(event.target.value)}} className="control h-7 min-w-20 max-w-36 px-1 text-center text-xs"><option value="">{placeholder}</option>{options.map(([optionValue,optionLabel])=><option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select>
+ const label=displayValue??options.find(([optionValue])=>optionValue===value)?.[1]??placeholder
+ if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 w-full min-w-0 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{label}</button>
+ return <select autoFocus value={value} onClick={event=>event.stopPropagation()} onBlur={()=>setEditing(false)} onChange={event=>{setEditing(false);onCommit(event.target.value)}} className="control h-7 w-full min-w-20 px-1 text-center text-xs"><option value="">{placeholder}</option>{options.map(([optionValue,optionLabel])=><option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select>
 }
 function InlineDuration({value,onCommit}:{value:number;onCommit:(value:number)=>void}){
  const [draft,setDraft]=useState(value)

@@ -26,10 +26,10 @@ for (const [name,width,height,safeTop] of models) {
   test(`${name}: safe area, alvos e overflow`, async ({ page }) => {
     await page.setViewportSize({ width, height })
     await page.goto(`/?qa-iphone=1&safe-top=${safeTop}&safe-bottom=34&display-mode=standalone&theme=light`)
-    await expect(page.getByRole('heading', { name:'Visão geral' })).toBeVisible()
+    await expect(page.getByRole('navigation', { name:'Localização' }).getByText('Visão Geral', { exact:true })).toBeVisible()
     const metrics = await page.evaluate(() => {
       const header=document.querySelector<HTMLElement>('header')!
-      const title=document.querySelector<HTMLElement>('#main-content h1')!
+      const title=document.querySelector<HTMLElement>('header nav[aria-label="Localização"]')!
       const root=getComputedStyle(document.documentElement)
       return {
         scrollWidth:document.documentElement.scrollWidth,

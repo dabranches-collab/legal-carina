@@ -17,7 +17,7 @@ test('arranque standalone ignora o último submenu e abre a Visão geral',async(
   await page.addInitScript(()=>{const original=window.matchMedia.bind(window);Object.defineProperty(window,'matchMedia',{configurable:true,value:(query:string)=>query==='(display-mode: standalone)'?{matches:true,media:query,onchange:null,addListener:()=>undefined,removeListener:()=>undefined,addEventListener:()=>undefined,removeEventListener:()=>undefined,dispatchEvent:()=>true}:original(query)})})
   await page.goto('/?qa-iphone=1&view=billing&society=MASSIVE+SEARCH')
   await expect(page).toHaveURL(/\?view=overview$/)
-  await expect(page.getByRole('heading',{name:'Visão geral',level:1})).toBeVisible()
+  await expect(page.getByRole('navigation',{name:'Localização'}).getByText('Visão Geral',{exact:true})).toBeVisible()
 })
 
 for (const viewport of windowsViewports) {
