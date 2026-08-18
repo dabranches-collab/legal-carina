@@ -143,6 +143,10 @@ Actualizado em: 2026-08-17
 - Widgets preparados com total e subtotais exactos por Sociedade, calculados no Supabase sob as mesmas regras de âmbito e ocultação financeira.
 - Evolução anual das Sociedades apresenta uma linha por Sociedade com mini-barras verticais, valores e anos, sem scroll horizontal em desktop; inclui uma linha final Total com a soma anual.
 - Valor por mês mostra, em Agregado e Por sociedade, uma janela por período com o total e todos os valores por Sociedade.
+- Os alertas de Acompanhamento usam agora fundo, contorno, ícone, título e atalho vermelhos para evidenciarem trabalho pendente.
+- Os três gráficos finais ocupam uma grelha completa de três colunas, com a mesma altura e sem espaços vazios em desktop.
+- Nas tabelas comuns, todas as células não monetárias ficam centradas; apenas os valores monetários permanecem alinhados à direita.
+- A versão local passa a acompanhar automaticamente o `package.json` quando este muda, através do reinício observado pelo Vite.
 - Evolução anual dos dashboards de Sociedade usa também barras verticais compactas.
 - Validação local: `pnpm check` aprovado (51/51 testes); E2E 24 aprovados e 2 opcionais omitidos.
 - Migrations isoladas deste lote: `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`. Não executar `db push` devido à divergência histórica conhecida.

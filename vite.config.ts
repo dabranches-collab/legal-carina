@@ -2,8 +2,11 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { readFileSync, writeFileSync } from 'node:fs'
+import packageJson from './package.json' with { type: 'json' }
 
-const packageVersion = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version as string
+// A importação torna package.json uma dependência observada pelo Vite: ao subir a
+// versão durante o desenvolvimento, o servidor reinicia e actualiza a indicação local.
+const packageVersion = packageJson.version
 
 // https://vite.dev/config/
 export default defineConfig({

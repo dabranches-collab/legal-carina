@@ -72,6 +72,7 @@ button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 
 .card { border: 1px solid var(--color-border); border-radius: 0.875rem; background: var(--color-surface); box-shadow: var(--shadow-card); }
+.card.card-danger { border-color: color-mix(in srgb, var(--color-danger) 58%, transparent); background: var(--color-danger-soft); box-shadow: 0 8px 24px color-mix(in srgb, var(--color-danger) 14%, transparent); }
 .control { min-height: 2.5rem; border: 1px solid var(--color-border-strong); border-radius: 0.625rem; background: var(--color-surface); color: var(--color-text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
 .control:hover { border-color: var(--color-secondary); }
 .control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 3px var(--color-secondary-soft); outline: 0; }
