@@ -9,6 +9,7 @@
 - Supabase `vtvvqyebigflgqccbqsw` saudável e migrations isoladas do lote aplicadas após revisão do histórico remoto.
 - Validação local: segurança, lint, TypeScript, 79 testes, build, dry-run Cloudflare e E2E focado aprovados.
 - Produção 0.4.7: commit `f9bad23`, Cloudflare Version ID `5412939b-d0b7-4e2a-9617-8db71510a93c`, publicada em 2026-08-19.
+- Backfill autorizado e publicado no Supabase: 7 movimentos anteriores à versão 0.4.7 receberam o total calculado e auditoria técnica. Confirmação pós-operação: trigger financeiro activo, 8/8 movimentos manuais do dia com total e zero linhas com valor/hora sem total.
 
 ## Hotfix 0.3.3 — grelha dos gráficos principais
 

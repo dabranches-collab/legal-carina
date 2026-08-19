@@ -10,6 +10,7 @@
 - Gates: segurança, lint, TypeScript, 79/79 testes, build e dry-run Cloudflare aprovados. E2E focado aprovou refresh browser/PWA e formulário iPhone; mantém-se o encerramento tardio conhecido do runner.
 - O browser integrado não abriu por falha interna de confiança do plugin; não foi substituído por outro browser porque o utilizador pediu explicitamente o integrado.
 - Publicado em 2026-08-19 a partir do commit `f9bad23`; Cloudflare Version ID `5412939b-d0b7-4e2a-9617-8db71510a93c`, URL `https://legal-carina.dabranches.workers.dev`.
+- Correcção de dados posterior autorizada explicitamente: 7 movimentos manuais criados antes da publicação tinham valor/hora mas total nulo. A migration `backfill_today_manual_work_entry_amounts` reconstruiu os totais por `duração × valor/hora ÷ 60`, sem descontos, criou 7 auditorias técnicas e reactivou o trigger financeiro na mesma transacção. Verificação final: 8/8 movimentos manuais do dia com total, zero pendentes, total agregado 930,00 €.
 
 ## Lote local 0.4.0 — preparação de Notas de Honorários
 
