@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Correcção 0.4.7 — criação e ordenação de movimentos
+
+- O formulário de criação apresenta `Valor/hora` e `Valor total`, calcula imediatamente nos dois sentidos com a duração e envia o valor/hora resultante para a RPC protegida.
+- Novos movimentos passam a guardar o valor/hora e o total calculado; a vista por defeito usa data crescente para que o movimento mais recente apareça no fim.
+- Refresh no browser e no PWA preserva o menu/submenu expresso no URL.
+- Alterações financeiras sem motivo são permitidas a proprietários e administradores; o motivo continua obrigatório para o perfil Operador. A auditoria por campo mantém-se para todos.
+- Migrations isoladas aplicadas ao projecto confirmado `vtvvqyebigflgqccbqsw`: `allow_hourly_rate_on_work_entry_creation` e `require_financial_override_reason_only_for_operators`. Não foi executado `db push` global.
+- Gates: segurança, lint, TypeScript, 79/79 testes, build e dry-run Cloudflare aprovados. E2E focado aprovou refresh browser/PWA e formulário iPhone; mantém-se o encerramento tardio conhecido do runner.
+- O browser integrado não abriu por falha interna de confiança do plugin; não foi substituído por outro browser porque o utilizador pediu explicitamente o integrado.
+
 ## Lote local 0.4.0 — preparação de Notas de Honorários
 
 - Estado: implementado e validado localmente, sem publicação. Produção continua confirmada em `0.3.3`.

@@ -124,6 +124,8 @@ test('criação de movimento no iPhone mantém as acções visíveis durante o s
   const cancel = dialog.getByRole('button', { name: 'Cancelar' })
   const save = dialog.getByRole('button', { name: /Guardar movimento/i })
   await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('spinbutton',{name:/^Valor\/hora/})).toBeVisible()
+  await expect(dialog.getByRole('spinbutton',{name:/^Valor total/})).toBeVisible()
   await expect(cancel).toBeInViewport()
   await expect(save).toBeInViewport()
 

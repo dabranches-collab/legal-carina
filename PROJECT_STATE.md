@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Versão 0.4.7 — correcções de movimentos
+
+- Criação com cálculo bidireccional entre duração, valor/hora e valor total, persistido no Supabase.
+- Ordem por defeito crescente, colocando os movimentos mais recentes no fim da lista.
+- Refresh preserva a localização actual, incluindo PWA standalone.
+- Justificação de alterações financeiras obrigatória apenas para Operadores; administradores mantêm auditoria automática sem campo obrigatório.
+- Supabase `vtvvqyebigflgqccbqsw` saudável e migrations isoladas do lote aplicadas após revisão do histórico remoto.
+- Validação local: segurança, lint, TypeScript, 79 testes, build, dry-run Cloudflare e E2E focado aprovados.
+
 ## Hotfix 0.3.3 — grelha dos gráficos principais
 
 - Os gráficos `Valor por ano` e `Valor por mês` da Visão Geral voltaram a ocupar conjuntamente toda a largura disponível, em duas colunas iguais, sem a metade vazia introduzida pela grelha de quatro colunas.

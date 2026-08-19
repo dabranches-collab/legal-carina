@@ -84,6 +84,14 @@ describe('interface principal', () => {
     expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
   })
 
+  it('preserva a secção e o submenu indicados no URL após refresh, também em modo PWA', async()=>{
+    Object.defineProperty(window,'matchMedia',{configurable:true,value:vi.fn((query:string)=>({matches:query==='(display-mode: standalone)',media:query,onchange:null,addListener:vi.fn(),removeListener:vi.fn(),addEventListener:vi.fn(),removeEventListener:vi.fn(),dispatchEvent:vi.fn()}))})
+    window.history.replaceState({},'', '/?view=clients&clientType=company&clientMode=list')
+    renderApp('owner')
+    expect(window.location.search).toBe('?view=clients&clientType=company&clientMode=list')
+    expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
+  })
+
   it('bloqueia URLs administrativas ao Operador e mantém os Registos operacionais disponíveis', async()=>{
     window.history.replaceState({},'', '/?view=admin-users')
     renderApp('operator')

@@ -128,7 +128,7 @@ function fetchWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,t
   workUniverseRequests.set(cacheKey,request);
   return request;
 }
-const baseUniverseArgs:SearchArgs={p_search:null,p_year:null,p_professional_id:null,p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_archive:null,p_review_only:false,p_missing_price:false,p_client_type:null,p_client_id:null,p_missing_society:false,p_sort:"work_date",p_direction:"desc"};
+const baseUniverseArgs:SearchArgs={p_search:null,p_year:null,p_professional_id:null,p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_archive:null,p_review_only:false,p_missing_price:false,p_client_type:null,p_client_id:null,p_missing_society:false,p_sort:"work_date",p_direction:"asc"};
 // eslint-disable-next-line react/only-export-components -- arranque antecipado partilha deliberadamente a cache deste módulo
 export function prefetchWorkEntries(){
   backgroundPrefetch??=fetchWorkUniverse(baseUniverseArgs).finally(()=>{backgroundPrefetch=null});
@@ -282,7 +282,7 @@ export function WorkEntriesPage({canDelete=true}:{canDelete?:boolean}={}) {
       p_client_id: clientId || null,
       p_missing_society: missingSociety,
       p_sort: "work_date",
-      p_direction: "desc",
+      p_direction: "asc",
     }),
     [
       query,
@@ -414,7 +414,7 @@ export function WorkEntriesPage({canDelete=true}:{canDelete?:boolean}={}) {
       p_client_id: clientId || null,
       p_missing_society: missingSociety,
       p_sort: "work_date",
-      p_direction: "desc",
+      p_direction: "asc",
     };
     return fetchWorkUniverse(exportArgs,onProgress);
   }, [

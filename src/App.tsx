@@ -28,10 +28,6 @@ function readLocation() {
   return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), professional:params.get('professional'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, clientMode:params.get('clientMode')==='list'?'list' as const:'dashboard' as const, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'?requestedEntity:null) as 'clients'|'billing_entities'|null }
 }
 
-function isStandaloneLaunch() {
-  return Boolean(window.matchMedia?.('(display-mode: standalone)').matches) || Boolean((navigator as Navigator & {standalone?:boolean}).standalone)
-}
-
 function overviewLocation() {
   const url=new URL(window.location.href)
   url.search=''
@@ -57,7 +53,7 @@ function buttonDescription(button:HTMLButtonElement){
 export function AuthenticatedApplication() {
   const {role}=useAuth()
   const canManageSettings=role==='owner'||role==='admin'
-  const [initial] = useState(()=>{if(isStandaloneLaunch()&&new URLSearchParams(window.location.search).get('view')!=='overview')overviewLocation();const location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();return readLocation()}return location})
+  const [initial] = useState(()=>{const location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();return readLocation()}return location})
   const [view, setView] = useState<ViewId>(initial.view)
   const [society,setSociety] = useState<string|null>(initial.society)
   const [professional,setProfessional] = useState<string|null>(initial.professional)
