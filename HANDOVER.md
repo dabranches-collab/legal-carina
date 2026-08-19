@@ -275,3 +275,4 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Clientes, Sociedades e Responsáveis apresentam Incobráveis como alerta autónomo com atalho filtrado.
 - A métrica `Por receber` dos Clientes exclui agora `uncollectible_invoiced`, sem retirar esse movimento do total histórico facturado.
 - Prova autenticada contador/tabela: Particulares 2/2, Empresas 4/4, CARINA SANTOS 3/3 e CARINA 4/4; claro e escuro revistos visualmente.
+- Publicado em 2026-08-19: commit funcional `537bc4a`, URL `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `57434d1c-d171-46c6-8183-8127d95e4a95`. HTTPS, manifesto, versão visível e cache PWA `carina-legal-shell-0.4.2` confirmados depois do deploy.

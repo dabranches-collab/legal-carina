@@ -250,3 +250,5 @@ Actualizado em: 2026-08-17
 - Nos dashboards de Clientes, créditos facturados incobráveis continuam incluídos no histórico facturado, mas deixam de integrar `Por receber`; trabalho abandonado antes de facturar permanece fora de `Não facturados`.
 - Prova autenticada: Particulares 2/2, Empresas 4/4, Sociedade CARINA SANTOS 3/3 e Responsável CARINA 4/4 entre contador e tabela filtrada.
 - Contraste e legibilidade revistos visualmente nos modos claro e escuro, mantendo o comportamento vermelho quando existem ocorrências e verde quando o contador é zero.
+- Versão `0.4.2` publicada em 2026-08-19 a partir do commit funcional `537bc4a`; Cloudflare Version ID `57434d1c-d171-46c6-8183-8127d95e4a95` em `https://legal-carina.dabranches.workers.dev`.
+- Verificação pós-publicação: HTTPS 200, manifesto com arranque na Visão Geral e service worker `carina-legal-shell-0.4.2`. A interface pública identifica correctamente a versão 0.4.2.
