@@ -270,3 +270,4 @@ Actualizado em: 2026-08-17
 - Corrigido o `controllerchange` do service worker: a activação inicial deixa de forçar uma recarga; a recarga acontece apenas depois de o utilizador escolher «Actualizar aplicação».
 - O teste PWA tem limite explícito de 10 segundos, valida a cache `carina-legal-shell-0.4.4` e limpa o worker/cache do contexto de ensaio.
 - Validação local: segurança, lint, TypeScript, 75/75 testes unitários, build, 29 testes E2E de interface (2 ignorados por modo), 2/2 testes PWA de produção e dry-run Cloudflare concluídos.
+- Publicado em `https://legal-carina.dabranches.workers.dev` com Cloudflare Version ID `7c577650-c8eb-44c3-ac1f-c5b843a0bd84`; confirmação pós-publicação em Chrome: versão 0.4.4, Visão Geral renderizada e sem recarga repetida/ecrã branco.
