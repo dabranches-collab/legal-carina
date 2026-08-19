@@ -74,6 +74,11 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfText.mock.calls.some(([value])=>value==='ASSUNTO: COBRANÇA')).toBe(true)
   expect(pdfText.mock.calls.some(([value])=>Array.isArray(value)&&value.join(' ').includes('permanecem por liquidar'))).toBe(true)
  })
+ it('avisa também na cobrança quando faltam dados da sociedade emissora',async()=>{
+  from.mockImplementation((table:string)=>({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:table==='clients'?{legal_name:'Cliente Cobrança',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:null,bank_account_holder:null,bank_name:null,bank_account_number:null,iban:null,bic_swift:null,default_vat_rate:23,default_currency:'EUR'}})})})}))
+  render(<HonorariumNoteModal clientId="client-warning" clientName="Cliente Cobrança" documentKind="collection" onClose={()=>{}}/> )
+  expect(await screen.findByText(/Complete na ficha da sociedade:/)).toHaveTextContent('titular da conta, banco, IBAN, BIC / SWIFT')
+ })
  it('exclui incobráveis da nota e da cobrança',async()=>{
   rpc.mockResolvedValue({error:null,data:{total:3,items:[
    {id:'normal',work_date:'2026-07-03',activity_description:'Movimento elegível',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade',status:'approved'},

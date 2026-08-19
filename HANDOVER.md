@@ -295,3 +295,10 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - O botão «Actualizar aplicação» continua a activar a versão em espera e só então recarrega a página.
 - Testado em claro/escuro e na matriz automatizada de Windows/iPhone; 75/75 unitários, 29 E2E de interface e 2/2 E2E PWA aprovados; dry-run Cloudflare aprovado.
 - Publicação confirmada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `7c577650-c8eb-44c3-ac1f-c5b843a0bd84`; Chrome actualizado para 0.4.4 sem ecrã branco nem ciclo de reload.
+
+## Lote 0.4.5 — consistência entre Nota de Honorários e Cobrança
+
+- O gerador documental foi revisto na produção 0.4.4: Nota e Cobrança abrem a partir da lista de cliente, filtram respectivamente não facturados e facturados não pagos, separam por Sociedade e alternam correctamente entre PT/EN/FR.
+- Corrigida localmente a ausência, na Cobrança, do aviso sobre dados legais/bancários incompletos da Sociedade emissora. Foi acrescentado teste de regressão específico.
+- Gates aprovados antes da publicação: ficheiros sensíveis, lint, TypeScript, 76/76 unitários, build, 29 E2E de interface/2 omitidos e dry-run Cloudflare.
+- Código preparado como `0.4.5`; preencher commit, Version ID Cloudflare e provas de produção depois da publicação.
