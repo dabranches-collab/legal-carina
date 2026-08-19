@@ -254,3 +254,12 @@ Actualizado em: 2026-08-17
 - Verificação pós-publicação: HTTPS 200, manifesto com arranque na Visão Geral e service worker `carina-legal-shell-0.4.2`. A interface pública identifica correctamente a versão 0.4.2.
 - Correcção Supabase posterior ao frontend 0.4.2: `get_entity_dashboard_rolling` deixou de reutilizar métricas/recentes da função antiga sem mascaramento e passou a construir todo o resultado exclusivamente com `has_scope_access` e `visible_financial_value`. O Operador mantém 4 936 h e 203 clientes em CARINA, mas os valores financeiros passaram a reflectir apenas as Sociedades autorizadas.
 - Medição autenticada de CARINA: 6,4 s antes e 8,1 s depois da correcção de segurança. O acréscimo vem do cálculo seguro das opções do selector; optimização posterior obrigatória, sem recuar no controlo financeiro.
+
+# Lote 0.4.3 — desempenho seguro dos dashboards individuais
+
+- A migration isolada `optimize_secure_entity_dashboard` foi aplicada ao projecto confirmado `vtvvqyebigflgqccbqsw`. O perfil, o escritório e o âmbito global são resolvidos uma única vez por pedido; utilizadores limitados continuam a usar `has_scope_access` e o Operador continua sujeito às permissões financeiras por Sociedade.
+- Prova autenticada como Operador: CARINA mantém exactamente 660 818,25 € trabalhados, 602 835,00 € facturados e 553 103,75 € recebidos. Três carregamentos completos consecutivos baixaram de cerca de 8,1 s para 1,27–1,30 s.
+- Sociedade CARINA SANTOS e Responsável CARINA carregaram em cerca de 1,3 s, sem erro, com gráficos e alertas. Contraste revisto visualmente em claro e escuro.
+- Gates locais: ficheiros sensíveis, lint, TypeScript, 75/75 testes e build aprovados. A matriz E2E percorreu os 31 cenários; mantém-se apenas a anomalia conhecida de o processo não encerrar depois de apresentar todos os resultados.
+- Auditorias Supabase depois da DDL: zero erros de segurança e zero erros de desempenho. Avisos existentes permanecem para revisão arquitectural, sem revogar RPCs necessárias nem remover índices por automatismo.
+- Versão local em preparação: `0.4.3`. Publicação Cloudflare pendente de dry-run, commit/push e verificação pós-deploy.

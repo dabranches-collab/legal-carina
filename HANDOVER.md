@@ -277,3 +277,13 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Prova autenticada contador/tabela: Particulares 2/2, Empresas 4/4, CARINA SANTOS 3/3 e CARINA 4/4; claro e escuro revistos visualmente.
 - Publicado em 2026-08-19: commit funcional `537bc4a`, URL `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `57434d1c-d171-46c6-8183-8127d95e4a95`. HTTPS, manifesto, versão visível e cache PWA `carina-legal-shell-0.4.2` confirmados depois do deploy.
 - Hotfix Supabase de segurança após o deploy: `secure_and_optimize_entity_dashboard` elimina a reutilização de métricas e movimentos recentes não mascarados da função antiga. A prova como Operador manteve horas/clientes, mas reduziu os valores ao âmbito financeiro autorizado. CARINA passou de 6,4 s para 8,1 s; optimizar a lista interna de opções sem remover o mascaramento é o próximo trabalho prioritário.
+
+## Lote 0.4.3 — optimização segura dos dashboards
+
+- Projecto Supabase confirmado por `.env.local`, documentação e histórico remoto: `vtvvqyebigflgqccbqsw`. A migration isolada `optimize_secure_entity_dashboard` está aplicada; nunca usar o identificador antigo referido num relato intermédio.
+- A função segura deixou de repetir milhares de verificações de perfil/âmbito para perfis globais. O caminho restritivo permanece para utilizadores limitados e os valores do Operador continuam filtrados pelas permissões financeiras por Sociedade.
+- CARINA: três carregamentos completos em 1,295 s, 1,277 s e 1,274 s, mantendo exactamente 660 818,25 € trabalhados, 602 835,00 € facturados e 553 103,75 € recebidos.
+- Validação visual autenticada em claro/escuro: Sociedade e Responsável sem erros, com gráficos e alertas; sessão local recuperada após reconstrução de dependências e versão 0.4.3 visível.
+- Gates aprovados: ficheiros sensíveis, lint, TypeScript, 75/75 testes, build e 31 cenários E2E apresentados como concluídos. O runner E2E conserva o bloqueio conhecido no encerramento após o último resultado.
+- Advisors Supabase: 0 `ERROR` de segurança e 0 `ERROR` de desempenho. Permanecem avisos existentes de RPCs `SECURITY DEFINER` intencionais, protecção Auth de passwords vazadas e três grupos de políticas permissivas duplicadas.
+- Falta antes do fecho: dry-run Cloudflare, commit/push, deploy 0.4.3, testes pós-publicação e registo do Version ID.
