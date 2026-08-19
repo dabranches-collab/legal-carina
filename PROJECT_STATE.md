@@ -262,4 +262,5 @@ Actualizado em: 2026-08-17
 - Sociedade CARINA SANTOS e Responsável CARINA carregaram em cerca de 1,3 s, sem erro, com gráficos e alertas. Contraste revisto visualmente em claro e escuro.
 - Gates locais: ficheiros sensíveis, lint, TypeScript, 75/75 testes e build aprovados. A matriz E2E percorreu os 31 cenários; mantém-se apenas a anomalia conhecida de o processo não encerrar depois de apresentar todos os resultados.
 - Auditorias Supabase depois da DDL: zero erros de segurança e zero erros de desempenho. Avisos existentes permanecem para revisão arquitectural, sem revogar RPCs necessárias nem remover índices por automatismo.
-- Versão local em preparação: `0.4.3`. Publicação Cloudflare pendente de dry-run, commit/push e verificação pós-deploy.
+- Versão `0.4.3` publicada a partir do commit `cd06d3d` em `https://legal-carina.dabranches.workers.dev`; Cloudflare Version ID `b95932a2-0a46-466b-9cd8-2de5936e28ea`.
+- Pós-publicação: página pública sem ecrã branco e com versão 0.4.3, manifesto HTTPS 200 com `/?view=overview` e service worker/cache `carina-legal-shell-0.4.3` confirmados.
