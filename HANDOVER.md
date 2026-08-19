@@ -262,3 +262,9 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Aplicar remotamente apenas `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`; publicar a Edge Function `admin-users` e o Worker. Não usar `supabase db push`.
 - Versão `0.2.9` publicada em 2026-08-18 a partir do commit funcional `4d6729bc455aabdb7da745613b784679da01dbe7`.
 - Cloudflare Worker confirmado em `https://legal-carina.dabranches.workers.dev`, Version ID `e6931985-c3b5-4c6b-86bf-a5daf4507fc4`, resposta HTTPS `200 OK`.
+
+## Correcção 0.4.1 em preparação — dashboards de Clientes
+
+- `get_client_category_dashboard` devolve agora os 12 meses contínuos terminados no último movimento acessível para Particulares e Empresas. A migration isolada `make_client_dashboards_rolling_12_months` está aplicada no Supabase correcto.
+- Prova visual autenticada como Operador: ambos os dashboards mostram 09/25–08/26, em claro e escuro, sem meses futuros vazios e sem erros de consola.
+- Gates aprovados: segurança, lint, TypeScript, 75/75 testes, build e 29 E2E aprovados/2 omitidos. Código local em `0.4.1`; produção Cloudflare ainda em `0.4.0` até ordem explícita.

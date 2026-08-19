@@ -234,3 +234,10 @@ Actualizado em: 2026-08-17
 - No cliente sintético, Nota de Honorários devolveu apenas o movimento não facturado (15 min) e Cobrança apenas o movimento facturado não pago (1 h). Idiomas, colunas e totais mantêm-se funcionais. Com `Allow access to file URLs` activo, o Chrome aceitou o PDF sintético.
 - O projecto Supabase correcto é `vtvvqyebigflgqccbqsw`: a sequência aditiva 0.4.0 está aplicada e reconciliada, o projecto está `ACTIVE_HEALTHY` e a Edge Function `client-documents` versão 2 está `ACTIVE`, com `verify_jwt=true`. Não foi executado `db push` global.
 - Verificação pós-publicação: página, manifesto e service worker respondem por HTTPS 200; o manifesto abre em `/?view=overview` e o cache activo é `carina-legal-shell-0.4.0`. Os 2 testes específicos de produção/preview passaram.
+
+# Correcção local 0.4.1 — janela mensal dos dashboards de Clientes
+
+- Particulares e Empresas passam a receber do Supabase uma janela contínua de 12 meses terminada no mês do registo mais recente do respectivo universo, em vez de Janeiro–Dezembro do último ano com meses futuros vazios.
+- Migration isolada `make_client_dashboards_rolling_12_months` aplicada e registada no projecto `vtvvqyebigflgqccbqsw`; não foi usado `db push` global.
+- Validação autenticada como Operador: Particulares e Empresas apresentam 12 pontos de 09/25 a 08/26, em claro e escuro, sem erros de consola. Segurança, lint, TypeScript, 75/75 testes, build e matriz E2E com 29 aprovados/2 omitidos passaram.
+- Estado: Supabase corrigido e código local em `0.4.1`; frontend Cloudflare permanece em `0.4.0` até nova ordem explícita de publicação.
