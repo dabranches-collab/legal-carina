@@ -280,3 +280,13 @@ Actualizado em: 2026-08-17
 - Publicação final 0.4.5 confirmada em `https://legal-carina.dabranches.workers.dev`, a partir do commit `e359402`, Cloudflare Version ID `49fdc0e8-6d2b-430b-9360-528998edf161`.
 - O teste PWA deixou de fixar a versão da cache no código e passa a derivá-la de `package.json`; manifesto e activação da cache `carina-legal-shell-0.4.5` passaram 2/2 no preview de produção.
 - Pós-publicação autenticado em Chrome: versão 0.4.5, Visão Geral sem ecrã branco, Nota de Honorários e Cobrança com universos correctos e aviso de dados incompletos da Sociedade emissora em ambos os documentos.
+
+# Lote 0.4.6 — validação integral do Operador em preparação
+
+- A matriz documental passou a cobrir despesas, IVA e total global da Nota de Honorários e confirma que a Cobrança não apresenta despesas.
+- Foi acrescentada prova E2E de navegação: o PWA abre deliberadamente na Visão Geral; o browser normal preserva `Clientes > Empresas > Lista` num refresh directo.
+- Tabela real medida em produção: cerca de 3,2 s para 7 220 movimentos; pesquisa global do cliente sintético em cerca de 1,2 s, com 12/12 resultados. A opção `Todas` representa 7 220 linhas, mantendo cerca de 41 elementos no DOM por virtualização.
+- Edge Function `client-documents` activa no Supabase, JWT obrigatório e rejeição sem sessão confirmada. A documentação RLS passou a incluir o papel Operador e a eliminação individual por RPC com motivo auditável.
+- A ficha completa do movimento passou a expor os dois estados Incobrável e mantém `status`, Facturado e Pago sincronizados. Ensaio autenticado como PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, ausência de menus administrativos e acesso correcto a Nota de Honorários e Cobrança do cliente sintético.
+- Gates finais locais: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos do preview de produção foram omitidos por condição normal.
+- Versão local em preparação: `0.4.6`; produção permanece em `0.4.5`.

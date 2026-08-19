@@ -65,6 +65,7 @@ describe('HonorariumNoteModal',()=>{
  it('prepara a cobrança apenas com movimentos facturados e não pagos',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-2" clientName="Cliente Cobrança" documentKind="collection" onClose={()=>{}}/> )
   expect(await screen.findByRole('heading',{name:'Cobrança · Cliente Cobrança'})).toBeInTheDocument()
+  expect(screen.queryByLabelText('Despesas')).not.toBeInTheDocument()
   await waitFor(()=>expect(rpc).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_client_id:'client-2',p_invoiced:true,p_paid:false})))
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
@@ -73,6 +74,20 @@ describe('HonorariumNoteModal',()=>{
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('Cliente: Cliente Cobrança')
   expect(pdfText.mock.calls.some(([value])=>value==='ASSUNTO: COBRANÇA')).toBe(true)
   expect(pdfText.mock.calls.some(([value])=>Array.isArray(value)&&value.join(' ').includes('permanecem por liquidar'))).toBe(true)
+ })
+ it('inclui despesas, IVA e total global na Nota de Honorários',async()=>{
+  rpc.mockResolvedValueOnce({error:null,data:{total:1,items:[{id:'fee',work_date:'2026-07-03',activity_description:'Serviço com despesas',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:100}]}})
+  from.mockImplementation((table:string)=>({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:table==='clients'?{legal_name:'Cliente Legal',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário',default_billing_entity_id:'sociedade-1'}:{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}})})})}))
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-fees" clientName="Cliente Legal" onClose={()=>{}}/> )
+  await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
+  await user.type(screen.getByLabelText('Descrição das despesas'),'Certidões')
+  await user.type(screen.getByLabelText('Despesas'),'25')
+  await user.click(screen.getByLabelText('Total monetário'))
+  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  const generatedText=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[String(value)]).join(' ')
+  expect(generatedText).toContain('Certidões')
+  expect(generatedText).toContain('148,00')
+  expect(generatedText).toContain('IVA')
  })
  it('avisa também na cobrança quando faltam dados da sociedade emissora',async()=>{
   from.mockImplementation((table:string)=>({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:table==='clients'?{legal_name:'Cliente Cobrança',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:null,bank_account_holder:null,bank_name:null,bank_account_number:null,iban:null,bic_swift:null,default_vat_rate:23,default_currency:'EUR'}})})})}))

@@ -20,6 +20,8 @@ const statuses = [
   ["approved", "Aprovado"],
   ["invoiced", "Facturado"],
   ["paid", "Pago"],
+  ["uncollectible_uninvoiced", "Incobrável — não facturado"],
+  ["uncollectible_invoiced", "Incobrável — facturado e não pago"],
   ["non_billable", "Não facturável"],
   ["cancelled", "Cancelado"],
 ];
@@ -44,6 +46,17 @@ const charges = [
   ["manual_negotiated", "Negociado manualmente"],
 ];
 const numeric = (value: string) => (value === "" ? null : Number(value));
+
+function withStatus(entry: Editable, status: string): Editable {
+  if (status === "paid") return { ...entry, status, is_invoiced: true, is_paid: true };
+  if (status === "invoiced" || status === "uncollectible_invoiced") {
+    return { ...entry, status, is_invoiced: true, is_paid: false };
+  }
+  if (status === "uncollectible_uninvoiced") {
+    return { ...entry, status, is_invoiced: false, is_paid: false, invoice_date: null };
+  }
+  return { ...entry, status, is_invoiced: false, is_paid: false, invoice_date: null };
+}
 
 export function EditWorkEntryModal({
   entryId,
@@ -382,7 +395,7 @@ export function EditWorkEntryModal({
               Estado
               <select
                 value={entry.status}
-                onChange={(e) => setEntry({ ...entry, status: e.target.value })}
+                onChange={(e) => setEntry(withStatus(entry, e.target.value))}
                 className="control mt-1 w-full px-3"
               >
                 {statuses.map(([value, label]) => (
@@ -436,6 +449,11 @@ export function EditWorkEntryModal({
                     is_invoiced: e.target.checked,
                     is_paid: e.target.checked ? entry.is_paid : false,
                     invoice_date: e.target.checked ? entry.invoice_date : null,
+                    status: e.target.checked
+                      ? entry.is_paid
+                        ? "paid"
+                        : "invoiced"
+                      : "approved",
                   })
                 }
               />
@@ -469,7 +487,11 @@ export function EditWorkEntryModal({
                 disabled={!entry.is_invoiced}
                 checked={entry.is_paid}
                 onChange={(e) =>
-                  setEntry({ ...entry, is_paid: e.target.checked })
+                  setEntry({
+                    ...entry,
+                    is_paid: e.target.checked,
+                    status: e.target.checked ? "paid" : "invoiced",
+                  })
                 }
               />
               Pago

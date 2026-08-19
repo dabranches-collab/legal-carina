@@ -304,3 +304,13 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Publicação final feita a partir do commit `e359402`: `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `49fdc0e8-6d2b-430b-9360-528998edf161`.
 - A expectativa da cache PWA passou a usar dinamicamente a versão de `package.json`; 2/2 testes de preview de produção confirmaram o manifesto, o service worker e `carina-legal-shell-0.4.5`.
 - Pós-publicação autenticado: versão 0.4.5 sem ecrã branco; Nota e Cobrança devolvem os universos esperados e ambas avisam quando a Sociedade emissora tem dados legais/bancários incompletos.
+
+## Lote 0.4.6 — ensaio do Operador em curso
+
+- Testes de Nota/Cobrança cobrem agora despesas, IVA, totais e a ausência intencional de despesas nas Cobranças.
+- Novo E2E distingue correctamente PWA (arranque na Visão Geral) de browser normal (refresh preserva o submenu profundo).
+- Produção 0.4.5: Registos completos em cerca de 3,2 s; pesquisa global em cerca de 1,2 s; `Todas` usa virtualização e não coloca 7 220 linhas simultaneamente no DOM.
+- `client-documents` está activa e protegida por JWT no projecto `vtvvqyebigflgqccbqsw`. Matriz RLS documentada com o papel Operador.
+- A ficha completa do movimento inclui agora os dois estados Incobrável e sincroniza-os com Facturado/Pago. A sessão real de PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, menus administrativos ausentes e Nota de Honorários/Cobrança com universos correctos no cliente sintético.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos de preview/produção omitidos como previsto.
+- Código local identificado como `0.4.6`; produção permanece em `0.4.5` até concluir commit, push e publicação ordenada.

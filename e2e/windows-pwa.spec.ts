@@ -20,6 +20,15 @@ test('arranque standalone ignora o último submenu e abre a Visão geral',async(
   await expect(page.getByRole('navigation',{name:'Localização'}).getByText('Visão Geral',{exact:true})).toBeVisible()
 })
 
+test('browser normal preserva o submenu de Clientes num refresh directo',async({page})=>{
+  await page.goto('/?qa-iphone=1&view=clients&clientType=company&clientMode=list')
+  await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
+  await expect(page.getByText('Lista · Empresas',{exact:true})).toBeVisible()
+  await page.reload()
+  await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
+  await expect(page.getByText('Lista · Empresas',{exact:true})).toBeVisible()
+})
+
 for (const viewport of windowsViewports) {
   test(`${viewport.name}: sidebar, versão e overflow`, async ({ page }) => {
     await page.setViewportSize(viewport)
