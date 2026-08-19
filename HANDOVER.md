@@ -9,6 +9,7 @@
 - Migrations isoladas aplicadas ao projecto confirmado `vtvvqyebigflgqccbqsw`: `allow_hourly_rate_on_work_entry_creation` e `require_financial_override_reason_only_for_operators`. Não foi executado `db push` global.
 - Gates: segurança, lint, TypeScript, 79/79 testes, build e dry-run Cloudflare aprovados. E2E focado aprovou refresh browser/PWA e formulário iPhone; mantém-se o encerramento tardio conhecido do runner.
 - O browser integrado não abriu por falha interna de confiança do plugin; não foi substituído por outro browser porque o utilizador pediu explicitamente o integrado.
+- Publicado em 2026-08-19 a partir do commit `f9bad23`; Cloudflare Version ID `5412939b-d0b7-4e2a-9617-8db71510a93c`, URL `https://legal-carina.dabranches.workers.dev`.
 
 ## Lote local 0.4.0 — preparação de Notas de Honorários
 
