@@ -218,7 +218,7 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 
 ## Validação local 0.4.0 — 2026-08-19
 
-- Continua exclusivamente local na branch `codex/reconcile-full-import`; produção mantém-se em `0.3.3`. Não houve publicação, push ou aplicação remota neste lote.
+- A versão `0.4.0` foi publicada a partir do commit funcional `ec0541a` da branch `codex/reconcile-full-import`; URL `https://legal-carina.dabranches.workers.dev`, Version ID Cloudflare `7a560053-0951-421f-989d-519d3ef9d2c4`.
 - Os Registos paginam identificadores antes de hidratar as linhas, reduzindo o trabalho da consulta. O pré-filtro histórico deixou de incluir avisos genéricos de importação e considera apenas facturados sem data ou excepções históricas reais. As migrations correspondentes permanecem apenas locais.
 - Formulários de criar/editar movimento usam rodapé móvel fixo e scroll interno; a matriz visual confirmou os botões dentro do ecrã em iPhone.
 - A grelha final da Visão Geral passou a admitir encolhimento dos filhos. Corrigido overflow horizontal de 172 px num iPhone 430×932; após a correcção `scrollWidth <= innerWidth` em claro e escuro.
@@ -234,6 +234,7 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - O Chrome isolado revelou que o clique em `Editar` ainda podia submeter a ficha porque o mesmo nó era reconciliado como botão de guardar durante a activação. Foi acrescentado `preventDefault()` à transição e `type="submit"` explícito ao botão final; revalidação visual em 1920×1200, claro/escuro, manteve o editor e o selector de ficheiros abertos após 4 segundos.
 - O cliente sintético confirmou separação funcional: Nota de Honorários = 1 movimento não facturado/15 min; Cobrança = 1 movimento facturado não pago/1 h. O Chrome aceitou o PDF sintético depois de activar `Allow access to file URLs`.
 - No projecto correcto `vtvvqyebigflgqccbqsw`, todas as migrations aditivas 0.4.0 foram aplicadas isoladamente e a Edge Function `client-documents` versão 2 está activa com `verify_jwt=true`. O projecto está saudável e não foi usado `db push` global.
+- Página, manifesto e service worker publicados respondem por HTTPS 200. O manifesto arranca em `/?view=overview`, o cache é `carina-legal-shell-0.4.0` e os 2 testes específicos de produção/preview passaram.
 
 ## Correcção 0.3.2 em preparação — dimensões dos dashboards
 

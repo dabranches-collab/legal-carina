@@ -216,12 +216,12 @@ Actualizado em: 2026-08-17
 
 # Estado de validação 0.4.0 — 2026-08-19
 
-- Estado: alterações locais não publicadas na branch `codex/reconcile-full-import`; produção confirmada anteriormente em `0.3.3`.
+- Estado: versão `0.4.0` publicada a partir do commit funcional `ec0541a` da branch `codex/reconcile-full-import`; URL `https://legal-carina.dabranches.workers.dev`, Version ID Cloudflare `7a560053-0951-421f-989d-519d3ef9d2c4`, confirmado em 2026-08-19.
 - UX responsiva verificada no browser integrado: Windows 1920×1080 (100%, equivalentes 125%/150%), tablet 1024×768, iPhone compacto 375×667 e iPhone 430×932, nos modos claro e escuro.
 - Corrigido o overflow móvel dos gráficos finais da Visão Geral através de `min-w-0` na grelha e nos dois contentores. O dashboard preenchido passou a ter largura estritamente contida.
 - Criar e editar movimento usam formulário vertical com scroll interno e rodapé sticky seguro em iPhone. A tabela liberta os filtros extensos a 150%, preservando apenas ferramentas e cabeçalho sticky.
 - Gates locais finais aprovados: ficheiros sensíveis, lint, TypeScript, 75 testes unitários, build Vite, dry-run Cloudflare e 29 testes E2E; 2 cenários exclusivos de produção foram omitidos por condição normal. Supabase ligado sem erros de schema no lint público.
-- Pendente de autorização: aplicar apenas as migrations isoladas revistas, validar RLS/Storage remoto e publicar frontend/Edge Functions. Nunca executar `db push` global enquanto persistir a divergência histórica.
+- As migrations isoladas revistas, a Edge Function documental e o frontend foram publicados. Nunca executar `db push` global enquanto persistir a divergência histórica.
 - Validação funcional autenticada como `Operador`: rotas de Administração, Utilizadores, Importações, Definições e Auditoria ficam inacessíveis; leitura, criação e edição de movimentos permanecem disponíveis e auditadas para consulta posterior por Administrador.
 - Dashboards confirmados com universos distintos: as três Sociedades apresentam totais próprios e desagregação por Responsável; CARINA, HUGO e PAULA apresentam totais próprios e desagregação por Sociedade. CARINA continua a ser o caso mais lento, cerca de 6 segundos, e requer análise de plano antes de qualquer optimização SQL.
 - Atalhos de acompanhamento conferidos contra as tabelas: CARINA 722 por facturar, 463 facturados não pagos e 554 sem preço; MASSIVE SEARCH 62, 173 e 0, respectivamente. O alerta a zero permanece visível em verde e abre uma tabela vazia coerente.
@@ -233,3 +233,4 @@ Actualizado em: 2026-08-17
 - No Chrome real foi detectada uma segunda submissão involuntária: durante o clique, o botão `Editar` era reutilizado como `Guardar alterações` e o comportamento predefinido submetia a ficha. A transição cancela agora explicitamente esse comportamento e o botão final declara `type="submit"`; confirmado visualmente após 4 segundos em claro e escuro, com ficha, arquivo e rodapé ainda abertos.
 - No cliente sintético, Nota de Honorários devolveu apenas o movimento não facturado (15 min) e Cobrança apenas o movimento facturado não pago (1 h). Idiomas, colunas e totais mantêm-se funcionais. Com `Allow access to file URLs` activo, o Chrome aceitou o PDF sintético.
 - O projecto Supabase correcto é `vtvvqyebigflgqccbqsw`: a sequência aditiva 0.4.0 está aplicada e reconciliada, o projecto está `ACTIVE_HEALTHY` e a Edge Function `client-documents` versão 2 está `ACTIVE`, com `verify_jwt=true`. Não foi executado `db push` global.
+- Verificação pós-publicação: página, manifesto e service worker respondem por HTTPS 200; o manifesto abre em `/?view=overview` e o cache activo é `carina-legal-shell-0.4.0`. Os 2 testes específicos de produção/preview passaram.
