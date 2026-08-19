@@ -22,6 +22,6 @@ test('preview de produção regista e ativa o service worker', async ({ page }) 
   if(!state)return
   expect(state.active).toBe(true)
   expect(state.scope).toBe(new URL('/',page.url()).href)
-  expect(state.caches).toContain('carina-legal-shell-0.4.1')
+  expect(state.caches).toContain('carina-legal-shell-0.4.2')
   await page.close()
 })

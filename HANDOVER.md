@@ -269,3 +269,9 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Prova visual autenticada como Operador: ambos os dashboards mostram 09/25–08/26, em claro e escuro, sem meses futuros vazios e sem erros de consola.
 - `align_client_dashboard_attention_counts` alinha os contadores de pendências com os respectivos atalhos, sem contar incobráveis como pendências normais. Prova autenticada: Particulares 484 não facturados e 294 facturados não pagos; Empresas 281 e 193, sempre com correspondência exacta entre caixa e tabela.
 - Gates aprovados: segurança, lint, TypeScript, 75/75 testes, build e 29 E2E aprovados/2 omitidos. Código local em `0.4.1`; produção Cloudflare ainda em `0.4.0` até ordem explícita.
+
+## Lote 0.4.2 — incobráveis nos dashboards
+
+- Clientes, Sociedades e Responsáveis apresentam Incobráveis como alerta autónomo com atalho filtrado.
+- A métrica `Por receber` dos Clientes exclui agora `uncollectible_invoiced`, sem retirar esse movimento do total histórico facturado.
+- Prova autenticada contador/tabela: Particulares 2/2, Empresas 4/4, CARINA SANTOS 3/3 e CARINA 4/4; claro e escuro revistos visualmente.

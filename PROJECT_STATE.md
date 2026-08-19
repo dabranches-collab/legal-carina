@@ -243,3 +243,10 @@ Actualizado em: 2026-08-17
 - Os contadores de `Não facturados` e `Facturados não pagos` dos dashboards de Clientes usam agora exactamente o mesmo universo dos atalhos, excluindo respectivamente `uncollectible_uninvoiced` e `uncollectible_invoiced`. A migration isolada `align_client_dashboard_attention_counts` está aplicada e registada no Supabase correcto.
 - Prova autenticada: Particulares apresentam 484/484 não facturados e 294/294 facturados não pagos; Empresas apresentam 281/281 e 193/193. Em todos os casos, o valor da caixa coincide com a contagem total da tabela filtrada.
 - Estado: Supabase corrigido e código local em `0.4.1`; frontend Cloudflare permanece em `0.4.0` até nova ordem explícita de publicação.
+
+# Lote 0.4.2 — incobráveis nos dashboards
+
+- Os dashboards de Clientes, Sociedades e Responsáveis apresentam um contador próprio de Incobráveis com acesso directo à tabela filtrada.
+- Nos dashboards de Clientes, créditos facturados incobráveis continuam incluídos no histórico facturado, mas deixam de integrar `Por receber`; trabalho abandonado antes de facturar permanece fora de `Não facturados`.
+- Prova autenticada: Particulares 2/2, Empresas 4/4, Sociedade CARINA SANTOS 3/3 e Responsável CARINA 4/4 entre contador e tabela filtrada.
+- Contraste e legibilidade revistos visualmente nos modos claro e escuro, mantendo o comportamento vermelho quando existem ocorrências e verde quando o contador é zero.
