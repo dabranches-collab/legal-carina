@@ -104,7 +104,7 @@ export function BillingLandingPage({
                 <div className="rounded-lg bg-surface-subtle p-3"><dt className="text-xs text-text-secondary">Facturado</dt><dd className="financial-value mt-1 text-lg font-semibold tabular-nums">{financial(item.invoiced)}</dd></div>
                 <div className="rounded-lg bg-surface-subtle p-3"><dt className="text-xs text-text-secondary">Por receber</dt><dd className="financial-value mt-1 text-lg font-semibold tabular-nums">{financial(item.receivable)}</dd></div>
               </dl>
-              <AttentionPanel counts={item} links={{uninvoiced:`?view=work&billingEntityId=${item.id}&invoiced=false`,unpaid:`?view=work&billingEntityId=${item.id}&invoiced=true&paid=false`,missingPrice:`?view=work&billingEntityId=${item.id}&missingPrice=true`}}/>
+              <AttentionPanel counts={item} links={{uninvoiced:`?view=work&billingEntityId=${item.id}&collectionState=uninvoiced`,unpaid:`?view=work&billingEntityId=${item.id}&collectionState=unpaid`,missingPrice:`?view=work&billingEntityId=${item.id}&missingPrice=true`}}/>
               <button type="button" onClick={() => onSelect(item.society)} className="mt-6 flex min-h-11 items-center justify-center gap-2 rounded-lg bg-secondary px-4 text-sm font-semibold text-surface hover:brightness-110">
                 Abrir dashboard <Icon name="chevron" className="size-4" />
               </button>

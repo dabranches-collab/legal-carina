@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "../../lib/supabase";
 import { useModalLifecycle } from "../../hooks/useModalLifecycle";
 import { DurationSelect } from "./DurationSelect";
+import { CalendarDateInput } from "../../components/CalendarDateInput";
 import {
   deleteWorkEntry,
   getWorkEntryForEdit,
@@ -48,10 +49,12 @@ export function EditWorkEntryModal({
   entryId,
   onClose,
   onSaved,
+  canDelete=true,
 }: {
   entryId: string;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (action?: "updated" | "deleted") => void;
+  canDelete?: boolean;
 }) {
   const [options, setOptions] = useState<OptionData | null>(null),
     [entry, setEntry] = useState<Editable | null>(null),
@@ -106,23 +109,33 @@ export function EditWorkEntryModal({
     setError("");
     const result = await updateWorkEntry(entry, reason);
     if (result.error) {
-      setError(result.error.message);
+      const messages:Record<string,string>={
+        "is_invoiced requires a matching manual override":"Não foi possível registar a facturação na auditoria. Tente novamente.",
+        "is_paid requires a matching manual override":"Não foi possível registar o pagamento na auditoria. Tente novamente.",
+        "override reason required":"Indique o motivo da alteração manual dos valores financeiros.",
+        "not authorized":"Não tem autorização para editar este movimento.",
+      };
+      setError(messages[result.error.message]??result.error.message);
       setSaving(false);
       return;
     }
-    onSaved();
+    onSaved("updated");
   }
   async function remove() {
     if (!entry) return;
+    if (!reason.trim()) {
+      setError("Indique o motivo da eliminação para o registo de auditoria.");
+      return;
+    }
     setSaving(true);
     setError("");
-    const result = await deleteWorkEntry(entry.id, "");
+    const result = await deleteWorkEntry(entry.id, reason.trim());
     if (result.error) {
       setError(result.error.message);
       setSaving(false);
       return;
     }
-    onSaved();
+    onSaved("deleted");
   }
   return (
     <div
@@ -133,7 +146,7 @@ export function EditWorkEntryModal({
     >
       <form
         onSubmit={submit}
-        className="card my-auto max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto p-6"
+        className="card my-auto max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto p-6 pb-0"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -158,7 +171,7 @@ export function EditWorkEntryModal({
             ×
           </button>
         </div>
-        {error && (
+        {error && !deleteMode && (
           <p
             role="alert"
             className="mt-4 rounded-lg bg-danger-soft p-3 text-sm text-danger"
@@ -172,15 +185,7 @@ export function EditWorkEntryModal({
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <label className="text-sm">
               Data
-              <input
-                required
-                type="date"
-                value={entry.work_date}
-                onChange={(e) =>
-                  setEntry({ ...entry, work_date: e.target.value })
-                }
-                className="control mt-1 w-full px-3"
-              />
+              <CalendarDateInput required value={entry.work_date} onChange={(value)=>setEntry({...entry,work_date:value})} className="mt-1 w-full px-3"/>
             </label>
             <label className="text-sm">
               Responsável
@@ -438,14 +443,24 @@ export function EditWorkEntryModal({
             </label>
             <label className="text-sm">
               Data da factura
-              <input
-                type="date"
-                disabled={!entry.is_invoiced}
+              <CalendarDateInput
+                ariaLabel="Data da factura"
                 value={entry.invoice_date ?? ""}
-                onChange={(e) =>
-                  setEntry({ ...entry, invoice_date: e.target.value || null })
-                }
-                className="control mt-1 w-full px-3"
+                onChange={(value) => {
+                  const invoiceDate = value || null;
+                  setEntry({
+                    ...entry,
+                    invoice_date: invoiceDate,
+                    is_invoiced: Boolean(invoiceDate),
+                    is_paid: invoiceDate ? entry.is_paid : false,
+                    status: invoiceDate
+                      ? entry.is_paid
+                        ? "paid"
+                        : "invoiced"
+                      : "approved",
+                  });
+                }}
+                className="mt-1 w-full px-3"
               />
             </label>
             <label className="flex min-h-11 items-center gap-2 text-sm">
@@ -479,6 +494,9 @@ export function EditWorkEntryModal({
               associadas são preservadas, mas deixam de ter ligação ao
               movimento.
             </p>
+            {error && (
+              <p className="mt-2 text-sm font-semibold text-danger">{error}</p>
+            )}
             <div className="mt-3 flex justify-end gap-2">
               <button
                 type="button"
@@ -498,15 +516,15 @@ export function EditWorkEntryModal({
             </div>
           </section>
         )}
-        <div className="mt-6 flex flex-wrap justify-between gap-3">
-          <button
+        <div className="sticky bottom-0 z-50 -mx-6 mt-6 flex flex-wrap justify-between gap-3 border-t border-border bg-surface px-6 py-3 pb-[max(.75rem,var(--safe-bottom))] shadow-[0_-8px_18px_-14px_rgba(0,0,0,.45)]">
+          {canDelete?<button
             type="button"
             disabled={saving || !entry}
             onClick={() => setDeleteMode(true)}
             className="min-h-11 rounded-lg border border-danger px-4 font-semibold text-danger disabled:opacity-40"
           >
             Apagar movimento
-          </button>
+          </button>:<span />}
           <div className="flex gap-3">
             <button
               type="button"

@@ -39,6 +39,21 @@ function overviewLocation() {
   window.history.replaceState({},'',url)
 }
 
+function buttonDescription(button:HTMLButtonElement){
+  const text=(button.textContent??'').replace(/\s+/g,' ').trim(),label=button.getAttribute('aria-label')?.trim()
+  if(label)return label
+  if(/^Filtrar/.test(text)){const column=button.closest('th')?.querySelector('button span')?.textContent?.trim();return `Filtrar a tabela pelos valores${column?` da coluna ${column}`:''}.`}
+  if(text==='Limpar filtros')return 'Remover a pesquisa e todos os filtros aplicados à tabela.'
+  if(text.startsWith('Colunas'))return 'Escolher, ordenar e repor as colunas visíveis da tabela.'
+  if(text==='XLSX')return 'Exportar para Excel todos os resultados que correspondem aos filtros actuais.'
+  if(text==='Imprimir / PDF')return 'Imprimir ou guardar em PDF os resultados filtrados da tabela.'
+  if(text==='Guardar PDF'||text==='A gerar PDF…')return 'Gerar e descarregar o PDF com os movimentos seleccionados.'
+  if(text==='Tentar novamente')return 'Repetir a consulta que não foi possível concluir.'
+  if(text.startsWith('Criar '))return `Abrir o formulário para ${text.toLocaleLowerCase('pt-PT')}.`
+  if(text)return `Executar a acção «${text}».`
+  return ''
+}
+
 export function AuthenticatedApplication() {
   const {role}=useAuth()
   const canManageSettings=role==='owner'||role==='admin'
@@ -50,6 +65,7 @@ export function AuthenticatedApplication() {
   const [clientMode,setClientMode] = useState<'dashboard'|'list'>(initial.clientMode)
   const [settingsEntity,setSettingsEntity] = useState<'clients'|'billing_entities'|null>(initial.settingsEntity)
   const [refreshKey,setRefreshKey] = useState(0)
+  useEffect(()=>{const apply=(root:ParentNode=document)=>{for(const button of root.querySelectorAll<HTMLButtonElement>('button')){if(button.title)continue;const description=buttonDescription(button);if(description){button.title=description;button.setAttribute('aria-description',description)}}};apply();const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node instanceof HTMLElement){if(node.matches('button'))apply(node.parentNode??document);else apply(node)}});observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect()},[])
   useEffect(()=>{const timer=window.setTimeout(()=>{void import('./features/work-entries/WorkEntriesPage').then(module=>module.prefetchWorkEntries()).catch(()=>undefined)},1200);return()=>window.clearTimeout(timer)},[])
   useEffect(() => { const sync=()=>{let location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();location=readLocation()}setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [canManageSettings])
   function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|null=null,nextProfessional:string|null=null) {
@@ -64,7 +80,7 @@ export function AuthenticatedApplication() {
   function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage />
-  else if (view === 'work') content = <WorkEntriesPage />
+  else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} />
   else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')}/>
   else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
   else if (view === 'professionals') content = professional?<EntityDashboard key={`professional-${professional}`} kind="professional" initialSelectionLabel={professional} />:<ProfessionalLandingPage onSelect={(name)=>navigate('professionals',null,null,null,name)}/>

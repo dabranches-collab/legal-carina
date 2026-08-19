@@ -119,4 +119,15 @@ describe('StandardDataTable',()=>{
     expect(screen.getByText('3 resultados de 3')).toBeInTheDocument()
     expect(screen.getByRole('columnheader',{name:/Valor/})).toHaveAttribute('aria-sort','none')
   })
+
+  test('Todas mantém o universo integral mas virtualiza as linhas apresentadas',async()=>{
+    const user=userEvent.setup()
+    const manyRows=Array.from({length:7200},(_,index)=>({id:String(index+1),name:`Cliente ${index+1}`,amount:index,active:index%2===0}))
+    render(<StandardDataTable id="virtual-all" label="Universo virtual" rows={manyRows} columns={columns} rowKey={row=>row.id}/>)
+    await user.selectOptions(screen.getByLabelText('Linhas por página'),'all')
+    expect(screen.getByText('1–7200 de 7200')).toBeInTheDocument()
+    const body=screen.getByRole('table').querySelector('tbody')!
+    expect(body.querySelectorAll('tr[aria-hidden="true"]')).toHaveLength(1)
+    expect(within(body).getAllByRole('row')).toHaveLength(40)
+  })
 })

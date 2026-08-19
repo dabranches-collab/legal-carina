@@ -46,8 +46,7 @@ Deno.serve(async(request)=>{
       const {data:document,error:documentError}=await admin.from('client_documents').select('id,storage_path').eq('id',documentId).single()
       if(documentError||!document)return json(request,{error:'Documento não encontrado.'},404)
       if(action==='remove'){
-        const {error:storageError}=await admin.storage.from('client-documents').remove([document.storage_path]);if(storageError)throw storageError
-        const {error:removeError}=await admin.from('client_documents').delete().eq('id',documentId);if(removeError)throw removeError
+        const {error:removeError}=await admin.from('client_documents').update({status:'removed'}).eq('id',documentId);if(removeError)throw removeError
       }else{
         const {error:updateError}=await admin.from('client_documents').update({status:action==='archive'?'archived':'active'}).eq('id',documentId);if(updateError)throw updateError
       }
@@ -60,9 +59,13 @@ Deno.serve(async(request)=>{
     if(!canonicalMime||!validContent(extension,bytes))return json(request,{error:'O conteúdo do ficheiro não corresponde a um formato permitido ou contém conteúdo activo.'},400)
     const {data:allowed}=await userClient.rpc('can_manage_client_document',{target_firm_id:firmId,target_client_id:clientId})
     if(!allowed)return json(request,{error:'Sem permissão para arquivar documentos deste cliente.'},403)
+    const contentHash=await hash(bytes)
+    const {data:duplicate,error:duplicateError}=await admin.from('client_documents').select('id,title').eq('firm_id',firmId).eq('client_id',clientId).eq('sha256',contentHash).neq('status','removed').maybeSingle()
+    if(duplicateError)throw duplicateError
+    if(duplicate)return json(request,{error:`Este ficheiro já está arquivado neste cliente como “${duplicate.title}”.`},409)
     const documentId=crypto.randomUUID(),path=`${firmId}/${clientId}/${documentId}/${safeName(file.name)}`
     const {error:uploadError}=await admin.storage.from('client-documents').upload(path,bytes,{contentType:canonicalMime,upsert:false});if(uploadError)throw uploadError
-    const record={id:documentId,firm_id:firmId,client_id:clientId,category,title,description:String(form.get('description')??'').trim()||null,original_filename:file.name.normalize('NFKC').slice(0,255),storage_path:path,mime_type:canonicalMime,size_bytes:file.size,sha256:await hash(bytes),document_date:String(form.get('documentDate')??'')||null,expires_at:String(form.get('expiresAt')??'')||null,uploaded_by:authData.user.id}
+    const record={id:documentId,firm_id:firmId,client_id:clientId,category,title,description:String(form.get('description')??'').trim()||null,original_filename:file.name.normalize('NFKC').slice(0,255),storage_path:path,mime_type:canonicalMime,size_bytes:file.size,sha256:contentHash,document_date:String(form.get('documentDate')??'')||null,expires_at:String(form.get('expiresAt')??'')||null,uploaded_by:authData.user.id}
     const {error:metadataError}=await admin.from('client_documents').insert(record)
     if(metadataError){await admin.storage.from('client-documents').remove([path]);throw metadataError}
     return json(request,{documentId},201)

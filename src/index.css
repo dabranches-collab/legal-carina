@@ -15,6 +15,7 @@
   --color-success: #287451;
   --color-success-soft: #e7f3ec;
   --color-warning: #a86819;
+  --color-warning-strong: #7f4b0d;
   --color-warning-soft: #fbf0dc;
   --color-danger: #b43a3f;
   --color-danger-soft: #fbe9e9;
@@ -98,7 +99,7 @@ html[data-financial-values="hidden"] .financial-value::after { content: "••�
     --color-background: #172638; --color-surface: #24384f; --color-surface-subtle: #304861;
     --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
     --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
-    --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
+    --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e; --color-warning-strong: #ffd384;
     --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
     --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580;
     --color-border-strong: #66819b; --color-row-selected: #132b40; --shadow-card: 0 1px 2px rgb(0 0 0 / .16), 0 8px 24px rgb(0 0 0 / .13);
@@ -110,15 +111,30 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
   --color-background: #172638; --color-surface: #24384f; --color-surface-subtle: #304861;
   --color-primary: #dce8f5; --color-primary-hover: #c8d8e8; --color-secondary: #69c3c1;
   --color-secondary-soft: #183b42; --color-accent: #d5ad62; --color-accent-soft: #3b3122;
-  --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e;
+  --color-success: #72c99d; --color-success-soft: #17382b; --color-warning: #e5b25e; --color-warning-strong: #ffd384;
   --color-warning-soft: #3a2d18; --color-danger: #f08b8e; --color-danger-soft: #432326;
   --color-text-primary: #f7fafc; --color-text-secondary: #c7d3df; --color-border: #4a6580; --color-border-strong: #66819b; --color-row-selected: #132b40;
   --color-chart-1: #74d6d2; --color-chart-2: #f0c56f; --color-chart-3: #9fc7ec;
   --color-chart-4: #d2a9dc; --color-chart-5: #9bd5a7;
 }
 @media (max-width: 480px) { .control, button { min-width: 2.75rem; min-height: 2.75rem; } }
+@media (min-width: 1024px) and (max-height: 760px) {
+  .work-filters-bar { position: static !important; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
 @media print {
+  @page { size: A4 portrait; margin: 0; }
+  body:has(.honorarium-print-area) * { visibility: hidden !important; }
+  body:has(.honorarium-print-area) .honorarium-print-area,
+  body:has(.honorarium-print-area) .honorarium-print-area * { visibility: visible !important; }
+  body:has(.honorarium-print-area) .honorarium-print-area { display: block !important; position: absolute; inset: 0; width: 100%; padding: 12mm; font: 10pt/1.35 Arial, sans-serif; }
+  .honorarium-print-area h1 { margin: 0 0 4mm; font-size: 16pt; }
+  .honorarium-print-area .honorarium-client-name { margin: 0 0 7mm; font-size: 12pt; font-weight: 700; }
+  .honorarium-print-area table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .honorarium-print-area th,.honorarium-print-area td { border: 1px solid #777; padding: 2.5mm; vertical-align: top; color: #000 !important; }
+  .honorarium-print-area th:first-child,.honorarium-print-area td:first-child { width: 22mm; text-align: center; }
+  .honorarium-print-area th:last-child,.honorarium-print-area td:last-child { width: 30mm; text-align: center; }
+  .honorarium-print-area tfoot th { font-weight: 700; }
   @page { size: landscape; margin: 12mm; }
   body { background: #fff !important; color: #000 !important; }
   body:has(.table-standard) * { visibility: hidden !important; }

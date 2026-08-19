@@ -59,6 +59,7 @@ type Props<Row> = {
   onRowDoubleClick?: (row: Row) => void;
   stickyHeaderOffset?: number;
   showSearch?: boolean;
+  resultNoun?: string;
 };
 
 const fold = (value: Scalar) =>
@@ -398,6 +399,7 @@ export function StandardDataTable<Row>({
   onRowDoubleClick,
   stickyHeaderOffset = 104,
   showSearch = true,
+  resultNoun = "resultados",
 }: Props<Row>) {
   const { user } = useAuth();
   const legacyStorageKey = `carina.table.${id}`;
@@ -426,7 +428,7 @@ export function StandardDataTable<Row>({
   const [columnsOpen, setColumnsOpen] = useState(false),
     [openFilter, setOpenFilter] = useState<string | null>(null);
   const [activeRow, setActiveRow] = useState<string | null>(null);
-  const [headerTranslate, setHeaderTranslate] = useState(0);
+  const headerTranslate = useRef(0);
   const [toolsHeight, setToolsHeight] = useState(36);
   const [virtualStart,setVirtualStart]=useState(0);
   const [exporting, setExporting] = useState(false),
@@ -550,33 +552,48 @@ export function StandardDataTable<Row>({
   useEffect(() => {
     const tools = toolsElement.current;
     if (!tools) return;
-    const update = () => setToolsHeight(Math.ceil(tools.getBoundingClientRect().height));
+    const update = () => setToolsHeight(window.innerWidth>=768?Math.ceil(tools.getBoundingClientRect().height):0);
     update();
+    window.addEventListener("resize", update);
     if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", update);
       return () => window.removeEventListener("resize", update);
     }
     const observer = new ResizeObserver(update);
     observer.observe(tools);
-    return () => observer.disconnect();
+    return () => {observer.disconnect();window.removeEventListener("resize",update)};
   }, []);
   useEffect(() => {
+    let frame = 0;
     const updateHeader = () => {
+      frame = 0;
       const header = headerElement.current;
       const table = tableElement.current;
       if (!header || !table) return;
-      setHeaderTranslate((current) => {
-        const naturalTop = header.getBoundingClientRect().top - current;
-        const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
-        return Math.min(maximum, Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop));
-      });
+      const naturalTop = table.getBoundingClientRect().top;
+      const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
+      const next = Math.round(
+        Math.min(
+          maximum,
+          Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop),
+        ),
+      );
+      if (next === headerTranslate.current) return;
+      headerTranslate.current = next;
+      header.style.transform = `translate3d(0, ${next}px, 0)`;
+    };
+    const scheduleHeaderUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateHeader);
     };
     updateHeader();
-    window.addEventListener("scroll", updateHeader, { passive: true });
-    window.addEventListener("resize", updateHeader);
+    window.addEventListener("scroll", scheduleHeaderUpdate, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("resize", scheduleHeaderUpdate);
     return () => {
-      window.removeEventListener("scroll", updateHeader);
-      window.removeEventListener("resize", updateHeader);
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleHeaderUpdate, true);
+      window.removeEventListener("resize", scheduleHeaderUpdate);
     };
   }, [stickyHeaderOffset, shown.length, toolsHeight]);
   useEffect(() => {
@@ -820,7 +837,7 @@ export function StandardDataTable<Row>({
   );
   return (
     <section
-      className="table-standard card relative isolate z-0 overflow-visible"
+      className="table-standard card relative isolate z-0 overflow-clip"
       aria-label={label}
     >
       <div className="print-table-heading hidden">
@@ -834,7 +851,7 @@ export function StandardDataTable<Row>({
       <div
         ref={toolsElement}
         style={{ top: stickyHeaderOffset }}
-        className="table-tools sticky z-40 flex min-h-9 flex-wrap items-center gap-1 border-b border-border bg-surface px-2 py-1 shadow-sm"
+        className="table-tools z-40 flex min-h-9 flex-wrap items-center gap-1 border-b border-border bg-surface px-2 py-1 shadow-sm md:sticky"
       >
         {showSearch && <label className="relative min-w-52 flex-1">
           <span className="sr-only">Pesquisar em {label}</span>
@@ -958,9 +975,11 @@ export function StandardDataTable<Row>({
       )}
       <div className="px-3 py-2 text-xs text-text-secondary" role="status">
         {updating ? "A actualizar… · " : ""}
-        {universeLoading
+        {loading && rows.length === 0
+          ? `A carregar ${resultNoun}…`
+          : universeLoading
           ? `A carregar todo o universo (${universeProgress?.loaded??rows.length} de ${universeProgress?.total??reportedTotal})…`
-          : `${resultTotal} resultados de ${reportedTotal}`}
+          : `${resultTotal} ${resultNoun} de ${reportedTotal}`}
         {selected.length ? ` · ${selected.length} seleccionados` : ""}
         {universeError ? ` · ${universeError}` : ""}
         {universeLoading&&<progress aria-label="Progresso do carregamento da tabela" className="mt-2 block h-2 w-full accent-secondary" value={universeProgress?.loaded??rows.length} max={Math.max(1,universeProgress?.total??reportedTotal)}/>}
@@ -968,7 +987,7 @@ export function StandardDataTable<Row>({
       <div ref={scrollContainer} className="scrollbar-thin overflow-x-auto">
         <table ref={tableElement} className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
-          <thead ref={headerElement} style={{ transform: `translateY(${headerTranslate}px)` }} className="relative z-30 bg-surface shadow-sm will-change-transform">
+          <thead ref={headerElement} className="relative z-30 bg-surface shadow-sm will-change-transform">
             <tr>
               {onSelectionChange && (
                 <th
@@ -1017,7 +1036,7 @@ export function StandardDataTable<Row>({
                           : "descending"
                         : "none"
                     }
-                    className={`relative border-b border-border bg-surface px-2 py-1 align-bottom ${sticky ? "sticky z-10 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "cursor-grab"}`}
+                    className={`relative border-b border-border bg-surface px-2 py-1 align-bottom ${sticky ? "sticky z-40 shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "cursor-grab"}`}
                   >
                     <button
                       type="button"
@@ -1274,11 +1293,13 @@ export function StandardDataTable<Row>({
           </select>
         </label>
         <span>
-          {pageSize === "all" && universeLoading
+          {loading && rows.length === 0
+            ? `A carregar ${resultNoun}…`
+            : pageSize === "all" && universeLoading
             ? `A carregar ${universeProgress?.loaded ?? rows.length} de ${universeProgress?.total ?? reportedTotal} para mostrar todas…`
             : resultTotal
             ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? resultTotal : Math.min(validPage * pageSize, resultTotal)} de ${resultTotal}`
-            : "0 resultados"}
+            : `0 ${resultNoun}`}
         </span>
         <div className="flex gap-2">
           <button

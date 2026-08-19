@@ -4,7 +4,7 @@
   "main": "./worker/index.ts",
   "compatibility_date": "2026-08-16",
   "build": {
-    "command": "pnpm build"
+    "command": "node ./node_modules/typescript/bin/tsc -b && node ./node_modules/vite/bin/vite.js build"
   },
   "assets": {
     "directory": "./dist",

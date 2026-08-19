@@ -1,5 +1,21 @@
 # Legal Carina — handover
 
+## Lote local 0.4.0 — preparação de Notas de Honorários
+
+- Estado: implementado e validado localmente, sem publicação. Produção continua confirmada em `0.3.3`.
+- Documentos de Cliente: carregamento múltiplo, validação por assinatura real, recusa de macros, mensagens por ficheiro, SHA-256 contra duplicados, validade e remoção lógica recuperável preparados localmente. Não promover a Edge Function nem `20260819020000_prevent_duplicate_client_documents.sql` antes de reconciliar o histórico remoto.
+- Desempenho: `HonorariumNoteModal` passou a carregamento tardio; `MasterDataPage` caiu de aproximadamente 458 kB para 38 kB brutos no build. O utilizador vê `A preparar o documento…` durante o carregamento sob procura.
+- Gates mais recentes: TypeScript, build, 13 ficheiros/69 testes aprovados e `git diff --check` sem erros. Browser integrado sem separador disponível nesta passagem; validação visual deste sublote continua pendente.
+- A ficha de Cliente permite preparar uma Nota de Honorários a partir dos seus movimentos não facturados. A selecção múltipla existe apenas nesta tabela própria e a impressão/PDF inclui Cliente, `mm-aaaa`, descrição, duração e total de tempo.
+- Cliente e Sociedade incluem os campos necessários para evoluir da actual folha de apoio para uma Nota de Honorários completa. A referência à Sociedade emissora é protegida por chave composta no Supabase para não atravessar escritórios.
+- Migrations remotas isoladas: `add_honorarium_note_fields` e `secure_honorarium_default_society_scope`. Migration local de referência: `20260818201935_add_honorarium_note_fields.sql`. Nunca executar `db push` indiscriminadamente devido à divergência histórica.
+- Removido o gráfico anual duplicado no fim dos dashboards de Responsáveis.
+- Gates: segurança de ficheiros, oxlint, TypeScript, 58 testes e build aprovados; dry-run Cloudflare aprovado sobre 31 assets. A matriz E2E percorreu 24 testes locais e omitiu 2 de produção, conservando o hang conhecido após o último resultado.
+- Supabase Advisors: nenhum erro crítico novo. Permanecem avisos de revisão sobre RPCs `SECURITY DEFINER`, protecção de passwords comprometidas, FKs sem índice, índices não usados e políticas permissivas múltiplas; avaliar individualmente, sem correcções automáticas.
+- Permissões do Operador decididas e aplicadas: consulta, criação e actualização de todos os Clientes e respectivas vertentes do próprio escritório, independentemente da Sociedade. Não inclui eliminação nem Definições. A migration isolada `allow_operator_all_client_management` passou um teste RLS transaccional completo e não deixou dados sintéticos; o Operador activo ainda tem de concluir a mudança obrigatória do PIN no primeiro acesso.
+- Nas listas de Clientes, `Emitir Nota de Honorários` abre o mesmo selector de movimentos não facturados da ficha. O botão permanece visível: azul quando há movimentos e neutro/desactivado quando não há. A migration isolada `add_uninvoiced_client_shortcuts` criou a RPC de indicador e a cache PostgREST foi recarregada.
+- Não fazer push desta branch sem nova ordem: historicamente, o push pode activar publicação automática na Cloudflare.
+
 ## Hotfix 0.3.3 — gráficos da Visão Geral
 
 - Corrigida a grelha de `Análise e tendências`: `Valor por ano` e `Valor por mês` ocupam agora 50% cada e preenchem 100% da largura disponível.
@@ -199,6 +215,25 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Implementar exportação XLSX integral sob pedido sem bloquear a abertura dos Registos de trabalho.
 - Continuar validação visual das tabelas e dashboards nas matrizes Windows/iPhone.
 - Manter o incremento SemVer visível na versão local antes de cada lote e publicar apenas quando solicitado.
+
+## Validação local 0.4.0 — 2026-08-19
+
+- Continua exclusivamente local na branch `codex/reconcile-full-import`; produção mantém-se em `0.3.3`. Não houve publicação, push ou aplicação remota neste lote.
+- Os Registos paginam identificadores antes de hidratar as linhas, reduzindo o trabalho da consulta. O pré-filtro histórico deixou de incluir avisos genéricos de importação e considera apenas facturados sem data ou excepções históricas reais. As migrations correspondentes permanecem apenas locais.
+- Formulários de criar/editar movimento usam rodapé móvel fixo e scroll interno; a matriz visual confirmou os botões dentro do ecrã em iPhone.
+- A grelha final da Visão Geral passou a admitir encolhimento dos filhos. Corrigido overflow horizontal de 172 px num iPhone 430×932; após a correcção `scrollWidth <= innerWidth` em claro e escuro.
+- Browser integrado validado em 1920×1080 a 100%, equivalentes a 125% e 150%, tablet 1024×768, iPhone 375×667 e 430×932. Sticky, scroll horizontal e contraste ficaram estáveis.
+- Validação automática final: segurança de ficheiros, lint, TypeScript, 75/75 testes unitários, build, dry-run Cloudflare e E2E completo com 29 aprovados e 2 cenários exclusivos de preview/produção omitidos. O subconjunto responsivo aprovou 19/19.
+- `supabase db lint --linked --schema public` devolveu `No schema errors found`. A listagem ligada confirma as cinco migrations remotas documentais recentes alinhadas; a divergência histórica local/remoto mantém o bloqueio a `supabase db push` global.
+- Sessão autenticada de PAULA CHAVES (`Operador`) revalidada: Administração/Definições/Importações/Auditoria não são navegáveis pelo perfil; criação e edição individual de movimentos funcionam e produzem confirmação de auditoria.
+- Sociedades e Responsáveis foram percorridos no browser integrado com totais e séries diferentes. Os atalhos Por facturar/Facturados não pagos/Sem preço coincidem com as contagens das respectivas tabelas. O dashboard de CARINA mantém latência repetível próxima de 6 segundos; não introduzir cache potencialmente obsoleta sem obter primeiro um plano SQL autenticado.
+- O selector de Nota de Honorários do cliente `TESTE PARTICULAR` foi confirmado em iPhone 390×844 e modo escuro: largura contida, rodapé visível, três idiomas, selecção por Sociedade, escolha/ordenação de colunas, totais e despesas. O movimento QA temporário foi eliminado com motivo de auditoria; o universo regressou a 7 220.
+- Registos frios medidos em cerca de 1,29 s para obter o universo de 7 221 movimentos. A selecção `Todas` conserva 1–7 221 no rodapé e virtualiza a tabela em janelas de 40 linhas; foi acrescentado teste automático com 7 200 resultados.
+- A preparação documental pagina movimentos para além das primeiras 10 000 linhas por Cliente e verifica a completude antes de permitir o PDF; o teste simula duas páginas e confirma os três movimentos.
+- O painel documental deixou de criar HTML inválido com um `<form>` dentro do formulário da ficha. O upload tem botão explícito e o browser integrado confirmou o editor estável, sem submissão automática, após 3,2 segundos.
+- O Chrome isolado revelou que o clique em `Editar` ainda podia submeter a ficha porque o mesmo nó era reconciliado como botão de guardar durante a activação. Foi acrescentado `preventDefault()` à transição e `type="submit"` explícito ao botão final; revalidação visual em 1920×1200, claro/escuro, manteve o editor e o selector de ficheiros abertos após 4 segundos.
+- O cliente sintético confirmou separação funcional: Nota de Honorários = 1 movimento não facturado/15 min; Cobrança = 1 movimento facturado não pago/1 h. O Chrome aceitou o PDF sintético depois de activar `Allow access to file URLs`.
+- No projecto correcto `vtvvqyebigflgqccbqsw`, todas as migrations aditivas 0.4.0 foram aplicadas isoladamente e a Edge Function `client-documents` versão 2 está activa com `verify_jwt=true`. O projecto está saudável e não foi usado `db push` global.
 
 ## Correcção 0.3.2 em preparação — dimensões dos dashboards
 

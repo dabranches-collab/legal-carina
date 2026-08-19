@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Icon } from "../../components/ui/Icon";
 import {
@@ -148,8 +148,9 @@ const archives = [
   ["other", "Outro"],
 ] as const;
 
-export function WorkEntriesPage() {
+export function WorkEntriesPage({canDelete=true}:{canDelete?:boolean}={}) {
   const initialParams = new URLSearchParams(window.location.search);
+  const [uncollectibleOnly,setUncollectibleOnly]=useState(()=>initialParams.get("collectionState")==="uncollectible");
   const [rows, setRows] = useState<Entry[]>([]),
     [meta, setMeta] = useState<SearchMeta>({
       items: [],
@@ -171,7 +172,11 @@ export function WorkEntriesPage() {
     [paid, setPaid] = useState(() => initialParams.get("paid") ?? ""),
     [archive, setArchive] = useState(""),
     [reviewIssue, setReviewIssue] = useState(() =>
-      initialParams.get("missingSociety") === "true"
+      initialParams.get("collectionState") === "unpaid"
+        ? "unpaid"
+        : initialParams.get("collectionState") === "uninvoiced"
+          ? "uninvoiced"
+      : initialParams.get("missingSociety") === "true"
         ? "missing_society"
         : initialParams.get("missingPrice") === "true"
           ? "missing_price"
@@ -184,16 +189,37 @@ export function WorkEntriesPage() {
     clientId = initialParams.get("clientId");
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
+  const filtersBarRef=useRef<HTMLDivElement>(null);
+  const [tableStickyOffset,setTableStickyOffset]=useState(112);
+  useEffect(()=>{
+    const bar=filtersBarRef.current;if(!bar)return;
+    const update=()=>{
+      const appHeader=document.querySelector<HTMLElement>('.app-shell-header');
+      const headerHeight=Math.ceil(appHeader?.getBoundingClientRect().height??64);
+      const keepFiltersSticky = window.innerWidth >= 1024 && window.innerHeight > 760;
+      setTableStickyOffset(headerHeight+(keepFiltersSticky?Math.ceil(bar.getBoundingClientRect().height):0));
+    };
+    update();
+    const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(update);
+    observer?.observe(bar);window.addEventListener('resize',update);
+    return()=>{observer?.disconnect();window.removeEventListener('resize',update)};
+  },[]);
   const [creating, setCreating] = useState(false),
     [editingId, setEditingId] = useState<string | null>(null);
   const saveInline = useCallback(async (row: Entry, field: string, value: string) => {
     if (!supabase) return;
     setError("");
+    setNotice("");
     const result = field === "invoice_number"
       ? await supabase.rpc("update_work_entry_invoice_number", {
           p_work_entry_id: row.id,
           p_invoice_number: value,
         })
+      : field === "invoice_date"
+        ? await supabase.rpc("update_work_entry_invoice_date", {
+            p_work_entry_id: row.id,
+            p_invoice_date: value || null,
+          })
       : field === "collection_status"
         ? await supabase.rpc("update_work_entry_collection_status", {
             p_work_entry_id: row.id,
@@ -205,7 +231,13 @@ export function WorkEntriesPage() {
           p_value: value,
         });
     if (result.error) {
-      setError(result.error.message ?? "Não foi possível guardar a alteração.");
+      const messages: Record<string, string> = {
+        "invoice date is required": "Preencha primeiro a Data da factura.",
+        "a paid movement must be invoiced": "Só é possível marcar como Pago depois de preencher a Data da factura.",
+        "enter the invoice date before assigning an invoice number": "Preencha primeiro a Data da factura antes de indicar o N.º da factura.",
+        "not authorized": "Não tem permissão para alterar este movimento.",
+      };
+      setError(messages[result.error.message] ?? result.error.message ?? "Não foi possível guardar a alteração.");
       return;
     }
     invalidateWorkUniverse();
@@ -282,7 +314,11 @@ export function WorkEntriesPage() {
       try {
         metadata = clientType === "mixed"
           ? { data: await searchMixedClientEntries(searchArgs), error: null }
-          : await supabase.rpc("search_work_entries", {
+          : uncollectibleOnly
+            ? await supabase.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
+            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"
+              ? await supabase.rpc("get_attention_work_entries",{p_kind:reviewIssue,p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
+            : await supabase.rpc("search_work_entries", {
               p_page: 1,
               p_page_size: 100,
               ...searchArgs,
@@ -309,7 +345,7 @@ export function WorkEntriesPage() {
     return () => {
       active = false;
     };
-  }, [searchArgs, refreshToken, clientType]);
+  }, [searchArgs, refreshToken, clientType, reviewIssue, uncollectibleOnly]);
   const clear = () => {
     setSearch("");
     setQuery("");
@@ -320,20 +356,14 @@ export function WorkEntriesPage() {
     setPaid("");
     setArchive("");
     setReviewIssue("");
+    setUncollectibleOnly(false);
   };
   const selectReviewIssue = (value: string) => {
+    setUncollectibleOnly(false);
     if (reviewIssue === value) {
       setReviewIssue("");
       return;
     }
-    setSearch("");
-    setQuery("");
-    setYear("");
-    setProfessional("");
-    setBilling("");
-    setInvoiced("");
-    setPaid("");
-    setArchive("");
     setReviewIssue(value);
   };
   const reviewLabels: Record<string, string> = {
@@ -399,7 +429,7 @@ export function WorkEntriesPage() {
     review,
     missingPrice,
     clientType,
-    clientId,
+      clientId,
     missingSociety,
   ]);
   const loadAllTableRows = loadExportRows;
@@ -473,8 +503,8 @@ export function WorkEntriesPage() {
       id: "invoiced",
       label: "Facturado",
       filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
-      value: (row) => row.status === "uncollectible" ? "Incobrável" : row.is_invoiced ? "Sim" : "Não",
-      render: (row) => <InlineSelect value={row.status === "uncollectible" ? "uncollectible" : String(row.is_invoiced)} options={[["true","Sim"],["false","Não"],["uncollectible","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible" ? "collection_status" : "is_invoiced",value)}/>,
+      value: (row) => row.status === "uncollectible_uninvoiced" ? "Incobrável" : row.is_invoiced ? "Sim" : "Não",
+      render: (row) => <InlineSelect value={row.status === "uncollectible_uninvoiced" ? "uncollectible_uninvoiced" : String(row.is_invoiced)} options={[["true","Sim"],["false","Não"],["uncollectible_uninvoiced","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible_uninvoiced" ? "collection_status" : "is_invoiced",value)}/>,
     },
     {
       id: "invoiceNumber",
@@ -494,8 +524,8 @@ export function WorkEntriesPage() {
       id: "paid",
       label: "Pago",
       filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
-      value: (row) => row.status === "uncollectible" ? "Incobrável" : row.is_paid ? "Sim" : "Não",
-      render: (row) => <InlineSelect value={row.status === "uncollectible" ? "uncollectible" : String(row.is_paid)} options={[["true","Sim"],["false","Não"],["uncollectible","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible" ? "collection_status" : "is_paid",value)}/>,
+      value: (row) => row.status === "uncollectible_invoiced" ? "Incobrável" : row.is_paid ? "Sim" : "Não",
+      render: (row) => <InlineSelect value={row.status === "uncollectible_invoiced" ? "uncollectible_invoiced" : String(row.is_paid)} options={[["true","Sim"],["false","Não"],["uncollectible_invoiced","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible_invoiced" ? "collection_status" : "is_paid",value)}/>,
     },
     { id: "archive", label: "Arquivo", filterOptions:[{value:"",label:"Sem arquivo"},...archives.map(([value,label])=>({value,label}))], value: (row) => row.archive_status, render:(row)=><InlineSelect value={row.archive_status??""} options={archives} placeholder="Sem arquivo" onCommit={(value)=>saveInline(row,"archive_status",value)}/> },
     { id: "notes", label: "Observações", suggestOptions:false, value: (row) => row.observations, render:(row)=><InlineInput value={row.observations??""} onCommit={(value)=>saveInline(row,"observations",value)}/> },
@@ -510,7 +540,7 @@ export function WorkEntriesPage() {
           {notice}
         </p>
       )}
-      <div className="sticky top-16 z-50 grid gap-2 bg-background pb-2 lg:top-[6.5rem] lg:grid-cols-[minmax(0,1fr)_7.5rem]">
+      <div ref={filtersBarRef} className="work-filters-bar grid gap-2 bg-background pb-2 lg:sticky lg:top-[6.5rem] lg:z-50 lg:grid-cols-[minmax(0,1fr)_7.5rem]">
       <section aria-label="Filtros dos registos" className="card p-2 shadow-sm">
       <div
         aria-labelledby="review-issues-title"
@@ -676,8 +706,9 @@ export function WorkEntriesPage() {
         loadAllRows={loadAllTableRows}
         totalRows={meta.total}
         universeKey={JSON.stringify(searchArgs)}
-        stickyHeaderOffset={304}
+        stickyHeaderOffset={tableStickyOffset}
         showSearch={false}
+        resultNoun="movimentos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
       />
       {creating && (
@@ -694,11 +725,14 @@ export function WorkEntriesPage() {
       {editingId && (
         <EditWorkEntryModal
           entryId={editingId}
+          canDelete={canDelete}
           onClose={() => setEditingId(null)}
-          onSaved={() => {
+          onSaved={(action) => {
             invalidateWorkUniverse();
             setEditingId(null);
-            setNotice("Movimento actualizado e registado na auditoria.");
+            setNotice(action === "deleted"
+              ? "Movimento apagado e preservado no histórico de auditoria."
+              : "Movimento actualizado e registado na auditoria.");
             setRefreshToken((value) => value + 1);
           }}
         />
@@ -712,14 +746,15 @@ function InlineInput({value,onCommit,type="text"}:{value:string;onCommit:(value:
  const [editing,setEditing]=useState(false)
  useEffect(()=>setDraft(value),[value])
  if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 w-full min-w-0 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{type==='date'&&value?new Date(`${value}T00:00:00`).toLocaleDateString('pt-PT'):value||'—'}</button>
- return <input autoFocus type={type} value={draft} onClick={event=>event.stopPropagation()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1.5 text-center text-xs"/>
+ if(type==='date')return <span onClick={event=>event.stopPropagation()} className="inline-flex items-center gap-1"><input autoFocus type="date" value={draft} onFocus={event=>{try{event.currentTarget.showPicker()}catch{}}} onClick={event=>{event.stopPropagation();try{event.currentTarget.showPicker()}catch{}}} onKeyDown={event=>event.preventDefault()} onPaste={event=>event.preventDefault()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1 text-center text-xs"/><button type="button" disabled={!draft} title="Limpar a data" onMouseDown={event=>event.preventDefault()} onClick={()=>{setDraft('');setEditing(false);if(value)onCommit('')}} className="h-7 rounded border border-border px-1 text-[0.65rem] disabled:opacity-30">Limpar</button></span>
+ return <input autoFocus type="text" value={draft} onClick={event=>event.stopPropagation()} onKeyDown={event=>{event.stopPropagation();if(event.key==='Enter')event.currentTarget.blur();if(event.key==='Escape'){setDraft(value);setEditing(false)}}} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1.5 text-center text-xs"/>
 }
 function InlineMoney({value,onCommit}:{value:number|null;onCommit:(value:string)=>void}){
  const [draft,setDraft]=useState(value==null?'':String(value))
  const [editing,setEditing]=useState(false)
  useEffect(()=>setDraft(value==null?'':String(value)),[value])
  if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="financial-value min-h-7 whitespace-nowrap px-1 text-xs hover:rounded hover:bg-secondary-soft">{value==null?'—':money.format(value)}</button>
- return <span className="inline-flex items-center gap-1"><input autoFocus type="number" min="0" step="0.01" inputMode="decimal" value={draft} onClick={event=>event.stopPropagation()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==(value==null?'':String(value)))onCommit(draft)}} className="control financial-value h-7 w-20 px-1.5 text-right text-xs"/><span className="financial-value text-[0.65rem]">EUR</span></span>
+ return <span className="inline-flex items-center gap-1"><input autoFocus type="number" min="0" step="0.01" inputMode="decimal" value={draft} onClick={event=>event.stopPropagation()} onKeyDown={event=>{event.stopPropagation();if(event.key==='Enter')event.currentTarget.blur();if(event.key==='Escape'){setDraft(value==null?'':String(value));setEditing(false)}}} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==(value==null?'':String(value)))onCommit(draft)}} className="control financial-value h-7 w-20 px-1.5 text-right text-xs"/><span className="financial-value text-[0.65rem]">EUR</span></span>
 }
 function InlineSelect({value,options,placeholder,displayValue,onCommit}:{value:string;options:readonly (readonly [string,string])[];placeholder:string;displayValue?:string;onCommit:(value:string)=>void}){
  const [editing,setEditing]=useState(false)

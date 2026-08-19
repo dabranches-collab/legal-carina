@@ -67,3 +67,45 @@ test('manifest e service worker de produção são válidos', async ({ request }
   expect(worker.ok()).toBe(true)
   expect(await worker.text()).toContain('SKIP_WAITING')
 })
+
+test('dashboard preenchido mantém gráficos contidos e informação mensal acessível', async ({ page }) => {
+  const societies = ['CARINA SANTOS', 'LEGAL TEAM', 'MASSIVE SEARCH']
+  const monthly = Array.from({ length: 12 }, (_, index) => ({
+    label: `2025-${String(index + 9 > 12 ? index - 3 : index + 9).padStart(2, '0')}`,
+    value: 5000 + index * 900,
+    societies: Object.fromEntries(societies.map((society, societyIndex) => [society, 1000 + index * 200 + societyIndex * 300])),
+  }))
+  await page.route('**/rest/v1/rpc/**', async (route) => {
+    const url = route.request().url()
+    if (url.includes('get_dashboard_metric_breakdowns')) {
+      await route.fulfill({ contentType: 'application/json', body: '[]' })
+      return
+    }
+    if (url.includes('get_dashboard_overview')) {
+      await route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+        metrics: { minutes: 1200, worked: 9000, invoiced: 7000, paid: 5000, receivable: 2000, uninvoicedCount: 4, unpaidCount: 3, uncollectibleCount: 1, uncollectibleValue: 250, averageRate: 150, activeClients: 8, missingPrice: 2, missingBilling: 1, overrides: 0, importErrors: 0 },
+        annual: Array.from({ length: 9 }, (_, index) => ({ label: 2018 + index, value: 10000 + index * 5000, minutes: 1000 })),
+        monthly,
+        monthlyByYear: [],
+        billingAnnual: societies.flatMap((society, societyIndex) => Array.from({ length: 9 }, (_, index) => ({ society, year: 2018 + index, value: 2000 + index * 1000 + societyIndex * 500 }))),
+        billingMonthly: societies.flatMap((society, societyIndex) => monthly.map((point, index) => ({ society, period: point.label, value: 1000 + index * 200 + societyIndex * 300 }))),
+        latestYear: 2026,
+        byClient: Array.from({ length: 10 }, (_, index) => ({ label: `Cliente ${index + 1}`, value: 1000 + index * 100 })),
+        byBilling: societies.map((label, index) => ({ label, value: 3000 + index * 1000 })),
+        byProfessional: [{ label: 'CARINA', value: 5000 }, { label: 'PAULA', value: 4000 }],
+        byArchive: [{ label: 'Sem arquivo', value: 10 }],
+        clientTypes: [{ label: 'individual', value: 5 }, { label: 'company', value: 3 }],
+      }) })
+      return
+    }
+    await route.fulfill({ contentType: 'application/json', body: '[]' })
+  })
+  await page.setViewportSize({ width: 430, height: 932 })
+  await page.goto('/?qa-iphone=1&safe-top=59&safe-bottom=34&theme=dark')
+  await expect(page.getByText('Valor por mês', { exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  const monthlyChart = page.getByRole('img', { name: 'Valor mensal' })
+  await expect(monthlyChart).toBeVisible()
+  const firstValue = monthlyChart.locator('xpath=..').locator('[title]').first()
+  await expect(firstValue).toHaveAttribute('title', /CARINA SANTOS.*LEGAL TEAM.*MASSIVE SEARCH/s)
+})

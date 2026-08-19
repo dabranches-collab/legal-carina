@@ -39,6 +39,8 @@ type OverviewData = {
     receivable: MoneyValue;
     uninvoicedCount: number;
     unpaidCount: number;
+    uncollectibleCount: number;
+    uncollectibleValue: MoneyValue;
     averageRate: MoneyValue;
     activeClients: number;
     missingPrice: number;
@@ -203,6 +205,13 @@ export function OverviewPage() {
       "warning",
     ],
     [
+      "Incobráveis",
+      number.format(m.uncollectibleCount),
+      m.uncollectibleValue==null?"Sem acesso ao valor":money.format(m.uncollectibleValue),
+      "warning",
+      "warning",
+    ],
+    [
       "Preço médio/hora",
       financial(m.averageRate),
       "Média ponderada",
@@ -232,14 +241,23 @@ export function OverviewPage() {
     ],
   ] as const;
   const detailLinks: Record<string, string> = {
-    "Por receber": "?view=work&invoiced=true&paid=false",
-    "Não facturados": "?view=work&invoiced=false",
-    "Facturados não pagos": "?view=work&invoiced=true&paid=false",
+    "Por receber": "?view=work&collectionState=unpaid",
+    "Não facturados": "?view=work&collectionState=uninvoiced",
+    "Facturados não pagos": "?view=work&collectionState=unpaid",
     "Movimentos sem preço": "?view=work&missingPrice=true",
     "Sem sociedade": "?view=work&missingSociety=true",
+    "Incobráveis": "?view=work&collectionState=uncollectible",
   };
   const followUpMetrics = metrics.filter(([label]) => detailLinks[label]),
     generalMetrics = metrics.filter(([label]) => !detailLinks[label]);
+  const followUpCount:Record<string,number|null>={
+    "Por receber":m.receivable,
+    "Não facturados":m.uninvoicedCount,
+    "Facturados não pagos":m.unpaidCount,
+    "Incobráveis":m.uncollectibleCount,
+    "Movimentos sem preço":m.missingPrice,
+    "Sem sociedade":m.missingBilling,
+  };
   const subtotalKey: Record<string, keyof MetricBreakdown> = {
     "Total de horas": "minutes",
     "Valor trabalhado": "worked",
@@ -328,7 +346,7 @@ export function OverviewPage() {
                 value={value}
                 detail={detail}
                 icon={icon}
-                tone={tone === "warning" ? "danger" : tone}
+                tone={followUpCount[label]===0?"success":tone === "warning" ? "danger" : tone}
                 financial={/valor|preço|receb/i.test(label)}
                 detailHref={detailLinks[label]}
                 subtotals={metricSubtotals(label)}
@@ -429,11 +447,11 @@ export function OverviewPage() {
                 ]}
               />
             </div>
-            <div className="grid items-stretch gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-              <div className="[&>*]:h-full">
+            <div className="grid min-w-0 items-stretch gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+              <div className="min-w-0 [&>*]:h-full">
                 <SocietyEvolutionChart data={data.billingAnnual ?? []} />
               </div>
-              <div className="grid gap-4 lg:[&>figure]:col-span-1">
+              <div className="grid min-w-0 gap-4 lg:[&>figure]:col-span-1">
                 <HorizontalChart
                   title="Arquivo"
                   subtitle="Movimentos por localização"
