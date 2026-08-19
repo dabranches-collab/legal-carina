@@ -240,4 +240,6 @@ Actualizado em: 2026-08-17
 - Particulares e Empresas passam a receber do Supabase uma janela contínua de 12 meses terminada no mês do registo mais recente do respectivo universo, em vez de Janeiro–Dezembro do último ano com meses futuros vazios.
 - Migration isolada `make_client_dashboards_rolling_12_months` aplicada e registada no projecto `vtvvqyebigflgqccbqsw`; não foi usado `db push` global.
 - Validação autenticada como Operador: Particulares e Empresas apresentam 12 pontos de 09/25 a 08/26, em claro e escuro, sem erros de consola. Segurança, lint, TypeScript, 75/75 testes, build e matriz E2E com 29 aprovados/2 omitidos passaram.
+- Os contadores de `Não facturados` e `Facturados não pagos` dos dashboards de Clientes usam agora exactamente o mesmo universo dos atalhos, excluindo respectivamente `uncollectible_uninvoiced` e `uncollectible_invoiced`. A migration isolada `align_client_dashboard_attention_counts` está aplicada e registada no Supabase correcto.
+- Prova autenticada: Particulares apresentam 484/484 não facturados e 294/294 facturados não pagos; Empresas apresentam 281/281 e 193/193. Em todos os casos, o valor da caixa coincide com a contagem total da tabela filtrada.
 - Estado: Supabase corrigido e código local em `0.4.1`; frontend Cloudflare permanece em `0.4.0` até nova ordem explícita de publicação.
