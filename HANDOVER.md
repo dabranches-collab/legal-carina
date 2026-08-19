@@ -288,3 +288,9 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Advisors Supabase: 0 `ERROR` de segurança e 0 `ERROR` de desempenho. Permanecem avisos existentes de RPCs `SECURITY DEFINER` intencionais, protecção Auth de passwords vazadas e três grupos de políticas permissivas duplicadas.
 - Publicado a partir do commit funcional `cd06d3d`: `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `b95932a2-0a46-466b-9cd8-2de5936e28ea`.
 - Pós-publicação confirmado: página pública sem ecrã branco e com versão 0.4.3; manifesto HTTPS 200 com arranque na Visão Geral; service worker/cache `carina-legal-shell-0.4.3`.
+
+## Lote 0.4.4 — estabilidade do arranque PWA
+
+- Eliminada a recarga automática provocada pela primeira activação do service worker, possível origem de flashes/ecrãs brancos e contextos destruídos.
+- O botão «Actualizar aplicação» continua a activar a versão em espera e só então recarrega a página.
+- Testado em claro/escuro e na matriz automatizada de Windows/iPhone; 75/75 unitários, 29 E2E de interface e 2/2 E2E PWA aprovados; dry-run Cloudflare aprovado.

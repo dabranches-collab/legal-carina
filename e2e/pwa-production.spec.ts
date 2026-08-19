@@ -13,15 +13,17 @@ test.skip(!process.env.PWA_PRODUCTION_QA, 'Executado apenas contra o preview de 
 
 test('preview de produção regista e ativa o service worker', async ({ page }) => {
   await page.goto('/')
-  let state:{active:boolean;scope:string;caches:string[]}|undefined
-  for(let attempt=0;attempt<3&&!state;attempt+=1){
-    try{state=await page.evaluate(async () => {const registration=await navigator.serviceWorker.ready;return { active:Boolean(registration.active),scope:registration.scope,caches:await caches.keys() }})}
-    catch{await page.waitForLoadState('domcontentloaded')}
-  }
-  expect(state).toBeDefined()
-  if(!state)return
+  const state=await page.evaluate(async () => {
+    const timeout=new Promise<never>((_,reject)=>window.setTimeout(()=>reject(new Error('O service worker não ficou pronto em 10 segundos.')),10_000))
+    const registration=await Promise.race([navigator.serviceWorker.ready,timeout])
+    return { active:Boolean(registration.active),scope:registration.scope,caches:await caches.keys() }
+  })
   expect(state.active).toBe(true)
   expect(state.scope).toBe(new URL('/',page.url()).href)
-  expect(state.caches).toContain('carina-legal-shell-0.4.3')
-  await page.close()
+  expect(state.caches).toContain('carina-legal-shell-0.4.4')
+  await page.evaluate(async () => {
+    const registrations=await navigator.serviceWorker.getRegistrations()
+    await Promise.all(registrations.map(registration=>registration.unregister()))
+    await Promise.all((await caches.keys()).map(cache=>caches.delete(cache)))
+  })
 })

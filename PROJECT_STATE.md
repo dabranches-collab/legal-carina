@@ -264,3 +264,9 @@ Actualizado em: 2026-08-17
 - Auditorias Supabase depois da DDL: zero erros de segurança e zero erros de desempenho. Avisos existentes permanecem para revisão arquitectural, sem revogar RPCs necessárias nem remover índices por automatismo.
 - Versão `0.4.3` publicada a partir do commit `cd06d3d` em `https://legal-carina.dabranches.workers.dev`; Cloudflare Version ID `b95932a2-0a46-466b-9cd8-2de5936e28ea`.
 - Pós-publicação: página pública sem ecrã branco e com versão 0.4.3, manifesto HTTPS 200 com `/?view=overview` e service worker/cache `carina-legal-shell-0.4.3` confirmados.
+
+# Lote 0.4.4 — arranque PWA sem recarga inicial
+
+- Corrigido o `controllerchange` do service worker: a activação inicial deixa de forçar uma recarga; a recarga acontece apenas depois de o utilizador escolher «Actualizar aplicação».
+- O teste PWA tem limite explícito de 10 segundos, valida a cache `carina-legal-shell-0.4.4` e limpa o worker/cache do contexto de ensaio.
+- Validação local: segurança, lint, TypeScript, 75/75 testes unitários, build, 29 testes E2E de interface (2 ignorados por modo), 2/2 testes PWA de produção e dry-run Cloudflare concluídos.
