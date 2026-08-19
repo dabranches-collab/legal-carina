@@ -301,4 +301,5 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - O gerador documental foi revisto na produção 0.4.4: Nota e Cobrança abrem a partir da lista de cliente, filtram respectivamente não facturados e facturados não pagos, separam por Sociedade e alternam correctamente entre PT/EN/FR.
 - Corrigida localmente a ausência, na Cobrança, do aviso sobre dados legais/bancários incompletos da Sociedade emissora. Foi acrescentado teste de regressão específico.
 - Gates aprovados antes da publicação: ficheiros sensíveis, lint, TypeScript, 76/76 unitários, build, 29 E2E de interface/2 omitidos e dry-run Cloudflare.
-- Código preparado como `0.4.5`; preencher commit, Version ID Cloudflare e provas de produção depois da publicação.
+- Primeira publicação feita a partir do commit funcional `b7cecab`: `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `c3459a59-6f05-44fd-98ad-6d00a455365b`.
+- A expectativa da cache PWA passou a usar dinamicamente a versão de `package.json`; 2/2 testes de preview de produção confirmaram o manifesto, o service worker e `carina-legal-shell-0.4.5`. O pequeno ajuste de teste deve ser centralizado e republicado antes de encerrar o lote.

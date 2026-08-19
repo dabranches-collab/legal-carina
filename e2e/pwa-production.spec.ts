@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 
 const manifest=JSON.parse(readFileSync(new URL('../public/manifest.webmanifest',import.meta.url),'utf8')) as {id:string;start_url:string;launch_handler:{client_mode:string}}
+const packageVersion=(JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8')) as {version:string}).version
 
 test('manifest abre e reabre o PWA na Visão geral',()=>{
   expect(manifest.id).toBe('/')
@@ -20,7 +21,7 @@ test('preview de produção regista e ativa o service worker', async ({ page }) 
   })
   expect(state.active).toBe(true)
   expect(state.scope).toBe(new URL('/',page.url()).href)
-  expect(state.caches).toContain('carina-legal-shell-0.4.4')
+  expect(state.caches).toContain(`carina-legal-shell-${packageVersion}`)
   await page.evaluate(async () => {
     const registrations=await navigator.serviceWorker.getRegistrations()
     await Promise.all(registrations.map(registration=>registration.unregister()))

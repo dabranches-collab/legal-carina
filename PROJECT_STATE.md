@@ -277,4 +277,5 @@ Actualizado em: 2026-08-17
 - Notas de Honorários e Cobranças foram validadas na lista de Empresas com o cliente sintético, incluindo o universo correcto, selecção de movimentos, separação por Sociedade e idiomas Português, Inglês e Francês.
 - A Cobrança passa a apresentar o mesmo aviso preventivo da Nota de Honorários quando faltam dados legais ou bancários da Sociedade emissora; mantém-se possível gerar um documento incompleto apenas para revisão.
 - Validação local: segurança, lint, TypeScript, 76/76 testes unitários, build, 29 testes E2E de interface (2 omitidos por modo) e dry-run Cloudflare aprovados.
-- Estado: versão `0.4.5` preparada para centralização no GitHub e publicação Cloudflare; confirmação pós-publicação ainda pendente.
+- Primeira publicação 0.4.5 confirmada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `c3459a59-6f05-44fd-98ad-6d00a455365b`.
+- O teste PWA deixou de fixar a versão da cache no código e passa a derivá-la de `package.json`; manifesto e activação da cache `carina-legal-shell-0.4.5` passaram 2/2 no preview de produção. Este ajuste de teste aguarda a publicação final do mesmo lote.
