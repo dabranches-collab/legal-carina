@@ -289,4 +289,4 @@ Actualizado em: 2026-08-17
 - Edge Function `client-documents` activa no Supabase, JWT obrigatório e rejeição sem sessão confirmada. A documentação RLS passou a incluir o papel Operador e a eliminação individual por RPC com motivo auditável.
 - A ficha completa do movimento passou a expor os dois estados Incobrável e mantém `status`, Facturado e Pago sincronizados. Ensaio autenticado como PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, ausência de menus administrativos e acesso correcto a Nota de Honorários e Cobrança do cliente sintético.
 - Gates finais locais: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos do preview de produção foram omitidos por condição normal.
-- Versão local em preparação: `0.4.6`; produção permanece em `0.4.5`.
+- Versão 0.4.6 publicada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`; confirmação visual pública mostrou 0.4.6, login íntegro e nenhum erro de consola.

@@ -313,4 +313,4 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - `client-documents` está activa e protegida por JWT no projecto `vtvvqyebigflgqccbqsw`. Matriz RLS documentada com o papel Operador.
 - A ficha completa do movimento inclui agora os dois estados Incobrável e sincroniza-os com Facturado/Pago. A sessão real de PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, menus administrativos ausentes e Nota de Honorários/Cobrança com universos correctos no cliente sintético.
 - Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos de preview/produção omitidos como previsto.
-- Código local identificado como `0.4.6`; produção permanece em `0.4.5` até concluir commit, push e publicação ordenada.
+- Código funcional publicado a partir do commit `d0f0f77`: versão 0.4.6 em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`. Confirmação visual pública: login íntegro, versão correcta e nenhum erro de consola.
