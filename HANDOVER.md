@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Correcção 0.4.8 — permissões auditadas dos movimentos
+
+- A Carina, enquanto administradora, pode editar, mudar a Sociedade facturante e apagar movimentos sem indicar uma justificação; a auditoria técnica mantém actor e dados anteriores.
+- O perfil Operador pode igualmente mudar a Sociedade e apagar movimentos, mas tem de indicar um motivo. Depois de preenchido, o motivo não bloqueia a operação.
+- O selector passa a apresentar ao Operador todas as Sociedades activas do escritório sem lhe expor valores financeiros protegidos.
+- Migrations isoladas aplicadas: `fix_role_based_work_entry_audit` e `require_operator_reason_for_all_work_edits`. Teste transaccional real confirmou os fluxos Operador/administrador e foi integralmente revertido.
+- Gates: segurança, lint, TypeScript, 79/79 testes, build, dry-run Cloudflare e 30/30 E2E aplicáveis aprovados; 2 E2E exclusivos de produção omitidos.
+- Publicado em 2026-08-20 a partir do commit `e6b8677`; Cloudflare Version ID `19b81fd5-25aa-4658-b974-4060c8f1f9f3`, URL `https://legal-carina.dabranches.workers.dev`.
+
 ## Correcção 0.4.7 — criação e ordenação de movimentos
 
 - O formulário de criação apresenta `Valor/hora` e `Valor total`, calcula imediatamente nos dois sentidos com a duração e envia o valor/hora resultante para a RPC protegida.

@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Versão 0.4.8 — permissões dos movimentos
+
+- Administradores editam, mudam Sociedade e apagam movimentos sem justificação obrigatória.
+- Operadores podem executar as mesmas operações, com motivo auditável obrigatório e sem bloqueio depois de preenchido.
+- Supabase validado transaccionalmente e migrations isoladas aplicadas; nenhuma escrita de teste ficou persistida.
+- Segurança, lint, TypeScript, 79 testes, build, dry-run e 30 E2E aplicáveis aprovados.
+- Produção confirmada em `https://legal-carina.dabranches.workers.dev`, commit `e6b8677`, Cloudflare Version ID `19b81fd5-25aa-4658-b974-4060c8f1f9f3`, publicada em 2026-08-20.
+
 ## Versão 0.4.7 — correcções de movimentos
 
 - Criação com cálculo bidireccional entre duração, valor/hora e valor total, persistido no Supabase.
