@@ -6,7 +6,10 @@
 - Todas as edições em linha passam por um RPC auditado; o Operador indica um motivo real e o Administrador não fica condicionado por justificação.
 - Duração e valor/hora recalculam o total; data, Cliente, Responsável e Sociedade voltam a executar o motor de preços. Os RPC antigos deixam de estar executáveis directamente por utilizadores autenticados.
 - Matriz transaccional Administrador/Operador aprovada com rollback: duração, valor/hora, Sociedade, data, actividade, observações, arquivo, facturação, número de factura, pagamento, incobrável, Nota de Honorários e Cobrança.
-- Gates: segurança, lint, TypeScript, 81/81 testes, build e 30/30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. Produção permanece em `0.4.9`; este lote ainda não foi publicado.
+- Gates: segurança, lint, TypeScript, 81/81 testes, build e 30/30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos.
+- Publicação automática do frontend confirmada em 2026-08-20, commit funcional `36dbe35`, Cloudflare Deployment ID `9089632c-3a3f-48d9-aba4-0cafab690ae3` e Version ID `aafb55c6-f638-47a9-8082-01764f1baa11`.
+- Backend alinhado após autorização: migrations `audit_and_recalculate_inline_work_entry_edits` e `repair_stale_manual_hourly_amounts` aplicadas. Dois movimentos horários incoerentes foram corrigidos selectivamente; verificação final devolveu zero incoerências.
+- Prevenção confirmada: apenas o novo RPC auditado é executável por `authenticated`; quatro RPC antigos estão revogados. Smoke pós-publicação Administrador/Operador aprovou duração, valor/hora, Sociedade e motivo obrigatório, com rollback.
 
 ## Correcção 0.4.9 — recálculo integral dos movimentos
 

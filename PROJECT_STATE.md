@@ -5,7 +5,9 @@
 - Ordem inicial dos Registos alterada para data descendente: mais recente primeiro.
 - Correcção preparada para recálculo nas edições em linha e auditoria obrigatória do motivo do Operador.
 - Matriz real Administrador/Operador aprovada transaccionalmente, incluindo movimentos, estados financeiros, Notas de Honorários e Cobranças; nenhuma escrita de QA ficou persistida.
-- Segurança, lint, TypeScript, 81 testes, build e 30 E2E Chromium aplicáveis aprovados. Produção continua em `0.4.9`; falta autorização de publicação deste lote.
+- Segurança, lint, TypeScript, 81 testes, build e 30 E2E Chromium aplicáveis aprovados.
+- Produção 0.4.10: frontend automático no commit `36dbe35`, Deployment ID `9089632c-3a3f-48d9-aba4-0cafab690ae3`, Version ID `aafb55c6-f638-47a9-8082-01764f1baa11`; backend e reparação selectiva aplicados após autorização.
+- Estado final confirmado: zero totais horários manuais incoerentes; novo RPC auditado activo; RPC antigos revogados; smoke Administrador/Operador aprovado com rollback.
 
 ## Versão 0.4.9 — recálculos e sessão após mudança de PIN
 
