@@ -63,11 +63,13 @@ export function EditWorkEntryModal({
   onClose,
   onSaved,
   canDelete=true,
+  requiresReason,
 }: {
   entryId: string;
   onClose: () => void;
   onSaved: (action?: "updated" | "deleted") => void;
   canDelete?: boolean;
+  requiresReason?: boolean;
 }) {
   const [options, setOptions] = useState<OptionData | null>(null),
     [entry, setEntry] = useState<Editable | null>(null),
@@ -118,6 +120,10 @@ export function EditWorkEntryModal({
       setError("Indique a data da factura.");
       return;
     }
+    if (requiresReason === true && !reason.trim()) {
+      setError("Indique o motivo da alteração para o registo de auditoria.");
+      return;
+    }
     setSaving(true);
     setError("");
     const result = await updateWorkEntry(entry, reason);
@@ -136,7 +142,7 @@ export function EditWorkEntryModal({
   }
   async function remove() {
     if (!entry) return;
-    if (!reason.trim()) {
+    if (requiresReason !== false && !reason.trim()) {
       setError("Indique o motivo da eliminação para o registo de auditoria.");
       return;
     }
@@ -497,8 +503,9 @@ export function EditWorkEntryModal({
               Pago
             </label>
             <label className="text-sm sm:col-span-2">
-              Motivo da alteração manual
+              Motivo da alteração manual{requiresReason === false ? " (opcional)" : ""}
               <textarea
+                required={requiresReason === true}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 className="control mt-1 min-h-20 w-full p-3"

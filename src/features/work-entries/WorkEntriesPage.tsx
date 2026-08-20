@@ -148,7 +148,7 @@ const archives = [
   ["other", "Outro"],
 ] as const;
 
-export function WorkEntriesPage({canDelete=true}:{canDelete?:boolean}={}) {
+export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete?:boolean;requiresReason?:boolean}={}) {
   const initialParams = new URLSearchParams(window.location.search);
   const [uncollectibleOnly,setUncollectibleOnly]=useState(()=>initialParams.get("collectionState")==="uncollectible");
   const [rows, setRows] = useState<Entry[]>([]),
@@ -726,6 +726,7 @@ export function WorkEntriesPage({canDelete=true}:{canDelete?:boolean}={}) {
         <EditWorkEntryModal
           entryId={editingId}
           canDelete={canDelete}
+          requiresReason={requiresReason}
           onClose={() => setEditingId(null)}
           onSaved={(action) => {
             invalidateWorkUniverse();
