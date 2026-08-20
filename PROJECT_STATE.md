@@ -6,7 +6,7 @@
 - Nota de Honorários e Cobrança apresentam nas linhas apenas período, descrição e tempo; o responsável e o valor individual deixam de poder ser incluídos. Período e tempo ficam centrados horizontalmente nas células.
 - Os valores financeiros permanecem apenas nos totais do documento e os dados do emitente são os da Sociedade seleccionada.
 - Validação final: segurança de ficheiros, lint, TypeScript, 81 testes, build, dry-run Cloudflare e 30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos.
-- Publicação autorizada em 2026-08-21; commit, deployment e version ID serão registados depois da confirmação directa em produção.
+- Publicada em 2026-08-21 a partir do commit funcional `9d98ad9`. O deploy manual criou `5f80941d-fcfd-4a7f-93fc-2f5536b4cb7d` / `fec6a83f-3092-4583-83c8-509373b7b39e`; a integração automática do mesmo commit ficou depois activa a 100% como Deployment ID `7e08c564-2f37-4de0-b2a8-cab9e1788a7a` e Version ID `fae41e0b-1bd1-4963-8561-143fd5228a88`. HTTP 200 e bundle `0.4.11` confirmados directamente.
 
 ## Lote local 0.4.10 — auditoria funcional alargada
 

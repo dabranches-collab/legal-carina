@@ -6,7 +6,7 @@
 - Nota de Honorários e Cobrança deixam de oferecer ou renderizar as colunas Responsável e Valor. As linhas ficam limitadas a período, descrição e tempo; período e tempo são centrados horizontalmente e os montantes aparecem apenas nos totais.
 - Mantém-se a Sociedade seleccionada como emitente e os respectivos dados legais e bancários no documento.
 - Gates aprovados: segurança de ficheiros, lint, TypeScript, 81 testes, build, dry-run Cloudflare e 30 E2E Chromium aplicáveis; 2 cenários exclusivos de produção omitidos. O teste de scroll inclui estabilidade da posição em movimento descendente e ascendente.
-- Publicação explicitamente autorizada em 2026-08-21; preencher commit, deployment ID e version ID após confirmação directa.
+- Publicada em 2026-08-21 a partir do commit funcional `9d98ad9`. Deploy manual: `5f80941d-fcfd-4a7f-93fc-2f5536b4cb7d` / `fec6a83f-3092-4583-83c8-509373b7b39e`. A integração automática do mesmo commit ficou depois activa a 100%: Deployment ID `7e08c564-2f37-4de0-b2a8-cab9e1788a7a`, Version ID `fae41e0b-1bd1-4963-8561-143fd5228a88`. URL pública com HTTP 200 e bundle `0.4.11` confirmados directamente.
 
 ## Lote local 0.4.10 — matriz operacional e recálculos em linha
 
