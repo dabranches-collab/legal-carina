@@ -563,37 +563,29 @@ export function StandardDataTable<Row>({
     return () => {observer.disconnect();window.removeEventListener("resize",update)};
   }, []);
   useEffect(() => {
-    let frame = 0;
     const updateHeader = () => {
-      frame = 0;
       const header = headerElement.current;
       const table = tableElement.current;
       if (!header || !table) return;
-      const naturalTop = table.getBoundingClientRect().top;
+      // Measure the header's layout position, excluding the transform already
+      // applied. Using the table top and rounding on every animation frame made
+      // the filter row oscillate while scrolling, especially at fractional zoom.
+      const naturalTop = header.getBoundingClientRect().top - headerTranslate.current;
       const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
-      const next = Math.round(
-        Math.min(
-          maximum,
-          Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop),
-        ),
+      const next = Math.min(
+        maximum,
+        Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop),
       );
-      if (next === headerTranslate.current) return;
+      if (Math.abs(next - headerTranslate.current) < 0.01) return;
       headerTranslate.current = next;
       header.style.transform = `translate3d(0, ${next}px, 0)`;
     };
-    const scheduleHeaderUpdate = () => {
-      if (!frame) frame = window.requestAnimationFrame(updateHeader);
-    };
     updateHeader();
-    window.addEventListener("scroll", scheduleHeaderUpdate, {
-      capture: true,
-      passive: true,
-    });
-    window.addEventListener("resize", scheduleHeaderUpdate);
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    window.addEventListener("resize", updateHeader);
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", scheduleHeaderUpdate, true);
-      window.removeEventListener("resize", scheduleHeaderUpdate);
+      window.removeEventListener("scroll", updateHeader);
+      window.removeEventListener("resize", updateHeader);
     };
   }, [stickyHeaderOffset, shown.length, toolsHeight]);
   useEffect(() => {

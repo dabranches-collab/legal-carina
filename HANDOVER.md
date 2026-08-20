@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Versão 0.4.11 — estabilidade da tabela e documentos financeiros
+
+- Corrigida a oscilação do cabeçalho/filtros dos Registos: o deslocamento passa a ser medido no próprio cabeçalho, sem arredondamento por frame nem atraso de animação.
+- Nota de Honorários e Cobrança deixam de oferecer ou renderizar as colunas Responsável e Valor. As linhas ficam limitadas a período, descrição e tempo; período e tempo são centrados horizontalmente e os montantes aparecem apenas nos totais.
+- Mantém-se a Sociedade seleccionada como emitente e os respectivos dados legais e bancários no documento.
+- Gates aprovados: segurança de ficheiros, lint, TypeScript, 81 testes, build, dry-run Cloudflare e 30 E2E Chromium aplicáveis; 2 cenários exclusivos de produção omitidos. O teste de scroll inclui estabilidade da posição em movimento descendente e ascendente.
+- Publicação explicitamente autorizada em 2026-08-21; preencher commit, deployment ID e version ID após confirmação directa.
+
 ## Lote local 0.4.10 — matriz operacional e recálculos em linha
 
 - Registos abrem por defeito do mais recente para o mais antigo, tanto na consulta visível como na exportação correspondente.

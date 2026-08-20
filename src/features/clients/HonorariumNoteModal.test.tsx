@@ -18,8 +18,8 @@ describe('HonorariumNoteModal',()=>{
   expect(await screen.findByText('Análise documental')).toBeInTheDocument()
   await waitFor(()=>expect(rpc).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_client_id:'client-1',p_invoiced:false,p_page_size:10000})))
   expect(document.querySelector('.overflow-x-auto table')).not.toHaveTextContent('Responsável')
-  expect(screen.getByLabelText('Responsável')).not.toBeChecked()
-  expect(screen.getByLabelText('Valor')).not.toBeChecked()
+  expect(screen.queryByLabelText('Responsável')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Valor')).not.toBeInTheDocument()
   expect(screen.getByLabelText('Total de tempo')).toBeChecked()
   expect(screen.getByLabelText('Total monetário')).not.toBeChecked()
   expect(screen.getByLabelText('Despesas')).toHaveValue(null)
@@ -35,6 +35,8 @@ describe('HonorariumNoteModal',()=>{
   expect(printable).not.toHaveTextContent('Reunião')
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
+  expect(pdfText.mock.calls.some(([value,,,options])=>value==='07-2026'&&options?.align==='center')).toBe(true)
+  expect(pdfText.mock.calls.some(([value,,,options])=>value==='1:15:00'&&options?.align==='center')).toBe(true)
  })
  it('separa movimentos por sociedade emissora',async()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:2,items:[
@@ -111,7 +113,6 @@ describe('HonorariumNoteModal',()=>{
  it('traduz cabeçalho, colunas e totais para inglês e francês',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-lang" clientName="Cliente Teste" onClose={()=>{}}/> )
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByLabelText('Valor'))
   await user.click(screen.getByLabelText('Total monetário'))
   await user.selectOptions(screen.getByLabelText('Idioma do documento'),'en')
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('FEE NOTE')
@@ -129,13 +130,14 @@ describe('HonorariumNoteModal',()=>{
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   expect(pdfRect.mock.calls.some((call)=>Number(call[3])>8&&Number(call[3])!==9)).toBe(true)
  })
- it('permite reordenar colunas e desligar ambos os totais',async()=>{
+ it('permite reordenar as colunas admitidas e nunca oferece responsável nem valor por linha',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-order" clientName="Cliente Ordem" onClose={()=>{}}/> )
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByLabelText('Responsável'))
-  await user.click(screen.getByRole('button',{name:'Mover Responsável para a esquerda'}))
+  expect(screen.queryByLabelText('Responsável')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Valor')).not.toBeInTheDocument()
+  await user.click(screen.getByRole('button',{name:'Mover Tempo para a esquerda'}))
   const headings=[...document.querySelectorAll('.honorarium-print-area thead th')].map(node=>node.textContent)
-  expect(headings).toEqual(['Mês/Ano','Descrição do movimento','Responsável','Tempo'])
+  expect(headings).toEqual(['Mês/Ano','Tempo','Descrição do movimento'])
   await user.click(screen.getByLabelText('Total de tempo'))
   expect(document.querySelector('.honorarium-print-area tfoot')).toBeNull()
  })

@@ -64,6 +64,13 @@ test('barra, filtros e Cliente permanecem estáveis no scroll da página e da ta
   expect(vertical[1]).not.toBeNull()
   expect(vertical[1]!.y).toBeGreaterThanOrEqual(vertical[0]!.y + vertical[0]!.height - 1)
 
+  const headerPositions:number[] = []
+  for (const scrollTop of [920, 960, 1000, 1040, 1000, 960, 920]) {
+    await page.evaluate((top) => window.scrollTo(0, top), scrollTop)
+    headerPositions.push((await header.boundingBox())!.y)
+  }
+  expect(Math.max(...headerPositions) - Math.min(...headerPositions)).toBeLessThanOrEqual(1)
+
   await horizontal.evaluate((element) => { element.scrollLeft = 900 })
   const [containerBox, clientBox] = await Promise.all([horizontal.boundingBox(), clientHeader.boundingBox()])
   expect(containerBox).not.toBeNull()

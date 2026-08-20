@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Versão 0.4.11 — estabilidade da tabela e documentos financeiros
+
+- Cabeçalho e filtros dos Registos deixam de oscilar durante o scroll, incluindo scroll descendente e ascendente.
+- Nota de Honorários e Cobrança apresentam nas linhas apenas período, descrição e tempo; o responsável e o valor individual deixam de poder ser incluídos. Período e tempo ficam centrados horizontalmente nas células.
+- Os valores financeiros permanecem apenas nos totais do documento e os dados do emitente são os da Sociedade seleccionada.
+- Validação final: segurança de ficheiros, lint, TypeScript, 81 testes, build, dry-run Cloudflare e 30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos.
+- Publicação autorizada em 2026-08-21; commit, deployment e version ID serão registados depois da confirmação directa em produção.
+
 ## Lote local 0.4.10 — auditoria funcional alargada
 
 - Ordem inicial dos Registos alterada para data descendente: mais recente primeiro.
