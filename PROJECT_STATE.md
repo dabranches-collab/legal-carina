@@ -7,7 +7,8 @@
 - Administradores não justificam edições ou eliminações; Operadores indicam motivo auditável e concluem a operação.
 - Primeira alteração de PIN mantém o acesso através de uma sessão nova.
 - Testes: 81 unitários/componentes, 30 E2E Chromium aplicáveis e bateria transaccional Administrador/Operador com rollback aprovados.
-- Estado: publicação 0.4.9 autorizada e em curso.
+- Produção confirmada em `https://legal-carina.dabranches.workers.dev`, commit funcional `0bbea29`, Cloudflare Deployment ID `551cd5ff-140c-4678-bd23-5a524b2d3e05` e Version ID `bcb82b5a-dcd3-4569-934f-f6214865cdc1`, publicada em 2026-08-20.
+- Bundle online `0.4.9`, HTTP 200 e smoke transaccional pós-publicação Administrador/Operador aprovados com rollback.
 
 ## Versão 0.4.8 — permissões dos movimentos
 
