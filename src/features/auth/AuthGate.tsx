@@ -166,9 +166,23 @@ export function AuthGate({ children }: { children: ReactNode }) {
     setBusy(true); setError('')
     const { data, error:changeError } = await supabase.functions.invoke('change-pin', { body:{ currentPin,newPin } })
     if (changeError || data?.error) { setError(data?.error ?? 'Não foi possível alterar o PIN.'); setBusy(false); return }
-    const { data:refreshed, error:refreshError } = await supabase.auth.refreshSession()
-    if (refreshError || !refreshed.session) { await signOut(); return }
-    setSession(refreshed.session); setUser(refreshed.user); setMustChangePin(false)
+    const accessToken = data?.session?.access_token
+    const refreshToken = data?.session?.refresh_token
+    if (!accessToken || !refreshToken) {
+      setError('O PIN foi alterado. Inicie sessão novamente com o novo PIN.')
+      setBusy(false)
+      return
+    }
+    const { data:authenticated, error:sessionError } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    })
+    if (sessionError || !authenticated.session || !authenticated.user) {
+      setError('O PIN foi alterado. Inicie sessão novamente com o novo PIN.')
+      setBusy(false)
+      return
+    }
+    setSession(authenticated.session); setUser(authenticated.user); setMustChangePin(false)
     setBusy(false)
   }
 

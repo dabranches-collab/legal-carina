@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Versão 0.4.9 — recálculos e sessão após mudança de PIN
+
+- Duração, valor/hora e descontos recalculam o total na interface e no servidor.
+- Mudanças das dimensões de preço, incluindo Sociedade, recalculam a regra e os totais dependentes.
+- Administradores não justificam edições ou eliminações; Operadores indicam motivo auditável e concluem a operação.
+- Primeira alteração de PIN mantém o acesso através de uma sessão nova.
+- Testes: 81 unitários/componentes, 30 E2E Chromium aplicáveis e bateria transaccional Administrador/Operador com rollback aprovados.
+- Estado: publicação 0.4.9 autorizada e em curso.
+
 ## Versão 0.4.8 — permissões dos movimentos
 
 - Administradores editam, mudam Sociedade e apagam movimentos sem justificação obrigatória.

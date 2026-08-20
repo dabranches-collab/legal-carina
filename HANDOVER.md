@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Correcção 0.4.9 — recálculo integral dos movimentos
+
+- Alterações de duração, valor/hora e desconto recalculam imediatamente o total na ficha e voltam a ser calculadas no servidor ao guardar.
+- Alterar data, Cliente/vertente, processo, Responsável ou Sociedade volta a executar o motor de preços; a mudança de Sociedade actualiza a regra e todos os totais dependentes.
+- Administradores continuam a editar, mudar Sociedade e eliminar sem justificação. Operadores executam as mesmas operações após fornecerem um motivo auditável.
+- A primeira mudança obrigatória de PIN passa a entregar uma sessão nova, evitando a espera causada pela invalidação da sessão anterior; falhas de telemetria não transformam uma mudança já concluída num falso erro.
+- Teste transaccional intensivo no Supabase de produção correcto validou Administrador e Operador, incluindo duração, valor/hora, desconto, Sociedade, motivo e eliminação; toda a escrita de teste foi revertida.
+- Gates locais: segurança, lint, TypeScript, 81 testes, build e 30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de preview de produção omitidos.
+- Estado: em publicação autorizada; preencher commit e Version ID Cloudflare após confirmação directa.
+
 ## Correcção 0.4.8 — permissões auditadas dos movimentos
 
 - A Carina, enquanto administradora, pode editar, mudar a Sociedade facturante e apagar movimentos sem indicar uma justificação; a auditoria técnica mantém actor e dados anteriores.

@@ -47,6 +47,14 @@ const charges = [
 ];
 const numeric = (value: string) => (value === "" ? null : Number(value));
 
+const recalculateAmount = (
+  durationMinutes: number,
+  hourlyRate: number | null,
+  discountAmount: number | null,
+) => hourlyRate === null
+  ? null
+  : Math.max(0, Math.round((hourlyRate * durationMinutes / 60 - (discountAmount ?? 0)) * 100) / 100);
+
 function withStatus(entry: Editable, status: string): Editable {
   if (status === "paid") return { ...entry, status, is_invoiced: true, is_paid: true };
   if (status === "invoiced" || status === "uncollectible_invoiced") {
@@ -291,7 +299,18 @@ export function EditWorkEntryModal({
             </label>
             <label className="text-sm">
               Duração
-              <DurationSelect value={entry.duration_minutes} onChange={(duration_minutes)=>setEntry({...entry,duration_minutes})}/>
+              <DurationSelect
+                value={entry.duration_minutes}
+                onChange={(duration_minutes)=>setEntry({
+                  ...entry,
+                  duration_minutes,
+                  effective_amount: recalculateAmount(
+                    duration_minutes,
+                    entry.effective_hourly_rate,
+                    entry.effective_discount_amount,
+                  ),
+                })}
+              />
             </label>
             <label className="text-sm">
               Preço/hora efectivo
@@ -301,9 +320,19 @@ export function EditWorkEntryModal({
                 step="0.01"
                 value={entry.effective_hourly_rate ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    effective_hourly_rate: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const effective_hourly_rate = numeric(e.target.value);
+                    return {
+                      ...current,
+                      effective_hourly_rate,
+                      charge_type: effective_hourly_rate === null ? current.charge_type : "hourly",
+                      effective_amount: recalculateAmount(
+                        current.duration_minutes,
+                        effective_hourly_rate,
+                        current.effective_discount_amount,
+                      ),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -362,9 +391,19 @@ export function EditWorkEntryModal({
                 step="0.01"
                 value={entry.effective_discount_amount ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    effective_discount_amount: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const effective_discount_amount = numeric(e.target.value);
+                    return {
+                      ...current,
+                      effective_discount_amount,
+                      discount_percentage: null,
+                      effective_amount: recalculateAmount(
+                        current.duration_minutes,
+                        current.effective_hourly_rate,
+                        effective_discount_amount,
+                      ),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -379,9 +418,23 @@ export function EditWorkEntryModal({
                 step="0.01"
                 value={entry.discount_percentage ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    discount_percentage: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const discount_percentage = numeric(e.target.value);
+                    const baseAmount = current.effective_hourly_rate === null
+                      ? null
+                      : current.effective_hourly_rate * current.duration_minutes / 60;
+                    const effective_discount_amount = baseAmount === null || discount_percentage === null
+                      ? null
+                      : Math.round(baseAmount * discount_percentage) / 100;
+                    return {
+                      ...current,
+                      discount_percentage,
+                      effective_discount_amount,
+                      effective_amount: baseAmount === null
+                        ? null
+                        : Math.max(0, Math.round((baseAmount - (effective_discount_amount ?? 0)) * 100) / 100),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
