@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Lote local 0.4.10 — matriz operacional e recálculos em linha
+
+- Registos abrem por defeito do mais recente para o mais antigo, tanto na consulta visível como na exportação correspondente.
+- Todas as edições em linha passam por um RPC auditado; o Operador indica um motivo real e o Administrador não fica condicionado por justificação.
+- Duração e valor/hora recalculam o total; data, Cliente, Responsável e Sociedade voltam a executar o motor de preços. Os RPC antigos deixam de estar executáveis directamente por utilizadores autenticados.
+- Matriz transaccional Administrador/Operador aprovada com rollback: duração, valor/hora, Sociedade, data, actividade, observações, arquivo, facturação, número de factura, pagamento, incobrável, Nota de Honorários e Cobrança.
+- Gates: segurança, lint, TypeScript, 81/81 testes, build e 30/30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. Produção permanece em `0.4.9`; este lote ainda não foi publicado.
+
 ## Correcção 0.4.9 — recálculo integral dos movimentos
 
 - Alterações de duração, valor/hora e desconto recalculam imediatamente o total na ficha e voltam a ser calculadas no servidor ao guardar.

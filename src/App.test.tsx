@@ -20,6 +20,7 @@ vi.mock('./lib/supabase', () => ({
 }))
 import { AuthenticatedApplication as App } from './App'
 import { AuthContext } from './features/auth/AuthContext'
+import { supabase } from './lib/supabase'
 
 const renderApp=(role:'owner'|'operator'='owner')=>render(<AuthContext.Provider value={{user:null,role,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>null}}><App/></AuthContext.Provider>)
 
@@ -41,6 +42,7 @@ describe('interface principal', () => {
     expect(
       await screen.findByRole('table', { name: 'Registos de trabalho' }, { timeout: 5000 }),
     ).toBeInTheDocument()
+    expect(vi.mocked(supabase!.rpc)).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_sort:'work_date',p_direction:'desc'}))
     expect(screen.queryByRole('checkbox', { name: 'Seleccionar LC-1048' })).not.toBeInTheDocument()
     expect(screen.getByRole('button',{name:'Sem sociedade'})).toBeInTheDocument()
     expect(screen.getByRole('button',{name:/Facturados\s+não pagos/i})).toBeInTheDocument()

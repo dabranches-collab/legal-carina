@@ -128,7 +128,7 @@ function fetchWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,t
   workUniverseRequests.set(cacheKey,request);
   return request;
 }
-const baseUniverseArgs:SearchArgs={p_search:null,p_year:null,p_professional_id:null,p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_archive:null,p_review_only:false,p_missing_price:false,p_client_type:null,p_client_id:null,p_missing_society:false,p_sort:"work_date",p_direction:"asc"};
+const baseUniverseArgs:SearchArgs={p_search:null,p_year:null,p_professional_id:null,p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_archive:null,p_review_only:false,p_missing_price:false,p_client_type:null,p_client_id:null,p_missing_society:false,p_sort:"work_date",p_direction:"desc"};
 // eslint-disable-next-line react/only-export-components -- arranque antecipado partilha deliberadamente a cache deste módulo
 export function prefetchWorkEntries(){
   backgroundPrefetch??=fetchWorkUniverse(baseUniverseArgs).finally(()=>{backgroundPrefetch=null});
@@ -210,26 +210,20 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     if (!supabase) return;
     setError("");
     setNotice("");
-    const result = field === "invoice_number"
-      ? await supabase.rpc("update_work_entry_invoice_number", {
-          p_work_entry_id: row.id,
-          p_invoice_number: value,
-        })
-      : field === "invoice_date"
-        ? await supabase.rpc("update_work_entry_invoice_date", {
-            p_work_entry_id: row.id,
-            p_invoice_date: value || null,
-          })
-      : field === "collection_status"
-        ? await supabase.rpc("update_work_entry_collection_status", {
-            p_work_entry_id: row.id,
-            p_state: value,
-          })
-      : await supabase.rpc("update_work_entry_inline", {
-          p_work_entry_id: row.id,
-          p_field: field,
-          p_value: value,
-        });
+    const reason = requiresReason
+      ? window.prompt("Indique o motivo desta alteração para o registo de auditoria:")?.trim()
+      : "";
+    if (requiresReason && !reason) {
+      setError("A alteração não foi guardada. O Operador tem de indicar um motivo.");
+      setRefreshToken((current) => current + 1);
+      return;
+    }
+    const result = await supabase.rpc("update_work_entry_inline_audited", {
+      p_work_entry_id: row.id,
+      p_field: field,
+      p_value: value,
+      p_reason: reason || null,
+    });
     if (result.error) {
       const messages: Record<string, string> = {
         "invoice date is required": "Preencha primeiro a Data da factura.",
@@ -243,7 +237,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     invalidateWorkUniverse();
     setNotice("Alteração guardada e registada na auditoria.");
     setRefreshToken((current) => current + 1);
-  }, []);
+  }, [requiresReason]);
   useEffect(() => {
     let active = true;
     void getWorkEntryOptions().then((result) => {
@@ -282,7 +276,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       p_client_id: clientId || null,
       p_missing_society: missingSociety,
       p_sort: "work_date",
-      p_direction: "asc",
+      p_direction: "desc",
     }),
     [
       query,
@@ -414,7 +408,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       p_client_id: clientId || null,
       p_missing_society: missingSociety,
       p_sort: "work_date",
-      p_direction: "asc",
+      p_direction: "desc",
     };
     return fetchWorkUniverse(exportArgs,onProgress);
   }, [

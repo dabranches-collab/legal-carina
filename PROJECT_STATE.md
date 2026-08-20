@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Lote local 0.4.10 — auditoria funcional alargada
+
+- Ordem inicial dos Registos alterada para data descendente: mais recente primeiro.
+- Correcção preparada para recálculo nas edições em linha e auditoria obrigatória do motivo do Operador.
+- Matriz real Administrador/Operador aprovada transaccionalmente, incluindo movimentos, estados financeiros, Notas de Honorários e Cobranças; nenhuma escrita de QA ficou persistida.
+- Segurança, lint, TypeScript, 81 testes, build e 30 E2E Chromium aplicáveis aprovados. Produção continua em `0.4.9`; falta autorização de publicação deste lote.
+
 ## Versão 0.4.9 — recálculos e sessão após mudança de PIN
 
 - Duração, valor/hora e descontos recalculam o total na interface e no servidor.
