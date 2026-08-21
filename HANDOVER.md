@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Versão 0.4.13 — correcção local em validação
+
+- Substituído o deslocamento vertical contínuo do `thead`, que podia ficar um frame atrás do scroll real e provocar o soluço visível, por estado fixo estável enquanto a tabela atravessa o viewport.
+- O cabeçalho acompanha o scroll horizontal, é recortado à área da tabela e regressa ao fluxo natural nos limites; a barra de ferramentas e os filtros por coluna mantêm-se acessíveis.
+- Validação local: captura visual revista, lint sem avisos, TypeScript, 88/88 unitários, build e 18/18 E2E focados em scroll, zoom 80–200% e seis dimensões de iPhone. Ainda não publicada; produção continua `0.4.12`.
+
 ## Versão 0.4.12 — publicada em 2026-08-21
 
 - Publicação confirmada em `https://legal-carina.dabranches.workers.dev` a partir do commit funcional `0d9eb98`, branch `codex/reconcile-full-import`. O deploy manual actual recebe 100% do tráfego: Deployment ID `c6f91020-c3de-49b3-9550-ccf0ceb35f2d`, Version ID `fed44c92-2b2d-4b5f-83dd-424c90817f69`, criado em 2026-08-21 às 08:23 UTC.

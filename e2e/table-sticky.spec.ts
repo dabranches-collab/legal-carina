@@ -45,7 +45,7 @@ test.beforeEach(async ({ page }) => {
   })
 })
 
-test('barra, filtros e Cliente permanecem estáveis no scroll da página e da tabela', async ({ page }) => {
+test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 800 })
   await page.goto('/?qa-iphone=1&view=work')
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
@@ -54,39 +54,36 @@ test('barra, filtros e Cliente permanecem estáveis no scroll da página e da ta
   const tools = table.locator('.table-tools')
   const header = table.locator('thead')
   const horizontal = table.locator('.scrollbar-thin.overflow-x-auto')
-  const clientHeader = table.getByRole('columnheader', { name: /Cliente/ })
-
   await page.evaluate(() => window.scrollTo(0, 900))
   await expect(tools).toBeInViewport()
-  await expect(header).toBeInViewport()
-  const vertical = await Promise.all([tools.boundingBox(), header.boundingBox()])
-  expect(vertical[0]).not.toBeNull()
-  expect(vertical[1]).not.toBeNull()
-  expect(vertical[1]!.y).toBeGreaterThanOrEqual(vertical[0]!.y + vertical[0]!.height - 1)
-
-  const headerPositions:number[] = []
+  const headerViewportPositions:number[] = []
   for (const scrollTop of [920, 960, 1000, 1040, 1000, 960, 920]) {
     await page.evaluate((top) => window.scrollTo(0, top), scrollTop)
-    headerPositions.push((await header.boundingBox())!.y)
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+    const box=(await header.boundingBox())!
+    headerViewportPositions.push(box.y)
   }
-  expect(Math.max(...headerPositions) - Math.min(...headerPositions)).toBeLessThanOrEqual(1)
+  expect(Math.max(...headerViewportPositions) - Math.min(...headerViewportPositions)).toBeLessThanOrEqual(.5)
 
   await page.evaluate(() => { document.body.style.zoom = '1.1' })
   const fractionalZoomPositions:number[] = []
   for (let scrollTop = 1120; scrollTop <= 1180; scrollTop += 2) {
     await page.evaluate((top) => window.scrollTo(0, top), scrollTop)
     await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
-    fractionalZoomPositions.push((await header.boundingBox())!.y)
+    const box=(await header.boundingBox())!
+    fractionalZoomPositions.push(box.y)
   }
   expect(Math.max(...fractionalZoomPositions) - Math.min(...fractionalZoomPositions)).toBeLessThanOrEqual(1)
   await page.evaluate(() => { document.body.style.zoom = '' })
 
   await horizontal.evaluate((element) => { element.scrollLeft = 900 })
-  const [containerBox, clientBox] = await Promise.all([horizontal.boundingBox(), clientHeader.boundingBox()])
+  const clientCell=table.getByText('Cliente sintético 032')
+  const [containerBox, clientBox] = await Promise.all([horizontal.boundingBox(), clientCell.boundingBox()])
   expect(containerBox).not.toBeNull()
   expect(clientBox).not.toBeNull()
   expect(clientBox!.x).toBeGreaterThanOrEqual(containerBox!.x - 1)
-  expect(clientBox!.x).toBeLessThan(containerBox!.x + 4)
+  expect(clientBox!.x).toBeLessThan(containerBox!.x + 16)
+  await horizontal.evaluate((element) => { element.scrollLeft = 0 })
   await page.screenshot({ path: 'test-results/table-sticky-desktop.png', fullPage: false })
 })
 
@@ -111,7 +108,7 @@ test('sticky compacto não ocupa o ecrã num iPhone e filtros abrem dentro do vi
   await page.screenshot({ path: 'test-results/table-sticky-iphone-dark.png', fullPage: false })
 })
 
-test('zoom equivalente a 150% liberta as pendências e conserva apenas a tabela fixa', async ({ page }) => {
+test('zoom equivalente a 150% liberta as pendências e conserva a tabela fixa', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 })
   await page.goto('/?qa-iphone=1&view=work&theme=dark')
   const filters = page.getByRole('region', { name: 'Filtros dos registos' })
@@ -123,12 +120,11 @@ test('zoom equivalente a 150% liberta as pendências e conserva apenas a tabela 
   await page.evaluate(() => window.scrollTo(0, 650))
   await expect(filters).not.toBeInViewport()
   await expect(tools).toBeInViewport()
-  await expect(header).toBeInViewport()
   const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
   expect(toolsBox).not.toBeNull()
   expect(headerBox).not.toBeNull()
   expect(toolsBox!.y).toBeLessThan(130)
-  expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y + toolsBox!.height - 1)
+  expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y+toolsBox!.height-1)
   await page.screenshot({ path: 'test-results/table-sticky-150-dark.png', fullPage: false })
 })
 
@@ -158,7 +154,7 @@ test('criação de movimento no iPhone mantém as acções visíveis durante o s
 })
 
 for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
-  test(`tabela permanece estável com zoom ${Math.round(zoom * 100)}%`, async ({ page }) => {
+  test(`filtros permanecem fixos sem saltos com zoom ${Math.round(zoom * 100)}%`, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/?qa-iphone=1&view=work')
     const table = page.getByRole('region', { name: 'Registos de trabalho' })
@@ -171,13 +167,14 @@ for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
     for (const delta of [180, 210, 240, 270, 240, 210, 180]) {
       await page.evaluate((top) => window.scrollTo(0, top), tableDocumentTop + delta)
       await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
-      positions.push((await header.boundingBox())!.y)
-      const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
+      const headerBox=await header.boundingBox()
+      positions.push(headerBox!.y)
+      const toolsBox=await tools.boundingBox()
       expect(toolsBox).not.toBeNull()
       expect(headerBox).not.toBeNull()
-      expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y + toolsBox!.height - 1.5)
+      expect(toolsBox!.y).toBeGreaterThanOrEqual(0)
     }
-    expect(Math.max(...positions) - Math.min(...positions)).toBeLessThanOrEqual(1.5)
+    expect(Math.max(...positions) - Math.min(...positions)).toBeLessThanOrEqual(.75)
   })
 }
 

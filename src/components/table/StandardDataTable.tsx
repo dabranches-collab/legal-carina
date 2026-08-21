@@ -428,8 +428,6 @@ export function StandardDataTable<Row>({
   const [columnsOpen, setColumnsOpen] = useState(false),
     [openFilter, setOpenFilter] = useState<string | null>(null);
   const [activeRow, setActiveRow] = useState<string | null>(null);
-  const headerTranslate = useRef(0);
-  const [toolsHeight, setToolsHeight] = useState(36);
   const [virtualStart,setVirtualStart]=useState(0);
   const [exporting, setExporting] = useState(false),
     [exportStatus, setExportStatus] = useState("");
@@ -550,49 +548,51 @@ export function StandardDataTable<Row>({
     return()=>{window.removeEventListener("scroll",updateVirtualWindow);window.removeEventListener("resize",updateVirtualWindow)};
   },[virtualized,shown.length]);
   useEffect(() => {
-    const tools = toolsElement.current;
-    if (!tools) return;
-    const update = () => setToolsHeight(window.innerWidth>=768?Math.ceil(tools.getBoundingClientRect().height):0);
+    const header=headerElement.current,table=tableElement.current,tools=toolsElement.current,scroller=scrollContainer.current;
+    if(!header||!table||!tools||!scroller)return;
+    const stickyHeaderCells=[...header.querySelectorAll<HTMLElement>('[data-sticky-column="true"]')];
+    let fixed=false;
+    const reset=()=>{
+      fixed=false;
+      header.style.position="";
+      header.style.top="";
+      header.style.left="";
+      header.style.width="";
+      header.style.transform="";
+      header.style.clipPath="";
+      table.style.paddingTop="";
+      for(const cell of stickyHeaderCells)cell.style.left=`${cell.dataset.stickyOffset??0}px`;
+    };
+    const update=()=>{
+      const tableRect=table.getBoundingClientRect(),headerHeight=header.offsetHeight;
+      const targetTop=tools.getBoundingClientRect().bottom;
+      const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop+headerHeight;
+      if(!shouldFix){if(fixed)reset();return}
+      if(!fixed){
+        fixed=true;
+        table.style.paddingTop=`${headerHeight}px`;
+        header.style.position="fixed";
+        header.style.transform="none";
+      }
+      const scrollerRect=scroller.getBoundingClientRect();
+      const hiddenRight=Math.max(0,tableRect.width-scroller.scrollLeft-scrollerRect.width);
+      header.style.top=`${targetTop}px`;
+      header.style.left=`${scrollerRect.left-scroller.scrollLeft}px`;
+      header.style.width=`${tableRect.width}px`;
+      header.style.clipPath=`inset(0 ${hiddenRight}px 0 ${scroller.scrollLeft}px)`;
+      for(const cell of stickyHeaderCells)cell.style.left=`${scrollerRect.left+Number(cell.dataset.stickyOffset??0)}px`;
+    };
     update();
-    window.addEventListener("resize", update);
-    if (typeof ResizeObserver === "undefined") {
-      return () => window.removeEventListener("resize", update);
-    }
-    const observer = new ResizeObserver(update);
-    observer.observe(tools);
-    return () => {observer.disconnect();window.removeEventListener("resize",update)};
-  }, []);
-  useEffect(() => {
-    const updateHeader = () => {
-      const header = headerElement.current;
-      const table = tableElement.current;
-      const tools = toolsElement.current;
-      if (!header || !table || !tools) return;
-      // Derive the layout position only from untransformed geometry. Reading the
-      // transformed THEAD and subtracting its previous transform feeds browser
-      // rounding back into the next scroll update and can make the filters jump.
-      const naturalTop = table.getBoundingClientRect().top + header.offsetTop - table.offsetTop;
-      const scale = table.offsetWidth > 0
-        ? table.getBoundingClientRect().width / table.offsetWidth
-        : 1;
-      const targetTop = tools.getBoundingClientRect().bottom;
-      const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
-      const next = Math.min(
-        maximum,
-        Math.max(0, (targetTop - naturalTop) / Math.max(scale, 0.01)),
-      );
-      if (Math.abs(next - headerTranslate.current) < 0.01) return;
-      headerTranslate.current = next;
-      header.style.transform = `translate3d(0, ${next}px, 0)`;
+    window.addEventListener("scroll",update,{passive:true});
+    window.addEventListener("resize",update);
+    scroller.addEventListener("scroll",update,{passive:true});
+    return()=>{
+      window.removeEventListener("scroll",update);
+      window.removeEventListener("resize",update);
+      scroller.removeEventListener("scroll",update);
+      reset();
     };
-    updateHeader();
-    window.addEventListener("scroll", updateHeader, { passive: true });
-    window.addEventListener("resize", updateHeader);
-    return () => {
-      window.removeEventListener("scroll", updateHeader);
-      window.removeEventListener("resize", updateHeader);
-    };
-  }, [stickyHeaderOffset, shown.length, toolsHeight]);
+  },[stickyHeaderOffset,shown.length]);
   useEffect(() => {
     localStorage.setItem(
       storageKey,
@@ -984,7 +984,7 @@ export function StandardDataTable<Row>({
       <div ref={scrollContainer} className="scrollbar-thin overflow-x-auto">
         <table ref={tableElement} className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
-          <thead ref={headerElement} className="relative z-30 bg-surface shadow-sm will-change-transform">
+          <thead ref={headerElement} className="relative z-30 bg-surface shadow-sm">
             <tr>
               {onSelectionChange && (
                 <th
@@ -1015,6 +1015,8 @@ export function StandardDataTable<Row>({
                 return (
                   <th
                     key={column.id}
+                    data-sticky-column={sticky}
+                    data-sticky-offset={sticky?stickyOffset(index):undefined}
                     draggable={!sticky}
                     onDragStart={() => {
                       draggedColumn.current = column.id;

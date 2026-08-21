@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Versão 0.4.13 — correcção local em validação
+
+- O cabeçalho e os filtros por coluna deixam de depender de uma transformação vertical recalculada em cada evento de scroll. Quando a tabela entra na zona fixa, o cabeçalho usa uma posição fixa estável, acompanha apenas o scroll horizontal e fica recortado aos limites da tabela.
+- Prova visual e funcional local: cabeçalho alinhado com a grelha; 18/18 cenários de scroll aprovados entre 80–200% de zoom e em seis dimensões de iPhone. Lint sem avisos, TypeScript, 88/88 testes unitários e build aprovados.
+- Esta correcção ainda não foi publicada. Produção permanece na versão `0.4.12`.
+
 ## Versão 0.4.12 — publicada em 2026-08-21
 
 - Publicada em `https://legal-carina.dabranches.workers.dev` a partir do commit funcional `0d9eb98`, branch `codex/reconcile-full-import`. Deploy manual actual e a 100%: Deployment ID `c6f91020-c3de-49b3-9550-ccf0ceb35f2d`, Version ID `fed44c92-2b2d-4b5f-83dd-424c90817f69`, criado em 2026-08-21 às 08:23 UTC.
