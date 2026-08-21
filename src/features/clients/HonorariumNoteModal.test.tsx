@@ -5,11 +5,12 @@ import { HonorariumNoteModal } from './HonorariumNoteModal'
 
 const {rpc,from}=vi.hoisted(()=>({rpc:vi.fn(),from:vi.fn()}))
 vi.mock('../../lib/supabase',()=>({supabase:{rpc,from}}))
-const {pdfRect,pdfText}=vi.hoisted(()=>({pdfRect:vi.fn(),pdfText:vi.fn()}))
-vi.mock('jspdf',()=>({jsPDF:class{setFont(){}setFontSize(){}text=pdfText;setFillColor(){}rect=pdfRect;addPage(){}getNumberOfPages(){return 1}setPage(){}setProperties(){}splitTextToSize(value:string){return value.length>80?[value.slice(0,40),value.slice(40,80),value.slice(80)]:[value]}output(){return new Blob(['pdf'],{type:'application/pdf'})}}}))
+const {pdfRect,pdfText,pdfAddPage,pdfSetPage,pdfState}=vi.hoisted(()=>({pdfRect:vi.fn(),pdfText:vi.fn(),pdfAddPage:vi.fn(),pdfSetPage:vi.fn(),pdfState:{pages:1}}))
+vi.mock('jspdf',()=>({jsPDF:class{constructor(){pdfState.pages=1}setFont(){}setFontSize(){}text=pdfText;setFillColor(){}rect=pdfRect;addPage(){pdfState.pages+=1;pdfAddPage()}getNumberOfPages(){return pdfState.pages}setPage=pdfSetPage;setProperties(){}splitTextToSize(value:string){return value.length>80?[value.slice(0,40),value.slice(40,80),value.slice(80)]:[value]}output(){return new Blob(['pdf'],{type:'application/pdf'})}}}))
+const downloads:string[]=[]
 
 describe('HonorariumNoteModal',()=>{
- beforeEach(()=>{rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockReturnValue({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:null})})})});rpc.mockResolvedValue({error:null,data:{total:2,items:[
+ beforeEach(()=>{vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockReturnValue({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:null})})})});rpc.mockResolvedValue({error:null,data:{total:2,items:[
   {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade'},
   {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
  ]}})})
@@ -35,6 +36,7 @@ describe('HonorariumNoteModal',()=>{
   expect(printable).not.toHaveTextContent('Reunião')
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
+  expect(downloads).toEqual([expect.stringMatching(/^nota-honorarios-cliente-teste-\d{4}-\d{2}-\d{2}\.pdf$/)])
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='07-2026'&&options?.align==='center')).toBe(true)
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='1:15:00'&&options?.align==='center')).toBe(true)
  })
@@ -72,6 +74,7 @@ describe('HonorariumNoteModal',()=>{
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
+  expect(downloads).toEqual([expect.stringMatching(/^cobranca-cliente-cobranca-\d{4}-\d{2}-\d{2}\.pdf$/)])
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('COBRANÇA')
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('Cliente: Cliente Cobrança')
   expect(pdfText.mock.calls.some(([value])=>value==='ASSUNTO: COBRANÇA')).toBe(true)
@@ -129,6 +132,22 @@ describe('HonorariumNoteModal',()=>{
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
   await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   expect(pdfRect.mock.calls.some((call)=>Number(call[3])>8&&Number(call[3])!==9)).toBe(true)
+ })
+ it.each([
+  ['honorarium' as const,/^nota-honorarios-cliente-acores-teste-\d{4}-\d{2}-\d{2}\.pdf$/],
+  ['collection' as const,/^cobranca-cliente-acores-teste-\d{4}-\d{2}-\d{2}\.pdf$/],
+ ])('gera %s multipágina com todas as linhas, cabeçalhos e rodapés repetidos e nome seguro',async(documentKind,filePattern)=>{
+  const manyRows=Array.from({length:90},(_,index)=>({id:`many-${index}`,work_date:`2026-${String(index%12+1).padStart(2,'0')}-15`,activity_description:`Intervenção sintética número ${index+1} com descrição suficiente para validar a paginação`,duration_minutes:15+(index%8)*15,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:10+index,status:'approved'}))
+  rpc.mockResolvedValueOnce({error:null,data:{total:manyRows.length,items:manyRows}})
+  from.mockImplementation((table:string)=>({select:()=>({eq:()=>({maybeSingle:async()=>({error:null,data:table==='clients'?{legal_name:'Cliente Açores Teste',address:'Ponta Delgada',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}})})})}))
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-many" clientName="Cliente Açores / Teste" documentKind={documentKind} onClose={()=>{}}/> )
+  await user.click(await screen.findByLabelText(`Seleccionar todos os ${manyRows.length} movimentos`))
+  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  expect(pdfAddPage).toHaveBeenCalled()
+  expect(pdfState.pages).toBeGreaterThan(1)
+  expect(pdfSetPage).toHaveBeenCalledTimes(pdfState.pages)
+  expect(pdfText.mock.calls.filter(([value])=>value==='Mês/Ano').length).toBe(pdfState.pages)
+  expect(downloads).toEqual([expect.stringMatching(filePattern)])
  })
  it('permite reordenar as colunas admitidas e nunca oferece responsável nem valor por linha',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-order" clientName="Cliente Ordem" onClose={()=>{}}/> )

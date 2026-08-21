@@ -79,10 +79,11 @@ describe('interface principal', () => {
     expect(screen.getByText(/Sem administração de utilizadores/i)).toBeInTheDocument()
   })
 
-  it('reserva as Definições aos administradores sem retirar a criação de clientes ao Operador', async()=>{
+  it('dá ao Operador as Definições operacionais sem lhe dar Administração', async()=>{
     window.history.replaceState({},'', '/?view=clients&clientType=company')
     renderApp('operator')
-    expect(screen.queryByRole('button',{name:'Definições'})).not.toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Definições'})).toBeInTheDocument()
+    expect(screen.queryByRole('button',{name:'Administração'})).not.toBeInTheDocument()
     expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
   })
 
@@ -98,7 +99,8 @@ describe('interface principal', () => {
     window.history.replaceState({},'', '/?view=admin-users')
     renderApp('operator')
     expect(window.location.search).toBe('?view=overview')
-    expect(screen.queryByRole('button',{name:'Definições'})).not.toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Definições'})).toBeInTheDocument()
+    expect(screen.queryByRole('button',{name:'Administração'})).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Registos'}))
     expect(await screen.findByRole('table',{name:'Registos de trabalho'},{timeout:5000})).toBeInTheDocument()
     expect(screen.getByRole('button',{name:'Criar movimento'})).toBeInTheDocument()

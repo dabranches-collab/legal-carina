@@ -3,6 +3,7 @@ import { Icon } from '../../components/ui/Icon'
 import { supabase } from '../../lib/supabase'
 import { AdminUsersTable, LoginActivityTable } from './AdminTables'
 import { useAuth } from '../auth/AuthContext'
+import { makeAccessMessage } from './accessMessage'
 
 type Role = 'admin'|'manager'|'operator'|'billing'|'professional'|'viewer'|'auditor'
 type AdminUser = { userId:string; username:string; displayName:string; display_name?:string; pinConfigured:boolean; role:Role|'owner'; active:boolean; invitedAt:string; lastSignInAt:string|null }
@@ -11,10 +12,6 @@ type LoginGroup = { userId:string; username:string; displayName:string; firstAt:
 const roleHelp:Record<Role,string> = {
   admin:'Gestão integral da aplicação, utilizadores e configurações.', manager:'Gestão operacional dentro das Sociedades autorizadas; os valores financeiros dependem de autorização separada.', operator:'Actualização diária dos movimentos nas Sociedades autorizadas: completar dados, corrigir Sociedade e actualizar facturação e pagamento. Sem administração de utilizadores ou configurações.', billing:'Facturação, recebimentos e valores das sociedades autorizadas.', professional:'Registos e processos dentro das sociedades autorizadas.', viewer:'Consulta dos dados autorizados, sem alteração.', auditor:'Consulta e auditoria dos dados autorizados, sem alteração operacional.',
 }
-function makeAccessMessage(username:string,pin:string) {
-  return `Carina - Legal\n\nLink: ${window.location.origin}/\nUtilizador: ${username}\nPIN temporário: ${pin}\n\nNo primeiro acesso será obrigatório escolher um novo PIN.`
-}
-
 export function AdminPage() {
   const {user:currentUser}=useAuth()
   const [firmId,setFirmId] = useState('')
@@ -108,17 +105,17 @@ export function AdminPage() {
     catch { setError('Não foi possível copiar automaticamente. Seleccione o texto da mensagem e copie-o manualmente.') }
   }
 
-  async function copyCredentials(login:string,temporaryPin:string) {
+  async function copyCredentials(login:string,temporaryPin?:string) {
     const message=makeAccessMessage(login,temporaryPin)
     setAccessMessage(message)
-    try { await navigator.clipboard.writeText(message); setNotice('Dados de acesso copiados: link, utilizador e PIN temporário.') }
+    try { await navigator.clipboard.writeText(message); setNotice(temporaryPin?'Dados de acesso copiados: link, utilizador e PIN temporário.':'Dados de acesso copiados: link e utilizador.') }
     catch { setError('Não foi possível copiar automaticamente. A mensagem ficou disponível para cópia manual.') }
   }
 
   return <div className="space-y-5">
     {error && <div role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</div>}
     {notice && <div role="status" className="rounded-lg bg-success-soft p-3 text-sm text-success">{notice}</div>}
-    {accessMessage && <section className="card p-5" aria-labelledby="access-message-title"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 id="access-message-title" className="font-semibold">Mensagem de acesso</h2><p className="mt-1 text-sm text-text-secondary">Pronta para colar num email ou WhatsApp. Feche-a depois de enviar.</p></div><div className="flex gap-2"><button type="button" onClick={()=>void copyAccessMessage()} className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface">Copiar mensagem</button><button type="button" onClick={()=>setAccessMessage('')} className="min-h-11 rounded-lg border border-border px-4 font-semibold">Fechar</button></div></div><textarea readOnly value={accessMessage} rows={7} className="control mt-4 w-full resize-y p-3 text-sm" aria-label="Mensagem de acesso gerada"/></section>}
+    {accessMessage && <div className="app-safe-fixed fixed z-[85] grid place-items-center bg-navigation/60 p-4"><section role="dialog" aria-modal="true" className="card w-full max-w-2xl p-5" aria-labelledby="access-message-title"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 id="access-message-title" className="font-semibold">Mensagem de acesso</h2><p className="mt-1 text-sm text-text-secondary">Pronta para colar num email ou WhatsApp. Feche-a depois de enviar.</p></div><div className="flex gap-2"><button type="button" onClick={()=>void copyAccessMessage()} className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface">Copiar mensagem</button><button type="button" onClick={()=>setAccessMessage('')} className="min-h-11 rounded-lg border border-border px-4 font-semibold">Fechar</button></div></div><textarea readOnly value={accessMessage} rows={7} className="control mt-4 w-full resize-y p-3 text-sm" aria-label="Mensagem de acesso gerada"/></section></div>}
     <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_24rem]">
       <div className="card overflow-hidden"><div className="flex items-center justify-between border-b border-border p-5"><div><h2 className="font-semibold">Utilizadores da aplicação</h2><p className="mt-1 text-sm text-text-secondary">Perfis e visibilidade são aplicados no backend.</p></div><button onClick={() => void load()} className="control grid size-10 place-items-center" aria-label="Actualizar utilizadores"><Icon name="trend" className="size-4"/></button></div>
         <div className="p-4"><AdminUsersTable rows={users} loading={loading} onConfigure={user=>void openPermissions(user as AdminUser)}/></div>
@@ -140,8 +137,8 @@ export function AdminPage() {
       {editing.role !== 'owner' && <div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold">Perfil<select value={editRole} onChange={e=>setEditRole(e.target.value as Role)} className="control mt-1 w-full px-3"><option value="admin">Administrador</option><option value="manager">Gestor</option><option value="operator">Operador</option><option value="billing">Financeiro</option><option value="professional">Advogado</option><option value="viewer">Consulta</option><option value="auditor">Auditor</option></select></label><label className="flex min-h-11 items-center gap-3 self-end rounded-lg border border-border px-3 text-sm font-semibold"><input type="checkbox" checked={editActive} onChange={e=>setEditActive(e.target.checked)}/>{editActive?'Acesso activo':'Acesso suspenso'}</label></div>}
       {editPin && <p className="mt-2 text-xs text-warning">O utilizador terá de substituir este PIN no próximo login.</p>}
       <fieldset className="mt-6"><legend className="font-semibold">Permissões por Sociedade</legend><p className="mt-1 text-sm text-text-secondary">Defina separadamente a visibilidade da Sociedade e o acesso aos respectivos valores financeiros.</p>{(editing.role==='owner'||editRole==='admin')&&<p className="mt-3 rounded-lg bg-warning-soft p-3 text-sm text-warning">{editing.role==='owner'?'O proprietário tem acesso integral e não pode ser suspenso nem perder permissões.':'O perfil Administrador tem acesso integral a todas as Sociedades e valores financeiros.'}</p>}<div className="mt-3 divide-y divide-border rounded-lg border border-border">{access.length===0?<p className="p-3 text-sm text-text-secondary">Não existem Sociedades activas para configurar.</p>:access.map((item,index)=>{const integral=editing.role==='owner'||editRole==='admin';return <div key={item.billingEntityId} className="grid gap-3 p-3 sm:grid-cols-[1fr_auto_auto] sm:items-center"><span className="font-medium">{item.name}</span><label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={integral||item.visible} disabled={integral} onChange={e=>setAccess(values=>values.map((value,i)=>i===index?{...value,visible:e.target.checked,financial:e.target.checked?value.financial:false}:value))}/> Ver Sociedade</label><label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={integral||item.financial} disabled={integral||!item.visible} onChange={e=>setAccess(values=>values.map((value,i)=>i===index?{...value,financial:e.target.checked}:value))}/> Ver valores financeiros</label></div>})}</div></fieldset>
-      <p className="mt-4 text-xs text-text-secondary">Para enviar dados completos, atribua acima um novo PIN temporário. O PIN actual não pode ser consultado.</p>
-      <div className="mt-4 flex flex-wrap justify-end gap-3"><button type="button" disabled={editPin.length!==4||!editUsername} onClick={()=>void copyCredentials(editUsername,editPin)} className="min-h-11 rounded-lg border border-primary px-4 font-semibold text-primary disabled:opacity-40">Copiar dados de acesso</button><button type="button" onClick={()=>setEditing(null)} className="min-h-11 rounded-lg border border-border px-4 font-semibold">Cancelar</button><button disabled={sending||!editDisplayName.trim()||Boolean(editPin&&editPin.length!==4)} className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface disabled:opacity-50">{sending?'A guardar…':'Guardar permissões'}</button></div>
+      <p className="mt-4 text-xs text-text-secondary">Pode copiar sempre o link e o utilizador. Para incluir um PIN válido, atribua acima um novo PIN temporário; o PIN actual não pode ser consultado.</p>
+      <div className="mt-4 flex flex-wrap justify-end gap-3"><button type="button" disabled={!editUsername||Boolean(editPin&&editPin.length!==4)} onClick={()=>void copyCredentials(editUsername,editPin||undefined)} className="min-h-11 rounded-lg border border-primary px-4 font-semibold text-primary disabled:opacity-40">{editPin.length===4?'Copiar dados com novo PIN':'Copiar link e utilizador'}</button><button type="button" onClick={()=>setEditing(null)} className="min-h-11 rounded-lg border border-border px-4 font-semibold">Cancelar</button><button disabled={sending||!editDisplayName.trim()||Boolean(editPin&&editPin.length!==4)} className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface disabled:opacity-50">{sending?'A guardar…':'Guardar permissões'}</button></div>
     </form></div>}
   </div>
 }

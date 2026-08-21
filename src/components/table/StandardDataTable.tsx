@@ -566,15 +566,20 @@ export function StandardDataTable<Row>({
     const updateHeader = () => {
       const header = headerElement.current;
       const table = tableElement.current;
-      if (!header || !table) return;
-      // Measure the header's layout position, excluding the transform already
-      // applied. Using the table top and rounding on every animation frame made
-      // the filter row oscillate while scrolling, especially at fractional zoom.
-      const naturalTop = header.getBoundingClientRect().top - headerTranslate.current;
+      const tools = toolsElement.current;
+      if (!header || !table || !tools) return;
+      // Derive the layout position only from untransformed geometry. Reading the
+      // transformed THEAD and subtracting its previous transform feeds browser
+      // rounding back into the next scroll update and can make the filters jump.
+      const naturalTop = table.getBoundingClientRect().top + header.offsetTop - table.offsetTop;
+      const scale = table.offsetWidth > 0
+        ? table.getBoundingClientRect().width / table.offsetWidth
+        : 1;
+      const targetTop = tools.getBoundingClientRect().bottom;
       const maximum = Math.max(0, table.offsetHeight - header.offsetHeight);
       const next = Math.min(
         maximum,
-        Math.max(0, stickyHeaderOffset + toolsHeight - naturalTop),
+        Math.max(0, (targetTop - naturalTop) / Math.max(scale, 0.01)),
       );
       if (Math.abs(next - headerTranslate.current) < 0.01) return;
       headerTranslate.current = next;

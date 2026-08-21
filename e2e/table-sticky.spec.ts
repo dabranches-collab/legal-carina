@@ -71,6 +71,16 @@ test('barra, filtros e Cliente permanecem estáveis no scroll da página e da ta
   }
   expect(Math.max(...headerPositions) - Math.min(...headerPositions)).toBeLessThanOrEqual(1)
 
+  await page.evaluate(() => { document.body.style.zoom = '1.1' })
+  const fractionalZoomPositions:number[] = []
+  for (let scrollTop = 1120; scrollTop <= 1180; scrollTop += 2) {
+    await page.evaluate((top) => window.scrollTo(0, top), scrollTop)
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+    fractionalZoomPositions.push((await header.boundingBox())!.y)
+  }
+  expect(Math.max(...fractionalZoomPositions) - Math.min(...fractionalZoomPositions)).toBeLessThanOrEqual(1)
+  await page.evaluate(() => { document.body.style.zoom = '' })
+
   await horizontal.evaluate((element) => { element.scrollLeft = 900 })
   const [containerBox, clientBox] = await Promise.all([horizontal.boundingBox(), clientHeader.boundingBox()])
   expect(containerBox).not.toBeNull()
@@ -146,3 +156,55 @@ test('criação de movimento no iPhone mantém as acções visíveis durante o s
   expect(footerMetrics[1]!.y + footerMetrics[1]!.height).toBeLessThanOrEqual(844)
   await page.screenshot({ path: 'test-results/create-work-entry-iphone-dark.png', fullPage: false })
 })
+
+for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
+  test(`tabela permanece estável com zoom ${Math.round(zoom * 100)}%`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/?qa-iphone=1&view=work')
+    const table = page.getByRole('region', { name: 'Registos de trabalho' })
+    await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+    const tools = table.locator('.table-tools')
+    const header = table.locator('thead')
+    await page.evaluate((factor) => { document.body.style.zoom = String(factor) }, zoom)
+    const tableDocumentTop = await table.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)
+    const positions:number[] = []
+    for (const delta of [180, 210, 240, 270, 240, 210, 180]) {
+      await page.evaluate((top) => window.scrollTo(0, top), tableDocumentTop + delta)
+      await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+      positions.push((await header.boundingBox())!.y)
+      const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
+      expect(toolsBox).not.toBeNull()
+      expect(headerBox).not.toBeNull()
+      expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y + toolsBox!.height - 1.5)
+    }
+    expect(Math.max(...positions) - Math.min(...positions)).toBeLessThanOrEqual(1.5)
+  })
+}
+
+for (const device of [
+  { name:'iPhone SE antigo',width:320,height:568 },
+  { name:'iPhone SE',width:375,height:667 },
+  { name:'iPhone 12–15',width:390,height:844 },
+  { name:'iPhone 15 Pro',width:393,height:852 },
+  { name:'iPhone Plus',width:414,height:896 },
+  { name:'iPhone Pro Max',width:430,height:932 },
+]) {
+  test(`${device.name}: registos e criação não provocam overflow global`, async ({ page }) => {
+    await page.setViewportSize({ width:device.width, height:device.height })
+    await page.goto('/?qa-iphone=1&view=work&safe-top=47&safe-bottom=34&theme=dark')
+    await expect(page.getByRole('region',{name:'Registos de trabalho'})).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.getByRole('button',{name:/Criar movimento/i}).click()
+    const dialog=page.getByRole('dialog',{name:/Criar movimento/i})
+    await expect(dialog).toBeVisible()
+    await dialog.evaluate((element)=>{element.scrollTop=element.scrollHeight})
+    for (const action of ['Cancelar','Guardar movimento']) {
+      const button=dialog.getByRole('button',{name:action})
+      const box=await button.boundingBox()
+      expect(box).not.toBeNull()
+      expect(box!.x).toBeGreaterThanOrEqual(0)
+      expect(box!.x+box!.width).toBeLessThanOrEqual(device.width)
+      expect(box!.y+box!.height).toBeLessThanOrEqual(device.height)
+    }
+  })
+}

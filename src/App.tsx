@@ -4,7 +4,7 @@ import { PlaceholderPage } from './components/feedback/PlaceholderPage'
 import type { ViewId } from './types/navigation'
 import { AuthGate } from './features/auth/AuthGate'
 import { PwaUpdateNotice } from './components/feedback/PwaUpdateNotice'
-import { useAuth } from './features/auth/AuthContext'
+import { AuthContext, useAuth } from './features/auth/AuthContext'
 
 const OverviewPage=lazy(()=>import('./pages/OverviewPage').then(module=>({default:module.OverviewPage})))
 const WorkEntriesPage=lazy(()=>import('./features/work-entries/WorkEntriesPage').then(module=>({default:module.WorkEntriesPage})))
@@ -19,13 +19,13 @@ const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
 
 const validViews:ViewId[] = ['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users']
-const restrictedViews:ViewId[]=['imports','import-review','master-data','admin','admin-users']
+const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 function readLocation() {
   const params = new URLSearchParams(window.location.search)
   const requested = params.get('view') as ViewId|null
   const requestedClientType=params.get('clientType')
   const requestedEntity=params.get('entity')
-  return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), professional:params.get('professional'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, clientMode:params.get('clientMode')==='list'?'list' as const:'dashboard' as const, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'?requestedEntity:null) as 'clients'|'billing_entities'|null }
+  return { view:requested && validViews.includes(requested) ? requested : 'overview' as ViewId, society:params.get('society'), professional:params.get('professional'), clientType:(requestedClientType==='individual'||requestedClientType==='company'||requestedClientType==='mixed'?requestedClientType:null) as 'individual'|'company'|'mixed'|null, clientMode:params.get('clientMode')==='list'?'list' as const:'dashboard' as const, settingsEntity:(requestedEntity==='clients'||requestedEntity==='billing_entities'||requestedEntity==='professionals'?requestedEntity:null) as 'clients'|'billing_entities'|'professionals'|null }
 }
 
 function overviewLocation() {
@@ -59,12 +59,12 @@ export function AuthenticatedApplication() {
   const [professional,setProfessional] = useState<string|null>(initial.professional)
   const [clientType,setClientType] = useState<'individual'|'company'|'mixed'|null>(initial.clientType)
   const [clientMode,setClientMode] = useState<'dashboard'|'list'>(initial.clientMode)
-  const [settingsEntity,setSettingsEntity] = useState<'clients'|'billing_entities'|null>(initial.settingsEntity)
+  const [settingsEntity,setSettingsEntity] = useState<'clients'|'billing_entities'|'professionals'|null>(initial.settingsEntity)
   const [refreshKey,setRefreshKey] = useState(0)
   useEffect(()=>{const apply=(root:ParentNode=document)=>{for(const button of root.querySelectorAll<HTMLButtonElement>('button')){if(button.title)continue;const description=buttonDescription(button);if(description){button.title=description;button.setAttribute('aria-description',description)}}};apply();const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node instanceof HTMLElement){if(node.matches('button'))apply(node.parentNode??document);else apply(node)}});observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect()},[])
   useEffect(()=>{const timer=window.setTimeout(()=>{void import('./features/work-entries/WorkEntriesPage').then(module=>module.prefetchWorkEntries()).catch(()=>undefined)},1200);return()=>window.clearTimeout(timer)},[])
   useEffect(() => { const sync=()=>{let location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();location=readLocation()}setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [canManageSettings])
-  function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|null=null,nextProfessional:string|null=null) {
+  function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|'professionals'|null=null,nextProfessional:string|null=null) {
     if(restrictedViews.includes(nextView)&&!canManageSettings){nextView='overview';nextSociety=null;nextClientType=null;nextEntity=null;nextProfessional=null}
     const url=new URL(window.location.href); url.searchParams.set('view',nextView)
     if(nextSociety) url.searchParams.set('society',nextSociety); else url.searchParams.delete('society')
@@ -90,8 +90,10 @@ export function AuthenticatedApplication() {
 }
 
 export default function App() {
-  if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('qa-iphone') === '1') {
-    return <><AuthenticatedApplication /><PwaUpdateNotice /></>
+  const qaParams=new URLSearchParams(window.location.search)
+  if (import.meta.env.DEV && qaParams.get('qa-iphone') === '1') {
+    const qaRole=qaParams.get('qa-role')==='admin'?'admin':'operator'
+    return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><AuthenticatedApplication /><PwaUpdateNotice /></AuthContext.Provider>
   }
   return <><AuthGate><AuthenticatedApplication /></AuthGate><PwaUpdateNotice /></>
 }

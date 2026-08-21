@@ -14,6 +14,7 @@ import { getWorkEntryOptions } from "./workEntryCompatibility";
 type Entry = {
   id: string;
   work_date: string;
+  created_at?: string;
   client_name: string;
   client_code: string;
   matter_code: string | null;
@@ -89,6 +90,7 @@ async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchM
     .sort(
       (left, right) =>
         right.work_date.localeCompare(left.work_date) ||
+        (right.created_at ?? "").localeCompare(left.created_at ?? "") ||
         left.id.localeCompare(right.id),
     );
   return {
