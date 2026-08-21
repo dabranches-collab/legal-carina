@@ -120,6 +120,13 @@ describe('StandardDataTable',()=>{
     expect(screen.getByRole('columnheader',{name:/Valor/})).toHaveAttribute('aria-sort','none')
   })
 
+  test('insere uma coluna nova na posição funcional mesmo com uma ordem antiga guardada',()=>{
+    localStorage.setItem('carina.table.anonymous.new-column-table',JSON.stringify({order:['name','amount','active']}))
+    const extended:TableColumn<Row>[]=[columns[0],columns[1],{id:'expenses',label:'Despesas',kind:'money',value:()=>0},columns[2]]
+    render(<StandardDataTable id="new-column-table" label="Tabela com nova coluna" rows={rows} columns={extended} rowKey={row=>row.id}/>)
+    expect(screen.getAllByRole('columnheader').map(cell=>cell.textContent?.replace(/Filtrar…↑↓$/,''))).toEqual(['Nome','Valor','Despesas','Activo'])
+  })
+
   test('Todas mantém o universo integral mas virtualiza as linhas apresentadas',async()=>{
     const user=userEvent.setup()
     const manyRows=Array.from({length:7200},(_,index)=>({id:String(index+1),name:`Cliente ${index+1}`,amount:index,active:index%2===0}))

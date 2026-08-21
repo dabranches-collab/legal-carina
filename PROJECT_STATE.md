@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.5.0 — backend promovido, frontend em publicação
+
+- Migration `20260821115454_add_work_entry_expenses.sql` aplicada isoladamente ao Supabase e Edge Function `expense-documents` v1 activa com JWT obrigatório. Zero dados sintéticos após os testes transaccionais.
+- Várias despesas por movimento, observações, anexos privados e criação atómica. Administrador/Proprietário sem justificação; Operador com motivo auditável para alteração e remoção.
+- Coluna `Despesas` depois de `Valor`, com agregado, quantidade, legenda e exportação paginada. Nota de Honorários com tabela informativa separada; Cobrança e todos os totais financeiros excluem despesas.
+- Gates aprovados: segurança, lint, TypeScript, build, 95/95 unitários, 55/55 E2E aplicáveis e 30/30 pgTAP ligados. Frontend ainda não estava publicado no momento deste registo.
+
 ## Versão 0.4.18 — em preparação local
 
 - A sidebar valida as respostas de Sociedades, Responsáveis e perfis antes de as percorrer. Respostas parciais ou de formato inesperado deixam apenas o submenu afectado vazio, em vez de produzirem uma rejeição não tratada.

@@ -415,9 +415,13 @@ export function StandardDataTable<Row>({
   const [sorts, setSorts] = useState<SortRule[]>([]);
   const [hidden, setHidden] = useState<string[]>(saved.hidden ?? []);
   const [filters, setFilters] = useState<Record<string, FilterValue>>({});
-  const [order, setOrder] = useState<string[]>(
-    saved.order ?? columns.map((column) => column.id),
-  );
+  const [order, setOrder] = useState<string[]>(()=>{
+    const source=columns.map(column=>column.id),stored=Array.isArray(saved.order)?saved.order.filter((id:unknown):id is string=>typeof id==='string'&&source.includes(id)):[];
+    if(!stored.length)return source;
+    const merged=[...stored];
+    for(let index=0;index<source.length;index++){const id=source[index];if(merged.includes(id))continue;const previous=source.slice(0,index).reverse().find(candidate=>merged.includes(candidate));const next=source.slice(index+1).find(candidate=>merged.includes(candidate));if(previous)merged.splice(merged.indexOf(previous)+1,0,id);else if(next)merged.splice(merged.indexOf(next),0,id);else merged.push(id)}
+    return merged;
+  });
   const [widths, setWidths] = useState<Record<string, number>>(
     saved.widths ?? {},
   );

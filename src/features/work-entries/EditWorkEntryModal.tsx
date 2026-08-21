@@ -3,6 +3,8 @@ import { supabase } from "../../lib/supabase";
 import { useModalLifecycle } from "../../hooks/useModalLifecycle";
 import { DurationSelect } from "./DurationSelect";
 import { CalendarDateInput } from "../../components/CalendarDateInput";
+import { WorkEntryExpensesEditor } from "./WorkEntryExpensesEditor";
+import type { ExpenseDraft } from "./workEntryExpenses";
 import {
   deleteWorkEntry,
   getWorkEntryForEdit,
@@ -85,6 +87,7 @@ export function EditWorkEntryModal({
     [saving, setSaving] = useState(false);
   const [reason, setReason] = useState(""),
     [deleteMode, setDeleteMode] = useState(false);
+  const [expenseDrafts,setExpenseDrafts]=useState<ExpenseDraft[]>([]);
   useModalLifecycle(onClose, saving);
   useEffect(() => {
     let active = true;
@@ -312,6 +315,7 @@ export function EditWorkEntryModal({
                 })}
               />
             </label>
+            <WorkEntryExpensesEditor entryId={entry.id} drafts={expenseDrafts} onDraftsChange={setExpenseDrafts} requiresReason={requiresReason===true}/>
             <label className="text-sm">
               Preço/hora efectivo
               <input

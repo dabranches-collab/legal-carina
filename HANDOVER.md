@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Versão 0.5.0 — backend promovido, frontend em publicação
+
+- Cada movimento pode ter várias despesas informativas, com montante, observações e anexos privados PDF/JPG/PNG/DOCX/XLSX. A criação do movimento e dos metadados das despesas é atómica; falhas de transferência de anexos podem ser repetidas na edição sem duplicar o movimento.
+- Administrador/Proprietário cria, altera e remove despesas sem justificação; Operador tem as mesmas operações, exigindo motivo nas alterações e remoções para auditoria.
+- A coluna `Despesas`, imediatamente depois de `Valor`, apresenta montante agregado, quantidade, primeira nota e legenda completa. O carregamento é feito em lotes e também cobre a exportação integral.
+- As despesas vivem em tabelas próprias e nunca alteram `effective_amount`, IVA, facturação, pagamento ou dashboards. A Nota de Honorários inclui-as numa tabela informativa associada aos movimentos seleccionados; a Cobrança não as inclui.
+- Backend promovido isoladamente: migration remota/local `20260821115454_add_work_entry_expenses.sql` e Edge Function `expense-documents` v1, activa com JWT obrigatório. Não foi usado `db push` nem `migration repair`; a divergência histórica pré-existente foi preservada.
+- Validação: segurança, lint, TypeScript, build, 95/95 unitários, 55/55 E2E aplicáveis (2 exclusivos de preview de produção omitidos) e 30/30 contratos pgTAP no schema persistente. A execução transaccional deixou zero movimentos/despesas sintéticos.
+- Desempenho E2E isolado: 5 000 clientes em 1,0 s e pesquisa em 0,21 s; 1 000 movimentos, 72 posições de scroll em 1,18 s, desvio do cabeçalho 0 px e pesquisa em 0,82–1,09 s.
+
 ## Versão 0.4.18 — em preparação local
 
 - Corrigida uma rejeição não tratada na navegação quando uma resposta parcial do Supabase para Sociedades, Responsáveis ou perfis de Cliente não é uma lista. A sidebar passa a degradar de forma segura para menus vazios, sem bloquear a restante aplicação.

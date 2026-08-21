@@ -36,6 +36,10 @@ type Entry = {
   has_manual_override: boolean;
   has_historical_state_exception: boolean;
   validation_warnings: string[];
+  expense_amount?: number;
+  expense_count?: number;
+  expense_notes?: string[];
+  expense_details?: string[];
 };
 type Option = { id: string; label: string };
 type ClientProfileOption = { id: string; client_type: "individual" | "company"; client_code: string; display_name: string };
@@ -137,6 +141,15 @@ export function prefetchWorkEntries(){
   return backgroundPrefetch;
 }
 function invalidateWorkUniverse(){workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
+async function hydrateExpenseSummaries(entries:Entry[]){
+  if(!supabase||!entries.length)return entries;
+  const summaries=new Map<string,{amount:number;count:number;notes:string[];details:string[]}>();
+  for(let start=0;start<entries.length;start+=800){
+    const results=await Promise.all(Array.from({length:Math.min(4,Math.ceil((entries.length-start)/200))},(_,index)=>supabase!.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',entries.slice(start+index*200,start+(index+1)*200).map(row=>row.id)).eq('status','active')));
+    for(const result of results){if(result.error){if(result.error.code==='42P01'||result.error.code==='PGRST205')return entries;throw result.error}for(const item of result.data??[]){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count+=1;if(item.observations)current.notes.push(item.observations);current.details.push(`${money.format(amount)} — ${item.observations||'Sem observação'}`);summaries.set(item.work_entry_id,current)}}
+  }
+  return entries.map(row=>{const summary=summaries.get(row.id);return summary?{...row,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
+}
 const money = new Intl.NumberFormat("pt-PT", {
     style: "currency",
     currency: "EUR",
@@ -334,7 +347,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       else {
         const next = metadata.data as SearchMeta;
         setMeta(next);
-        setRows((next.items ?? []).slice(0, 100));
+        const visible=(next.items ?? []).slice(0,100);
+        try{const hydrated=await hydrateExpenseSummaries(visible);if(active)setRows(hydrated)}catch{if(active)setRows(visible)}
       }
       setLoading(false);
     })();
@@ -412,7 +426,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       p_sort: "work_date",
       p_direction: "desc",
     };
-    return fetchWorkUniverse(exportArgs,onProgress);
+    return fetchWorkUniverse(exportArgs,onProgress).then(hydrateExpenseSummaries);
   }, [
     query,
     year,
@@ -488,6 +502,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       value: (row) => row.effective_amount,
       render: (row) => <InlineMoney value={row.effective_amount} onCommit={(value)=>saveInline(row,"effective_amount",value)}/>,
     },
+    {id:'expenses',label:'Despesas',kind:'money',align:'right',suggestOptions:false,value:row=>row.expense_amount??0,render:row=>{if(!row.expense_count)return <span>—</span>;const first=row.expense_notes?.[0]||'Sem observação',more=row.expense_count-1,details=row.expense_details??[];return <span title={details.join('\n')} aria-label={`${row.expense_count} ${row.expense_count===1?'despesa':'despesas'}: ${details.join('; ')}`} className="block max-w-52 cursor-help text-right"><span className="block tabular-nums font-semibold">{money.format(row.expense_amount??0)} · {row.expense_count}</span><span className="block truncate text-xs text-text-secondary">{first}{more>0?` · +${more}`:''}</span></span>}},
     {
       id: "society",
       label: "Sociedade",
