@@ -75,9 +75,9 @@ test('manifest e service worker de produção são válidos', async ({ request }
   const manifestData=await manifest.json()
   expect(manifestData.display).toBe('standalone')
   expect(manifestData.icons.map((icon:{src:string})=>icon.src)).toEqual([
-    '/lady-justice-icon-192.png','/lady-justice-icon-512.png',
+    '/lady-justice-windows-icon-192.png','/lady-justice-windows-icon-512.png',
   ])
-  for(const path of ['/lady-justice-icon-180.png','/lady-justice-icon-192.png','/lady-justice-icon-512.png','/lady-justice-favicon-32.png']){
+  for(const path of ['/lady-justice-bright-icon-180.png','/lady-justice-windows-icon-192.png','/lady-justice-windows-icon-512.png','/lady-justice-bright-favicon-32.png']){
     const icon=await request.get(path)
     expect(icon.ok()).toBe(true)
     expect(icon.headers()['content-type']).toContain('image/png')

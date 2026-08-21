@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## Versão 0.4.17 — invalidação dos ícones Windows/browser
+
+- A 0.4.16 publicou o novo build, mas a verificação de comprimentos HTTP provou que os URLs antigos dos ícones continuavam a devolver os bytes da 0.4.15. A 0.4.17 referencia nomes novos para o favicon e para 192/512 px, forçando a Cloudflare e os browsers a recolher os ficheiros brilhantes.
+- `apple-touch-icon` 180 px também recebe o dourado de contraste reforçado e um URL novo para contornar a cache do iOS. Ainda não publicada.
+
 ## Versão 0.4.16 — contraste Windows/browser local
 
 - Variante Windows/browser da Justiça Cega com dourado mais luminoso, traço aproximadamente 25% mais espesso e figura ligeiramente ampliada. O ícone iPhone de 180 px permanece inalterado.
