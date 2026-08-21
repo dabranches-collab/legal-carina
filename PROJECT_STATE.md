@@ -1,9 +1,10 @@
 # Estado do projecto
 
-## Versão 0.4.14 — ajuste móvel local
+## Versão 0.4.14 — publicada em 2026-08-21
 
 - No iPhone, o busto da Justiça Cega na sidebar passa de 256 px para 128 px de altura, reduz também a largura máxima para cerca de metade e desce ligeiramente dentro da barra. O desktop mantém as dimensões anteriores.
-- Validação móvel deve confirmar que o busto não invade nem comprime os menus em todas as dimensões de iPhone suportadas. Ainda não publicada.
+- Validação aprovada: captura real do iPhone 13 mini revista, 15/15 cenários móveis em onze modelos, 88/88 unitários, segurança, lint, TypeScript, build e dry-run Cloudflare.
+- Publicada a partir do commit funcional `1d6923a`. A integração do mesmo commit ficou activa a 100% como Deployment ID `c5f53186-4cfc-4509-b3f6-686c22ff3a1e` e Version ID `8e277618-1449-4660-84e6-80c2ab1cb324`. HTTP 200, service worker `0.4.14` e bundle activo confirmados directamente.
 
 ## Versão 0.4.13 — publicada em 2026-08-21
 

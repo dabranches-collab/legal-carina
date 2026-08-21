@@ -1,9 +1,10 @@
 # Legal Carina — handover
 
-## Versão 0.4.14 — ajuste móvel local
+## Versão 0.4.14 — publicada em 2026-08-21
 
 - Sidebar de iPhone: busto da Justiça Cega reduzido para 50% da altura e aproximadamente 50% da largura máxima usadas no desktop, com ligeiro deslocamento descendente. A área rolável dos menus recupera 128 px; desktop inalterado.
-- Ainda não publicada. Produção permanece na versão `0.4.13`.
+- Validação aprovada: captura real do iPhone 13 mini revista, 15/15 cenários móveis em onze modelos, 88/88 unitários, segurança, lint, TypeScript, build e dry-run Cloudflare.
+- Publicada a partir do commit funcional `1d6923a`. Deployment activo a 100% `c5f53186-4cfc-4509-b3f6-686c22ff3a1e`, Version `8e277618-1449-4660-84e6-80c2ab1cb324`. Produção confirmou HTTP 200, service worker `carina-legal-shell-0.4.14` e bundle `/assets/index-lwUZNh0J.js`.
 
 ## Versão 0.4.13 — publicada em 2026-08-21
 
