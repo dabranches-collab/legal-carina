@@ -1,11 +1,11 @@
 # Legal Carina — handover
 
-## Versão 0.5.6 — cobertura integral dos acessos em preparação
+## Versão 0.5.6 — cobertura integral dos acessos publicada
 
 - Corrigida a lacuna dos logs quando o PWA restaura uma sessão já válida: essas entradas passam a ser registadas com `auth_method=session_restore`.
 - A Edge Function dos Utilizadores complementa eventos em falta com o `last_sign_in_at` do Supabase Auth, usando uma janela de um minuto para não duplicar logins já auditados.
 - Nome apresentado: `display_name` da credencial, metadados autenticados e username, por esta ordem, ignorando valores vazios.
-- Ainda não publicada. Requer deploy conjunto do frontend e da Edge Function `admin-users`; produção permanece em 0.5.5.
+- Publicada a partir do commit `9b8f9aa`. Cloudflare Version ID `d00e6567-9e53-4d79-a211-33e69f236b71`, bundle `index-B6E1XSJM.js`, service worker `0.5.6` e HTTP 200 confirmados. Edge Function `admin-users` v7 activa com JWT obrigatório.
 
 ## Versão 0.5.5 — registos de acesso em preparação
 

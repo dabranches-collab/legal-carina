@@ -1,11 +1,12 @@
 # Estado do projecto
 
-## Versão 0.5.6 — cobertura integral dos acessos em preparação
+## Versão 0.5.6 — cobertura integral dos acessos publicada
 
 - A reabertura da aplicação com uma sessão válida passa a criar um evento de acesso, cobrindo o PWA quando o utilizador não volta a introduzir o PIN.
 - O histórico recupera lacunas anteriores através do `last_sign_in_at` autenticado, sem duplicar eventos existentes separados por menos de um minuto.
 - A identificação usa nome visível da credencial, depois nome do perfil autenticado e só por fim o username; nomes vazios deixam de provocar apresentação inconsistente.
 - Validação local: lint, TypeScript e 107/107 testes unitários aprovados.
+- Publicada a partir do commit `9b8f9aa`: Cloudflare Version ID `d00e6567-9e53-4d79-a211-33e69f236b71`, bundle `index-B6E1XSJM.js`; Edge Function `admin-users` v7 activa com JWT obrigatório.
 
 ## Versão 0.5.5 — registos de acesso em preparação
 
