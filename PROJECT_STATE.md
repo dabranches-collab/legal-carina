@@ -9,6 +9,7 @@
 - O IVA das Notas de Honorários é inicializado pela Sociedade e editável por documento, recalculando IVA e total sem interferir com movimentos ou totais de facturação.
 - Migration `20260821124055_add_multiple_billing_entity_bank_accounts` aplicada e confirmada no projecto Supabase correcto. Sem novos avisos de segurança ou desempenho.
 - Gates: segurança de ficheiros, lint, TypeScript, build, 99/99 unitários e 55/55 E2E aplicáveis; 2 exclusivos de preview omitidos. Browser real: 7 233/7 233 registos sem paginação e dois blocos bancários no Operador sem gravação.
+- Produção 0.5.2 confirmada: commit `d6f8417`, Deployment `21efbce5-cd22-4c3c-9550-d4e30a11796d`, Version `dd1d69d0-72cd-4b13-b7a7-d34b113d0b01`, bundle `/assets/index-CBtzDRk4.js` e PWA actualizado no browser autenticado.
 
 ## Versão 0.5.1 — alinhamento sticky publicado
 

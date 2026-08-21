@@ -10,6 +10,7 @@
 - O IVA da Nota de Honorários começa no valor predefinido da Sociedade, pode ser alterado no próprio documento e recalcula IVA/total sem alterar movimentos ou facturação.
 - Migration Supabase `20260821124055_add_multiple_billing_entity_bank_accounts` aplicada isoladamente. Ensaio prévio com `ROLLBACK`, zero tipos inválidos/divergências e prova real do Operador com dois blocos bancários sem guardar dados.
 - Validação: segurança de ficheiros, lint, TypeScript, build, 99/99 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos). A tabela real carregou 7 233/7 233 movimentos; 1 000 linhas/72 posições de scroll mantiveram desvio sticky de 0 px.
+- Publicada em 2026-08-21 a partir do commit funcional `d6f8417`. Deployment activo a 100% `21efbce5-cd22-4c3c-9550-d4e30a11796d`, Version ID `dd1d69d0-72cd-4b13-b7a7-d34b113d0b01`. HTTP 200, bundle `/assets/index-CBtzDRk4.js` e actualização PWA para `Versão 0.5.2` confirmados directamente.
 
 ## Versão 0.5.1 — alinhamento sticky publicado
 
