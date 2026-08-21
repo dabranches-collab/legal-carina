@@ -22,7 +22,7 @@ import { AuthenticatedApplication as App } from './App'
 import { AuthContext } from './features/auth/AuthContext'
 import { supabase } from './lib/supabase'
 
-const renderApp=(role:'owner'|'operator'='owner')=>render(<AuthContext.Provider value={{user:null,role,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>null}}><App/></AuthContext.Provider>)
+const renderApp=(role:'owner'|'admin'|'operator'='owner')=>render(<AuthContext.Provider value={{user:null,role,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>null}}><App/></AuthContext.Provider>)
 
 describe('interface principal', () => {
   it('apresenta navegação, cabeçalho e indicadores da visão geral', async () => {
@@ -71,12 +71,29 @@ describe('interface principal', () => {
     await userEvent.click(screen.getAllByRole('button', { name: 'Utilizadores' })[0])
     expect(await screen.findByRole('heading', { name: 'Utilizadores da aplicação' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Criar utilizador' })).toBeInTheDocument()
-    expect(await screen.findByRole('heading', { name: 'Histórico de acessos' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Registos de acesso' })).not.toBeInTheDocument()
     const profile = screen.getByRole('combobox', { name: 'Perfil' })
     expect(screen.getByRole('option', { name: 'Operador' })).toBeInTheDocument()
     await userEvent.selectOptions(profile, 'operator')
     expect(screen.getByText(/Actualização diária dos movimentos/i)).toBeInTheDocument()
     expect(screen.getByText(/Sem administração de utilizadores/i)).toBeInTheDocument()
+  })
+
+  it('separa os registos de acesso e apresenta-os apenas ao proprietário',async()=>{
+    renderApp('owner')
+    await userEvent.click(screen.getByRole('button',{name:'Definições'}))
+    await userEvent.click(screen.getByRole('button',{name:'Administração'}))
+    await userEvent.click(screen.getAllByRole('button',{name:'Registos de acesso'})[0])
+    expect(await screen.findByRole('heading',{name:'Registos de acesso'})).toBeInTheDocument()
+    expect(within(screen.getByRole('navigation',{name:'Localização'})).getByText('Registos de acesso')).toBeInTheDocument()
+  })
+
+  it('não apresenta nem aceita a rota dos registos de acesso ao administrador',async()=>{
+    window.history.replaceState({},'', '/?view=admin-access-logs')
+    renderApp('admin')
+    expect(window.location.search).toBe('?view=overview')
+    await userEvent.click(screen.getByRole('button',{name:'Definições'}))
+    expect(screen.queryByRole('button',{name:'Registos de acesso'})).not.toBeInTheDocument()
   })
 
   it('dá ao Operador as Definições operacionais sem lhe dar Administração', async()=>{

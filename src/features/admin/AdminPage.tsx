@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import { supabase } from '../../lib/supabase'
-import { AdminUsersTable, LoginActivityTable } from './AdminTables'
+import { AdminUsersTable } from './AdminTables'
 import { useAuth } from '../auth/AuthContext'
 import { makeAccessMessage } from './accessMessage'
 
 type Role = 'admin'|'manager'|'operator'|'billing'|'professional'|'viewer'|'auditor'
 type AdminUser = { userId:string; username:string; displayName:string; display_name?:string; pinConfigured:boolean; role:Role|'owner'; active:boolean; invitedAt:string; lastSignInAt:string|null }
 type BillingAccess = { billingEntityId:string; name:string; visible:boolean; financial:boolean }
-type LoginGroup = { userId:string; username:string; displayName:string; firstAt:string; lastAt:string; count:number; events:string[] }
 const roleHelp:Record<Role,string> = {
   admin:'Gestão integral da aplicação, utilizadores e configurações.', manager:'Gestão operacional dentro das Sociedades autorizadas; os valores financeiros dependem de autorização separada.', operator:'Actualização diária dos movimentos nas Sociedades autorizadas: completar dados, corrigir Sociedade e actualizar facturação e pagamento. Sem administração de utilizadores ou configurações.', billing:'Facturação, recebimentos e valores das sociedades autorizadas.', professional:'Registos e processos dentro das sociedades autorizadas.', viewer:'Consulta dos dados autorizados, sem alteração.', auditor:'Consulta e auditoria dos dados autorizados, sem alteração operacional.',
 }
@@ -33,9 +32,6 @@ export function AdminPage() {
   const [editPin,setEditPin] = useState('')
   const [editRole,setEditRole] = useState<Role>('professional')
   const [editActive,setEditActive] = useState(true)
-  const [isOwner,setIsOwner] = useState(false)
-  const [loginGroups,setLoginGroups] = useState<LoginGroup[]>([])
-  const [loginError,setLoginError] = useState('')
 
   const invoke = useCallback(async (body:Record<string,unknown>) => {
     if (!supabase) throw new Error('Ligação ao Supabase indisponível.')
@@ -50,12 +46,10 @@ export function AdminPage() {
     const { data:membership,error:membershipError } = await supabase.from('firm_members').select('firm_id,role').eq('active',true).in('role',['owner','admin']).limit(1).maybeSingle()
     if (membershipError || !membership) { setError('Permissão administrativa necessária.'); setLoading(false); return }
     setFirmId(membership.firm_id)
-    setIsOwner(membership.role==='owner')
     try {
       const [data,entitiesResult]=await Promise.all([invoke({ action:'list_users', firmId:membership.firm_id }),supabase.from('billing_entities').select('id,name').eq('firm_id',membership.firm_id).eq('active',true).order('name')])
       setUsers((data.users ?? []).map((item:AdminUser)=>({...item,displayName:(item.userId===currentUser?.id?currentUser.user_metadata?.display_name:'')||item.displayName||item.display_name||item.username})))
       if(!entitiesResult.error) setNewAccess((entitiesResult.data??[]).map(entity=>({billingEntityId:entity.id,name:entity.name,visible:false,financial:false})))
-      if(membership.role==='owner') { try { const activity=await invoke({action:'list_login_activity',firmId:membership.firm_id}); setLoginGroups(activity.groups??[]); setLoginError('') } catch { setLoginError('Não foi possível carregar o histórico de acessos.') } }
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Não foi possível listar os utilizadores.') }
     setLoading(false)
   }, [invoke,currentUser])
@@ -131,7 +125,6 @@ export function AdminPage() {
         <button disabled={sending||!firmId||!displayName.trim()||pin.length!==4} className="mt-3 min-h-11 w-full rounded-lg bg-primary px-4 font-semibold text-surface disabled:opacity-50">{sending?'A criar…':'Criar utilizador'}</button>
       </form>
     </section>
-    {isOwner && <section className="card p-4" aria-labelledby="login-log-title"><div className="mb-4"><h2 id="login-log-title" className="font-semibold">Histórico de acessos</h2><p className="mt-1 text-sm text-text-secondary">Visível apenas para o proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.</p></div>{loginError?<p role="alert" className="text-sm text-danger">{loginError}</p>:<LoginActivityTable rows={loginGroups}/>}</section>}
     {editing && <div className="app-safe-fixed fixed z-[75] grid place-items-center bg-primary/45 p-4"><form onSubmit={saveAccess} role="dialog" aria-modal="true" aria-labelledby="permissions-title" className="card max-h-[min(48rem,calc(100dvh-2rem))] w-full max-w-2xl overflow-y-auto p-6"><div className="flex justify-between gap-4"><div><h2 id="permissions-title" className="font-display text-2xl font-semibold">Acesso de {editing.displayName || editing.username || 'utilizador'}</h2><p className="mt-1 text-sm text-text-secondary">A visibilidade e os valores financeiros são independentes por sociedade.</p></div><button type="button" onClick={()=>setEditing(null)} className="min-h-11 min-w-11 text-xl" aria-label="Fechar">×</button></div>
       <div className="mt-5 grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold">Nome visível<input required maxLength={100} value={editDisplayName} onChange={e=>setEditDisplayName(e.target.value)} className="control mt-1 w-full px-3"/></label><label className="text-sm font-semibold">Utilizador para login<input required value={editUsername} onChange={e=>setEditUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g,''))} className="control mt-1 w-full px-3"/></label><label className="text-sm font-semibold">Reset do PIN <span className="font-normal text-text-secondary">(opcional)</span><input type="text" inputMode="numeric" autoComplete="off" pattern="[0-9]{4}" maxLength={4} value={editPin} onChange={e=>setEditPin(e.target.value.replace(/\D/g,'').slice(0,4))} className="control mt-1 w-full px-3 text-center tracking-[0.3em]"/></label></div>
       {editing.role !== 'owner' && <div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-semibold">Perfil<select value={editRole} onChange={e=>setEditRole(e.target.value as Role)} className="control mt-1 w-full px-3"><option value="admin">Administrador</option><option value="manager">Gestor</option><option value="operator">Operador</option><option value="billing">Financeiro</option><option value="professional">Advogado</option><option value="viewer">Consulta</option><option value="auditor">Auditor</option></select></label><label className="flex min-h-11 items-center gap-3 self-end rounded-lg border border-border px-3 text-sm font-semibold"><input type="checkbox" checked={editActive} onChange={e=>setEditActive(e.target.checked)}/>{editActive?'Acesso activo':'Acesso suspenso'}</label></div>}

@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.5.5 — registos de acesso em preparação
+
+- Criada uma página autónoma «Registos de acesso» dentro de Administração, visível e navegável apenas pelo proprietário.
+- Administradores mantêm Administração e Utilizadores, mas a rota dos logs é recusada e redireccionada para a Visão Geral; Operadores continuam sem acesso a toda a Administração.
+- A página de Utilizadores deixou de consultar ou apresentar o histórico; o backend já exige explicitamente o perfil `owner` para devolver os acessos.
+- Validação: TypeScript, lint, 107/107 testes unitários e 9/9 fluxos Administrador/Operador. Desempenho isolado: 72 posições de scroll em 4,10 s, desvio sticky 0 px e pesquisa em 0,75 s.
+
 ## Versão 0.5.4 — correcção definitiva do alinhamento sticky em preparação
 
 - O cabeçalho fixo preserva agora no `colgroup` as larguras efectivamente renderizadas antes de sair do fluxo da tabela, impedindo que o corpo recalcule colunas diferentes no PWA/produção.

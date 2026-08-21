@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.5.5 — registos de acesso em preparação
+
+- Nova rota e entrada «Registos de acesso» sob Administração, exclusiva do proprietário tanto na navegação como na protecção da rota e na Edge Function.
+- A gestão de Utilizadores fica separada do histórico de entradas. Administradores continuam com Utilizadores, importações e dados-base, sem conseguirem ver ou abrir os logs; Operadores permanecem fora da Administração.
+- Validação local: TypeScript, lint, 107/107 testes unitários, 9/9 fluxos de permissões e desempenho isolado aprovado (72 amostras/4,10 s, desvio 0 px, pesquisa 0,75 s).
+- Ainda não publicada; produção permanece em `0.5.4`, commit `559a3d9`, Version ID Cloudflare `0ff8b0fa-f6ae-4891-b282-7cca6b5f7689`.
+
 ## Versão 0.5.4 — correcção definitiva do alinhamento sticky em preparação
 
 - O modo fixo do cabeçalho congela simultaneamente as larguras das células e do `colgroup`, usando a geometria real da tabela para posição e recorte. Isto elimina a divergência que só surgia com larguras guardadas no PWA/produção.

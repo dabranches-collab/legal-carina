@@ -16,10 +16,12 @@ const ImportWizard=lazy(()=>import('./features/imports/ImportWizard').then(modul
 const ImportReviewPage=lazy(()=>import('./features/imports/ImportReviewPage').then(module=>({default:module.ImportReviewPage})))
 const AdminPage=lazy(()=>import('./features/admin/AdminPage').then(module=>({default:module.AdminPage})))
 const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then(module=>({default:module.AdminLandingPage})))
+const AccessLogsPage=lazy(()=>import('./features/admin/AccessLogsPage').then(module=>({default:module.AccessLogsPage})))
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
 
-const validViews:ViewId[] = ['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users']
+const validViews:ViewId[] = ['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
+const ownerViews:ViewId[]=['admin-access-logs']
 function readLocation() {
   const params = new URLSearchParams(window.location.search)
   const requested = params.get('view') as ViewId|null
@@ -53,7 +55,7 @@ function buttonDescription(button:HTMLButtonElement){
 export function AuthenticatedApplication() {
   const {role}=useAuth()
   const canManageSettings=role==='owner'||role==='admin'
-  const [initial] = useState(()=>{const location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();return readLocation()}return location})
+  const [initial] = useState(()=>{const location=readLocation();if((restrictedViews.includes(location.view)&&!canManageSettings)||(ownerViews.includes(location.view)&&role!=='owner')){overviewLocation();return readLocation()}return location})
   const [view, setView] = useState<ViewId>(initial.view)
   const [society,setSociety] = useState<string|null>(initial.society)
   const [professional,setProfessional] = useState<string|null>(initial.professional)
@@ -63,9 +65,9 @@ export function AuthenticatedApplication() {
   const [refreshKey,setRefreshKey] = useState(0)
   useEffect(()=>{const apply=(root:ParentNode=document)=>{for(const button of root.querySelectorAll<HTMLButtonElement>('button')){if(button.title)continue;const description=buttonDescription(button);if(description){button.title=description;button.setAttribute('aria-description',description)}}};apply();const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node instanceof HTMLElement){if(node.matches('button'))apply(node.parentNode??document);else apply(node)}});observer.observe(document.body,{childList:true,subtree:true});return()=>observer.disconnect()},[])
   useEffect(()=>{const timer=window.setTimeout(()=>{void import('./features/work-entries/WorkEntriesPage').then(module=>module.prefetchWorkEntries()).catch(()=>undefined)},1200);return()=>window.clearTimeout(timer)},[])
-  useEffect(() => { const sync=()=>{let location=readLocation();if(restrictedViews.includes(location.view)&&!canManageSettings){overviewLocation();location=readLocation()}setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [canManageSettings])
+  useEffect(() => { const sync=()=>{let location=readLocation();if((restrictedViews.includes(location.view)&&!canManageSettings)||(ownerViews.includes(location.view)&&role!=='owner')){overviewLocation();location=readLocation()}setView(location.view);setSociety(location.society);setProfessional(location.professional);setClientType(location.clientType);setClientMode(location.clientMode);setSettingsEntity(location.settingsEntity)}; window.addEventListener('popstate',sync); return()=>window.removeEventListener('popstate',sync) }, [canManageSettings,role])
   function navigate(nextView:ViewId,nextSociety:string|null=null,nextClientType:'individual'|'company'|'mixed'|null=null,nextEntity:'clients'|'billing_entities'|'professionals'|null=null,nextProfessional:string|null=null) {
-    if(restrictedViews.includes(nextView)&&!canManageSettings){nextView='overview';nextSociety=null;nextClientType=null;nextEntity=null;nextProfessional=null}
+    if((restrictedViews.includes(nextView)&&!canManageSettings)||(ownerViews.includes(nextView)&&role!=='owner')){nextView='overview';nextSociety=null;nextClientType=null;nextEntity=null;nextProfessional=null}
     const url=new URL(window.location.href); url.searchParams.set('view',nextView)
     if(nextSociety) url.searchParams.set('society',nextSociety); else url.searchParams.delete('society')
     if(nextClientType) url.searchParams.set('clientType',nextClientType); else url.searchParams.delete('clientType')
@@ -85,6 +87,7 @@ export function AuthenticatedApplication() {
   else if (view === 'master-data') content = <MasterDataPage initialSection={settingsEntity??'clients'} />
   else if (view === 'admin') content = <AdminLandingPage onNavigate={navigate} />
   else if (view === 'admin-users') content = <AdminPage />
+  else if (view === 'admin-access-logs') content = <AccessLogsPage />
   else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
   return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
 }
