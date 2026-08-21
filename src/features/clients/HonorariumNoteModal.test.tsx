@@ -117,7 +117,7 @@ describe('HonorariumNoteModal',()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-bank" clientName="Cliente Bancário" onClose={()=>{}}/> )
   expect(await screen.findByText('Banco A')).toBeInTheDocument()
   const accounts=screen.getAllByRole('checkbox',{name:/Banco [AB]/})
-  expect(accounts[0]).toBeChecked();expect(accounts[1]).not.toBeChecked()
+  await waitFor(()=>expect(accounts[0]).toBeChecked());expect(accounts[1]).not.toBeChecked()
   await user.click(accounts[1]);await user.clear(screen.getByLabelText('IVA do documento'));await user.type(screen.getByLabelText('IVA do documento'),'10')
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'));await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
   const generatedText=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[String(value)]).join(' ')

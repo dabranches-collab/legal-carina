@@ -87,6 +87,30 @@ test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) =
   await page.screenshot({ path: 'test-results/table-sticky-desktop.png', fullPage: false })
 })
 
+test('cabeçalho e filtros mantêm o centro exacto das células com larguras persistidas após sticky',async({page})=>{
+  await page.setViewportSize({width:1440,height:800})
+  await page.addInitScript(()=>localStorage.setItem('carina.table.anonymous.work-entries',JSON.stringify({widths:{date:113,client:287,clientCode:121,activity:419,responsible:173,duration:137,rate:151,amount:149,expenses:207,society:193}})))
+  await page.goto('/?qa-iphone=1&view=work')
+  const table=page.getByRole('region',{name:'Registos de trabalho'})
+  await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+  for(const zoom of [0.8,1,1.25,1.5,2]){
+    await page.evaluate(value=>{document.body.style.zoom=String(value);window.scrollTo(0,1200)},zoom)
+    await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))))
+    const geometry=await table.evaluate(element=>{
+      const headers=[...element.querySelectorAll('thead th')].map(cell=>cell.getBoundingClientRect())
+      const row=element.querySelector('tbody tr:not([aria-hidden="true"])')
+      const cells=row?[...row.querySelectorAll('td')].map(cell=>cell.getBoundingClientRect()):[]
+      return headers.map((header,index)=>({label:element.querySelectorAll('thead th')[index]?.textContent?.trim(),headerLeft:header.left,headerRight:header.right,cellLeft:cells[index]?.left,cellRight:cells[index]?.right,centerDelta:Math.abs((header.left+header.right)/2-(cells[index]?.left+cells[index]?.right)/2),leftDelta:Math.abs(header.left-cells[index]?.left),rightDelta:Math.abs(header.right-cells[index]?.right)}))
+    })
+    expect(geometry.length).toBeGreaterThan(10)
+    for(const column of geometry){
+      expect.soft(column.centerDelta,`${column.label} centro a zoom ${zoom}`).toBeLessThanOrEqual(0.75)
+      expect.soft(column.leftDelta,`${column.label} esquerda a zoom ${zoom}`).toBeLessThanOrEqual(0.75)
+      expect.soft(column.rightDelta,`${column.label} direita a zoom ${zoom}`).toBeLessThanOrEqual(0.75)
+    }
+  }
+})
+
 test('sticky compacto não ocupa o ecrã num iPhone e filtros abrem dentro do viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/?qa-iphone=1&view=work&safe-top=47&safe-bottom=34&theme=dark')

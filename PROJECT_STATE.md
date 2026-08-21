@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.5.4 — correcção definitiva do alinhamento sticky em preparação
+
+- O cabeçalho fixo preserva agora no `colgroup` as larguras efectivamente renderizadas antes de sair do fluxo da tabela, impedindo que o corpo recalcule colunas diferentes no PWA/produção.
+- Novo teste geométrico compara margens e centro de cada cabeçalho com a célula correspondente usando larguras persistidas e zoom entre 80% e 200%.
+- Perfis confirmados: Administrador acede a Administração, Utilizadores e Definições; Operador cria e edita Clientes, Sociedades e Responsáveis, sem acesso à Administração.
+- Validação local: 19/19 cenários sticky/iPhone, 9/9 fluxos de permissões, 7/7 testes de navegação, segurança, lint, TypeScript, build e 105/105 testes unitários.
+
 ## Versão 0.5.3 — validação reforçada em preparação
 
 - Estado exclusivamente local; produção mantém-se em `0.5.2`. Não publicar sem nova ordem explícita.

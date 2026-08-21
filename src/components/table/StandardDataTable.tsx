@@ -458,6 +458,7 @@ export function StandardDataTable<Row>({
   const visible = ordered.filter(
     (column) => column.essential || !hidden.includes(column.id),
   );
+  const stickyLayoutKey=visible.map(column=>`${column.id}:${widths[column.id]??column.width??160}`).join('|');
   const optionsFor = (column: TableColumn<Row>): TableColumn<Row> => {
     if(column.filterOptions||column.kind==="boolean"||column.kind==="number"||column.kind==="money"||column.kind==="date")return column;
     const values = new Map<string,string>();
@@ -553,7 +554,11 @@ export function StandardDataTable<Row>({
   useEffect(() => {
     const header=headerElement.current,table=tableElement.current,tools=toolsElement.current,scroller=scrollContainer.current;
     if(!header||!table||!tools||!scroller)return;
+    const headerCells=[...header.querySelectorAll<HTMLElement>('th')];
+    const tableColumns=[...table.querySelectorAll<HTMLElement>('colgroup col')];
     const stickyHeaderCells=[...header.querySelectorAll<HTMLElement>('[data-sticky-column="true"]')];
+    const originalCellStyles=headerCells.map(cell=>({width:cell.style.width,minWidth:cell.style.minWidth,maxWidth:cell.style.maxWidth}));
+    const originalColumnStyles=tableColumns.map(column=>({width:column.style.width,minWidth:column.style.minWidth}));
     let fixed=false;
     const reset=()=>{
       fixed=false;
@@ -563,7 +568,11 @@ export function StandardDataTable<Row>({
       header.style.width="";
       header.style.transform="";
       header.style.clipPath="";
+      header.style.display="";
+      header.style.tableLayout="";
       table.style.paddingTop="";
+      headerCells.forEach((cell,index)=>{cell.style.width=originalCellStyles[index].width;cell.style.minWidth=originalCellStyles[index].minWidth;cell.style.maxWidth=originalCellStyles[index].maxWidth});
+      tableColumns.forEach((column,index)=>{column.style.width=originalColumnStyles[index].width;column.style.minWidth=originalColumnStyles[index].minWidth});
       for(const cell of stickyHeaderCells)cell.style.left=`${cell.dataset.stickyOffset??0}px`;
     };
     const update=()=>{
@@ -572,18 +581,24 @@ export function StandardDataTable<Row>({
       const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop+headerHeight;
       if(!shouldFix){if(fixed)reset();return}
       if(!fixed){
+        const renderedWidths=headerCells.map(cell=>cell.offsetWidth);
         fixed=true;
         table.style.paddingTop=`${headerHeight}px`;
         header.style.position="fixed";
         header.style.transform="none";
+        header.style.display="table";
+        header.style.tableLayout="fixed";
+        headerCells.forEach((cell,index)=>{const width=`${renderedWidths[index]}px`;cell.style.width=width;cell.style.minWidth=width;cell.style.maxWidth=width});
+        tableColumns.forEach((column,index)=>{const width=`${renderedWidths[index]}px`;column.style.width=width;column.style.minWidth=width});
       }
       const scrollerRect=scroller.getBoundingClientRect();
-      const hiddenRight=Math.max(0,tableRect.width-scroller.scrollLeft-scrollerRect.width);
-      header.style.top=`${targetTop}px`;
-      header.style.left=`${scrollerRect.left-scroller.scrollLeft}px`;
-      header.style.width=`${tableRect.width}px`;
-      header.style.clipPath=`inset(0 ${hiddenRight}px 0 ${scroller.scrollLeft}px)`;
-      for(const cell of stickyHeaderCells)cell.style.left=`${scrollerRect.left+Number(cell.dataset.stickyOffset??0)}px`;
+      const scale=table.offsetWidth>0?tableRect.width/table.offsetWidth:1;
+      const hiddenLeft=Math.max(0,(scrollerRect.left-tableRect.left)/scale),hiddenRight=Math.max(0,(tableRect.right-scrollerRect.right)/scale);
+      header.style.top=`${targetTop/scale}px`;
+      header.style.left=`${tableRect.left/scale}px`;
+      header.style.width=`${table.offsetWidth}px`;
+      header.style.clipPath=`inset(0 ${hiddenRight}px 0 ${hiddenLeft}px)`;
+      for(const cell of stickyHeaderCells)cell.style.left=`${scrollerRect.left/scale+Number(cell.dataset.stickyOffset??0)}px`;
     };
     update();
     window.addEventListener("scroll",update,{passive:true});
@@ -595,7 +610,7 @@ export function StandardDataTable<Row>({
       scroller.removeEventListener("scroll",update);
       reset();
     };
-  },[stickyHeaderOffset,shown.length]);
+  },[stickyHeaderOffset,shown.length,stickyLayoutKey]);
   useEffect(() => {
     localStorage.setItem(
       storageKey,

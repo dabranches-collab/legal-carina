@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.5.4 — correcção definitiva do alinhamento sticky em preparação
+
+- O modo fixo do cabeçalho congela simultaneamente as larguras das células e do `colgroup`, usando a geometria real da tabela para posição e recorte. Isto elimina a divergência que só surgia com larguras guardadas no PWA/produção.
+- Prova geométrica automatizada em zoom 80%, 100%, 125%, 150% e 200%, acrescida da matriz sticky existente: 19/19 cenários aprovados, incluindo seis dimensões de iPhone.
+- Matriz de perfis aprovada: Administrador com Administração, Utilizadores e dados-base integrais; Operador com criação/edição de Clientes, Sociedades e Responsáveis e sem acesso administrativo.
+- Gates: segurança, lint, TypeScript, build, 105/105 testes unitários, 9/9 fluxos de permissões e 7/7 testes de navegação.
+
 ## Versão 0.5.3 — validação reforçada em preparação
 
 - Código local na branch `codex/reconcile-full-import`; produção permanece em `0.5.2` (`d6f8417`, Deployment `21efbce5-cd22-4c3c-9550-d4e30a11796d`). Este lote não está publicado.
