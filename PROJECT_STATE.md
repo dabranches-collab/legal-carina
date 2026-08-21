@@ -1,10 +1,10 @@
 # Estado do projecto
 
-## Versão 0.4.15 — identidade PWA/browser local
+## Versão 0.4.15 — publicada em 2026-08-21
 
 - O busto dourado da Justiça Cega passa a ser o ícone comum da PWA, do atalho iPhone (`apple-touch-icon`) e do favicon do browser, sobre o azul-escuro da aplicação.
 - Foram criados ficheiros próprios de 32, 180, 192 e 512 px e URLs novas para reduzir a reutilização das caches antigas. O iOS não oferece uma API que garanta a substituição do ícone de um atalho já instalado; a nova URL maximiza a possibilidade de actualização, mas alguns dispositivos podem exigir remover e voltar a adicionar ao ecrã principal.
-- Ainda não publicada.
+- Publicada a partir do commit funcional `fd66f66`. Deployment activo a 100% `568e73b9-429d-4137-8827-f0b96b96a3c1`, Version `86727e94-d8d9-4c70-b297-26d4e87e1d74`. Página, service worker `0.4.15`, manifest, favicon e ícones de 180/192/512 px responderam HTTP 200 com os tipos correctos.
 
 ## Versão 0.4.14 — publicada em 2026-08-21
 

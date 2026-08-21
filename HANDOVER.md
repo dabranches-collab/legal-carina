@@ -1,10 +1,10 @@
 # Legal Carina — handover
 
-## Versão 0.4.15 — identidade PWA/browser local
+## Versão 0.4.15 — publicada em 2026-08-21
 
 - Novo ícone comum: busto da Justiça Cega dourado sobre azul-escuro no favicon, manifest PWA e `apple-touch-icon`. Assets PNG específicos: 32, 180, 192 e 512 px; os URLs versionados por nome evitam depender dos caminhos antigos em cache.
 - Limitação iOS: não existe API web para obrigar um Web Clip já instalado a trocar o ícone. A nova referência pode ser recolhida pelo sistema, mas a substituição garantida continua a exigir remover e adicionar novamente o atalho.
-- Ainda não publicada. Produção permanece `0.4.14`.
+- Publicada a partir do commit funcional `fd66f66`. Deployment activo a 100% `568e73b9-429d-4137-8827-f0b96b96a3c1`, Version `86727e94-d8d9-4c70-b297-26d4e87e1d74`. Página, service worker `carina-legal-shell-0.4.15`, manifest e os quatro ficheiros de ícone responderam HTTP 200 com os tipos correctos.
 
 ## Versão 0.4.14 — publicada em 2026-08-21
 
