@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.5.7 — acessos ao retomar o PWA em preparação
+
+- Regista como acesso o retorno do PWA/separador autenticado ao estado visível, mesmo quando React permanece montado e o utilizador não volta a introduzir o PIN. Reentradas em menos de 60 segundos são deduplicadas.
+- A identidade apresentada prefere `auth.users.raw_user_meta_data.display_name`, depois a credencial e finalmente o username.
+- A consulta de produção confirmou que o acesso recente da Carina foi uma reutilização de sessão, não um login Auth novo; não existe fonte segura para reconstruir retroactivamente a hora que nunca foi registada.
+- Lint, TypeScript e 107/107 testes unitários aprovados. Ainda não publicada; requer frontend e `admin-users` em conjunto.
+
 ## Versão 0.5.6 — cobertura integral dos acessos publicada
 
 - Corrigida a lacuna dos logs quando o PWA restaura uma sessão já válida: essas entradas passam a ser registadas com `auth_method=session_restore`.

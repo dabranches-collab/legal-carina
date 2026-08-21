@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.5.7 — acessos ao retomar o PWA em preparação
+
+- O regresso de uma sessão autenticada ao primeiro plano passa a criar um acesso com `auth_method=app_resumed`; existe uma janela de 60 segundos para impedir duplicações por alternância rápida de aplicações.
+- O histórico dá prioridade ao nome visível autenticado e só depois ao nome antigo da credencial e ao username. O proprietário deixa de surgir com o identificador de login.
+- A auditoria directa confirmou que a Carina abriu uma sessão persistente, sem novo login Auth; eventos históricos que nunca foram gravados não recebem uma hora inventada.
+- Validação: lint, TypeScript e 107/107 testes unitários aprovados.
+
 ## Versão 0.5.6 — cobertura integral dos acessos publicada
 
 - A reabertura da aplicação com uma sessão válida passa a criar um evento de acesso, cobrindo o PWA quando o utilizador não volta a introduzir o PIN.

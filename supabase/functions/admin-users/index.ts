@@ -89,7 +89,7 @@ Deno.serve(async (request) => {
       const identityById = new Map((credentials ?? []).map((credential) => {
         const metadata=authIdentityById.get(credential.user_id)
         const metadataName=typeof metadata?.display_name==='string'?metadata.display_name.trim():''
-        return [credential.user_id,{...credential,display_name:credential.display_name?.trim()||metadataName||credential.username}]
+        return [credential.user_id,{...credential,display_name:metadataName||credential.display_name?.trim()||credential.username}]
       }))
       const recoveredEvents=(authUsers.users??[]).filter(user=>userIds.includes(user.id)&&user.last_sign_in_at).flatMap(user=>{
         const latest=(events??[]).find(event=>event.user_id===user.id)?.occurred_at

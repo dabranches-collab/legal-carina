@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { hasSupabaseConfiguration, supabase } from '../../lib/supabase'
 import { AuthContext } from './AuthContext'
@@ -37,6 +37,7 @@ async function getAccessStatus(currentUser?:User|null) {
 }
 
 export function AuthGate({ children }: { children: ReactNode }) {
+  const lastAccessEventAt=useRef(0)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [user, setUser] = useState<User | null>(null)
@@ -67,7 +68,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setSession(initialSession); setUser(verifiedUser)
       setRole(accessStatus.role)
       setMustChangePin(accessStatus.mustChangePin)
-      await recordSecurityEvent('login_succeeded',undefined,{auth_method:'session_restore'})
+      await recordSecurityEvent('login_succeeded',undefined,{auth_method:'session_restore'});lastAccessEventAt.current=Date.now()
       if (active) setLoading(false)
     }
     void initialize()
@@ -79,6 +80,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
     })
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
+  useEffect(()=>{
+    const recordResume=()=>{if(document.visibilityState!=='visible'||!session||Date.now()-lastAccessEventAt.current<60_000)return;lastAccessEventAt.current=Date.now();void recordSecurityEvent('login_succeeded',undefined,{auth_method:'app_resumed'})}
+    document.addEventListener('visibilitychange',recordResume)
+    return()=>document.removeEventListener('visibilitychange',recordResume)
+  },[session])
 
   async function loginWithPin(username: string, pin: string) {
     if (!supabase) return
