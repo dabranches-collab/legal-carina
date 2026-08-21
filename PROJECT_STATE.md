@@ -1,6 +1,16 @@
 # Estado do projecto
 
-## Versão 0.5.1 — alinhamento sticky em validação
+## Versão 0.5.2 — protecção contra edição acidental
+
+- Nos Registos, o primeiro clique numa célula interactiva selecciona a linha e é deliberadamente consumido; apenas o segundo clique activa a edição. O mecanismo é reutilizável nas restantes tabelas editáveis.
+- Todas as tabelas carregam o universo integral por defeito e deixam de apresentar o selector/paginação 10/20/50/100/Todas; a virtualização protege os universos grandes.
+- Títulos centrados em todas as colunas; Actividade alinhada à esquerda e valores à direita.
+- Sociedades suportam várias contas bancárias, criadas apenas através do botão próprio; a primeira conta é principal. Notas de Honorários e Cobranças permitem escolher uma ou várias contas para o PDF.
+- O IVA das Notas de Honorários é inicializado pela Sociedade e editável por documento, recalculando IVA e total sem interferir com movimentos ou totais de facturação.
+- Migration `20260821124055_add_multiple_billing_entity_bank_accounts` aplicada e confirmada no projecto Supabase correcto. Sem novos avisos de segurança ou desempenho.
+- Gates: segurança de ficheiros, lint, TypeScript, build, 99/99 unitários e 55/55 E2E aplicáveis; 2 exclusivos de preview omitidos. Browser real: 7 233/7 233 registos sem paginação e dois blocos bancários no Operador sem gravação.
+
+## Versão 0.5.1 — alinhamento sticky publicado
 
 - A grelha fixa agora as larguras num `colgroup`; o desvio medido entre os centros do cabeçalho e das células foi `0 px` antes e depois da fixação sticky. Segurança, lint, TypeScript, build, 96/96 unitários e 55/55 E2E aplicáveis aprovados.
 

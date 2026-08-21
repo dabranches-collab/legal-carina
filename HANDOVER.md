@@ -1,6 +1,17 @@
 # Legal Carina — handover
 
-## Versão 0.5.1 — alinhamento sticky em validação
+## Versão 0.5.2 — protecção contra edição acidental
+
+- Nas tabelas com edição directa, o primeiro clique numa célula interactiva apenas selecciona a linha; só o segundo clique na linha já activa abre o editor dessa célula.
+- O comportamento é uma opção do componente comum de tabelas e está activo nos Registos; as fichas de Clientes, Sociedades e Responsáveis já mantêm a abertura por duplo clique.
+- Todas as tabelas abrem o universo completo por defeito, sem selector 10/20/50/100 nem paginação. Universos grandes continuam virtualizados para não desenhar milhares de linhas simultaneamente.
+- Todos os títulos de colunas ficam centrados; o conteúdo de Actividade permanece alinhado à esquerda e valores mantêm alinhamento numérico à direita.
+- As Sociedades admitem várias contas bancárias sob pedido através de «Adicionar dados bancários»; a primeira é principal e mantém compatibilidade com os documentos anteriores. Nota de Honorários e Cobrança permitem seleccionar uma ou várias contas a apresentar.
+- O IVA da Nota de Honorários começa no valor predefinido da Sociedade, pode ser alterado no próprio documento e recalcula IVA/total sem alterar movimentos ou facturação.
+- Migration Supabase `20260821124055_add_multiple_billing_entity_bank_accounts` aplicada isoladamente. Ensaio prévio com `ROLLBACK`, zero tipos inválidos/divergências e prova real do Operador com dois blocos bancários sem guardar dados.
+- Validação: segurança de ficheiros, lint, TypeScript, build, 99/99 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos). A tabela real carregou 7 233/7 233 movimentos; 1 000 linhas/72 posições de scroll mantiveram desvio sticky de 0 px.
+
+## Versão 0.5.1 — alinhamento sticky publicado
 
 - A grelha fixa agora as larguras num `colgroup`, preservando o centro exacto entre cabeçalho e células quando o cabeçalho entra em modo sticky.
 - Medição local real antes/depois do sticky: desvio horizontal de `0 px` nas primeiras 10 colunas. Gates verdes: 96/96 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos); o cenário de Operador mediu 72 posições de scroll em 1,19 s, desvio `0 px` e pesquisa em 0,79 s.

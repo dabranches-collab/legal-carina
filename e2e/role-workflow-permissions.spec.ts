@@ -7,7 +7,7 @@ const editable={id:row.id,work_date:row.work_date,client_profile_id:'profile-a',
 async function mockWork(page:Page,calls:Array<{name:string;body:Record<string,unknown>}>) {
  await page.route('**/rest/v1/**',async route=>{const url=new URL(route.request().url()),name=url.pathname.split('/').at(-1)??'',body=(route.request().postDataJSON()??{}) as Record<string,unknown>;if(url.pathname.includes('/rpc/'))calls.push({name,body});if(name==='search_work_entries')return route.fulfill({contentType:'application/json',body:JSON.stringify({items:[row],total:1,pageSize:100,professionals:[{id:'prof-a',label:'Responsável A'}],billingEntities:[{id:'soc-a',label:'Sociedade A'},{id:'soc-b',label:'Sociedade B'}]})});if(name==='get_work_entry_form_options')return route.fulfill({contentType:'application/json',body:JSON.stringify(options)});if(name==='get_work_entry_for_edit')return route.fulfill({contentType:'application/json',body:JSON.stringify(editable)});return route.fulfill({contentType:'application/json',body:'1'})})
 }
-async function openEntry(page:Page){await page.getByRole('row',{name:/Abrir qa-role-entry/}).dblclick();await expect(page.getByRole('dialog',{name:/Editar movimento/})).toBeVisible()}
+async function openEntry(page:Page){const entry=page.getByRole('row',{name:/Abrir qa-role-entry/});await entry.click();await entry.dblclick();await expect(page.getByRole('dialog',{name:/Editar movimento/})).toBeVisible()}
 
 test('Administrador altera e elimina sem justificação obrigatória',async({page})=>{
  const calls:Array<{name:string;body:Record<string,unknown>}>=[];await mockWork(page,calls);await page.goto('/?qa-iphone=1&qa-role=admin&view=work');await openEntry(page)

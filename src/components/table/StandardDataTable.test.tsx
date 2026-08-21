@@ -44,7 +44,7 @@ describe('StandardDataTable',()=>{
     expect(within(screen.getByRole('table').querySelector('tbody')!).getAllByRole('row')[0]).toHaveTextContent('Duarte')
     await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'Beatriz')
     expect(screen.getByText('1 resultados de 4')).toBeInTheDocument()
-    expect(screen.getByRole('option',{name:'Todas'})).toBeInTheDocument()
+    expect(screen.queryByLabelText('Linhas por página')).not.toBeInTheDocument()
   })
 
   test('abre uma linha com duplo clique ou Enter quando existe acção configurada',async()=>{
@@ -87,6 +87,18 @@ describe('StandardDataTable',()=>{
     await user.click(within(renderedRows[1]).getByText('Beatriz'))
     expect(renderedRows[1]).toHaveAttribute('aria-selected','true')
     expect(renderedRows[1]).toHaveClass('table-row-active')
+  })
+
+  test('numa tabela editável o primeiro clique selecciona e só o segundo activa a célula',async()=>{
+    const user=userEvent.setup(),edit=vi.fn()
+    const editable:TableColumn<Row>[]=[{...columns[0],render:row=><button type="button" onClick={()=>edit(row.id)}>{row.name}</button>},...columns.slice(1)]
+    render(<StandardDataTable id="guarded-edit" label="Tabela editável protegida" rows={rows} columns={editable} rowKey={row=>row.id} requireActiveRowForCellActions/>)
+    const action=screen.getByRole('button',{name:'Álvaro'})
+    await user.click(action)
+    expect(edit).not.toHaveBeenCalled()
+    expect(action.closest('tr')).toHaveAttribute('aria-selected','true')
+    await user.click(action)
+    expect(edit).toHaveBeenCalledOnce()
   })
 
   test('selector de colunas mantém-se aberto, protege a coluna essencial e devolve o foco ao fechar',async()=>{
@@ -135,11 +147,17 @@ describe('StandardDataTable',()=>{
     expect(Array.from(cols).map(col=>(col as HTMLElement).style.width)).toEqual(['160px','160px','160px'])
   })
 
-  test('Todas mantém o universo integral mas virtualiza as linhas apresentadas',async()=>{
-    const user=userEvent.setup()
+  test('respeita o alinhamento funcional indicado por cada coluna',()=>{
+    const aligned:TableColumn<Row>[]=[{...columns[0],align:'left'},columns[1],columns[2]]
+    render(<StandardDataTable id="column-alignment" label="Tabela alinhada por conteúdo" rows={rows.slice(0,1)} columns={aligned} rowKey={row=>row.id}/>)
+    const cells=within(screen.getAllByRole('row')[1]).getAllByRole('cell')
+    expect(cells[0]).toHaveClass('text-left')
+    expect(cells[1]).toHaveClass('text-right')
+  })
+
+  test('abre todo o universo por defeito mas virtualiza as linhas apresentadas',()=>{
     const manyRows=Array.from({length:7200},(_,index)=>({id:String(index+1),name:`Cliente ${index+1}`,amount:index,active:index%2===0}))
     render(<StandardDataTable id="virtual-all" label="Universo virtual" rows={manyRows} columns={columns} rowKey={row=>row.id}/>)
-    await user.selectOptions(screen.getByLabelText('Linhas por página'),'all')
     expect(screen.getByText('1–7200 de 7200')).toBeInTheDocument()
     const body=screen.getByRole('table').querySelector('tbody')!
     expect(body.querySelectorAll('tr[aria-hidden="true"]')).toHaveLength(1)

@@ -95,6 +95,18 @@ describe('HonorariumNoteModal',()=>{
   expect(generatedText).not.toContain('148,00')
   expect(generatedText).toContain('IVA')
  })
+ it('permite seleccionar várias contas e alterar o IVA apenas no documento',async()=>{
+  rpc.mockResolvedValueOnce({error:null,data:{total:1,items:[{id:'bank-fee',work_date:'2026-07-03',activity_description:'Serviço bancário',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:100}]}})
+  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Bancário',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:table==='billing_entities'?{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Titular A',bank_name:'Banco A',bank_account_number:'1',iban:'PT50000000000000000000001',bic_swift:'BICAPTPL',bank_accounts:[{account_holder:'Titular A',bank_name:'Banco A',account_number:'1',iban:'PT50000000000000000000001',bic_swift:'BICAPTPL',currency:'EUR'},{account_holder:'Titular B',bank_name:'Banco B',account_number:'2',iban:'PT50000000000000000000002',bic_swift:'BICBPTPL',currency:'EUR'}],default_vat_rate:23,default_currency:'EUR'}:[]))
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-bank" clientName="Cliente Bancário" onClose={()=>{}}/> )
+  expect(await screen.findByText('Banco A')).toBeInTheDocument()
+  const accounts=screen.getAllByRole('checkbox',{name:/Banco [AB]/})
+  expect(accounts[0]).toBeChecked();expect(accounts[1]).not.toBeChecked()
+  await user.click(accounts[1]);await user.clear(screen.getByLabelText('IVA do documento'));await user.type(screen.getByLabelText('IVA do documento'),'10')
+  await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'));await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  const generatedText=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[String(value)]).join(' ')
+  expect(generatedText).toContain('PT50000000000000000000001');expect(generatedText).toContain('PT50000000000000000000002');expect(generatedText).toContain('110,00')
+ })
  it('avisa também na cobrança quando faltam dados da sociedade emissora',async()=>{
   from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Cobrança',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:null,bank_account_holder:null,bank_name:null,bank_account_number:null,iban:null,bic_swift:null,default_vat_rate:23,default_currency:'EUR'}))
   render(<HonorariumNoteModal clientId="client-warning" clientName="Cliente Cobrança" documentKind="collection" onClose={()=>{}}/> )

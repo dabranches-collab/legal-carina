@@ -57,6 +57,7 @@ type Props<Row> = {
   totalRows?: number;
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
+  requireActiveRowForCellActions?: boolean;
   stickyHeaderOffset?: number;
   showSearch?: boolean;
   resultNoun?: string;
@@ -388,7 +389,6 @@ export function StandardDataTable<Row>({
   updating = false,
   error,
   onRetry,
-  defaultPageSize = 20,
   selected = [],
   onSelectionChange,
   emptyMessage = "Não existem dados.",
@@ -397,6 +397,7 @@ export function StandardDataTable<Row>({
   totalRows,
   universeKey = "",
   onRowDoubleClick,
+  requireActiveRowForCellActions = false,
   stickyHeaderOffset = 104,
   showSearch = true,
   resultNoun = "resultados",
@@ -425,9 +426,7 @@ export function StandardDataTable<Row>({
   const [widths, setWidths] = useState<Record<string, number>>(
     saved.widths ?? {},
   );
-  const [pageSize, setPageSize] = useState<10 | 20 | 50 | 100 | "all">(
-    saved.pageSize === "all" ? defaultPageSize : (saved.pageSize ?? defaultPageSize),
-  );
+  const pageSize = "all" as const;
   const [page, setPage] = useState(1);
   const [columnsOpen, setColumnsOpen] = useState(false),
     [openFilter, setOpenFilter] = useState<string | null>(null);
@@ -436,7 +435,7 @@ export function StandardDataTable<Row>({
   const [exporting, setExporting] = useState(false),
     [exportStatus, setExportStatus] = useState("");
   const [universeRows, setUniverseRows] = useState<Row[] | null>(null),
-    [universeRequested, setUniverseRequested] = useState(false),
+    [universeRequested, setUniverseRequested] = useState(Boolean(loadAllRows)),
     [universeLoading, setUniverseLoading] = useState(false),
     [universeError, setUniverseError] = useState(""),
     [universeProgress,setUniverseProgress]=useState<{loaded:number;total:number}|null>(null);
@@ -602,7 +601,6 @@ export function StandardDataTable<Row>({
       storageKey,
       JSON.stringify({
         hidden,
-        pageSize: pageSize === "all" ? defaultPageSize : pageSize,
         order,
         widths,
       }),
@@ -610,10 +608,8 @@ export function StandardDataTable<Row>({
   }, [
     storageKey,
     hidden,
-    pageSize,
     order,
     widths,
-    defaultPageSize,
   ]);
   useEffect(() => {
     if (page > pageCount) setPage(pageCount);
@@ -1052,7 +1048,7 @@ export function StandardDataTable<Row>({
                       type="button"
                       disabled={column.sortable === false}
                       onClick={(event) => toggleSort(column, event.shiftKey)}
-                      className="flex min-h-6 w-full items-center gap-1.5 text-xs font-semibold disabled:cursor-default"
+                      className="flex min-h-6 w-full items-center justify-center gap-1.5 text-center text-xs font-semibold disabled:cursor-default"
                     >
                       <span>{column.label}</span>
                       {sortIndex >= 0 && (
@@ -1065,7 +1061,7 @@ export function StandardDataTable<Row>({
                         </span>
                       )}
                     </button>
-                      <div className="mt-0.5 flex items-center gap-0.5">
+                      <div className="mt-0.5 flex items-center justify-center gap-0.5">
                       {column.filterable !== false &&
                         column.searchable !== false && (
                           <div className="relative min-w-0 flex-1">
@@ -1082,7 +1078,7 @@ export function StandardDataTable<Row>({
                                   current === column.id ? null : column.id,
                                 );
                               }}
-                              className={`min-h-7 w-full rounded border px-1.5 text-left text-[0.6875rem] disabled:cursor-wait disabled:opacity-60 ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
+                              className={`min-h-7 w-full rounded border px-1.5 text-center text-[0.6875rem] disabled:cursor-wait disabled:opacity-60 ${hasFilter(column.id) ? "border-secondary bg-secondary-soft text-secondary" : "border-border bg-background text-text-secondary"}`}
                             >
                               {universeLoading
                                 ? "A carregar opções…"
@@ -1169,8 +1165,17 @@ export function StandardDataTable<Row>({
                     key={key}
                     tabIndex={0}
                     aria-selected={isSelected}
-                    onClickCapture={() => setActiveRow(key)}
-                    onFocus={() => setActiveRow(key)}
+                    onClickCapture={(event) => {
+                      const interactive=(event.target as Element).closest('button,input,select,textarea,a');
+                      if(requireActiveRowForCellActions&&!isActive&&interactive){
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }
+                      setActiveRow(key);
+                    }}
+                    onFocus={(event) => {
+                      if(!requireActiveRowForCellActions||event.target===event.currentTarget)setActiveRow(key);
+                    }}
                     onDoubleClick={() => onRowDoubleClick?.(row)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" && onRowDoubleClick) {
@@ -1225,7 +1230,7 @@ export function StandardDataTable<Row>({
                             maxWidth: width,
                             left: sticky ? stickyOffset(index) : undefined,
                           }}
-                          className={`border-b border-border px-3 py-0.5 ${column.kind === "money" ? "text-right tabular-nums" : "text-center"} ${sticky ? "sticky z-10 bg-inherit shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "bg-inherit"}`}
+                          className={`border-b border-border px-3 py-0.5 ${column.align==="left"?"text-left":column.align==="right"||column.kind==="money"?"text-right tabular-nums":"text-center"} ${sticky ? "sticky z-10 bg-inherit shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "bg-inherit"}`}
                         >
                           <div
                             className="overflow-hidden text-ellipsis whitespace-nowrap"
@@ -1279,29 +1284,7 @@ export function StandardDataTable<Row>({
           </div>
         )}
       </div>
-      <div className="table-pagination flex flex-wrap items-center justify-between gap-3 border-t border-border p-3 text-sm">
-        <label>
-          Linhas por página{" "}
-          <select
-            value={pageSize}
-            onChange={(event) => {
-              if (event.target.value === "all" && loadAllRows) setUniverseRequested(true);
-              setPageSize(
-                event.target.value === "all"
-                  ? "all"
-                  : (Number(event.target.value) as 10 | 20 | 50 | 100),
-              );
-              setPage(1);
-            }}
-            className="control ml-2 min-h-9 px-2"
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value="all" disabled={universeLoading||Boolean(universeError)}>Todas</option>
-          </select>
-        </label>
+      <div className="table-pagination flex items-center justify-center border-t border-border p-3 text-sm">
         <span>
           {loading && rows.length === 0
             ? `A carregar ${resultNoun}…`
@@ -1311,27 +1294,6 @@ export function StandardDataTable<Row>({
             ? `${pageSize === "all" ? 1 : (validPage - 1) * pageSize + 1}–${pageSize === "all" ? resultTotal : Math.min(validPage * pageSize, resultTotal)} de ${resultTotal}`
             : `0 ${resultNoun}`}
         </span>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            disabled={validPage <= 1}
-            onClick={() => setPage((value) => value - 1)}
-            className="control min-h-9 px-3 disabled:opacity-40"
-          >
-            Anterior
-          </button>
-          <button
-            type="button"
-            disabled={validPage >= pageCount}
-            onClick={() => {
-              if (loadAllRows && !universeRows) setUniverseRequested(true);
-              setPage((value) => value + 1);
-            }}
-            className="control min-h-9 px-3 disabled:opacity-40"
-          >
-            Seguinte
-          </button>
-        </div>
       </div>
     </section>
   );

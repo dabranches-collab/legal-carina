@@ -467,6 +467,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     {
       id: "activity",
       label: "Actividade",
+      align: "left",
       suggestOptions: false,
       value: (row) => row.activity_description,
       render: (row) => <InlineInput value={row.activity_description} onCommit={(value)=>saveInline(row,"activity_description",value)}/>,
@@ -721,6 +722,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         showSearch={false}
         resultNoun="movimentos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
+        requireActiveRowForCellActions
       />
       {creating && (
         <CreateWorkEntryModal
