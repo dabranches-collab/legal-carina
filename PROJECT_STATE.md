@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## Versão 0.4.16 — contraste Windows/browser local
+
+- Mantido o `apple-touch-icon` de 180 px aprovado no iPhone. A variante usada no Windows/PWA e no favicon recebeu dourado mais luminoso, traço cerca de 25% mais espesso e ocupação ligeiramente maior do quadrado para não se perder sobre o azul-escuro.
+- Foram actualizados o favicon de 32 px e os ícones manifest de 192/512 px, incluindo os caminhos antigos de compatibilidade. Ainda não publicada.
+
 ## Versão 0.4.15 — publicada em 2026-08-21
 
 - O busto dourado da Justiça Cega passa a ser o ícone comum da PWA, do atalho iPhone (`apple-touch-icon`) e do favicon do browser, sobre o azul-escuro da aplicação.

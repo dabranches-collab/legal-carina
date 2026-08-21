@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## Versão 0.4.16 — contraste Windows/browser local
+
+- Variante Windows/browser da Justiça Cega com dourado mais luminoso, traço aproximadamente 25% mais espesso e figura ligeiramente ampliada. O ícone iPhone de 180 px permanece inalterado.
+- Actualizados favicon 32 px, manifest 192/512 px e ficheiros antigos equivalentes para compatibilidade. Ainda não publicada; produção permanece `0.4.15`.
+
 ## Versão 0.4.15 — publicada em 2026-08-21
 
 - Novo ícone comum: busto da Justiça Cega dourado sobre azul-escuro no favicon, manifest PWA e `apple-touch-icon`. Assets PNG específicos: 32, 180, 192 e 512 px; os URLs versionados por nome evitam depender dos caminhos antigos em cache.

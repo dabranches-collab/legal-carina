@@ -1,7 +1,7 @@
 {
   "name": "legal-carina",
   "private": true,
-  "version": "0.4.15",
+  "version": "0.4.16",
   "packageManager": "pnpm@11.19.0",
   "type": "module",
   "scripts": {
