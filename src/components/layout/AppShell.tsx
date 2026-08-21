@@ -104,9 +104,9 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
             </li>})}
           </ul>
         </nav>
-        {!collapsed && <div className="pointer-events-none flex h-64 shrink-0 items-center justify-center px-5 py-3" aria-hidden="true">
+        {!collapsed && <div className="sidebar-justice pointer-events-none flex h-32 shrink-0 translate-y-2 items-end justify-center px-5 py-2 lg:h-64 lg:translate-y-0 lg:items-center lg:py-3" aria-hidden="true">
           <div
-            className="h-full w-full max-w-52 bg-accent opacity-80"
+            className="h-full w-full max-w-28 bg-accent opacity-80 lg:max-w-52"
             style={{
               WebkitMaskImage: 'url(/brand/lady-justice-bust-a.png)',
               maskImage: 'url(/brand/lady-justice-bust-a.png)',

@@ -46,6 +46,16 @@ for (const [name,width,height,safeTop] of models) {
     expect(metrics.titleTop).toBeGreaterThan(safeTop)
     expect(metrics.controls.every((size)=>size>=44)).toBe(true)
     await expect(page.getByRole('button', { name:'Abrir navegação' })).toBeVisible()
+    await page.getByRole('button', { name:'Abrir navegação' }).click()
+    const sidebar=page.getByRole('complementary',{name:'Navegação principal'})
+    const justice=sidebar.locator('.sidebar-justice')
+    const menu=sidebar.getByRole('navigation').locator(':scope > ul')
+    const [justiceBox,menuBox]=await Promise.all([justice.boundingBox(),menu.boundingBox()])
+    expect(justiceBox).not.toBeNull()
+    expect(menuBox).not.toBeNull()
+    expect(justiceBox!.height).toBeLessThanOrEqual(128)
+    expect(justiceBox!.y).toBeGreaterThanOrEqual(menuBox!.y+menuBox!.height)
+    await page.screenshot({path:`test-results/sidebar-${name.replaceAll(' ','-')}.png`,fullPage:false})
   })
 }
 

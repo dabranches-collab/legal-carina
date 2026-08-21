@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## Versão 0.4.14 — ajuste móvel local
+
+- No iPhone, o busto da Justiça Cega na sidebar passa de 256 px para 128 px de altura, reduz também a largura máxima para cerca de metade e desce ligeiramente dentro da barra. O desktop mantém as dimensões anteriores.
+- Validação móvel deve confirmar que o busto não invade nem comprime os menus em todas as dimensões de iPhone suportadas. Ainda não publicada.
+
 ## Versão 0.4.13 — publicada em 2026-08-21
 
 - O cabeçalho e os filtros por coluna deixam de depender de uma transformação vertical recalculada em cada evento de scroll. Quando a tabela entra na zona fixa, o cabeçalho usa uma posição fixa estável, acompanha apenas o scroll horizontal e fica recortado aos limites da tabela.

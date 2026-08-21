@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## Versão 0.4.14 — ajuste móvel local
+
+- Sidebar de iPhone: busto da Justiça Cega reduzido para 50% da altura e aproximadamente 50% da largura máxima usadas no desktop, com ligeiro deslocamento descendente. A área rolável dos menus recupera 128 px; desktop inalterado.
+- Ainda não publicada. Produção permanece na versão `0.4.13`.
+
 ## Versão 0.4.13 — publicada em 2026-08-21
 
 - Substituído o deslocamento vertical contínuo do `thead`, que podia ficar um frame atrás do scroll real e provocar o soluço visível, por estado fixo estável enquanto a tabela atravessa o viewport.
