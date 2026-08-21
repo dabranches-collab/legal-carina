@@ -1,16 +1,17 @@
 # Legal Carina — handover
 
-## Versão 0.4.12 — em preparação local, ainda não publicada
+## Versão 0.4.12 — publicada em 2026-08-21
 
-- A versão local foi avançada no início do lote para distinguir inequivocamente o desenvolvimento da produção `0.4.11`.
+- Publicação confirmada em `https://legal-carina.dabranches.workers.dev` a partir do commit funcional `0d9eb98`, branch `codex/reconcile-full-import`. O deploy manual actual recebe 100% do tráfego: Deployment ID `c6f91020-c3de-49b3-9550-ccf0ceb35f2d`, Version ID `fed44c92-2b2d-4b5f-83dd-424c90817f69`, criado em 2026-08-21 às 08:23 UTC.
 - Estado funcional local: Administrador edita e elimina sem justificação; Operador executa as operações equivalentes nos movimentos com motivo obrigatório mas não bloqueante. Duração, valor/hora, desconto e dimensões de preço recalculam o total; o valor final não altera os restantes critérios ao contrário.
-- Dados mestres: Operador pode consultar, criar e editar Clientes, Sociedades e Responsáveis; Administração de utilizadores e importações continua exclusiva de Proprietário/Administrador. Migration por aplicar: `20260821014500_allow_operator_master_data_management.sql`.
+- Dados mestres: Operador pode consultar, criar e editar Clientes, Sociedades e Responsáveis; Administração de utilizadores e importações continua exclusiva de Proprietário/Administrador.
 - Prova ligada exclusivamente transaccional: edição completa 16 invariantes, massa 12, dados mestres 11 e financeiro/consolidações 30. Todos terminaram em `ROLLBACK`; auditorias de resíduos devolveram zero. Nunca executar estas migrations por `db push` global.
 - A matriz financeira cobre seis estados, mesmo Cliente em duas Sociedades, dois Responsáveis, movimento sem Sociedade, totais globais e por entidade, listas Por facturar/Não pagos/Incobráveis, pagamento sem factura, incobrável facturado sem data, factura→pago e remoção de factura com reposição dependente.
 - PDF real: Nota de Honorários e Cobrança com 90 movimentos/5 páginas, Cliente/data no nome, cabeçalhos de continuação, datas/tempos centrados, sem Responsável/valor por linha e total contido na margem.
 - Desempenho/sticky: 5 000 Clientes abriram em 0,8–2,2 s e filtraram em 0,2–0,6 s; 1 000 movimentos, 72 amostras de scroll em ~1,17 s no contexto do browser, desvio vertical `0 px`; pesquisa 0,99 s isolada/1,55 s sob sete workers.
 - Gates finais: segurança aprovada; lint sem avisos; TypeScript; 88/88 unitários; build; 55 E2E aprovados e 2 exclusivos de produção omitidos. Cobertura visual automatizada de zoom 80–200%, iPhones, Windows, rotação, modo escuro, texto ampliado e safe areas.
-- Produção confirmada continua `0.4.11` (`9d98ad9`, Deployment `7e08c564-2f37-4de0-b2a8-cab9e1788a7a`, Version `fae41e0b-1bd1-4963-8561-143fd5228a88`). Código local está no HEAD base `7832481d6900ea6525d36504126d6bb41080670c`, branch `codex/reconcile-full-import`, com alterações ainda não commitadas. Não fazer push/publicação sem ordem explícita.
+- Backend publicado por aplicação individual e revista das migrations `20260821000808_make_full_work_edit_rls_independent.sql`, `20260821011500_order_same_day_work_entries_by_creation.sql`, `20260821013000_fix_bulk_work_entry_permissions_and_recalculation.sql` e `20260821014500_allow_operator_master_data_management.sql`. Não foi usado `db push` nem `migration repair`. Os testes ligados pós-migration de edição/recálculo, operações em massa, dados mestres e consolidação financeira passaram integralmente com `ROLLBACK`.
+- Verificação pós-publicação: HTTP 200, service worker `carina-legal-shell-0.4.12`, bundle e CSS activos e recurso `lady-justice-bust-a.png` acessível. A integração Git criou antes um deploy automático do mesmo commit, mas o deploy manual acima é o actual e autoritativo.
 
 ## Versão 0.4.11 — estabilidade da tabela e documentos financeiros
 

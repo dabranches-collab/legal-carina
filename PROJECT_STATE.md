@@ -1,15 +1,15 @@
 # Estado do projecto
 
-## Versão 0.4.12 — em preparação local, ainda não publicada
+## Versão 0.4.12 — publicada em 2026-08-21
 
-- A versão local foi avançada no início do lote para distinguir inequivocamente o desenvolvimento da produção `0.4.11`.
+- Publicada em `https://legal-carina.dabranches.workers.dev` a partir do commit funcional `0d9eb98`, branch `codex/reconcile-full-import`. Deploy manual actual e a 100%: Deployment ID `c6f91020-c3de-49b3-9550-ccf0ceb35f2d`, Version ID `fed44c92-2b2d-4b5f-83dd-424c90817f69`, criado em 2026-08-21 às 08:23 UTC.
 - Campanha funcional concluída localmente para Administrador e Operador: criação, edição completa/em linha/em massa, mudança de Sociedade, duração, valor/hora, descontos, estados financeiros, eliminação e motivos por perfil. O total nunca recalcula ao contrário o valor/hora.
-- O Operador passa a poder consultar, criar e editar Clientes, Sociedades e Responsáveis. Utilizadores e importações continuam administrativos. A migration local é `20260821014500_allow_operator_master_data_management.sql`; ainda não foi aplicada remotamente.
+- O Operador passa a poder consultar, criar e editar Clientes, Sociedades e Responsáveis. Utilizadores e importações continuam administrativos. As quatro migrations deste lote foram aplicadas remotamente de forma individual e revista; não foi usado `db push` nem `migration repair`.
 - Matrizes ligadas com `ROLLBACK`: 16 invariantes de edição completa, 12 de edição em massa, 11 de dados mestres e 30 de estados/transições/consolidações financeiras. Incluem o mesmo Cliente em duas Sociedades, totais por Cliente/Sociedade/Responsável, incobráveis e sequências inválidas. Consultas de resíduos devolveram zero.
 - Notas de Honorários e Cobranças reais com 90 linhas geraram 5 páginas cada; nomes incluem tipo, Cliente e data. Linhas não mostram Responsável nem valor individual, datas/tempos ficam centrados e os totais não ultrapassam a margem.
 - Estabilidade medida: 5 000 Clientes abriram entre 0,8–2,2 s conforme isolamento/contenção, filtro entre 0,2–0,6 s; 1 000 movimentos, 72 amostras de scroll em cerca de 1,17 s dentro do browser, desvio do cabeçalho `0 px`; pesquisa com debounce 0,99 s isolada e 1,55 s com sete workers.
 - Matriz visual/E2E: zoom 80–200%, seis famílias de iPhone na tabela, onze modelos na matriz PWA, sete resoluções Windows, rotação, modo escuro, texto ampliado e safe areas. Resultado global: 55 aprovados e 2 cenários exclusivos de produção omitidos.
-- Gates finais locais: ficheiros sensíveis aprovados, lint sem avisos, TypeScript aprovado, 88/88 testes unitários, build Vite aprovado e `git diff --check` sem erros. Produção, GitHub e Supabase remoto permanecem inalterados; não publicar nem fazer push sem ordem explícita.
+- Gates finais: ficheiros sensíveis aprovados, lint sem avisos, TypeScript aprovado, 88/88 testes unitários, build Vite e dry-run Cloudflare aprovados, 55 E2E aprovados e 2 cenários exclusivos de produção omitidos. Após as migrations, os testes ligados de edição, recálculo, permissões, dados mestres e consolidação financeira passaram com `ROLLBACK`. Produção respondeu HTTP 200, o service worker confirmou `0.4.12` e o recurso gráfico respondeu HTTP 200.
 
 ## Versão 0.4.11 — estabilidade da tabela e documentos financeiros
 
