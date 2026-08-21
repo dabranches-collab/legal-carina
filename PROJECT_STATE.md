@@ -1,9 +1,9 @@
 # Estado do projecto
 
-## Versão 0.4.17 — invalidação dos ícones Windows/browser
+## Versão 0.4.17 — publicada em 2026-08-21
 
 - A verificação pós-publicação 0.4.16 detectou que a Cloudflare continuava a servir os bytes antigos nos URLs já conhecidos dos ícones. Foram criados URLs novos para o favicon brilhante e para os ícones Windows de 192/512 px, eliminando a dependência dessa cache. O `apple-touch-icon` de 180 px recebe o mesmo contraste reforçado e também um URL novo.
-- Ainda não publicada.
+- Publicada a partir do commit funcional `2cc1c41`. Deployment activo a 100% `b57716d2-34d4-495e-948e-8af8647776a7`, Version `0b7f4c9d-04ac-40f2-a1c4-f7258b22add8`. Os novos URLs devolveram os comprimentos esperados: favicon 1 604 bytes, iPhone 29 446, Windows 192 px 39 623 e Windows 512 px 213 653; página e service worker `0.4.17` confirmados.
 
 ## Versão 0.4.16 — contraste Windows/browser local
 

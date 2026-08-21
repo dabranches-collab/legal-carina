@@ -1,9 +1,10 @@
 # Legal Carina — handover
 
-## Versão 0.4.17 — invalidação dos ícones Windows/browser
+## Versão 0.4.17 — publicada em 2026-08-21
 
 - A 0.4.16 publicou o novo build, mas a verificação de comprimentos HTTP provou que os URLs antigos dos ícones continuavam a devolver os bytes da 0.4.15. A 0.4.17 referencia nomes novos para o favicon e para 192/512 px, forçando a Cloudflare e os browsers a recolher os ficheiros brilhantes.
-- `apple-touch-icon` 180 px também recebe o dourado de contraste reforçado e um URL novo para contornar a cache do iOS. Ainda não publicada.
+- `apple-touch-icon` 180 px também recebe o dourado de contraste reforçado e um URL novo para contornar a cache do iOS.
+- Publicada a partir do commit funcional `2cc1c41`. Deployment activo a 100% `b57716d2-34d4-495e-948e-8af8647776a7`, Version `0b7f4c9d-04ac-40f2-a1c4-f7258b22add8`. HTTP confirmou os novos ficheiros pelos comprimentos exactos: favicon 1 604 bytes, iPhone 29 446, Windows 192 px 39 623 e Windows 512 px 213 653; service worker `0.4.17` activo.
 
 ## Versão 0.4.16 — contraste Windows/browser local
 
