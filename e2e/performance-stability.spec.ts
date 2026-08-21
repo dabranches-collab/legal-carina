@@ -10,10 +10,10 @@ test('Administrador abre e filtra 5000 clientes sem soluços prolongados',async(
  const search=page.getByRole('textbox',{name:'Pesquisar em Lista de Clientes'}),filterStart=Date.now();await search.fill('Cliente desempenho 04999');await expect(page.getByText('1 resultados de 5000')).toBeVisible();const filterMs=Date.now()-filterStart
  await search.fill('');await expect(page.getByText('5000 resultados de 5000')).toBeVisible()
  const longTasks=await page.evaluate(()=>(window as typeof window&{qaLongTasks:number[]}).qaLongTasks)
+ console.info(`QA_PERF_ADMIN ${JSON.stringify({rows:clients.length,initialMs,filterMs,maxLongTaskMs:Math.round(Math.max(0,...longTasks)),longTasks:longTasks.map(value=>Math.round(value))})}`)
  expect(initialMs,'abertura da lista de 5000 clientes').toBeLessThan(5000)
  expect(filterMs,'filtragem de 5000 clientes').toBeLessThan(1200)
  expect(Math.max(0,...longTasks),'maior tarefa longa').toBeLessThan(1000)
- console.info(`QA_PERF_ADMIN ${JSON.stringify({rows:clients.length,initialMs,filterMs,maxLongTaskMs:Math.round(Math.max(0,...longTasks))})}`)
 })
 
 test('Operador mantém filtros e cabeçalho estáveis sob scroll prolongado',async({page},testInfo)=>{

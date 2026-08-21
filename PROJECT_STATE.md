@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Versão 0.4.18 — em preparação local
+
+- A sidebar valida as respostas de Sociedades, Responsáveis e perfis antes de as percorrer. Respostas parciais ou de formato inesperado deixam apenas o submenu afectado vazio, em vez de produzirem uma rejeição não tratada.
+- O build QA explícito (`VITE_APP_ENV=test`) permite medir o código compilado sem expor o bypass de autenticação no build normal de produção. O cenário `/iphone-preview` continua exclusivamente local.
+- Validação: segurança, lint, TypeScript, 88/88 unitários, build, 56 E2E no preview compilado mais 1 E2E exclusivo do Vite. Matriz Supabase transaccional: 11 + 12 + 11 + 30 invariantes, todos revertidos; zero resíduos.
+- Tempos confirmados no build: 5 000 Clientes em 0,56–0,88 s, pesquisa em 0,11–0,22 s, maior tarefa longa 89–170 ms; 1 000 movimentos com 72 amostras de scroll em 1,17–1,18 s, pesquisa em 0,51–0,84 s e desvio do cabeçalho 0 px.
+- PDFs reais de Nota de Honorários e Cobrança, 90 movimentos/5 páginas cada, revistos visualmente página a página sem cortes, sobreposições ou colunas indevidas.
+- Estado remoto divergente mas funcional: as funções finais existem, porém as migrations locais de 21/08 não constam do histórico remoto. Reconciliação deve ser explícita e não autoriza `db push`/`migration repair` indiscriminado.
+
 ## Versão 0.4.17 — publicada em 2026-08-21
 
 - A verificação pós-publicação 0.4.16 detectou que a Cloudflare continuava a servir os bytes antigos nos URLs já conhecidos dos ícones. Foram criados URLs novos para o favicon brilhante e para os ícones Windows de 192/512 px, eliminando a dependência dessa cache. O `apple-touch-icon` de 180 px recebe o mesmo contraste reforçado e também um URL novo.

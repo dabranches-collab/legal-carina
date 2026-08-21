@@ -10,6 +10,7 @@ const models = [
 ] as const
 
 test('matriz local expõe modelos e controlos acessíveis', async ({ page }) => {
+  test.skip(Boolean(process.env.PWA_PRODUCTION_QA), 'A matriz /iphone-preview existe apenas no servidor Vite de desenvolvimento.')
   await page.goto('/iphone-preview')
   await expect(page.getByRole('heading', { name:'Matriz iPhone' })).toBeVisible()
   await expect(page.getByRole('navigation', { name:'Modelos de iPhone' }).getByRole('button')).toHaveCount(11)

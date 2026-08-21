@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
-if (import.meta.env.DEV) {
+if (import.meta.env.DEV || import.meta.env.VITE_APP_ENV === 'test') {
   const params = new URLSearchParams(window.location.search)
   if (params.get('qa-iphone') === '1') {
     const safeTop = Number(params.get('safe-top'))

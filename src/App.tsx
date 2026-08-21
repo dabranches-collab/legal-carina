@@ -91,7 +91,8 @@ export function AuthenticatedApplication() {
 
 export default function App() {
   const qaParams=new URLSearchParams(window.location.search)
-  if (import.meta.env.DEV && qaParams.get('qa-iphone') === '1') {
+  const qaEnabled=import.meta.env.DEV||import.meta.env.VITE_APP_ENV==='test'
+  if (qaEnabled && qaParams.get('qa-iphone') === '1') {
     const qaRole=qaParams.get('qa-role')==='admin'?'admin':'operator'
     return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><AuthenticatedApplication /><PwaUpdateNotice /></AuthContext.Provider>
   }

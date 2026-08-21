@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Versão 0.4.18 — em preparação local
+
+- Corrigida uma rejeição não tratada na navegação quando uma resposta parcial do Supabase para Sociedades, Responsáveis ou perfis de Cliente não é uma lista. A sidebar passa a degradar de forma segura para menus vazios, sem bloquear a restante aplicação.
+- O modo QA pode ser incluído explicitamente num build de teste através de `VITE_APP_ENV=test`, mantendo-se removido do build normal de produção. A matriz `/iphone-preview`, exclusiva do servidor Vite, é omitida apenas no preview compilado e executada separadamente no desenvolvimento.
+- Gates confirmados: segurança, lint, TypeScript, 88/88 unitários e build. No build final de QA, 56/57 E2E passaram e 1 exclusivo do Vite foi omitido; esse cenário passou separadamente, totalizando 57/57 cenários aplicáveis.
+- Desempenho no build: 5 000 Clientes abriram em 0,56–0,88 s, pesquisa em 0,11–0,22 s e maior tarefa longa em 89–170 ms. Em 1 000 movimentos, 72 amostras de scroll demoraram 1,17–1,18 s, pesquisa 0,51–0,84 s e o cabeçalho teve desvio vertical de 0 px.
+- Provas transaccionais remotas com `ROLLBACK`: edição completa/recálculo 11, operações em massa 12, dados mestres 11 e financeiro/consolidações 30; auditoria posterior confirmou zero resíduos sintéticos.
+- Nota de Honorários e Cobrança reais, ambas com 90 movimentos e 5 páginas, foram renderizadas integralmente e revistas visualmente: datas/tempos centrados, sem Responsável nem valor por linha, cabeçalhos/rodapés repetidos e totais dentro das margens.
+- Divergência preservada: as quatro funções finais de edição/massa/dados mestres existem no schema remoto, mas as migrations locais de 21/08 não aparecem no histórico remoto. Não executar `db push` nem `migration repair` por suposição.
+
 ## Versão 0.4.17 — publicada em 2026-08-21
 
 - A 0.4.16 publicou o novo build, mas a verificação de comprimentos HTTP provou que os URLs antigos dos ícones continuavam a devolver os bytes da 0.4.15. A 0.4.17 referencia nomes novos para o favicon e para 192/512 px, forçando a Cloudflare e os browsers a recolher os ficheiros brilhantes.
