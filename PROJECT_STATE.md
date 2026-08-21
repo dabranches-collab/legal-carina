@@ -1,10 +1,10 @@
 # Estado do projecto
 
-## Versão 0.4.13 — correcção local em validação
+## Versão 0.4.13 — publicada em 2026-08-21
 
 - O cabeçalho e os filtros por coluna deixam de depender de uma transformação vertical recalculada em cada evento de scroll. Quando a tabela entra na zona fixa, o cabeçalho usa uma posição fixa estável, acompanha apenas o scroll horizontal e fica recortado aos limites da tabela.
 - Prova visual e funcional local: cabeçalho alinhado com a grelha; 18/18 cenários de scroll aprovados entre 80–200% de zoom e em seis dimensões de iPhone. Lint sem avisos, TypeScript, 88/88 testes unitários e build aprovados.
-- Esta correcção ainda não foi publicada. Produção permanece na versão `0.4.12`.
+- Publicada a partir do commit funcional `9775923`, branch `codex/reconcile-full-import`. Deploy manual: Deployment ID `76f40895-b74d-47d7-b1b7-c170f015821a`, Version ID `ca987268-e904-4cab-8ffb-fb33eeaa0083`; a integração Git do mesmo commit criou depois `6f5a9f4c-ba0b-4cad-bb33-de915d5fbcd2` / `2cbe8222-d0da-4a89-a65c-a4991a8cac1c`. HTTP 200, service worker `0.4.13` e bundle activo confirmados directamente.
 
 ## Versão 0.4.12 — publicada em 2026-08-21
 
