@@ -988,6 +988,13 @@ export function StandardDataTable<Row>({
       <div ref={scrollContainer} className="scrollbar-thin overflow-x-auto">
         <table ref={tableElement} className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
+          <colgroup>
+            {onSelectionChange && <col style={{ width: 48, minWidth: 48 }} />}
+            {visible.map((column) => {
+              const width = widths[column.id] ?? column.width ?? 160;
+              return <col key={column.id} style={{ width, minWidth: width }} />;
+            })}
+          </colgroup>
           <thead ref={headerElement} className="relative z-30 bg-surface shadow-sm">
             <tr>
               {onSelectionChange && (

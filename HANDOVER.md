@@ -1,6 +1,11 @@
 # Legal Carina — handover
 
-## Versão 0.5.0 — backend promovido, frontend em publicação
+## Versão 0.5.1 — alinhamento sticky em validação
+
+- A grelha fixa agora as larguras num `colgroup`, preservando o centro exacto entre cabeçalho e células quando o cabeçalho entra em modo sticky.
+- Medição local real antes/depois do sticky: desvio horizontal de `0 px` nas primeiras 10 colunas. Gates verdes: 96/96 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos); o cenário de Operador mediu 72 posições de scroll em 1,19 s, desvio `0 px` e pesquisa em 0,79 s.
+
+## Versão 0.5.0 — despesas persistentes publicadas
 
 - Cada movimento pode ter várias despesas informativas, com montante, observações e anexos privados PDF/JPG/PNG/DOCX/XLSX. A criação do movimento e dos metadados das despesas é atómica; falhas de transferência de anexos podem ser repetidas na edição sem duplicar o movimento.
 - Administrador/Proprietário cria, altera e remove despesas sem justificação; Operador tem as mesmas operações, exigindo motivo nas alterações e remoções para auditoria.

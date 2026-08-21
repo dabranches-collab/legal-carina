@@ -1,6 +1,10 @@
 # Estado do projecto
 
-## Versão 0.5.0 — backend promovido, frontend em publicação
+## Versão 0.5.1 — alinhamento sticky em validação
+
+- A grelha fixa agora as larguras num `colgroup`; o desvio medido entre os centros do cabeçalho e das células foi `0 px` antes e depois da fixação sticky. Segurança, lint, TypeScript, build, 96/96 unitários e 55/55 E2E aplicáveis aprovados.
+
+## Versão 0.5.0 — despesas persistentes publicadas
 
 - Migration `20260821115454_add_work_entry_expenses.sql` aplicada isoladamente ao Supabase e Edge Function `expense-documents` v1 activa com JWT obrigatório. Zero dados sintéticos após os testes transaccionais.
 - Várias despesas por movimento, observações, anexos privados e criação atómica. Administrador/Proprietário sem justificação; Operador com motivo auditável para alteração e remoção.

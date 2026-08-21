@@ -127,6 +127,14 @@ describe('StandardDataTable',()=>{
     expect(screen.getAllByRole('columnheader').map(cell=>cell.textContent?.replace(/Filtrar…↑↓$/,''))).toEqual(['Nome','Valor','Despesas','Activo'])
   })
 
+  test('fixa as larguras no colgroup para o cabeçalho sticky não desalinhavar as colunas',()=>{
+    render(<StandardDataTable id="sticky-widths" label="Tabela alinhada" rows={rows} columns={columns} rowKey={row=>row.id}/> )
+    const table=screen.getByRole('table')
+    const cols=table.querySelectorAll('colgroup col')
+    expect(cols).toHaveLength(columns.length)
+    expect(Array.from(cols).map(col=>(col as HTMLElement).style.width)).toEqual(['160px','160px','160px'])
+  })
+
   test('Todas mantém o universo integral mas virtualiza as linhas apresentadas',async()=>{
     const user=userEvent.setup()
     const manyRows=Array.from({length:7200},(_,index)=>({id:String(index+1),name:`Cliente ${index+1}`,amount:index,active:index%2===0}))
