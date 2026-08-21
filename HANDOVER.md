@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.5.6 — cobertura integral dos acessos em preparação
+
+- Corrigida a lacuna dos logs quando o PWA restaura uma sessão já válida: essas entradas passam a ser registadas com `auth_method=session_restore`.
+- A Edge Function dos Utilizadores complementa eventos em falta com o `last_sign_in_at` do Supabase Auth, usando uma janela de um minuto para não duplicar logins já auditados.
+- Nome apresentado: `display_name` da credencial, metadados autenticados e username, por esta ordem, ignorando valores vazios.
+- Ainda não publicada. Requer deploy conjunto do frontend e da Edge Function `admin-users`; produção permanece em 0.5.5.
+
 ## Versão 0.5.5 — registos de acesso em preparação
 
 - Nova rota e entrada «Registos de acesso» sob Administração, exclusiva do proprietário tanto na navegação como na protecção da rota e na Edge Function.

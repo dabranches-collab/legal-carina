@@ -19,8 +19,8 @@ function ConfigurationRequired() {
   return <main className="grid min-h-screen place-items-center bg-background p-6"><section className="card max-w-lg p-7"><p className="text-xs font-semibold uppercase tracking-widest text-warning">Configuração local necessária</p><h1 className="mt-2 font-display text-2xl font-semibold">Supabase Auth não configurado</h1><p className="mt-3 text-sm leading-6 text-text-secondary">Copie <code>.env.example</code> para <code>.env.local</code> e preencha apenas a URL e a chave publicável do projecto. Nunca use a service role no frontend.</p></section></main>
 }
 
-async function recordSecurityEvent(eventType: string, email?: string) {
-  try { await supabase?.functions.invoke('security-event', { body: { eventType, email } }) } catch { /* best-effort: auth must not leak logging internals */ }
+async function recordSecurityEvent(eventType: string, email?: string,metadata:Record<string,unknown>={}) {
+  try { await supabase?.functions.invoke('security-event', { body: { eventType, email,metadata } }) } catch { /* best-effort: auth must not leak logging internals */ }
 }
 
 async function getAccessStatus(currentUser?:User|null) {
@@ -67,6 +67,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setSession(initialSession); setUser(verifiedUser)
       setRole(accessStatus.role)
       setMustChangePin(accessStatus.mustChangePin)
+      await recordSecurityEvent('login_succeeded',undefined,{auth_method:'session_restore'})
       if (active) setLoading(false)
     }
     void initialize()

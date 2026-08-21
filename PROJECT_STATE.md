@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.5.6 — cobertura integral dos acessos em preparação
+
+- A reabertura da aplicação com uma sessão válida passa a criar um evento de acesso, cobrindo o PWA quando o utilizador não volta a introduzir o PIN.
+- O histórico recupera lacunas anteriores através do `last_sign_in_at` autenticado, sem duplicar eventos existentes separados por menos de um minuto.
+- A identificação usa nome visível da credencial, depois nome do perfil autenticado e só por fim o username; nomes vazios deixam de provocar apresentação inconsistente.
+- Validação local: lint, TypeScript e 107/107 testes unitários aprovados.
+
 ## Versão 0.5.5 — registos de acesso em preparação
 
 - Criada uma página autónoma «Registos de acesso» dentro de Administração, visível e navegável apenas pelo proprietário.

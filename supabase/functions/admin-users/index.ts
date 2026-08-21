@@ -79,14 +79,24 @@ Deno.serve(async (request) => {
       if (memberError) throw memberError
       const userIds = (firmUsers ?? []).map((membership) => membership.user_id)
       if (!userIds.length) return json(request, { groups: [] })
-      const [{ data: events, error: eventsError }, { data: credentials, error: credentialsError }] = await Promise.all([
+      const [{ data: events, error: eventsError }, { data: credentials, error: credentialsError }, { data:authUsers,error:authUsersError }] = await Promise.all([
         admin.from('security_events').select('id,user_id,occurred_at').eq('event_type', 'login_succeeded').in('user_id', userIds).order('occurred_at', { ascending: false }).limit(500),
         admin.from('user_login_credentials').select('user_id,username,display_name').eq('firm_id', firmId),
+        admin.auth.admin.listUsers({page:1,perPage:1000}),
       ])
-      if (eventsError || credentialsError) throw eventsError ?? credentialsError
-      const identityById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential]))
+      if (eventsError || credentialsError || authUsersError) throw eventsError ?? credentialsError ?? authUsersError
+      const authIdentityById=new Map((authUsers.users??[]).map(user=>[user.id,user.user_metadata??{}]))
+      const identityById = new Map((credentials ?? []).map((credential) => {
+        const metadata=authIdentityById.get(credential.user_id)
+        const metadataName=typeof metadata?.display_name==='string'?metadata.display_name.trim():''
+        return [credential.user_id,{...credential,display_name:credential.display_name?.trim()||metadataName||credential.username}]
+      }))
+      const recoveredEvents=(authUsers.users??[]).filter(user=>userIds.includes(user.id)&&user.last_sign_in_at).flatMap(user=>{
+        const latest=(events??[]).find(event=>event.user_id===user.id)?.occurred_at
+        return !latest||new Date(user.last_sign_in_at!).getTime()-new Date(latest).getTime()>60_000?[{id:`auth-${user.id}`,user_id:user.id,occurred_at:user.last_sign_in_at!}]:[]
+      })
       const groups: Array<{ userId:string; username:string; displayName:string; firstAt:string; lastAt:string; count:number; events:string[] }> = []
-      for (const event of events ?? []) {
+      for (const event of [...(events??[]),...recoveredEvents].sort((a,b)=>b.occurred_at.localeCompare(a.occurred_at))) {
         if (!event.user_id) continue
         const previous = groups.at(-1)
         if (previous?.userId === event.user_id) {
