@@ -1,11 +1,11 @@
 # Legal Carina — handover
 
-## Versão 0.5.7 — acessos ao retomar o PWA em preparação
+## Versão 0.5.7 — acessos ao retomar o PWA publicada
 
 - Regista como acesso o retorno do PWA/separador autenticado ao estado visível, mesmo quando React permanece montado e o utilizador não volta a introduzir o PIN. Reentradas em menos de 60 segundos são deduplicadas.
 - A identidade apresentada prefere `auth.users.raw_user_meta_data.display_name`, depois a credencial e finalmente o username.
 - A consulta de produção confirmou que o acesso recente da Carina foi uma reutilização de sessão, não um login Auth novo; não existe fonte segura para reconstruir retroactivamente a hora que nunca foi registada.
-- Lint, TypeScript e 107/107 testes unitários aprovados. Ainda não publicada; requer frontend e `admin-users` em conjunto.
+- Lint, TypeScript e 107/107 testes unitários aprovados. Publicada com Cloudflare Version ID `c5135902-610c-4d70-82d4-064c98fdb7c2`, bundle `index-B_aNRE0x.js`, service worker `0.5.7`, HTTP 200 e `admin-users` v8 activa com JWT obrigatório.
 
 ## Versão 0.5.6 — cobertura integral dos acessos publicada
 
