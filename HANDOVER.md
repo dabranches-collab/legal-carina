@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Versão 0.4.15 — identidade PWA/browser local
+
+- Novo ícone comum: busto da Justiça Cega dourado sobre azul-escuro no favicon, manifest PWA e `apple-touch-icon`. Assets PNG específicos: 32, 180, 192 e 512 px; os URLs versionados por nome evitam depender dos caminhos antigos em cache.
+- Limitação iOS: não existe API web para obrigar um Web Clip já instalado a trocar o ícone. A nova referência pode ser recolhida pelo sistema, mas a substituição garantida continua a exigir remover e adicionar novamente o atalho.
+- Ainda não publicada. Produção permanece `0.4.14`.
+
 ## Versão 0.4.14 — publicada em 2026-08-21
 
 - Sidebar de iPhone: busto da Justiça Cega reduzido para 50% da altura e aproximadamente 50% da largura máxima usadas no desktop, com ligeiro deslocamento descendente. A área rolável dos menus recupera 128 px; desktop inalterado.

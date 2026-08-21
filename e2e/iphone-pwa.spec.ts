@@ -72,7 +72,16 @@ test('rotação, tema escuro, texto ampliado e teclado não criam overflow horiz
 test('manifest e service worker de produção são válidos', async ({ request }) => {
   const manifest=await request.get('/manifest.webmanifest')
   expect(manifest.ok()).toBe(true)
-  expect((await manifest.json()).display).toBe('standalone')
+  const manifestData=await manifest.json()
+  expect(manifestData.display).toBe('standalone')
+  expect(manifestData.icons.map((icon:{src:string})=>icon.src)).toEqual([
+    '/lady-justice-icon-192.png','/lady-justice-icon-512.png',
+  ])
+  for(const path of ['/lady-justice-icon-180.png','/lady-justice-icon-192.png','/lady-justice-icon-512.png','/lady-justice-favicon-32.png']){
+    const icon=await request.get(path)
+    expect(icon.ok()).toBe(true)
+    expect(icon.headers()['content-type']).toContain('image/png')
+  }
   const worker=await request.get('/sw.js')
   expect(worker.ok()).toBe(true)
   expect(await worker.text()).toContain('SKIP_WAITING')

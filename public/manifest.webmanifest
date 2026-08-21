@@ -11,8 +11,7 @@
   "background_color": "#f6f5f1",
   "theme_color": "#13263d",
   "icons": [
-    { "src": "/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+    { "src": "/lady-justice-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/lady-justice-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
