@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path=public,extensions;
-select plan(30);
+select plan(34);
 
 select has_table('public','work_entry_expenses','expense table exists');
 select ok((select c.relrowsecurity from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relname='work_entry_expenses'),'expense RLS is active');
@@ -24,7 +24,8 @@ select ok(position('facturação' in obj_description('public.work_entry_expenses
 
 insert into auth.users(id,email) values
  ('00000000-0000-0000-0000-000000000151','expense-admin@example.test'),
- ('00000000-0000-0000-0000-000000000152','expense-operator@example.test');
+ ('00000000-0000-0000-0000-000000000152','expense-operator@example.test'),
+ ('00000000-0000-0000-0000-000000000153','expense-outsider@example.test');
 insert into public.law_firms(id,name) values('10000000-0000-0000-0000-000000000151','Escritório despesas sintético');
 insert into public.firm_members(firm_id,user_id,role) values
  ('10000000-0000-0000-0000-000000000151','00000000-0000-0000-0000-000000000151','admin'),
@@ -52,9 +53,17 @@ select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000152'
 set local role authenticated;
 select throws_ok(format('select public.update_work_entry_expense(%L,15,%L,null)',(select id from public.work_entry_expenses where work_entry_id='40000000-0000-0000-0000-000000000151'),'Certidão revista'),'P0001','reason required','Operador não altera despesa sem motivo');
 select lives_ok(format('select public.update_work_entry_expense(%L,15,%L,%L)',(select id from public.work_entry_expenses where work_entry_id='40000000-0000-0000-0000-000000000151'),'Certidão revista','tcodexoperador: correcção'),'motivo permite ao Operador alterar a despesa');
+select ok(public.can_manage_work_entry_expense_document((select id from public.work_entry_expenses where work_entry_id='40000000-0000-0000-0000-000000000151')),'Operador autorizado pode associar documentos à despesa');
 reset role;
 select is((select effective_amount from public.work_entries where id='40000000-0000-0000-0000-000000000151'),100.00::numeric,'alterar despesa não recalcula nem contamina facturação');
 select is((select is_invoiced from public.work_entries where id='40000000-0000-0000-0000-000000000151'),false,'alterar despesa não altera o estado de factura');
+
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000153',true);
+set local role authenticated;
+select throws_ok($$select public.create_work_entry_expense('40000000-0000-0000-0000-000000000151',1,'Intrusão')$$,'P0001','not authorized','Utilizador exterior não cria despesas noutro escritório');
+select is((select count(*) from public.work_entry_expenses),0::bigint,'RLS não revela despesas a utilizador exterior');
+select is(public.can_manage_work_entry_expense_document((select id from public.work_entry_expenses where work_entry_id='40000000-0000-0000-0000-000000000151')),false,'Utilizador exterior não obtém autorização documental');
+reset role;
 
 select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-000000000151',true);
 set local role authenticated;

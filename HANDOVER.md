@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Versão 0.5.3 — validação reforçada em preparação
+
+- Código local na branch `codex/reconcile-full-import`; produção permanece em `0.5.2` (`d6f8417`, Deployment `21efbce5-cd22-4c3c-9550-d4e30a11796d`). Este lote não está publicado.
+- Cliente: Administrador e Operador podem editar e persistir os dados usados nos documentos. Nota de Honorários e Cobrança permitem alterar destinatário e idioma no próprio documento.
+- Despesas: tradução integral PT/EN/FR na tabela informativa da Nota, anexos privados abertos através de URL assinado sem perder o gesto do utilizador e selector reutilizável após upload.
+- Prova autenticada: o movimento sintético do Operador mantém 180,00 € facturáveis, tem 2 despesas/18,00 € e 1 documento no bucket privado; a pré-visualização francesa associa as duas despesas ao movimento sem as incluir nos totais.
+- Base de dados: 34/34 contratos pgTAP aprovados no projecto `vtvvqyebigflgqccbqsw`, em transacção terminada por rollback. Inclui outsider negado, Operador com motivo auditado e Administrador sem motivo obrigatório.
+- Gates: segurança, lint, TypeScript, 105 testes unitários, build e 57 E2E aplicáveis aprovados; 2 omitidos por dependerem de preview/produção. Não publicar sem ordem explícita.
+
 ## Versão 0.5.2 — protecção contra edição acidental
 
 - Nas tabelas com edição directa, o primeiro clique numa célula interactiva apenas selecciona a linha; só o segundo clique na linha já activa abre o editor dessa célula.

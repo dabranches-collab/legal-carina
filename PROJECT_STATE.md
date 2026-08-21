@@ -1,5 +1,15 @@
 # Estado do projecto
 
+## Versão 0.5.3 — validação reforçada em preparação
+
+- Estado exclusivamente local; produção mantém-se em `0.5.2`. Não publicar sem nova ordem explícita.
+- O painel documental de Cliente permite substituir, no próprio documento, destinatário e idioma em Notas de Honorários e Cobranças; o Operador pode editar e persistir os dados da ficha tal como o Administrador.
+- Corrigida a internacionalização da tabela informativa de despesas: cabeçalho e colunas seguem agora Português, Inglês ou Francês tanto na área imprimível como no PDF.
+- A abertura de anexos privados reserva a janela no gesto do utilizador antes de obter o URL assinado, evitando bloqueio de pop-up; o selector é limpo depois do carregamento para permitir repetir o mesmo ficheiro.
+- Prova real autenticada como `TESTE CODEX OPERADOR`: movimento `tcodexoperador teste despesas múltiplas`, 90 minutos × 120,00 € = 180,00 €, duas despesas totalizando 18,00 € e um PDF no bucket privado. A Nota em Francês apresenta ambas as despesas associadas ao movimento e mantém o total de tempo/valor independente.
+- A bateria pgTAP executada no projecto correcto `vtvvqyebigflgqccbqsw` terminou em `ok 34` e rollback: RLS, isolamento entre escritórios, permissões de Operador/Administrador, auditoria, criação atómica e exclusão da facturação passaram.
+- Gates locais: ficheiros sensíveis, lint, TypeScript, 105/105 testes unitários, build e 57/57 E2E aplicáveis aprovados; 2 cenários exclusivos de preview/produção omitidos. Scroll do Operador: 72 amostras, desvio do cabeçalho 0 px e filtro em 772 ms.
+
 ## Versão 0.5.2 — protecção contra edição acidental
 
 - Nos Registos, o primeiro clique numa célula interactiva selecciona a linha e é deliberadamente consumido; apenas o segundo clique activa a edição. O mecanismo é reutilizável nas restantes tabelas editáveis.

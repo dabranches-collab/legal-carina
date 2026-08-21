@@ -77,8 +77,40 @@ test('Operador edita fichas existentes de Cliente, Sociedade e Responsável',asy
  ] as const){
   await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}`)
   await expect(page.getByText(entity.current,{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Abrir ficha'}).click()
-  const dialog=page.getByRole('dialog');await dialog.getByRole('button',{name:'Editar'}).click();await dialog.getByLabel('Nome').fill(entity.next);await dialog.getByRole('button',{name:'Guardar alterações'}).click()
+  const dialog=page.getByRole('dialog');await dialog.getByRole('button',{name:'Editar',exact:true}).click();await dialog.getByLabel('Nome').fill(entity.next);await dialog.getByRole('button',{name:'Guardar alterações'}).click()
   await expect(page.getByRole('status').filter({hasText:`${entity.next} actualizado.`})).toBeVisible()
   expect(writes.some(item=>item.table===entity.table&&item.method==='PATCH'&&item.body.display_name===entity.next||item.table===entity.table&&item.method==='PATCH'&&item.body.name===entity.next)).toBe(true)
  }
+})
+
+for(const role of ['admin','operator'] as const)test(`${role} altera e persiste os dados usados em Notas de Honorários e Cobranças`,async({page})=>{
+ const writes:Write[]=[],client={legal_name:'Cliente existente',tax_number:'',email:'',phone:'',address:'',notes:'',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário inicial',default_billing_entity_id:'qa-society-a'}
+ await page.route('**/rest/v1/**',async route=>{
+  const request=route.request(),url=new URL(request.url()),table=url.pathname.split('/').at(-1)??'',method=request.method(),select=url.searchParams.get('select')??''
+  if(table==='firm_members')return route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'qa-firm'})})
+  if(table==='get_client_document_action_flags')return route.fulfill({contentType:'application/json',body:'[]'})
+  if(table==='billing_entities')return route.fulfill({contentType:'application/json',body:JSON.stringify([{id:'qa-society-a',name:'Sociedade A'},{id:'qa-society-b',name:'Sociedade B'}])})
+  if(table==='clients'&&method==='PATCH'){
+   const body=(request.postDataJSON()??{}) as Record<string,unknown>;writes.push({method,table,body});Object.assign(client,body)
+   return route.fulfill({contentType:'application/json',body:'[]'})
+  }
+  if(table==='clients')return route.fulfill({contentType:'application/json',body:select.includes('legal_name')?JSON.stringify(client):JSON.stringify([{id:'qa-client-existing',firm_id:'qa-firm',display_name:'Cliente existente',client_code:'01.0099',client_type:'company',active:true}])})
+  if(table==='client_profiles')return route.fulfill({contentType:'application/json',body:select.includes('id,client_type')?JSON.stringify([{id:'qa-profile-existing',client_type:'company',client_code:'01.0099',active:true}]):JSON.stringify([{client_id:'qa-client-existing',client_type:'company'}])})
+  return route.fulfill({contentType:'application/json',body:'[]'})
+ })
+ await page.goto(`/?qa-iphone=1&qa-role=${role}&view=master-data&entity=clients`)
+ await page.getByRole('button',{name:'Abrir ficha'}).click();let dialog=page.getByRole('dialog')
+ await expect(dialog.getByLabel('Destinatário')).toBeDisabled();await expect(dialog.getByLabel('Sociedade emissora')).toBeDisabled();await expect(dialog.getByLabel('Idioma')).toBeDisabled()
+ await dialog.getByRole('button',{name:'Editar dados da ficha'}).click()
+ await dialog.getByLabel('Destinatário').fill(`${role} destinatário persistido`)
+ await dialog.getByLabel('Sociedade emissora').selectOption('qa-society-b')
+ await dialog.getByLabel('Idioma').selectOption('fr')
+ await dialog.getByRole('button',{name:'Guardar alterações'}).click()
+ await expect(page.getByRole('status').filter({hasText:'Cliente existente actualizado.'})).toBeVisible()
+ const write=writes.find(item=>item.table==='clients'&&item.method==='PATCH')
+ expect(write?.body).toMatchObject({honorarium_recipient_name:`${role} destinatário persistido`,default_billing_entity_id:'qa-society-b',honorarium_language:'fr'})
+ await page.getByRole('button',{name:'Abrir ficha'}).click();dialog=page.getByRole('dialog')
+ await expect(dialog.getByLabel('Destinatário')).toHaveValue(`${role} destinatário persistido`)
+ await expect(dialog.getByLabel('Sociedade emissora')).toHaveValue('qa-society-b')
+ await expect(dialog.getByLabel('Idioma')).toHaveValue('fr')
 })
