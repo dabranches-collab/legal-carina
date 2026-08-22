@@ -1,5 +1,16 @@
 # Legal Carina — handover
 
+## Publicação exclusivamente manual — 2026-08-22
+
+- `CONFIRMADO`: a integração Git da Cloudflare foi desligada e o token
+  `legal-carina build token` foi revogado. PRs, Dependabot e pushes deixaram de
+  ter um caminho automático para o Worker de produção.
+- A branch predefinida do GitHub é agora `codex/reconcile-full-import`, que
+  contém o commit funcional publicado `480135e` e o handover corrente.
+- Produção só pode mudar por deploy manual depois da ordem explícita `publica`.
+  Worker, versões, deployments, Supabase e dados foram preservados.
+- `tmp/` de QA foi enviado para a Reciclagem após confirmação do utilizador.
+
 ## Incidente Cloudflare de 2026-08-22 — resolvido
 
 - **CONFIRMADO:** seis PRs Dependabot foram construídos pela integração Git da Cloudflare entre 09:13:33 e 09:14:43 UTC. Como o comando configurado era `npx wrangler deploy`, cada build de branch substituiu o Worker de produção; a última deixou online o frontend 0.2.5. Não existiu `git revert`, force-push ou alteração do Supabase.

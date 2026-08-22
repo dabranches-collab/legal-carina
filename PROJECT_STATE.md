@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Política de publicação — 2026-08-22
+
+A integração Git Cloudflare está desligada, o antigo build token foi revogado e
+a branch predefinida no GitHub é `codex/reconcile-full-import`. Produção só é
+publicada manualmente após a ordem explícita `publica`; Supabase e dados não
+foram alterados nesta operação.
+
 ## Incidente de publicação automática — resolvido em 2026-08-22
 
 - A integração Git da Cloudflare estava a executar `npx wrangler deploy` também nas branches não produtivas. Seis PRs do Dependabot foram assim promovidos sucessivamente para o Worker de produção entre 09:13:33 e 09:14:43 UTC; o último voltou a servir o frontend antigo 0.2.5, sem alterar o GitHub nem o Supabase.
