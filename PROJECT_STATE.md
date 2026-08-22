@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Incidente de publicação automática — resolvido em 2026-08-22
+
+- A integração Git da Cloudflare estava a executar `npx wrangler deploy` também nas branches não produtivas. Seis PRs do Dependabot foram assim promovidos sucessivamente para o Worker de produção entre 09:13:33 e 09:14:43 UTC; o último voltou a servir o frontend antigo 0.2.5, sem alterar o GitHub nem o Supabase.
+- Em Cloudflare, «Compilações para ramificações de não produção» foi desactivado, guardado e confirmado novamente após recarregar as definições. PRs e branches não produtivas deixam de publicar este Worker.
+- A versão 0.5.7 do commit funcional `480135e` foi reconstruída e reposta manualmente. Deployment activo a 100% em 2026-08-22 às 09:59 UTC: Version ID `15485d53-a045-4f1f-bbca-8998eba30bd1`.
+- Verificação directa sem cache: HTTP 200, bundle `/assets/index-B_aNRE0x.js` e service worker `carina-legal-shell-0.5.7`.
+- Gates da reposição: ficheiros sensíveis, lint, TypeScript, 107/107 unitários, build e dry-run Cloudflare aprovados. O Chromium local não chegou à aplicação (`page.goto` abortado contra o servidor local), pelo que se preserva a prova E2E integral já aprovada para o mesmo commit e artefacto.
+
 ## Versão 0.5.7 — acessos ao retomar o PWA publicada
 
 - O regresso de uma sessão autenticada ao primeiro plano passa a criar um acesso com `auth_method=app_resumed`; existe uma janela de 60 segundos para impedir duplicações por alternância rápida de aplicações.

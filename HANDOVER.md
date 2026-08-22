@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Incidente Cloudflare de 2026-08-22 — resolvido
+
+- **CONFIRMADO:** seis PRs Dependabot foram construídos pela integração Git da Cloudflare entre 09:13:33 e 09:14:43 UTC. Como o comando configurado era `npx wrangler deploy`, cada build de branch substituiu o Worker de produção; a última deixou online o frontend 0.2.5. Não existiu `git revert`, force-push ou alteração do Supabase.
+- **CONTENÇÃO CONFIRMADA:** a opção Cloudflare «Compilações para ramificações de não produção» foi desactivada e continuou desactivada após recarregar o painel. A integração conserva `main` como branch de produção, mas PRs e restantes branches deixam de criar deployments neste Worker.
+- **PRODUÇÃO RESTAURADA:** 0.5.7 reconstruída a partir de `480135e`; Version ID activa a 100% `15485d53-a045-4f1f-bbca-8998eba30bd1`, criada em 2026-08-22 às 09:59 UTC. HTTP 200, bundle `/assets/index-B_aNRE0x.js` e cache `carina-legal-shell-0.5.7` confirmados directamente sem cache.
+- Gates: segurança de ficheiros, lint, TypeScript, 107/107 unitários, build e dry-run aprovados. A tentativa E2E desta sessão ficou bloqueada antes da aplicação por `ERR_ABORTED` no `page.goto` ao servidor local; o commit/artefacto reposto é exactamente o que já tinha a matriz E2E integral aprovada.
+
 ## Versão 0.5.7 — acessos ao retomar o PWA publicada
 
 - Regista como acesso o retorno do PWA/separador autenticado ao estado visível, mesmo quando React permanece montado e o utilizador não volta a introduzir o PIN. Reentradas em menos de 60 segundos são deduplicadas.
