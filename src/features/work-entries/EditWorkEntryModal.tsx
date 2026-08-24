@@ -83,6 +83,8 @@ export function EditWorkEntryModal({
 }) {
   const [options, setOptions] = useState<OptionData | null>(null),
     [entry, setEntry] = useState<Editable | null>(null),
+    [originalEntry,setOriginalEntry]=useState(''),
+    [originalBillingScope,setOriginalBillingScope]=useState<'standard'|'retainer'>('standard'),
     [error, setError] = useState(""),
     [saving, setSaving] = useState(false);
   const [reason, setReason] = useState(""),
@@ -114,12 +116,15 @@ export function EditWorkEntryModal({
         return;
       }
       setOptions(form.data);
-      setEntry(item.data);
+      const loaded={...item.data,billing_scope:item.data.billing_scope??'standard'} as Editable;
+      setEntry(loaded);setOriginalEntry(JSON.stringify(loaded));
+      setOriginalBillingScope(item.data.billing_scope??'standard');
     })();
     return () => {
       active = false;
     };
   }, [entryId]);
+  const dirty=Boolean(entry&&(JSON.stringify(entry)!==originalEntry||expenseDrafts.length));
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!supabase || !entry) return;
@@ -137,6 +142,7 @@ export function EditWorkEntryModal({
     }
     setSaving(true);
     setError("");
+    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='standard'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'standard',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     const result = await updateWorkEntry(entry, reason);
     if (result.error) {
       const messages:Record<string,string>={
@@ -149,6 +155,7 @@ export function EditWorkEntryModal({
       setSaving(false);
       return;
     }
+    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'retainer',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     onSaved("updated");
   }
   async function remove() {
@@ -279,6 +286,7 @@ export function EditWorkEntryModal({
                 ))}
               </select>
             </label>
+            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer';setEntry({...entry,billing_scope,...(billing_scope==='retainer'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:'retainer',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Fora da avença · facturação normal</option><option value="retainer">Coberto pela avença · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao escolher avença, o movimento perde preço e valor individual.</span></label>
             <label className="text-sm sm:col-span-2 lg:col-span-3">
               Actividade
               <textarea
@@ -319,6 +327,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Preço/hora efectivo
               <input
+                disabled={entry.billing_scope==='retainer'}
                 type="number"
                 min="0"
                 step="0.01"
@@ -345,6 +354,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Valor final
               <input
+                disabled={entry.billing_scope==='retainer'}
                 type="number"
                 min="0"
                 step="0.01"
@@ -374,6 +384,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Tipo de cobrança
               <select
+                disabled={entry.billing_scope==='retainer'}
                 value={entry.charge_type ?? ""}
                 onChange={(e) =>
                   setEntry({ ...entry, charge_type: e.target.value || null })
@@ -495,6 +506,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
+                disabled={entry.billing_scope==='retainer'}
                 checked={entry.is_billable}
                 onChange={(e) =>
                   setEntry({ ...entry, is_billable: e.target.checked })
@@ -505,6 +517,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
+                disabled={entry.billing_scope==='retainer'}
                 checked={entry.is_invoiced}
                 onChange={(e) =>
                   setEntry({
@@ -525,6 +538,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Data da factura
               <CalendarDateInput
+                disabled={entry.billing_scope==='retainer'}
                 ariaLabel="Data da factura"
                 value={entry.invoice_date ?? ""}
                 onChange={(value) => {
@@ -622,7 +636,7 @@ export function EditWorkEntryModal({
             </button>
             <button
               type="submit"
-              disabled={saving || !entry || !options}
+              disabled={saving || !entry || !options || !dirty}
               className="rounded-lg bg-primary px-4 py-2 font-semibold text-surface disabled:opacity-50"
             >
               {saving ? "A guardar…" : "Guardar alterações"}

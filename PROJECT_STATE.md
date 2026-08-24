@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Versão 0.6.0 — pronta localmente, frontend não publicado
+
+- Implementados logótipos privados por Sociedade em Notas de Honorários/Cobranças, avenças e mensalidades por Cliente, classificação individual dos movimentos, credenciais visíveis cifradas no Vault, edição imediata das fichas e remoção da justificação obrigatória para Paula/Operadores.
+- Trabalho coberto preserva duração e elimina preço/valor individual. Fica fora de «Por facturar» e disponível em «Cobertos por avença»; trabalho extra do mesmo Cliente mantém facturação normal. A ficha resume horas, valor/hora efectivo, avenças por facturar e facturado por liquidar.
+- Exportação XLSX e impressão/PDF respeitam pesquisa, filtros de coluna e filtros de atenção. A folha de tabela usa A4 horizontal, uma página de largura e o conjunto completo filtrado.
+- Supabase alterado apenas por quatro execuções SQL isoladas e previamente ensaiadas: logótipos, avenças, credenciais e motivos opcionais. Esquema/RPCs confirmados; não foi feito `db push`, `migration repair` nem deploy Cloudflare.
+- Ensaio autenticado integral com dados sintéticos comprovou upload/reabertura/remoção de logótipo, mensalidade facturada e liquidada, 2 h cobertas sem valor, 1 h extra normal, cálculo de 600 €/h efectivo e duas versões de uma credencial visível. Limpeza final confirmou zero resíduos funcionais.
+- Gates actuais: segurança, lint, TypeScript, 112 testes unitários, build e 58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Produção continua confirmada em 0.5.7; 0.6.0 não está publicada.
+
 ## Política de publicação — 2026-08-22
 
 A integração Git Cloudflare está desligada, o antigo build token foi revogado e

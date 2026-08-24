@@ -1,12 +1,16 @@
 # Legal Carina — handover
 
-## Versão 0.6.0 — logótipos por Sociedade em preparação
+## Versão 0.6.0 — avenças, credenciais, logótipos e exportação em preparação
 
-- Upload por arrastamento ou selecção na ficha da Sociedade, com JPG/PNG/PDF, recorte panorâmico, deslocamento e ampliação. Nos PDF só se lê a primeira página; o original nunca é enviado nem guardado.
-- O recorte final é um PNG privado em `billing-entity-logos/<firm>/<sociedade>/logo.png`, protegido pelas permissões da Sociedade. A Nota de Honorários e a Cobrança obtêm um URL assinado e inserem o logótipo no PDF gerado pelo browser.
-- Migration local `20260824153000_add_billing_entity_logos.sql` acrescenta `billing_entities.logo_path`, bucket privado e políticas de Storage. Não aplicada remotamente; produção e Supabase permanecem inalterados.
-- `package.json` em 0.6.0 e `pdfjs-dist` fixado em 5.4.149. Gates aprovados: segurança, lint, TypeScript, 107/107 unitários e build.
-- Pedido seguinte já clarificado: avenças devem manter as horas, sem valor por movimento. Devem sair de «Não facturados» para uma fila própria de facturação/análise, continuando sempre visíveis; o valor/hora efectivo resulta de avenças do período / horas trabalhadas. Ainda não implementado.
+- Sociedades: upload JPG/PNG/PDF, enquadramento inicial integral, recorte/zoom e PNG privado usado nas Notas de Honorários e Cobranças. A migration isolada foi aplicada ao Supabase; coluna, bucket privado, quatro políticas e permissões auxiliares foram confirmados. Upload, gravação, reabertura e remoção foram provados no browser com dados sintéticos depois eliminados.
+- Clientes: configuração de avença, mensalidades com estados Por facturar/Facturada/Liquidada/Incobrável, horas cobertas sem preço por movimento, valor/hora efectivo e fila própria «Cobertos por avença». Cada movimento pode ser classificado como coberto ou fora da avença; só os segundos entram em «Por facturar».
+- Credenciais: plataforma, ligação, utilizador e palavra-passe sempre visíveis na ficha; segredos cifrados no Vault, histórico de versões e auditoria. Criação, alteração e histórico real foram provados com segredos sintéticos e limpos do cofre.
+- Edição: fichas abrem editáveis; «Guardar alterações» só activa após mudança, incluindo acções programáticas como adicionar/remover contactos, identificações, contas bancárias e logótipo. Paula/Operadores deixam de ser bloqueados por ausência de justificação, mantendo auditoria e autoria.
+- Tabelas: XLSX, impressão e PDF usam exactamente o universo filtrado, incluindo filtros de atenção. Impressão em A4 horizontal, uma página de largura, com todas as linhas filtradas e sem virtualização/paginação truncada.
+- Supabase: migrations `20260824170000`, `20260824183000` e `20260824184500` ensaiadas com rollback e depois aplicadas isoladamente; nunca foi usado `db push`. A divergência do histórico remoto permanece e deve continuar a ser tratada explicitamente.
+- Prova real: cliente sintético com avença de 1 200 €, mensalidade liquidada, 2 h cobertas (600 €/h efectivo) e 1 h extra. «Por facturar» devolveu só o extra e «Cobertos por avença» só as 2 h. Limpeza final: zero clientes, movimentos, avenças, mensalidades e credenciais sintéticas.
+- Gates: segurança, lint, TypeScript, 112/112 unitários, build e 58/58 E2E aplicáveis; 2 cenários exclusivos de preview/produção omitidos. PDFs reais, matrizes iPhone/Windows/zoom e desempenho também aprovados.
+- Frontend ainda não publicado. Produção mantém 0.5.7 e só muda depois da ordem explícita `publica`.
 
 ## Publicação exclusivamente manual — 2026-08-22
 

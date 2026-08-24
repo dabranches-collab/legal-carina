@@ -35,6 +35,16 @@ export default defineConfig({
       },
     },
   ],
+  server: {
+    proxy: {
+      '/supabase-functions': {
+        target: 'https://vtvvqyebigflgqccbqsw.supabase.co',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/supabase-functions/, '/functions'),
+        headers: { Origin: 'https://legal-carina.dabranches.workers.dev' },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',

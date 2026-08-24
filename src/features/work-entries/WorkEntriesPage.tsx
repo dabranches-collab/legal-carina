@@ -40,6 +40,7 @@ type Entry = {
   expense_count?: number;
   expense_notes?: string[];
   expense_details?: string[];
+  billing_scope?: 'standard'|'retainer';
 };
 type Option = { id: string; label: string };
 type ClientProfileOption = { id: string; client_type: "individual" | "company"; client_code: string; display_name: string };
@@ -143,12 +144,14 @@ export function prefetchWorkEntries(){
 function invalidateWorkUniverse(){workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
 async function hydrateExpenseSummaries(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
+  const scopeResult=await supabase.from('work_entries').select('id,billing_scope').in('id',entries.map(row=>row.id));
+  const scopes=new Map<string,'standard'|'retainer'>();if(!scopeResult.error)for(const item of scopeResult.data??[])scopes.set(item.id,(item.billing_scope??'standard') as 'standard'|'retainer');
   const summaries=new Map<string,{amount:number;count:number;notes:string[];details:string[]}>();
   for(let start=0;start<entries.length;start+=800){
     const results=await Promise.all(Array.from({length:Math.min(4,Math.ceil((entries.length-start)/200))},(_,index)=>supabase!.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',entries.slice(start+index*200,start+(index+1)*200).map(row=>row.id)).eq('status','active')));
     for(const result of results){if(result.error){if(result.error.code==='42P01'||result.error.code==='PGRST205')return entries;throw result.error}for(const item of result.data??[]){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count+=1;if(item.observations)current.notes.push(item.observations);current.details.push(`${money.format(amount)} — ${item.observations||'Sem observação'}`);summaries.set(item.work_entry_id,current)}}
   }
-  return entries.map(row=>{const summary=summaries.get(row.id);return summary?{...row,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
+  return entries.map(row=>{const summary=summaries.get(row.id),billing_scope=row.billing_scope??scopes.get(row.id)??'standard';return summary?{...row,billing_scope,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,billing_scope,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
 }
 const money = new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -325,7 +328,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
           ? { data: await searchMixedClientEntries(searchArgs), error: null }
           : uncollectibleOnly
             ? await supabase.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
-            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"
+            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"||reviewIssue==="retainer"
               ? await supabase.rpc("get_attention_work_entries",{p_kind:reviewIssue,p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
             : await supabase.rpc("search_work_entries", {
               p_page: 1,
@@ -382,6 +385,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     uninvoiced: "Por facturar",
     unpaid: "Facturados não pagos",
     historical: "Facturados sem data / estados históricos",
+    retainer: "Cobertos por avença",
   };
   const activeFilters = [
     year && `Ano: ${year}`,
@@ -426,7 +430,43 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       p_sort: "work_date",
       p_direction: "desc",
     };
-    return fetchWorkUniverse(exportArgs,onProgress).then(hydrateExpenseSummaries);
+    let entries: Entry[];
+    if (clientType === "mixed") {
+      entries = (await searchMixedClientEntries(exportArgs)).items;
+    } else if (uncollectibleOnly) {
+      const response = await supabase.rpc("get_uncollectible_work_entries", {
+        p_search: exportArgs.p_search,
+        p_year: exportArgs.p_year,
+        p_professional_id: exportArgs.p_professional_id,
+        p_billing_entity_id: exportArgs.p_billing_entity_id,
+        p_archive: exportArgs.p_archive,
+        p_missing_price: exportArgs.p_missing_price,
+        p_client_type: exportArgs.p_client_type,
+        p_client_id: exportArgs.p_client_id,
+        p_missing_society: exportArgs.p_missing_society,
+      });
+      if (response.error) throw new Error(response.error.message);
+      entries = ((response.data as SearchMeta).items ?? []);
+    } else if (["uninvoiced", "unpaid", "historical", "retainer"].includes(reviewIssue)) {
+      const response = await supabase.rpc("get_attention_work_entries", {
+        p_kind: reviewIssue,
+        p_search: exportArgs.p_search,
+        p_year: exportArgs.p_year,
+        p_professional_id: exportArgs.p_professional_id,
+        p_billing_entity_id: exportArgs.p_billing_entity_id,
+        p_archive: exportArgs.p_archive,
+        p_missing_price: exportArgs.p_missing_price,
+        p_client_type: exportArgs.p_client_type,
+        p_client_id: exportArgs.p_client_id,
+        p_missing_society: exportArgs.p_missing_society,
+      });
+      if (response.error) throw new Error(response.error.message);
+      entries = ((response.data as SearchMeta).items ?? []);
+    } else {
+      entries = await fetchWorkUniverse(exportArgs,onProgress);
+    }
+    onProgress?.(entries.length,entries.length);
+    return hydrateExpenseSummaries(entries);
   }, [
     query,
     year,
@@ -436,6 +476,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     paid,
     archive,
     reviewIssue,
+    uncollectibleOnly,
     review,
     missingPrice,
     clientType,
@@ -487,6 +528,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       value: (row) => row.duration_minutes,
       render: (row) => <InlineDuration value={row.duration_minutes} onCommit={(value)=>saveInline(row,"duration_minutes",String(value))}/>,
     },
+    {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Facturação normal'},{value:'retainer',label:'Coberto por avença'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='retainer'?'Avença':'Normal'}</span>},
     {
       id: "rate",
       label: "Valor/hora (EUR)",

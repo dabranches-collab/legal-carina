@@ -8,7 +8,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { useAuth } from "../../features/auth/AuthContext";
 
 type Scalar = string | number | boolean | Date | null | undefined;
@@ -433,7 +433,8 @@ export function StandardDataTable<Row>({
   const [activeRow, setActiveRow] = useState<string | null>(null);
   const [virtualStart,setVirtualStart]=useState(0);
   const [exporting, setExporting] = useState(false),
-    [exportStatus, setExportStatus] = useState("");
+    [exportStatus, setExportStatus] = useState(""),
+    [printing,setPrinting]=useState(false);
   const [universeRows, setUniverseRows] = useState<Row[] | null>(null),
     [universeRequested, setUniverseRequested] = useState(Boolean(loadAllRows)),
     [universeLoading, setUniverseLoading] = useState(false),
@@ -534,7 +535,7 @@ export function StandardDataTable<Row>({
       : processed.slice((validPage - 1) * pageSize, validPage * pageSize);
   const virtualized=pageSize==="all"&&shown.length>250,
     virtualCount=40,
-    rendered=virtualized?shown.slice(virtualStart,Math.min(shown.length,virtualStart+virtualCount)):shown,
+    rendered=printing?processed:virtualized?shown.slice(virtualStart,Math.min(shown.length,virtualStart+virtualCount)):shown,
     virtualTop=virtualized?virtualStart*34:0,
     virtualBottom=virtualized?Math.max(0,(shown.length-virtualStart-rendered.length)*34):0;
   useEffect(()=>{setVirtualStart(0)},[pageSize,query,filters,sorts,universeKey]);
@@ -807,7 +808,10 @@ export function StandardDataTable<Row>({
     setExporting(true);
     setExportStatus("");
     try {
-      const sourceRows = loadExportRows ? await loadExportRows() : processed;
+      const loadedRows = loadExportRows ? await loadExportRows() : processed;
+      const words=fold(query).split(/\s+/).filter(Boolean);
+      const sourceRows=loadedRows.filter(row=>words.every(word=>columns.some(column=>(column.searchable??column.exportable!==false)&&fold(column.value(row)).includes(word)))&&columns.every(column=>!hasFilterValue(filters[column.id])||matchesFilter(row,column,filters[column.id])));
+      if(sorts.length)sourceRows.sort((a,b)=>{for(const sort of sorts){const column=columns.find(item=>item.id===sort.id);if(!column)continue;const av=comparable(column.value(a),column.kind),bv=comparable(column.value(b),column.kind),direction=av<bv?-1:av>bv?1:0;if(direction)return sort.direction==='asc'?direction:-direction}return 0});
       const { utils, writeFile } = await import("xlsx");
       const exportColumns = visible.filter(
           (column) => column.exportable !== false,
@@ -842,6 +846,7 @@ export function StandardDataTable<Row>({
       setExporting(false);
     }
   };
+  const printTable=()=>{flushSync(()=>setPrinting(true));window.print();setPrinting(false)};
   const allShownSelected = Boolean(
     onSelectionChange &&
       shown.length &&
@@ -971,7 +976,7 @@ export function StandardDataTable<Row>({
         </button>
         <button
           type="button"
-          onClick={() => window.print()}
+          onClick={printTable}
           className="control min-h-6 px-1.5 text-[10px] font-semibold"
         >
           Imprimir / PDF

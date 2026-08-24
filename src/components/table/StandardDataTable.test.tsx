@@ -36,6 +36,24 @@ describe('StandardDataTable',()=>{
     expect(loadExportRows).toHaveBeenCalledTimes(1)
   })
 
+  test('aplica a pesquisa actual às linhas carregadas para XLSX',async()=>{
+    const user=userEvent.setup(),loadExportRows=vi.fn(async()=>[...rows,{id:'4',name:'Duarte',amount:40,active:true}])
+    render(<StandardDataTable id="filtered-export" label="Tabela filtrada" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadExportRows={loadExportRows}/>)
+    await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'Beatriz')
+    await user.click(screen.getByRole('button',{name:'XLSX'}))
+    expect(await screen.findByText('1 resultados exportados para XLSX.')).toBeInTheDocument()
+  })
+
+  test('imprime todo o resultado filtrado mesmo quando a tabela está virtualizada',async()=>{
+    const user=userEvent.setup(),many=Array.from({length:300},(_,index)=>({id:String(index),name:index<275?'Incluído':'Excluído',amount:index,active:true})),printed:string[]=[]
+    vi.spyOn(window,'print').mockImplementation(()=>{printed.push(...within(screen.getByRole('table').querySelector('tbody')!).getAllByRole('row').map(row=>row.textContent??''))})
+    render(<StandardDataTable id="filtered-print" label="Impressão filtrada" rows={many} columns={columns} rowKey={row=>row.id}/>)
+    await user.type(screen.getByPlaceholderText('Pesquisar em todas as colunas…'),'Incluído')
+    await user.click(screen.getByRole('button',{name:'Imprimir / PDF'}))
+    expect(printed).toHaveLength(275)
+    expect(printed.every(row=>row.includes('Incluído'))).toBe(true)
+  })
+
   test('filtra e ordena sobre todo o universo carregado, não apenas sobre a página inicial',async()=>{
     const user=userEvent.setup(),loadAllRows=vi.fn(async()=>[...rows,{id:'4',name:'Duarte',amount:5,active:true}])
     render(<StandardDataTable id="full-universe" label="Universo integral" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadAllRows={loadAllRows}/>)

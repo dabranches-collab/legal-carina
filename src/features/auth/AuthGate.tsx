@@ -89,7 +89,18 @@ export function AuthGate({ children }: { children: ReactNode }) {
   async function loginWithPin(username: string, pin: string) {
     if (!supabase) return
     setBusy(true); setError(''); setNotice('')
-    const { data, error: invokeError } = await supabase.functions.invoke('pin-auth', { body: { username, pin } })
+    let data:{error?:string;session?:{access_token:string;refresh_token:string};mustChangePin?:boolean}|null=null,invokeError:unknown=null
+    if(import.meta.env.DEV){
+      try{
+        const publishableKey=import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()
+        const response=await fetch('/supabase-functions/v1/pin-auth',{method:'POST',headers:{'Content-Type':'application/json',apikey:publishableKey,Authorization:`Bearer ${publishableKey}`},body:JSON.stringify({username,pin})})
+        data=await response.json()
+        if(!response.ok)invokeError=new Error(data?.error??`HTTP ${response.status}`)
+      }catch(error){invokeError=error}
+    }else{
+      const result=await supabase.functions.invoke('pin-auth', { body: { username, pin } })
+      data=result.data;invokeError=result.error
+    }
     if (invokeError || data?.error || !data?.session?.access_token || !data?.session?.refresh_token) {
       setError(data?.error ?? 'Nome de utilizador ou PIN inválido.')
       setBusy(false)

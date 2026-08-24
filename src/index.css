@@ -123,7 +123,8 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
 @media print {
-  @page { size: A4 portrait; margin: 0; }
+  @page { size: A4 portrait; margin: 12mm; }
+  @page table-report { size: A4 landscape; margin: 8mm; }
   body:has(.honorarium-print-area) * { visibility: hidden !important; }
   body:has(.honorarium-print-area) .honorarium-print-area,
   body:has(.honorarium-print-area) .honorarium-print-area * { visibility: visible !important; }
@@ -135,22 +136,21 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
   .honorarium-print-area th:first-child,.honorarium-print-area td:first-child { width: 22mm; text-align: center; }
   .honorarium-print-area th:last-child,.honorarium-print-area td:last-child { width: 30mm; text-align: center; }
   .honorarium-print-area tfoot th { font-weight: 700; }
-  @page { size: landscape; margin: 12mm; }
   body { background: #fff !important; color: #000 !important; }
   body:has(.table-standard) * { visibility: hidden !important; }
   body:has(.table-standard) .table-standard,
   body:has(.table-standard) .table-standard * { visibility: visible !important; }
   aside, header, .table-tools, .table-pagination, button { display: none !important; }
   main { margin: 0 !important; padding: 0 !important; }
-  .table-standard { position: absolute !important; inset: 0 auto auto 0 !important; width: 100% !important; border: 0 !important; box-shadow: none !important; }
+  .table-standard { page: table-report; position: absolute !important; inset: 0 auto auto 0 !important; width: 100% !important; border: 0 !important; box-shadow: none !important; }
   .app-safe-fixed:has(.table-standard) { position: static !important; display: block !important; overflow: visible !important; padding: 0 !important; background: #fff !important; }
   .print-table-heading { display: block !important; margin-bottom: 8mm; }
   .print-table-heading h2 { font-size: 16pt; font-weight: 700; }
   .print-table-heading p { margin-top: 2mm; font-size: 9pt; }
   .table-standard > div { max-height: none !important; overflow: visible !important; }
-  .table-standard table { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; border-collapse: collapse !important; font-size: 8pt !important; }
+  .table-standard table { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; border-collapse: collapse !important; font-size: 7pt !important; }
   .table-standard thead { display: table-header-group; position: static !important; }
-  .table-standard th, .table-standard td { position: static !important; width: auto !important; min-width: 0 !important; max-width: none !important; overflow: hidden !important; border: 1px solid #777 !important; color: #000 !important; background: #fff !important; }
+  .table-standard th, .table-standard td { position: static !important; width: auto !important; min-width: 0 !important; max-width: none !important; overflow: hidden !important; overflow-wrap: anywhere !important; white-space: normal !important; border: 1px solid #777 !important; padding: 1.2mm !important; color: #000 !important; background: #fff !important; box-shadow: none !important; transform: none !important; }
   .table-standard tr { break-inside: avoid; }
 }
 
