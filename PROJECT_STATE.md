@@ -470,7 +470,13 @@ Actualizado em: 2026-08-17
 - A ficha completa do movimento passou a expor os dois estados Incobrável e mantém `status`, Facturado e Pago sincronizados. Ensaio autenticado como PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, ausência de menus administrativos e acesso correcto a Nota de Honorários e Cobrança do cliente sintético.
 - Gates finais locais: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos do preview de produção foram omitidos por condição normal.
 - Versão 0.4.6 publicada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`; confirmação visual pública mostrou 0.4.6, login íntegro e nenhum erro de consola.
-# Versão 0.6.0 — logótipos por Sociedade em preparação
+# Versão 0.6.0 — publicada em 2026-08-24
+
+- Publicação manual confirmada a partir do commit `80a45cbdae4fdd5d316d7011300df7f15d887033`, branch `codex/reconcile-full-import`, em `https://legal-carina.dabranches.workers.dev`.
+- Cloudflare Deployment ID `cea3b2b4-3ce4-40c5-bdea-3b437dee59f1`; Version ID `ae1b887b-b59d-4342-bc1d-0e5e389ecc54`, com 100% do tráfego desde 2026-08-24 19:17 UTC.
+- Pós-publicação: HTTP 200, bundle `index-BMQuYZr1.js` e cache PWA `carina-legal-shell-0.6.0` confirmados. Gates finais: segurança, lint, TypeScript, 112/112 unitários, build, 58/58 E2E aplicáveis em série, 2 cenários exclusivos de preview omitidos, CI e dry-run Cloudflare aprovados.
+
+# Versão 0.6.0 — logótipos por Sociedade
 
 - A ficha de cada Sociedade aceita um logótipo por selecção ou arrastamento de JPG, PNG ou PDF. A primeira página de PDF é convertida localmente e só o recorte PNG final é guardado; o documento original não é conservado.
 - O editor permite deslocar e ampliar a imagem numa moldura 3:1 antes de aplicar o recorte. O ficheiro final fica num bucket Supabase privado e associado à Sociedade.

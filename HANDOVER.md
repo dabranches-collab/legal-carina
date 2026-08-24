@@ -1,6 +1,9 @@
 # Legal Carina — handover
 
-## Versão 0.6.0 — avenças, credenciais, logótipos e exportação em preparação
+## Versão 0.6.0 — avenças, credenciais, logótipos e exportação publicada
+
+- **PRODUÇÃO CONFIRMADA em 2026-08-24:** commit funcional `80a45cbdae4fdd5d316d7011300df7f15d887033`, branch `codex/reconcile-full-import`, URL `https://legal-carina.dabranches.workers.dev`, Deployment ID `cea3b2b4-3ce4-40c5-bdea-3b437dee59f1` e Version ID `ae1b887b-b59d-4342-bc1d-0e5e389ecc54`, activa a 100% do tráfego desde 19:17 UTC.
+- Verificação pós-publicação: HTTP 200, bundle `/assets/index-BMQuYZr1.js`, folha `/assets/index-DZI4m6Z2.css` e service worker/cache `carina-legal-shell-0.6.0` confirmados directamente sem depender do estado local.
 
 - Sociedades: upload JPG/PNG/PDF, enquadramento inicial integral, recorte/zoom e PNG privado usado nas Notas de Honorários e Cobranças. A migration isolada foi aplicada ao Supabase; coluna, bucket privado, quatro políticas e permissões auxiliares foram confirmados. Upload, gravação, reabertura e remoção foram provados no browser com dados sintéticos depois eliminados.
 - Clientes: configuração de avença, mensalidades com estados Por facturar/Facturada/Liquidada/Incobrável, horas cobertas sem preço por movimento, valor/hora efectivo e fila própria «Cobertos por avença». Cada movimento pode ser classificado como coberto ou fora da avença; só os segundos entram em «Por facturar».
@@ -10,7 +13,7 @@
 - Supabase: migrations `20260824170000`, `20260824183000` e `20260824184500` ensaiadas com rollback e depois aplicadas isoladamente; nunca foi usado `db push`. A divergência do histórico remoto permanece e deve continuar a ser tratada explicitamente.
 - Prova real: cliente sintético com avença de 1 200 €, mensalidade liquidada, 2 h cobertas (600 €/h efectivo) e 1 h extra. «Por facturar» devolveu só o extra e «Cobertos por avença» só as 2 h. Limpeza final: zero clientes, movimentos, avenças, mensalidades e credenciais sintéticas.
 - Gates: segurança, lint, TypeScript, 112/112 unitários, build e 58/58 E2E aplicáveis; 2 cenários exclusivos de preview/produção omitidos. PDFs reais, matrizes iPhone/Windows/zoom e desempenho também aprovados.
-- Frontend ainda não publicado. Produção mantém 0.5.7 e só muda depois da ordem explícita `publica`.
+- Frontend 0.6.0 publicado após ordem explícita `publica`.
 
 ## Publicação exclusivamente manual — 2026-08-22
 
