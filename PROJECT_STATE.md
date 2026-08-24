@@ -461,3 +461,11 @@ Actualizado em: 2026-08-17
 - A ficha completa do movimento passou a expor os dois estados Incobrável e mantém `status`, Facturado e Pago sincronizados. Ensaio autenticado como PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, ausência de menus administrativos e acesso correcto a Nota de Honorários e Cobrança do cliente sintético.
 - Gates finais locais: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos do preview de produção foram omitidos por condição normal.
 - Versão 0.4.6 publicada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`; confirmação visual pública mostrou 0.4.6, login íntegro e nenhum erro de consola.
+# Versão 0.6.0 — logótipos por Sociedade em preparação
+
+- A ficha de cada Sociedade aceita um logótipo por selecção ou arrastamento de JPG, PNG ou PDF. A primeira página de PDF é convertida localmente e só o recorte PNG final é guardado; o documento original não é conservado.
+- O editor permite deslocar e ampliar a imagem numa moldura 3:1 antes de aplicar o recorte. O ficheiro final fica num bucket Supabase privado e associado à Sociedade.
+- Notas de Honorários e Cobranças usam o logótipo da Sociedade emissora no cabeçalho do PDF. Sem logótipo, preservam exactamente o cabeçalho textual anterior.
+- Migration candidata `20260824153000_add_billing_entity_logos.sql` criada localmente; não foi aplicada ao Supabase. Frontend 0.6.0 não publicado.
+- Validação local: segurança de ficheiros, lint, TypeScript, 107/107 testes unitários e build aprovados.
+- Avenças: modelo funcional discutido, mas ainda não implementado neste lote. Os movimentos cobertos deverão preservar horas sem valor individual; a análise calculará o valor/hora efectivo a partir do valor das avenças no período.

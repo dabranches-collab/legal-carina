@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Versão 0.6.0 — logótipos por Sociedade em preparação
+
+- Upload por arrastamento ou selecção na ficha da Sociedade, com JPG/PNG/PDF, recorte panorâmico, deslocamento e ampliação. Nos PDF só se lê a primeira página; o original nunca é enviado nem guardado.
+- O recorte final é um PNG privado em `billing-entity-logos/<firm>/<sociedade>/logo.png`, protegido pelas permissões da Sociedade. A Nota de Honorários e a Cobrança obtêm um URL assinado e inserem o logótipo no PDF gerado pelo browser.
+- Migration local `20260824153000_add_billing_entity_logos.sql` acrescenta `billing_entities.logo_path`, bucket privado e políticas de Storage. Não aplicada remotamente; produção e Supabase permanecem inalterados.
+- `package.json` em 0.6.0 e `pdfjs-dist` fixado em 5.4.149. Gates aprovados: segurança, lint, TypeScript, 107/107 unitários e build.
+- Pedido seguinte já clarificado: avenças devem manter as horas, sem valor por movimento. Devem sair de «Não facturados» para uma fila própria de facturação/análise, continuando sempre visíveis; o valor/hora efectivo resulta de avenças do período / horas trabalhadas. Ainda não implementado.
+
 ## Publicação exclusivamente manual — 2026-08-22
 
 - `CONFIRMADO`: a integração Git da Cloudflare foi desligada e o token

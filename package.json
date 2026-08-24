@@ -1,7 +1,7 @@
 {
   "name": "legal-carina",
   "private": true,
-  "version": "0.5.7",
+  "version": "0.6.0",
   "packageManager": "pnpm@11.19.0",
   "type": "module",
   "scripts": {
@@ -20,6 +20,7 @@
     "@supabase/supabase-js": "2.112.1",
     "jspdf": "3.0.3",
     "papaparse": "^5.5.4",
+    "pdfjs-dist": "5.4.149",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
