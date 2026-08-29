@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Versão 0.6.1 — contadores e edição imediata em preparação
+
+- «Pendências a corrigir» apresenta contadores exactos nos seis botões através da nova RPC agregada `get_work_attention_counts`, sem carregar os movimentos completos apenas para contar.
+- Após uma edição directa, a linha é actualizada imediatamente; a confirmação integral acontece silenciosamente em segundo plano.
+- Migration `20260829125438_add_work_attention_counts.sql` ensaiada com rollback e aplicada isoladamente. Frontend ainda não publicado.
+- Atribuições de sociedades pedidas pelo utilizador concluídas e verificadas em 899 registos: sete clientes em CARINA SANTOS e três em LEGALTEAM; zero divergências finais.
+- Segurança, lint, TypeScript, 112/112 unitários, build e 58/58 E2E aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. O teste unitário da página comprova individualmente os seis contadores.
+
 ## Versão 0.6.0 — avenças, credenciais, logótipos e exportação publicada
 
 - **PRODUÇÃO CONFIRMADA em 2026-08-24:** commit funcional `80a45cbdae4fdd5d316d7011300df7f15d887033`, branch `codex/reconcile-full-import`, URL `https://legal-carina.dabranches.workers.dev`, Deployment ID `cea3b2b4-3ce4-40c5-bdea-3b437dee59f1` e Version ID `ae1b887b-b59d-4342-bc1d-0e5e389ecc54`, activa a 100% do tráfego desde 19:17 UTC.

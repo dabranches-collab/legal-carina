@@ -207,6 +207,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     clientId = initialParams.get("clientId");
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
+  const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>({});
+  const silentRefreshRef=useRef(false);
   const filtersBarRef=useRef<HTMLDivElement>(null);
   const [tableStickyOffset,setTableStickyOffset]=useState(112);
   useEffect(()=>{
@@ -252,10 +254,31 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       setError(messages[result.error.message] ?? result.error.message ?? "Não foi possível guardar a alteração.");
       return;
     }
+    const optionLabel=(options:{id:string;label:string}[])=>options.find(option=>option.id===value)?.label??null;
+    setRows(current=>current.flatMap(item=>{
+      if(item.id!==row.id)return [item];
+      const next={...item};
+      if(field==="billing_entity_id")next.billing_entity_name=optionLabel(meta.billingEntities);
+      else if(field==="professional_id")next.professional_name=optionLabel(meta.professionals)??item.professional_name;
+      else if(field==="activity_description")next.activity_description=value;
+      else if(field==="duration_minutes")next.duration_minutes=Number(value);
+      else if(field==="effective_hourly_rate")next.effective_hourly_rate=value===""?null:Number(value);
+      else if(field==="effective_amount")next.effective_amount=value===""?null:Number(value);
+      else if(field==="invoice_number")next.invoice_number=value||null;
+      else if(field==="invoice_date")next.invoice_date=value||null;
+      else if(field==="archive_status")next.archive_status=value||null;
+      else if(field==="observations")next.observations=value||null;
+      else if(field==="is_invoiced")next.is_invoiced=value==="true";
+      else if(field==="is_paid")next.is_paid=value==="true";
+      if(reviewIssue==="missing_society"&&field==="billing_entity_id"&&value)return [];
+      if(reviewIssue==="missing_price"&&(field==="effective_hourly_rate"||field==="effective_amount")&&value!=="")return [];
+      return [next];
+    }));
     invalidateWorkUniverse();
     setNotice("Alteração guardada e registada na auditoria.");
+    silentRefreshRef.current=true;
     setRefreshToken((current) => current + 1);
-  }, [requiresReason]);
+  }, [requiresReason,meta.billingEntities,meta.professionals,reviewIssue]);
   useEffect(() => {
     let active = true;
     void getWorkEntryOptions().then((result) => {
@@ -314,7 +337,9 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
   );
   useEffect(() => {
     let active = true;
-    setLoading(true);
+    const silent=silentRefreshRef.current;
+    silentRefreshRef.current=false;
+    if(!silent)setLoading(true);
     setError("");
     void (async () => {
       if (!supabase) {
@@ -353,12 +378,25 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         const visible=(next.items ?? []).slice(0,100);
         try{const hydrated=await hydrateExpenseSummaries(visible);if(active)setRows(hydrated)}catch{if(active)setRows(visible)}
       }
-      setLoading(false);
+      if(!silent)setLoading(false);
     })();
     return () => {
       active = false;
     };
   }, [searchArgs, refreshToken, clientType, reviewIssue, uncollectibleOnly]);
+  useEffect(()=>{
+    let active=true;
+    void(async()=>{
+      if(!supabase)return;
+      const common={p_search:query||null,p_year:year?Number(year):null,p_professional_id:professional||null,p_billing_entity_id:billing||null,p_archive:archive||null,p_client_type:clientType||null,p_client_id:clientId||null};
+      const result=await supabase.rpc("get_work_attention_counts",common);
+      if(!active)return;
+      if(result.error){setReviewCounts({});return}
+      const counts=result.data as Record<string,number>;
+      setReviewCounts(Object.fromEntries(Object.entries(counts).map(([key,value])=>[key,Number(value)])));
+    })();
+    return()=>{active=false};
+  },[query,year,professional,billing,archive,clientType,clientId,refreshToken]);
   const clear = () => {
     setSearch("");
     setQuery("");
@@ -618,7 +656,10 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
                 onClick={() => selectReviewIssue(value)}
                 className={`min-h-7 rounded-md border border-danger px-1.5 py-0.5 text-[10px] font-semibold leading-tight transition ${active ? "bg-danger text-surface shadow-sm" : "bg-surface text-danger hover:bg-danger-soft"}`}
               >
-                {value === "unpaid" ? <>Facturados<br />não pagos</> : label}
+                <span>{value === "unpaid" ? <>Facturados<br />não pagos</> : label}</span>
+                <span className={`ml-1 inline-flex min-w-5 justify-center rounded-full px-1.5 py-0.5 tabular-nums ${active?'bg-surface/20 text-surface':'bg-danger text-surface'}`} aria-label={`${reviewCounts[value]??'a calcular'} registos`}>
+                  {reviewCounts[value]??"…"}
+                </span>
               </button>
             );
           })}

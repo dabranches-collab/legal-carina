@@ -12,6 +12,7 @@ vi.mock('./lib/supabase', () => ({
     if (name === 'get_client_category_summaries') return { error:null,data:[{category:'individual',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'company',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'mixed',clients:0,movements:0,minutes:0,total:0,invoiced:0}] }
     if (name === 'get_professional_landing_summaries') return { error:null,data:[{id:'1',name:'Carina',minutes:120,total:200,invoiced:150,clients:1,uninvoiced:1,unpaid:1,missingPrice:0}] }
     if (name === 'search_work_entries') return { error:null,data:{items:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}],total:1,page:1,pageSize:25,professionals:[],billingEntities:[]} }
+    if (name === 'get_work_attention_counts') return { error:null,data:{missing_society:47,missing_price:665,uninvoiced:796,unpaid:487,historical:248,retainer:3} }
     if (name === 'export_visible_work_entries') return { error:null,data:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',matter_code:null,matter_title:null,activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',observations:null,source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}] }
     if (name === 'get_work_entry_form_options') return { error:null,data:{societies:[{id:'soc-1',name:'Carina Santos'}],clientProfiles:[{id:'profile-1',client_id:'client-1',client_type:'company',client_code:'C-0142',display_name:'Cliente Atlas'}],responsibles:[{id:'professional-1',display_name:'Carina'}],processes:[]} }
     const titles:Record<string,string>={client:'Cliente Atlas',billing:'Carina Santos',professional:'Carina'}
@@ -44,8 +45,12 @@ describe('interface principal', () => {
     ).toBeInTheDocument()
     expect(vi.mocked(supabase!.rpc)).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_sort:'work_date',p_direction:'desc'}))
     expect(screen.queryByRole('checkbox', { name: 'Seleccionar LC-1048' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button',{name:'Sem sociedade'})).toBeInTheDocument()
-    expect(screen.getByRole('button',{name:/Facturados\s+não pagos/i})).toBeInTheDocument()
+    expect(await screen.findByLabelText('47 registos')).toHaveTextContent('47')
+    expect(screen.getByLabelText('665 registos')).toHaveTextContent('665')
+    expect(screen.getByLabelText('796 registos')).toHaveTextContent('796')
+    expect(screen.getByLabelText('487 registos')).toHaveTextContent('487')
+    expect(screen.getByLabelText('248 registos')).toHaveTextContent('248')
+    expect(screen.getByLabelText('3 registos')).toHaveTextContent('3')
     await userEvent.click(screen.getByRole('button',{name:'Criar movimento'}))
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(screen.getByText(/preço e o valor são resolvidos no backend/i)).toBeInTheDocument()

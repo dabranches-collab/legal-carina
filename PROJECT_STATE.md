@@ -1,13 +1,21 @@
 # Estado do projecto
 
-## Versão 0.6.0 — pronta localmente, frontend não publicado
+## Versão 0.6.1 — contadores de pendências e edição imediata em preparação
+
+- Os seis botões de «Pendências a corrigir» apresentam o número exacto de registos do universo filtrado. Uma única RPC agregada substitui seis listagens completas; ensaio autenticado: 796 por facturar, 487 facturados não pagos, 665 sem preço, 47 sem sociedade, 248 históricos e 0 cobertos por avença.
+- A edição directa actualiza imediatamente a linha no ecrã e faz a reconciliação silenciosa com o Supabase em segundo plano, evitando o bloqueio visual causado pelo recarregamento integral.
+- A função `get_work_attention_counts` foi ensaiada com rollback e aplicada isoladamente; não foi usado `db push` nem `migration repair`. Frontend 0.6.1 não publicado.
+- Atribuições solicitadas em 2026-08-29: Vanessa Domingos, Sara Brazona, Pedro Mimoso, Maria Sousa, Maria Dionísio, Inês Ferreira Lopes e César Remisio para CARINA SANTOS; GHH, Frank Morlock e Carolina Rocha para LEGALTEAM. Fichas, 899 registos e assuntos verificados com zero divergências.
+- Gates: segurança, lint, TypeScript, 112/112 testes unitários, build e 58/58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Existe cobertura unitária específica dos seis contadores.
+
+## Versão 0.6.0 — publicada
 
 - Implementados logótipos privados por Sociedade em Notas de Honorários/Cobranças, avenças e mensalidades por Cliente, classificação individual dos movimentos, credenciais visíveis cifradas no Vault, edição imediata das fichas e remoção da justificação obrigatória para Paula/Operadores.
 - Trabalho coberto preserva duração e elimina preço/valor individual. Fica fora de «Por facturar» e disponível em «Cobertos por avença»; trabalho extra do mesmo Cliente mantém facturação normal. A ficha resume horas, valor/hora efectivo, avenças por facturar e facturado por liquidar.
 - Exportação XLSX e impressão/PDF respeitam pesquisa, filtros de coluna e filtros de atenção. A folha de tabela usa A4 horizontal, uma página de largura e o conjunto completo filtrado.
 - Supabase alterado apenas por quatro execuções SQL isoladas e previamente ensaiadas: logótipos, avenças, credenciais e motivos opcionais. Esquema/RPCs confirmados; não foi feito `db push`, `migration repair` nem deploy Cloudflare.
 - Ensaio autenticado integral com dados sintéticos comprovou upload/reabertura/remoção de logótipo, mensalidade facturada e liquidada, 2 h cobertas sem valor, 1 h extra normal, cálculo de 600 €/h efectivo e duas versões de uma credencial visível. Limpeza final confirmou zero resíduos funcionais.
-- Gates actuais: segurança, lint, TypeScript, 112 testes unitários, build e 58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Produção continua confirmada em 0.5.7; 0.6.0 não está publicada.
+- Gates actuais: segurança, lint, TypeScript, 112 testes unitários, build e 58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Produção 0.6.0 confirmada em 2026-08-24; a 0.6.1 permanece apenas em preparação.
 
 ## Política de publicação — 2026-08-22
 
