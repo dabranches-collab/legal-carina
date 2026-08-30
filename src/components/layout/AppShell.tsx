@@ -12,6 +12,7 @@ const navigation: NavigationItem[] = [
   { id: 'clients', label: 'Clientes', icon: 'clients' },
   { id: 'billing', label: 'Sociedades', icon: 'building' }, { id: 'professionals', label: 'Responsáveis', icon: 'people' },
   { id: 'work', label: 'Registos', icon: 'clock' },
+  { id: 'notes', label: 'Notas', icon: 'audit' },
   { id: 'admin', label: 'Definições', icon: 'admin' },
 ]
 
@@ -56,6 +57,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
   const pageDescription: Partial<Record<ViewId,string>> = {
     overview:'Resumo global da actividade, facturação e acompanhamento.',
     clients:'Consulta e gestão dos clientes e respectivas vertentes.',
+    notes:'Notas pessoais e partilhadas, listas, imagens e gravações de voz.',
     retainers:'Tratamento das condições, horas e facturação das avenças.',
     billing:'Análise e acompanhamento por sociedade.',
     professionals:'Análise e acompanhamento por responsável.',

@@ -187,6 +187,7 @@ export function MasterDataPage({
     [profiles, setProfiles] = useState<Profile[]>(emptyProfiles),
     [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"credentials"|"documents">("general");
   const [mode, setMode] = useState<"view" | "edit">("view"),
     [details, setDetails] = useState<ClientDetails>(emptyDetails),
     [identifiers, setIdentifiers] = useState<Identifier[]>([]);
@@ -339,6 +340,7 @@ export function MasterDataPage({
     setEditing(row);
     setMode("view");
     setDirty(false);
+    setClientPage("general");
     setEditName(row.display_name ?? row.name ?? "");
     setEditActive(row.active);
     setError("");
@@ -1241,9 +1243,15 @@ export function MasterDataPage({
                   </button>
                 </nav>
               )}
+              {section === "clients" && (
+                <nav aria-label="Páginas da ficha do cliente" className="sticky top-0 z-20 -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
+                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-white shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
+                </nav>
+              )}
               <fieldset
                 disabled={mode === "view"}
                 data-compact={mode === "view" ? "true" : "false"}
+                data-client-page={section === "clients" ? clientPage : undefined}
                 onDoubleClick={() => { if (mode === "view") setMode("edit") }}
                 className="master-data-fields min-w-0"
               >
@@ -1271,14 +1279,16 @@ export function MasterDataPage({
                     className="control mt-1 w-full px-3"
                   />
                 </label>
-                <label className="mt-4 flex min-h-11 items-center gap-3 rounded-lg border border-border px-3 text-sm font-semibold">
-                  <input
-                    type="checkbox"
-                    checked={editActive}
-                    onChange={(event) => setEditActive(event.target.checked)}
-                  />
-                  {editActive ? "Entidade activa" : "Entidade inactiva"}
-                </label>
+                {section !== "clients" && (
+                  <label className="mt-4 flex min-h-11 items-center gap-3 rounded-lg border border-border px-3 text-sm font-semibold">
+                    <input
+                      type="checkbox"
+                      checked={editActive}
+                      onChange={(event) => setEditActive(event.target.checked)}
+                    />
+                    {editActive ? "Entidade activa" : "Entidade inactiva"}
+                  </label>
+                )}
                 {section === "clients" && (
                   <>
                     <fieldset className="mt-5">
@@ -1292,7 +1302,9 @@ export function MasterDataPage({
                           Empresas.
                         </p>
                       )}
-                      {(["individual", "company"] as const).map((type) => {
+                      {(["individual", "company"] as const)
+                        .filter((type) => mode !== "view" || profile(type).active)
+                        .map((type) => {
                         const item = profile(type);
                         return (
                           <div
@@ -1348,19 +1360,14 @@ export function MasterDataPage({
                             </label>
                           </div>
                         );
-                      })}
+                        })}
                       {!creating && (
                         <p className="mt-2 text-xs text-text-secondary">
                           As vertentes existentes permanecem editáveis para
                           preservar os registos históricos.
                         </p>
                       )}
-                    </fieldset>
-                    <fieldset className="mt-6">
-                      <legend className="font-semibold">
-                        Identificação e contactos
-                      </legend>
-                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
                         <label className="text-sm font-semibold">
                           Denominação legal
                           <input
@@ -1389,6 +1396,13 @@ export function MasterDataPage({
                             className="control mt-1 w-full px-3"
                           />
                         </label>
+                      </div>
+                    </fieldset>
+                    <fieldset className="mt-6">
+                      <legend className="font-semibold">
+                        Identificação e contactos
+                      </legend>
+                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
                         <div className="rounded-xl border border-border p-3">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-sm font-semibold">
@@ -1938,24 +1952,18 @@ export function MasterDataPage({
                   </fieldset>
                 </>
               )}
-              {section === "clients" && editing && (
+              {section === "clients" && editing && clientPage === "retainer" && (
                 <>
                   <ClientRetainerPanel
                     firmId={editing.firm_id}
                     clientId={editing.id}
                     readOnly={mode === "view"}
-                  />
-                  <ClientCredentialsPanel
-                    clientId={editing.id}
-                    readOnly={mode === "view"}
-                  />
-                  <ClientDocumentsPanel
-                    firmId={editing.firm_id}
-                    clientId={editing.id}
-                    readOnly={mode === "view"}
+                    onRequestEdit={() => setMode("edit")}
                   />
                 </>
               )}{" "}
+              {section === "clients" && editing && clientPage === "credentials" && <ClientCredentialsPanel clientId={editing.id} readOnly={mode === "view"}/>}
+              {section === "clients" && editing && clientPage === "documents" && <ClientDocumentsPanel firmId={editing.firm_id} clientId={editing.id} readOnly={mode === "view"}/>}
               {error && (
                 <p
                   role="alert"

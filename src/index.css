@@ -7,9 +7,32 @@
   display: none;
 }
 
-.client-retainer[data-compact="true"] > details:last-of-type {
-  display: none;
+.master-data-fields[data-compact="false"] > fieldset,
+.master-data-fields[data-compact="false"] fieldset fieldset {
+  margin-top: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: .85rem;
+  background: var(--color-surface-subtle);
+  padding: 1rem;
 }
+
+.master-data-fields[data-compact="false"] fieldset legend {
+  padding: 0 .5rem;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.master-data-fields[data-client-page] > label,
+.master-data-fields[data-client-page] > fieldset { display: none; }
+.master-data-fields[data-client-page="general"] > label { display: flex; }
+.master-data-fields[data-client-page="general"] > label:first-of-type { display: block; }
+.master-data-fields[data-client-page="general"] > fieldset:nth-of-type(1),
+.master-data-fields[data-client-page="contacts"] > fieldset:nth-of-type(2),
+.master-data-fields[data-client-page="billing"] > fieldset:nth-of-type(3),
+.master-data-fields[data-client-page="billing"] > fieldset:nth-of-type(4) { display: block; }
+
 
 @theme {
   --color-background: #f6f5f1;

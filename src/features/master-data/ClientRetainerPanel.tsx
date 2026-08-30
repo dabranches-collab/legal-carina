@@ -74,10 +74,12 @@ export function ClientRetainerPanel({
   firmId,
   clientId,
   readOnly,
+  onRequestEdit,
 }: {
   firmId: string;
   clientId: string;
   readOnly: boolean;
+  onRequestEdit?: () => void;
 }) {
   const [retainers, setRetainers] = useState<Retainer[]>([]),
     [retainer, setRetainer] = useState<Retainer | null>(null),
@@ -371,20 +373,10 @@ export function ClientRetainerPanel({
             Avença
           </h3>
           <p className="mt-1 text-xs text-text-secondary">
-            As horas cobertas ficam separadas das mensalidades e não recebem
+            As horas utilizadas na avença ficam separadas das mensalidades e não recebem
             valor individual.
           </p>
         </div>
-        {retainers.length > 0 && !readOnly && (
-          <button
-            type="button"
-            disabled={saving}
-            onClick={() => void createPeriods()}
-            className="min-h-10 rounded-lg border border-primary/40 px-3 font-semibold text-primary"
-          >
-            Criar mensalidades em falta
-          </button>
-        )}
       </div>
       {notice && (
         <p
@@ -570,7 +562,7 @@ export function ClientRetainerPanel({
         <>
           <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-lg bg-surface-subtle p-3">
-              <dt className="text-xs text-text-secondary">Horas cobertas</dt>
+              <dt className="text-xs text-text-secondary">Horas utilizadas — histórico total</dt>
               <dd className="mt-1 font-semibold">
                 {hours(summary?.minutes ?? 0)}
               </dd>
@@ -609,11 +601,23 @@ export function ClientRetainerPanel({
               <span className="flex items-center gap-3 text-sm tabular-nums"><span>Total: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</span><span aria-hidden="true" className="text-lg group-open:rotate-180">▼</span></span>
             </summary>
           <section className="mt-4 rounded-xl border border-border p-4" aria-labelledby="retainer-monthly-usage-title">
-            <div className="flex flex-wrap items-end justify-between gap-2"><div><h4 id="retainer-monthly-usage-title" className="font-display text-lg font-semibold">Mapa mensal de horas da avença</h4><p className="mt-1 text-xs text-text-secondary">Inclui todos os meses desde o início da avença, mesmo quando não existiram registos.</p></div><strong className="text-sm tabular-nums">Total: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</strong></div>
+            <div className="flex flex-wrap items-end justify-between gap-2"><div><h4 id="retainer-monthly-usage-title" className="font-display text-lg font-semibold">Horas utilizadas por mês e ano</h4><p className="mt-1 text-xs text-text-secondary">São horas efectivamente registadas como avença; não representam as horas contratadas.</p></div><strong className="text-sm tabular-nums">Utilizadas: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</strong></div>
             <div className="mt-3 grid gap-2">{yearlyUsage.map(([year,months],index)=>{const annualMinutes=months.reduce((sum,item)=>sum+item.minutes,0),annualEntries=months.reduce((sum,item)=>sum+item.entries,0);return <details key={year} open={index===0} className="rounded-lg border border-border"><summary className="flex cursor-pointer items-center justify-between gap-3 bg-surface-subtle px-3 py-2 font-semibold"><span>{year}</span><span className="text-sm tabular-nums">Subtotal anual: {hours(annualMinutes)} · {annualEntries} registos</span></summary><div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 lg:grid-cols-6">{months.sort((a,b)=>a.month.localeCompare(b.month)).map(item=><div key={item.month} className="rounded-lg border border-border p-2"><div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold capitalize">{monthLabel(`${item.month}-01`).split(' de ')[0]}</span><span className="text-[10px] text-text-secondary">{item.entries} reg.</span></div><strong className="mt-1 block text-sm tabular-nums">{hours(item.minutes)}</strong><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-secondary" style={{width:`${item.minutes/monthlyMaximum*100}%`}}/></div></div>)}</div></details>})}</div>
           </section>
           </details>
-          <details className="mt-4 rounded-xl border border-border"><summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Facturação da avença · {charges.length} períodos</summary><div className="overflow-x-auto border-t border-border">
+          <details open className="mt-4 overflow-hidden rounded-xl border-2 border-primary bg-surface shadow-sm"><summary className="flex min-h-12 cursor-pointer items-center justify-between bg-primary px-4 py-3 font-display text-lg font-semibold text-white hover:bg-primary/90"><span>Facturação da avença — estado e datas</span><span className="rounded-full bg-white/20 px-3 py-1 text-xs">{charges.length} períodos · ▼</span></summary><div className="border-t border-border p-3">
+            {retainers.length > 0 && (
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => readOnly ? onRequestEdit?.() : void createPeriods()}
+                className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-white shadow-sm disabled:opacity-60"
+              >
+                {readOnly ? "Editar e criar controlos de facturação" : "Criar mensalidades em falta"}
+              </button>
+            )}
+            <p className="mt-2 text-xs text-text-secondary">Cada período permite registar o valor, o número e a data da factura, o vencimento, a liquidação e o respectivo estado.</p>
+          </div><div className="overflow-x-auto border-t border-border">
             <table className="w-full min-w-[68rem] text-sm">
               <thead className="bg-surface-subtle">
                 <tr>
@@ -655,20 +659,6 @@ export function ClientRetainerPanel({
                     </td>
                     <td className="border-t border-border p-2">
                       <input
-                        disabled={readOnly}
-                        aria-label={`Data de vencimento de ${monthLabel(charge.period_start)}`}
-                        type="date"
-                        value={charge.due_on ?? ""}
-                        onChange={(event) =>
-                          void updateCharge(charge.id, {
-                            due_on: event.target.value || null,
-                          })
-                        }
-                        className="control w-full px-2"
-                      />
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <input
                         disabled={readOnly || charge.status === "pending"}
                         aria-label={`N.º factura de ${monthLabel(charge.period_start)}`}
                         value={charge.invoice_reference ?? ""}
@@ -701,6 +691,20 @@ export function ClientRetainerPanel({
                         onChange={(event) =>
                           void updateCharge(charge.id, {
                             invoice_date: event.target.value || null,
+                          })
+                        }
+                        className="control w-full px-2"
+                      />
+                    </td>
+                    <td className="border-t border-border p-2">
+                      <input
+                        disabled={readOnly}
+                        aria-label={`Data de vencimento de ${monthLabel(charge.period_start)}`}
+                        type="date"
+                        value={charge.due_on ?? ""}
+                        onChange={(event) =>
+                          void updateCharge(charge.id, {
+                            due_on: event.target.value || null,
                           })
                         }
                         className="control w-full px-2"
