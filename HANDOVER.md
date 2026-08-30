@@ -559,3 +559,9 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Gates: segurança, lint, TypeScript, 115/115 unitários e build aprovados. E2E completo: 61 aprovados, 2 omitidos e uma sobreposição detectada no iPhone 13 mini; após a correcção, toda a matriz iPhone passou 15/15.
 - Publicada em 2026-08-30 a partir do commit funcional `daa6cdd2f67dde5974e71260e70e9ba9cb0d5a16`, branch `codex/reconcile-full-import`, em `https://legal-carina.dabranches.workers.dev`. Cloudflare Version ID `3f2dc508-7df5-4d60-b9aa-50b571a9a767`; HTTPS 200, bundle `index-D-GNWpSl.js` e cache PWA `carina-legal-shell-0.6.2` confirmados directamente.
 - Verificação visual pós-publicação no browser integrado confirmou «Versão 0.6.2», o menu Notas depois de Registos e a acção destacada «+ Nova nota» correctamente renderizados.
+
+## Versão 0.6.3 — exemplos de notas em produção
+
+- Os quatro exemplos solicitados foram criados na base real como notas de CARINA SANTOS e partilhados com `dabranches`: Lembrete e Documento para Consulta; Preparar reunião e Mensagem de voz para Edição.
+- A lista contém três itens; as notas Documento e Mensagem incluem, respectivamente, um recurso demonstrativo de imagem e áudio servido pelo frontend. A inserção é idempotente e a auditoria confirmou 4 notas, 3 itens, 2 recursos e 4 partilhas, sem alterar avenças.
+- Segurança de ficheiros, lint, TypeScript, 115/115 testes unitários e build aprovados para a versão 0.6.3.
