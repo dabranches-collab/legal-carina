@@ -603,10 +603,16 @@ export function ClientRetainerPanel({
               </dd>
             </div>
           </dl>
+          <details open className="group mt-4 overflow-hidden rounded-xl border-2 border-secondary bg-surface shadow-sm">
+            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 bg-secondary px-4 py-3 font-display text-lg font-semibold text-white marker:text-white hover:bg-secondary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-white">
+              <span>Mapa mensal e anual de horas</span>
+              <span className="flex items-center gap-3 text-sm tabular-nums"><span>Total: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</span><span aria-hidden="true" className="text-lg group-open:rotate-180">▼</span></span>
+            </summary>
           <section className="mt-4 rounded-xl border border-border p-4" aria-labelledby="retainer-monthly-usage-title">
             <div className="flex flex-wrap items-end justify-between gap-2"><div><h4 id="retainer-monthly-usage-title" className="font-display text-lg font-semibold">Mapa mensal de horas da avença</h4><p className="mt-1 text-xs text-text-secondary">Inclui todos os meses desde o início da avença, mesmo quando não existiram registos.</p></div><strong className="text-sm tabular-nums">Total: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</strong></div>
             <div className="mt-3 grid gap-2">{yearlyUsage.map(([year,months],index)=>{const annualMinutes=months.reduce((sum,item)=>sum+item.minutes,0),annualEntries=months.reduce((sum,item)=>sum+item.entries,0);return <details key={year} open={index===0} className="rounded-lg border border-border"><summary className="flex cursor-pointer items-center justify-between gap-3 bg-surface-subtle px-3 py-2 font-semibold"><span>{year}</span><span className="text-sm tabular-nums">Subtotal anual: {hours(annualMinutes)} · {annualEntries} registos</span></summary><div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 lg:grid-cols-6">{months.sort((a,b)=>a.month.localeCompare(b.month)).map(item=><div key={item.month} className="rounded-lg border border-border p-2"><div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold capitalize">{monthLabel(`${item.month}-01`).split(' de ')[0]}</span><span className="text-[10px] text-text-secondary">{item.entries} reg.</span></div><strong className="mt-1 block text-sm tabular-nums">{hours(item.minutes)}</strong><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-secondary" style={{width:`${item.minutes/monthlyMaximum*100}%`}}/></div></div>)}</div></details>})}</div>
           </section>
+          </details>
           <details className="mt-4 rounded-xl border border-border"><summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Facturação da avença · {charges.length} períodos</summary><div className="overflow-x-auto border-t border-border">
             <table className="w-full min-w-[68rem] text-sm">
               <thead className="bg-surface-subtle">

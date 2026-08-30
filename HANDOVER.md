@@ -540,6 +540,6 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Movimentos cobertos por avença foram excluídos de «Sem preço», por facturar, não pagos e estados históricos, tanto nos contadores como nos detalhes. COCKTAIL TEAM confirma 0 sem preço e 91 cobertos.
 - Fichas de dados base abrem em consulta compacta; «Editar» expande os campos, «Guardar alterações» só activa com mudanças e «Cancelar alterações» repõe os dados sem gravar.
 - Facturação da avença controla período, número/data de factura, vencimento e data de liquidação. O dashboard identifica as 172 h como histórico global de COCKTAIL TEAM e INFANTÁRIO DO POVO.
-- EBO: condição única activa corrigida directamente para início em 2021-01-01 e confirmada visualmente no editor.
+- EBO: condição activa inicia em 2021-01-01. A auditoria recuperou 4 movimentos de 2026 com preço explícito de 120 €/h e 150 € no total; foram preservados como trabalho à peça. Permanecem 48 movimentos de avença (36 h), sem estados financeiros inválidos.
 - Supabase remoto recebeu `exclude_retainers_from_financial_attention` e `add_retainer_charge_due_date`. Frontend continua apenas local; produção permanece 0.6.0.
 - Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 114/114 testes e build.

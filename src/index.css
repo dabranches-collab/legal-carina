@@ -7,7 +7,6 @@
   display: none;
 }
 
-.client-retainer[data-compact="true"] [aria-labelledby="retainer-monthly-usage-title"],
 .client-retainer[data-compact="true"] > details:last-of-type {
   display: none;
 }

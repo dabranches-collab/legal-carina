@@ -507,5 +507,5 @@ Actualizado em: 2026-08-17
 - Tratamento de avenças implementado com condições temporais, periodicidade financeira independente do período das horas, mapa mensal/anual, valor/hora efectivo e controlo das mensalidades.
 - Registos de avença preservam horas sem preço/valor individual e já não entram nas pendências financeiras normais.
 - Fichas de clientes, sociedades e responsáveis usam consulta compacta e edição explícita, com guardar condicionado a alterações e cancelamento restaurável.
-- EBO inicia a condição activa em 2021-01-01. Migrations remotas do lote aplicadas; frontend ainda não publicado.
+- EBO inicia a condição activa em 2021-01-01: 48 movimentos permanecem cobertos (36 h) e 4 movimentos de 2026 com 120 €/h e 150 € históricos foram preservados como trabalho à peça até confirmação do escritório. Frontend ainda não publicado.
 - Validação actual: segurança, lint, TypeScript, 114/114 testes e build aprovados; browser confirmou contadores, ficha EBO e cancelamento sem persistência.
