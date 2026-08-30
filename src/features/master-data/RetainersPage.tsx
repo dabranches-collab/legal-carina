@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
-type Row={client_id:string;client_name:string;client_code:string;terms_count:number;current_monthly_amount:number|null;currency:string|null;included_hours:number|null;billing_interval_months:number|null;consumption_period_start:string|null;consumption_period_end:string|null;period_used_minutes:number;period_included_minutes:number|null;current_starts_on:string|null;current_ends_on:string|null;billing_entity_name:string|null;covered_minutes:number;effective_hourly_rate:number|null;pending_amount:number;unpaid_amount:number};
+type Row={client_id:string;client_name:string;client_code:string;terms_count:number;current_monthly_amount:number|null;currency:string|null;included_hours:number|null;billing_interval_months:number|null;hours_interval_months:number|null;consumption_period_start:string|null;consumption_period_end:string|null;period_used_minutes:number;period_included_minutes:number|null;current_starts_on:string|null;current_ends_on:string|null;billing_entity_name:string|null;covered_minutes:number;effective_hourly_rate:number|null;pending_amount:number;unpaid_amount:number};
 const money=(value:number,currency='EUR')=>new Intl.NumberFormat('pt-PT',{style:'currency',currency}).format(value);
 const duration=(minutes:number)=>`${Math.floor(minutes/60)} h ${String(minutes%60).padStart(2,'0')} min`;
 

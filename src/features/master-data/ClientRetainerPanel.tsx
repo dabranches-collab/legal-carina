@@ -20,6 +20,7 @@ type Retainer = {
   reference_hourly_rate: number | null;
   included_hours: number | null;
   billing_interval_months: number;
+  hours_interval_months: number;
   notes: string | null;
 };
 type Charge = {
@@ -34,6 +35,7 @@ type Charge = {
   notes: string | null;
 };
 type Society = { id: string; name: string };
+type UsageEntry = { work_date: string; duration_minutes: number };
 type Summary = {
   minutes: number;
   movements: number;
@@ -55,6 +57,7 @@ const empty = () => ({
   reference_hourly_rate: "",
   included_hours: "",
   billing_interval_months: "1",
+  hours_interval_months: "1",
   notes: "",
 });
 const monthLabel = (value: string) =>
@@ -80,9 +83,11 @@ export function ClientRetainerPanel({
     [form, setForm] = useState(empty),
     [societies, setSocieties] = useState<Society[]>([]),
     [charges, setCharges] = useState<Charge[]>([]),
+    [usageEntries, setUsageEntries] = useState<UsageEntry[]>([]),
     [summary, setSummary] = useState<Summary | null>(null);
   const [loading, setLoading] = useState(true),
     [saving, setSaving] = useState(false),
+    [termsOpen,setTermsOpen]=useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const formRef=useRef<HTMLFieldSetElement>(null);
@@ -90,7 +95,7 @@ export function ClientRetainerPanel({
     if (!supabase) return;
     setLoading(true);
     setError("");
-    const [retainerResult, societyResult, chargeResult, summaryResult] =
+    const [retainerResult, societyResult, chargeResult, summaryResult, usageResult] =
       await Promise.all([
         supabase
           .from("client_retainers")
@@ -110,9 +115,10 @@ export function ClientRetainerPanel({
           .eq("client_id", clientId)
           .order("period_start", { ascending: false }),
         supabase.rpc("get_client_retainer_summary", { p_client_id: clientId }),
+        supabase.from("work_entries").select("work_date,duration_minutes").eq("client_id",clientId).eq("billing_scope","retainer").order("work_date"),
       ]);
     const failure =
-      retainerResult.error ?? societyResult.error ?? chargeResult.error;
+      retainerResult.error ?? societyResult.error ?? chargeResult.error ?? usageResult.error;
     if (failure) {
       if (failure.code !== "42P01" && failure.code !== "PGRST205")
         setError(failure.message);
@@ -139,12 +145,14 @@ export function ClientRetainerPanel({
             included_hours:
               found.included_hours == null ? "" : String(found.included_hours),
             billing_interval_months: String(found.billing_interval_months ?? 1),
+            hours_interval_months: String(found.hours_interval_months ?? found.billing_interval_months ?? 1),
             notes: found.notes ?? "",
           }
         : empty(),
     );
     setSocieties((societyResult.data ?? []) as Society[]);
     setCharges((chargeResult.data ?? []) as Charge[]);
+    setUsageEntries((usageResult.data ?? []) as UsageEntry[]);
     if (!summaryResult.error && summaryResult.data)
       setSummary(summaryResult.data as unknown as Summary);
     setLoading(false);
@@ -153,6 +161,7 @@ export function ClientRetainerPanel({
     void load();
   }, [load]);
   function editTerms(item: Retainer | null) {
+    setTermsOpen(true);
     setRetainer(item);
     setForm(item ? {
       billing_entity_id:item.billing_entity_id,
@@ -164,6 +173,7 @@ export function ClientRetainerPanel({
       reference_hourly_rate:item.reference_hourly_rate==null?"":String(item.reference_hourly_rate),
       included_hours:item.included_hours==null?"":String(item.included_hours),
       billing_interval_months:String(item.billing_interval_months??1),
+      hours_interval_months:String(item.hours_interval_months??item.billing_interval_months??1),
       notes:item.notes??"",
     } : empty());
     setError("");
@@ -202,6 +212,7 @@ export function ClientRetainerPanel({
       reference_hourly_rate: reference,
       included_hours: includedHours,
       billing_interval_months: Number(form.billing_interval_months),
+      hours_interval_months: Number(form.hours_interval_months),
       notes: form.notes.trim() || null,
       updated_at: new Date().toISOString(),
     };
@@ -315,7 +326,28 @@ export function ClientRetainerPanel({
           .filter((item) => item.status === "invoiced")
           .reduce((sum, item) => sum + item.amount, 0),
       [charges],
-    );
+    ),
+    monthlyUsage = useMemo(()=>{
+      if(!retainers.length)return [];
+      const totals=new Map<string,{minutes:number;entries:number}>();
+      for(const entry of usageEntries){const month=entry.work_date.slice(0,7),current=totals.get(month)??{minutes:0,entries:0};current.minutes+=Number(entry.duration_minutes);current.entries+=1;totals.set(month,current)}
+      const first=[...retainers].sort((a,b)=>a.starts_on.localeCompare(b.starts_on))[0].starts_on.slice(0,7);
+      const today=new Date().toISOString().slice(0,10),active=retainers.some(item=>item.active&&item.starts_on<=today&&(!item.ends_on||item.ends_on>=today));
+      const last=active?today.slice(0,7):[...retainers].map(item=>(item.ends_on??item.starts_on).slice(0,7)).sort().at(-1)??first;
+      const result:Array<{month:string;minutes:number;entries:number}>=[],cursor=new Date(`${first}-01T12:00:00`),limit=new Date(`${last}-01T12:00:00`);
+      while(cursor<=limit){const month=`${cursor.getFullYear()}-${String(cursor.getMonth()+1).padStart(2,'0')}`,value=totals.get(month)??{minutes:0,entries:0};result.push({month,...value});cursor.setMonth(cursor.getMonth()+1)}
+      return result.reverse();
+    },[retainers,usageEntries]);
+  const monthlyMaximum=Math.max(1,...monthlyUsage.map(item=>item.minutes));
+  const yearlyUsage=Object.entries(monthlyUsage.reduce<Record<string,Array<{month:string;minutes:number;entries:number}>>>((groups,item)=>{const year=item.month.slice(0,4);(groups[year]??=[]).push(item);return groups},{})).sort(([a],[b])=>b.localeCompare(a));
+  const todayMonth=new Date().toISOString().slice(0,7);
+  const contractedValueToDate=retainers.reduce((total,item)=>{
+    const first=item.starts_on.slice(0,7),last=(item.ends_on&&item.ends_on.slice(0,7)<todayMonth?item.ends_on.slice(0,7):todayMonth);
+    if(first>last)return total;
+    const [firstYear,firstMonth]=first.split('-').map(Number),[lastYear,lastMonth]=last.split('-').map(Number),elapsedMonths=(lastYear-firstYear)*12+(lastMonth-firstMonth),cycles=Math.floor(elapsedMonths/Math.max(1,item.billing_interval_months))+1;
+    return total+cycles*Number(item.monthly_amount);
+  },0);
+  const effectiveContractRate=(summary?.minutes??0)>0?contractedValueToDate*60/(summary?.minutes??1):null;
   if (loading)
     return (
       <section className="mt-6 rounded-xl border border-border p-4">
@@ -367,6 +399,9 @@ export function ClientRetainerPanel({
           {error}
         </p>
       )}
+      <details open={termsOpen} onToggle={event=>setTermsOpen(event.currentTarget.open)} className="mt-4 rounded-xl border border-border bg-surface">
+        <summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Condições e edição da avença · {retainers.length} {retainers.length===1?'período':'períodos'}</summary>
+        <div className="border-t border-border p-4">
       {retainers.length > 0 && (
         <div className="mt-4 overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[48rem] text-sm">
@@ -374,7 +409,7 @@ export function ClientRetainerPanel({
             <tbody>{retainers.map(item=><tr key={item.id} className={retainer?.id===item.id?'bg-secondary-soft':''}>
               <td className="border-t border-border p-2">{item.starts_on} — {item.ends_on??'sem fim'}</td>
               <td className="border-t border-border p-2 text-right">{money(item.monthly_amount,item.currency)}</td>
-              <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.billing_interval_months===1?'mês':`${item.billing_interval_months} meses`}`}</td>
+              <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.hours_interval_months===1?'mês':item.hours_interval_months===12?'ano':`${item.hours_interval_months} meses`}`}</td>
               <td className="border-t border-border p-2">{societies.find(s=>s.id===item.billing_entity_id)?.name??'—'}</td>
               <td className="border-t border-border p-2 text-center">{item.active?'Activa':'Inactiva'}</td>
               <td className="border-t border-border p-2 text-right"><button type="button" onClick={()=>editTerms(item)} className="rounded-lg border border-primary/50 bg-primary px-3 py-2 font-semibold text-white">Editar condição</button></td>
@@ -476,6 +511,13 @@ export function ClientRetainerPanel({
             <span className="mt-1 block text-xs font-normal text-text-secondary">Permite comparar as horas realizadas com o limite acordado nesse período.</span>
           </label>
           <label className="text-sm font-semibold">
+            Período de controlo das horas
+            <select value={form.hours_interval_months} onChange={event=>setForm({...form,hours_interval_months:event.target.value})} className="control mt-1 w-full px-3">
+              <option value="1">Mensal</option><option value="3">Trimestral</option><option value="6">Semestral</option><option value="12">Anual</option>
+            </select>
+            <span className="mt-1 block text-xs font-normal text-text-secondary">Independente da facturação: uma avença pode ser facturada mensalmente e ter um pacote anual de horas.</span>
+          </label>
+          <label className="text-sm font-semibold">
             Moeda
             <input
               maxLength={3}
@@ -517,6 +559,8 @@ export function ClientRetainerPanel({
           )}
         </fieldset>
       </div>
+        </div>
+      </details>
       {retainers.length > 0 && (
         <>
           <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -531,10 +575,11 @@ export function ClientRetainerPanel({
                 Valor/hora efectivo
               </dt>
               <dd className="mt-1 font-semibold">
-                {summary?.effectiveHourlyRate == null
-                  ? "Sem horas facturadas"
-                  : money(summary.effectiveHourlyRate, retainers[0].currency)}
+                {effectiveContractRate == null
+                  ? "Sem horas utilizadas"
+                  : money(effectiveContractRate, retainers[0].currency)}
               </dd>
+              <span className="mt-1 block text-[10px] text-text-secondary">{money(contractedValueToDate,retainers[0].currency)} contratados ÷ {hours(summary?.minutes??0)}</span>
             </div>
             <div className="rounded-lg bg-warning-soft p-3">
               <dt className="text-xs text-text-secondary">
@@ -553,7 +598,11 @@ export function ClientRetainerPanel({
               </dd>
             </div>
           </dl>
-          <div className="mt-5 overflow-x-auto rounded-xl border border-border">
+          <section className="mt-4 rounded-xl border border-border p-4" aria-labelledby="retainer-monthly-usage-title">
+            <div className="flex flex-wrap items-end justify-between gap-2"><div><h4 id="retainer-monthly-usage-title" className="font-display text-lg font-semibold">Mapa mensal de horas da avença</h4><p className="mt-1 text-xs text-text-secondary">Inclui todos os meses desde o início da avença, mesmo quando não existiram registos.</p></div><strong className="text-sm tabular-nums">Total: {hours(monthlyUsage.reduce((sum,item)=>sum+item.minutes,0))}</strong></div>
+            <div className="mt-3 grid gap-2">{yearlyUsage.map(([year,months],index)=>{const annualMinutes=months.reduce((sum,item)=>sum+item.minutes,0),annualEntries=months.reduce((sum,item)=>sum+item.entries,0);return <details key={year} open={index===0} className="rounded-lg border border-border"><summary className="flex cursor-pointer items-center justify-between gap-3 bg-surface-subtle px-3 py-2 font-semibold"><span>{year}</span><span className="text-sm tabular-nums">Subtotal anual: {hours(annualMinutes)} · {annualEntries} registos</span></summary><div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 lg:grid-cols-6">{months.sort((a,b)=>a.month.localeCompare(b.month)).map(item=><div key={item.month} className="rounded-lg border border-border p-2"><div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold capitalize">{monthLabel(`${item.month}-01`).split(' de ')[0]}</span><span className="text-[10px] text-text-secondary">{item.entries} reg.</span></div><strong className="mt-1 block text-sm tabular-nums">{hours(item.minutes)}</strong><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-secondary" style={{width:`${item.minutes/monthlyMaximum*100}%`}}/></div></div>)}</div></details>})}</div>
+          </section>
+          <details className="mt-4 rounded-xl border border-border"><summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Facturação da avença · {charges.length} períodos</summary><div className="overflow-x-auto border-t border-border">
             <table className="w-full min-w-[58rem] text-sm">
               <thead className="bg-surface-subtle">
                 <tr>
@@ -655,7 +704,7 @@ export function ClientRetainerPanel({
                 financeiro.
               </p>
             )}
-          </div>
+          </div></details>
         </>
       )}
     </section>
