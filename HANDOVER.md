@@ -566,3 +566,10 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - A lista contém três itens; as notas Documento e Mensagem incluem, respectivamente, um recurso demonstrativo de imagem e áudio servido pelo frontend. A inserção é idempotente e a auditoria confirmou 4 notas, 3 itens, 2 recursos e 4 partilhas, sem alterar avenças.
 - Segurança de ficheiros, lint, TypeScript, 115/115 testes unitários e build aprovados para a versão 0.6.3.
 - Publicada em 2026-08-30 a partir do commit funcional `4a94ff6`, Cloudflare Version ID `91d12e25-f890-43e9-a8ca-179f78994685`. Produção confirmou HTTP 200, bundle `index-Dp9eifQ2.js`, cache `carina-legal-shell-0.6.3`, imagem com 1 338 479 bytes, áudio com 44 bytes e versão 0.6.3 visível no browser integrado.
+
+## Versão 0.6.4 — edição do nome do Proprietário
+
+- Corrigido localmente o bloqueio que devolvia 403 ao Administrador ao corrigir o nome visível do Proprietário. O login do Proprietário continua protegido e só pode ser alterado pelo próprio.
+- A ficha desactiva explicitamente o campo de login neste caso e explica a restrição. Erros não-2xx das Edge Functions passam a apresentar a mensagem funcional devolvida pelo backend em vez de «Edge Function returned a non-2xx status code».
+- Segurança, lint, TypeScript, 115/115 testes unitários e build aprovados. Frontend e `admin-users` ainda não publicados; produção permanece 0.6.3 até nova ordem explícita `publica`.
+- Diagnóstico adicional: a Administração mostrava `DIOGO ABRANCHES` a partir dos metadados da sessão, mas o selector de partilhas lia `dabranches` de `user_login_credentials`. O registo interno foi sincronizado com o perfil real e a verificação visual em produção confirmou «DIOGO ABRANCHES» nas partilhas, sem a etiqueta antiga.

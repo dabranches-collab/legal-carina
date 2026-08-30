@@ -188,7 +188,11 @@ Deno.serve(async (request) => {
       const { data: target } = await admin.from('firm_members').select('user_id,role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target) return json(request, { error: 'Utilizador inválido.' }, 400)
       const callerMembership = memberships.find((membership) => membership.firm_id === firmId)
-      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) return json(request, { error: 'O perfil do proprietário só pode ser alterado pelo próprio.' }, 403)
+      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) {
+        const { data: ownerCredential, error: ownerCredentialError } = await admin.from('user_login_credentials').select('username').eq('user_id', userId).eq('firm_id', firmId).maybeSingle()
+        if (ownerCredentialError) throw ownerCredentialError
+        if (!ownerCredential || username !== ownerCredential.username) return json(request, { error: 'Um Administrador pode corrigir o nome visível, mas não pode alterar o login do Proprietário.' }, 403)
+      }
       const { data: targetAuthData, error: targetAuthError } = await admin.auth.admin.getUserById(userId)
       if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
       const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, { user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName } })
