@@ -1,12 +1,21 @@
 # Estado do projecto
 
+## Avenças temporais e tratamento — 30-08-2026
+
+- Backend ligado já tem condições temporais de avença, periodicidade de facturação e cálculo do consumo de horas do ciclo actual.
+- Frontend local tem submenu/ecrã de tratamento e 3.ª caixa Avenças no dashboard de Clientes, sem retirar clientes de Particulares/Empresas.
+- Registos de avença preservam apenas horas e estão excluídos de `Sem preço`; Infantário do Povo tem 139 movimentos e 5 160 minutos classificados.
+- Código frontend 0.6.1 ainda não publicado; produção permanece 0.6.0. Validação: segurança, lint, tipos, 114 testes e build verdes.
+
 ## Versão 0.6.1 — contadores de pendências e edição imediata em preparação
 
+- As tabelas de dados-base repetem automaticamente falhas transitórias como `Failed to fetch` e descartam respostas tardias de pedidos anteriores; erros funcionais/permissões continuam a ser apresentados sem repetição.
+- Neste computador, o proxy de PIN da porta 4181 devolvia `502`; a aplicação local foi mantida em `http://127.0.0.1:4190/`, onde o endpoint foi validado com credenciais sintéticas e devolveu a rejeição funcional esperada.
 - Os seis botões de «Pendências a corrigir» apresentam o número exacto de registos do universo filtrado. Uma única RPC agregada substitui seis listagens completas; ensaio autenticado: 796 por facturar, 487 facturados não pagos, 665 sem preço, 47 sem sociedade, 248 históricos e 0 cobertos por avença.
 - A edição directa actualiza imediatamente a linha no ecrã e faz a reconciliação silenciosa com o Supabase em segundo plano, evitando o bloqueio visual causado pelo recarregamento integral.
 - A função `get_work_attention_counts` foi ensaiada com rollback e aplicada isoladamente; não foi usado `db push` nem `migration repair`. Frontend 0.6.1 não publicado.
 - Atribuições solicitadas em 2026-08-29: Vanessa Domingos, Sara Brazona, Pedro Mimoso, Maria Sousa, Maria Dionísio, Inês Ferreira Lopes e César Remisio para CARINA SANTOS; GHH, Frank Morlock e Carolina Rocha para LEGALTEAM. Fichas, 899 registos e assuntos verificados com zero divergências.
-- Gates: segurança, lint, TypeScript, 112/112 testes unitários, build e 58/58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Existe cobertura unitária específica dos seis contadores.
+- Gates: segurança, lint, TypeScript, 114/114 testes unitários, build e 58/58 E2E aplicáveis aprovados; 2 exclusivos de produção omitidos. Existe cobertura unitária específica dos seis contadores e das falhas transitórias.
 
 ## Versão 0.6.0 — publicada
 

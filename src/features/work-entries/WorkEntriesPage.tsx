@@ -42,6 +42,9 @@ type Entry = {
   expense_details?: string[];
   billing_scope?: 'standard'|'retainer';
 };
+const attentionCountsCache=new Map<string,Record<string,number>>();
+const attentionCacheStorageKey='carina-work-attention-counts';
+const readStoredAttentionCounts=()=>{try{const value=sessionStorage.getItem(attentionCacheStorageKey);return value?JSON.parse(value) as Record<string,number>:{};}catch{return {}}};
 type Option = { id: string; label: string };
 type ClientProfileOption = { id: string; client_type: "individual" | "company"; client_code: string; display_name: string };
 type SearchMeta = {
@@ -207,7 +210,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     clientId = initialParams.get("clientId");
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
-  const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>({});
+  const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>(()=>readStoredAttentionCounts());
   const silentRefreshRef=useRef(false);
   const filtersBarRef=useRef<HTMLDivElement>(null);
   const [tableStickyOffset,setTableStickyOffset]=useState(112);
@@ -353,7 +356,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
           ? { data: await searchMixedClientEntries(searchArgs), error: null }
           : uncollectibleOnly
             ? await supabase.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
-            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"||reviewIssue==="retainer"
+            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"||reviewIssue==="retainer"||reviewIssue==="missing_price"
               ? await supabase.rpc("get_attention_work_entries",{p_kind:reviewIssue,p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
             : await supabase.rpc("search_work_entries", {
               p_page: 1,
@@ -389,11 +392,15 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     void(async()=>{
       if(!supabase)return;
       const common={p_search:query||null,p_year:year?Number(year):null,p_professional_id:professional||null,p_billing_entity_id:billing||null,p_archive:archive||null,p_client_type:clientType||null,p_client_id:clientId||null};
+      const cacheKey=JSON.stringify(common),cached=attentionCountsCache.get(cacheKey);
+      if(cached)setReviewCounts(cached);
       const result=await supabase.rpc("get_work_attention_counts",common);
       if(!active)return;
-      if(result.error){setReviewCounts({});return}
+      if(result.error)return;
       const counts=result.data as Record<string,number>;
-      setReviewCounts(Object.fromEntries(Object.entries(counts).map(([key,value])=>[key,Number(value)])));
+      const normalized=Object.fromEntries(Object.entries(counts).map(([key,value])=>[key,Number(value)]));
+      attentionCountsCache.set(cacheKey,normalized);setReviewCounts(normalized);
+      try{sessionStorage.setItem(attentionCacheStorageKey,JSON.stringify(normalized))}catch{/* armazenamento indisponível */}
     })();
     return()=>{active=false};
   },[query,year,professional,billing,archive,clientType,clientId,refreshToken]);
@@ -636,15 +643,15 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       <section aria-label="Filtros dos registos" className="card p-2 shadow-sm">
       <div
         aria-labelledby="review-issues-title"
-        className="mb-2 flex flex-col gap-1.5 rounded-lg border border-danger/40 bg-danger-soft px-2 py-1.5 lg:flex-row lg:items-center lg:justify-between"
+        className="mb-2 rounded-xl border border-danger/40 bg-danger-soft p-3"
       >
-        <div className="min-w-0 shrink-0">
+        <div className="flex items-end justify-between gap-3">
           <h2 id="review-issues-title" className="text-sm font-semibold leading-tight text-danger">
             Pendências a corrigir
           </h2>
-          <p className="text-[10px] leading-tight text-text-secondary">Pré-filtros do universo completo.</p>
+          <p className="text-[11px] leading-tight text-text-primary">Seleccione para filtrar o universo completo.</p>
         </div>
-        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:ml-auto lg:w-[72%] lg:grid-cols-5">
+        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
           {Object.entries(reviewLabels).map(([value, label]) => {
             const active = reviewIssue === value;
             return (
@@ -654,11 +661,11 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
                 aria-label={label}
                 aria-pressed={active}
                 onClick={() => selectReviewIssue(value)}
-                className={`min-h-7 rounded-md border border-danger px-1.5 py-0.5 text-[10px] font-semibold leading-tight transition ${active ? "bg-danger text-surface shadow-sm" : "bg-surface text-danger hover:bg-danger-soft"}`}
+                className={`flex min-h-12 items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-xs font-semibold leading-tight transition ${active ? "border-danger bg-danger text-surface shadow-sm" : "border-danger/35 bg-surface text-text-primary hover:border-danger hover:bg-danger-soft"}`}
               >
-                <span>{value === "unpaid" ? <>Facturados<br />não pagos</> : label}</span>
-                <span className={`ml-1 inline-flex min-w-5 justify-center rounded-full px-1.5 py-0.5 tabular-nums ${active?'bg-surface/20 text-surface':'bg-danger text-surface'}`} aria-label={`${reviewCounts[value]??'a calcular'} registos`}>
-                  {reviewCounts[value]??"…"}
+                <span>{label}</span>
+                <span className={`inline-flex min-w-10 shrink-0 justify-center rounded-md px-2 py-1 text-sm font-bold tabular-nums ${active?'bg-surface text-danger':'bg-danger text-surface'}`} aria-label={`${reviewCounts[value]??'a calcular'} registos`}>
+                  {reviewCounts[value]??"—"}
                 </span>
               </button>
             );

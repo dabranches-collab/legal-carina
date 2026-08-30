@@ -17,6 +17,7 @@ import { AppLink } from "../../components/ui/AppLink";
 import { SocietyLogoCropper } from "./SocietyLogoCropper";
 import { ClientRetainerPanel } from "./ClientRetainerPanel";
 import { ClientCredentialsPanel } from "./ClientCredentialsPanel";
+import { withTransientRetry } from "../../lib/transientRetry";
 
 const HonorariumNoteModal = lazy(() =>
   import("../clients/HonorariumNoteModal").then((module) => ({
@@ -216,19 +217,26 @@ export function MasterDataPage({
   const [retainerClientIds, setRetainerClientIds] = useState<Set<string>>(
     new Set(),
   );
+  const loadSequenceRef = useRef(0);
   useEffect(() => setSection(initialSection), [initialSection]);
   const load = useCallback(async () => {
-    if (!supabase) return;
+    const db = supabase;
+    if (!db) return;
+    const sequence = ++loadSequenceRef.current;
+    const isCurrent = () => loadSequenceRef.current === sequence;
     setLoading(true);
     setError("");
     let targetFirm = firmIdRef.current;
     if (!targetFirm) {
-      const { data } = await supabase
-        .from("firm_members")
-        .select("firm_id")
-        .eq("active", true)
-        .limit(1)
-        .maybeSingle();
+      const { data } = await withTransientRetry(() =>
+        db
+          .from("firm_members")
+          .select("firm_id")
+          .eq("active", true)
+          .limit(1)
+          .maybeSingle(),
+      );
+      if (!isCurrent()) return;
       targetFirm = data?.firm_id ?? "";
       firmIdRef.current = targetFirm;
       setFirmId(targetFirm);
@@ -239,23 +247,33 @@ export function MasterDataPage({
         : section === "clients"
           ? "id,firm_id,display_name,client_code,client_type,active"
           : "id,firm_id,display_name,active";
-    const { data, error: failure } = await supabase
-      .from(section)
-      .select(fields)
-      .order(section === "billing_entities" ? "name" : "display_name");
+    const { data, error: failure } = await withTransientRetry(() =>
+      db
+        .from(section)
+        .select(fields)
+        .order(section === "billing_entities" ? "name" : "display_name"),
+    );
+    if (!isCurrent()) return;
     if (failure) setError(failure.message);
     else if (section === "clients") {
       const [profileResult, flagsResult, retainerResult] = await Promise.all([
-        supabase
-          .from("client_profiles")
-          .select("client_id,client_type")
-          .eq("active", true),
-        supabase.rpc("get_client_document_action_flags"),
-        supabase
-          .from("client_retainers")
-          .select("client_id")
-          .eq("active", true),
+        withTransientRetry(() =>
+          db
+            .from("client_profiles")
+            .select("client_id,client_type")
+            .eq("active", true),
+        ),
+        withTransientRetry(() =>
+          db.rpc("get_client_document_action_flags"),
+        ),
+        withTransientRetry(() =>
+          db
+            .from("client_retainers")
+            .select("client_id")
+            .eq("active", true),
+        ),
       ]);
+      if (!isCurrent()) return;
       if (profileResult.error) setError(profileResult.error.message);
       else {
         const types = new Map<string, Array<"individual" | "company">>();
@@ -307,10 +325,13 @@ export function MasterDataPage({
           : new Set((retainerResult.data ?? []).map((item) => item.client_id)),
       );
     } else setRows((data ?? []) as unknown as Row[]);
-    setLoading(false);
+    if (isCurrent()) setLoading(false);
   }, [section]);
   useEffect(() => {
     void load();
+    return () => {
+      loadSequenceRef.current += 1;
+    };
   }, [load]);
   async function openEditor(row: Row) {
     setCreating(false);

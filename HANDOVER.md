@@ -1,12 +1,22 @@
 # Legal Carina — handover
 
+## Avenças temporais e tratamento — base ligada em 30-08-2026
+
+- Migração `add_retainer_terms_history` aplicada ao Supabase ligado: condições históricas sem sobreposição, periodicidade mensal/bimestral/trimestral/semestral/anual, horas incluídas por ciclo e resumo de consumo corrente.
+- Novo submenu `Clientes > Avenças` e 3.ª caixa Avenças no dashboard; é uma visualização adicional e não altera as contagens de Particulares/Empresas.
+- `INFANTÁRIO DO POVO`: 139/139 movimentos em avença, 5 160 minutos preservados e zero preços/valores individuais.
+- Movimentos de avença não contam na pendência `Sem preço`; contador autenticado passou de 666 para 527 e Avenças mostra 139.
+- Interface 0.6.1 continua apenas local/GitHub por publicar; produção frontend permanece 0.6.0. `pnpm check`: 114/114 testes e build verde.
+
 ## Versão 0.6.1 — contadores e edição imediata em preparação
 
+- Tabelas de Clientes/Sociedades/Responsáveis repetem até duas vezes apenas falhas transitórias de rede (`Failed to fetch`) e ignoram respostas tardias de carregamentos já substituídos, evitando o alerta inicial que permanecia sobre uma tabela entretanto carregada.
+- Login local validado na porta 4190: o proxy de `pin-auth` responde correctamente; a porta 4181 devolvia `502` neste computador e foi abandonada para a sessão local.
 - «Pendências a corrigir» apresenta contadores exactos nos seis botões através da nova RPC agregada `get_work_attention_counts`, sem carregar os movimentos completos apenas para contar.
 - Após uma edição directa, a linha é actualizada imediatamente; a confirmação integral acontece silenciosamente em segundo plano.
 - Migration `20260829125438_add_work_attention_counts.sql` ensaiada com rollback e aplicada isoladamente. Frontend ainda não publicado.
 - Atribuições de sociedades pedidas pelo utilizador concluídas e verificadas em 899 registos: sete clientes em CARINA SANTOS e três em LEGALTEAM; zero divergências finais.
-- Segurança, lint, TypeScript, 112/112 unitários, build e 58/58 E2E aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. O teste unitário da página comprova individualmente os seis contadores.
+- Segurança, lint, TypeScript, 114/114 unitários, build e 58/58 E2E aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. Existem testes específicos dos seis contadores e da repetição selectiva de falhas de rede.
 
 ## Versão 0.6.0 — avenças, credenciais, logótipos e exportação publicada
 

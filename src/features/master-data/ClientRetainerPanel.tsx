@@ -17,6 +17,8 @@ type Retainer = {
   starts_on: string;
   ends_on: string | null;
   reference_hourly_rate: number | null;
+  included_hours: number | null;
+  billing_interval_months: number;
   notes: string | null;
 };
 type Charge = {
@@ -50,6 +52,8 @@ const empty = () => ({
   starts_on: new Date().toISOString().slice(0, 7) + "-01",
   ends_on: "",
   reference_hourly_rate: "",
+  included_hours: "",
+  billing_interval_months: "1",
   notes: "",
 });
 const monthLabel = (value: string) =>
@@ -70,7 +74,8 @@ export function ClientRetainerPanel({
   clientId: string;
   readOnly: boolean;
 }) {
-  const [retainer, setRetainer] = useState<Retainer | null>(null),
+  const [retainers, setRetainers] = useState<Retainer[]>([]),
+    [retainer, setRetainer] = useState<Retainer | null>(null),
     [form, setForm] = useState(empty),
     [societies, setSocieties] = useState<Society[]>([]),
     [charges, setCharges] = useState<Charge[]>([]),
@@ -89,7 +94,7 @@ export function ClientRetainerPanel({
           .from("client_retainers")
           .select("*")
           .eq("client_id", clientId)
-          .maybeSingle(),
+          .order("starts_on", { ascending: false }),
         supabase
           .from("billing_entities")
           .select("id,name")
@@ -112,7 +117,9 @@ export function ClientRetainerPanel({
       setLoading(false);
       return;
     }
-    const found = retainerResult.data as Retainer | null;
+    const allRetainers = (retainerResult.data ?? []) as Retainer[];
+    const found = allRetainers[0] ?? null;
+    setRetainers(allRetainers);
     setRetainer(found);
     setForm(
       found
@@ -127,6 +134,9 @@ export function ClientRetainerPanel({
               found.reference_hourly_rate == null
                 ? ""
                 : String(found.reference_hourly_rate),
+            included_hours:
+              found.included_hours == null ? "" : String(found.included_hours),
+            billing_interval_months: String(found.billing_interval_months ?? 1),
             notes: found.notes ?? "",
           }
         : empty(),
@@ -140,6 +150,23 @@ export function ClientRetainerPanel({
   useEffect(() => {
     void load();
   }, [load]);
+  function editTerms(item: Retainer | null) {
+    setRetainer(item);
+    setForm(item ? {
+      billing_entity_id:item.billing_entity_id,
+      active:item.active,
+      monthly_amount:String(item.monthly_amount),
+      currency:item.currency,
+      starts_on:item.starts_on,
+      ends_on:item.ends_on??"",
+      reference_hourly_rate:item.reference_hourly_rate==null?"":String(item.reference_hourly_rate),
+      included_hours:item.included_hours==null?"":String(item.included_hours),
+      billing_interval_months:String(item.billing_interval_months??1),
+      notes:item.notes??"",
+    } : empty());
+    setError("");
+    setNotice("");
+  }
   async function save() {
     if (!supabase) return;
     setSaving(true);
@@ -148,8 +175,11 @@ export function ClientRetainerPanel({
     const amount = Number(form.monthly_amount.replace(",", ".")),
       reference = form.reference_hourly_rate
         ? Number(form.reference_hourly_rate.replace(",", "."))
+        : null,
+      includedHours = form.included_hours
+        ? Number(form.included_hours.replace(",", "."))
         : null;
-    if (!form.billing_entity_id || !form.starts_on || !/^[A-Za-z]{3}$/.test(form.currency) || !Number.isFinite(amount) || amount < 0 || (reference!==null&&(!Number.isFinite(reference)||reference<0))) {
+    if (!form.billing_entity_id || !form.starts_on || !/^[A-Za-z]{3}$/.test(form.currency) || !Number.isFinite(amount) || amount < 0 || (reference!==null&&(!Number.isFinite(reference)||reference<0)) || (includedHours!==null&&(!Number.isFinite(includedHours)||includedHours<0))) {
       setError("Indique a Sociedade emissora, o início, a moeda e valores válidos.");
       setSaving(false);
       return;
@@ -164,6 +194,8 @@ export function ClientRetainerPanel({
       starts_on: form.starts_on,
       ends_on: form.ends_on || null,
       reference_hourly_rate: reference,
+      included_hours: includedHours,
+      billing_interval_months: Number(form.billing_interval_months),
       notes: form.notes.trim() || null,
       updated_at: new Date().toISOString(),
     };
@@ -175,37 +207,42 @@ export function ClientRetainerPanel({
       : await supabase.from("client_retainers").insert(payload);
     if (result.error) setError(result.error.message);
     else {
-      setNotice("Configuração da avença guardada.");
+      setNotice("Condições da avença guardadas sem apagar o histórico.");
       await load();
     }
     setSaving(false);
   }
   async function createPeriods() {
-    if (!supabase || !retainer) return;
+    if (!supabase || !retainers.length) return;
     setSaving(true);
     setError("");
-    const first = new Date(`${retainer.starts_on.slice(0, 7)}-01T12:00:00`),
-      last = retainer.ends_on
-        ? new Date(`${retainer.ends_on.slice(0, 7)}-01T12:00:00`)
+    const chronological = [...retainers].sort((a,b)=>a.starts_on.localeCompare(b.starts_on));
+    const first = new Date(`${chronological[0].starts_on.slice(0, 7)}-01T12:00:00`),
+      lastTerms = chronological[chronological.length-1],
+      last = lastTerms.ends_on
+        ? new Date(`${lastTerms.ends_on.slice(0, 7)}-01T12:00:00`)
         : new Date(),
       existing = new Set(charges.map((item) => item.period_start.slice(0, 7))),
       rows = [];
     for (
       const date = new Date(first);
       date <= last;
-      date.setMonth(date.getMonth() + 1)
+      date.setMonth(date.getMonth() + (termsForStep?.billing_interval_months??1))
     ) {
       const period = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      if (!existing.has(period))
+      const periodStart=`${period}-01`;
+      const terms=chronological.find(item=>item.starts_on<=periodStart&&(!item.ends_on||item.ends_on>=periodStart));
+      if (!existing.has(period)&&terms)
         rows.push({
           firm_id: firmId,
-          retainer_id: retainer.id,
+          retainer_id: terms.id,
           client_id: clientId,
-          billing_entity_id: retainer.billing_entity_id,
-          period_start: `${period}-01`,
-          amount: retainer.monthly_amount,
-          currency: retainer.currency,
+          billing_entity_id: terms.billing_entity_id,
+          period_start: periodStart,
+          amount: terms.monthly_amount,
+          currency: terms.currency,
         });
+      var termsForStep=terms;
     }
     if (!rows.length) {
       setNotice("Não existem mensalidades em falta.");
@@ -297,7 +334,7 @@ export function ClientRetainerPanel({
             valor individual.
           </p>
         </div>
-        {retainer && !readOnly && (
+        {retainers.length > 0 && !readOnly && (
           <button
             type="button"
             disabled={saving}
@@ -324,6 +361,24 @@ export function ClientRetainerPanel({
           {error}
         </p>
       )}
+      {retainers.length > 0 && (
+        <div className="mt-4 overflow-x-auto rounded-xl border border-border">
+          <table className="w-full min-w-[48rem] text-sm">
+            <thead className="bg-surface-subtle"><tr><th className="p-2 text-left">Vigência</th><th className="p-2 text-right">Valor mensal</th><th className="p-2 text-right">Horas incluídas</th><th className="p-2 text-left">Sociedade</th><th className="p-2 text-center">Estado</th><th className="p-2"></th></tr></thead>
+            <tbody>{retainers.map(item=><tr key={item.id} className={retainer?.id===item.id?'bg-secondary-soft':''}>
+              <td className="border-t border-border p-2">{item.starts_on} — {item.ends_on??'sem fim'}</td>
+              <td className="border-t border-border p-2 text-right">{money(item.monthly_amount,item.currency)}</td>
+              <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.billing_interval_months===1?'mês':`${item.billing_interval_months} meses`}`}</td>
+              <td className="border-t border-border p-2">{societies.find(s=>s.id===item.billing_entity_id)?.name??'—'}</td>
+              <td className="border-t border-border p-2 text-center">{item.active?'Activa':'Inactiva'}</td>
+              <td className="border-t border-border p-2 text-right"><button type="button" onClick={()=>editTerms(item)} className="rounded-lg border border-border px-3 py-2 font-semibold">Editar</button></td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+      )}
+      {!readOnly && retainers.length > 0 && (
+        <button type="button" onClick={()=>editTerms(null)} className="mt-3 min-h-10 rounded-lg border border-primary/40 px-3 font-semibold text-primary">+ Nova condição temporal</button>
+      )}
       <div>
         <fieldset
           disabled={readOnly || saving}
@@ -347,7 +402,7 @@ export function ClientRetainerPanel({
             </select>
           </label>
           <label className="text-sm font-semibold">
-            Valor mensal
+            Valor por período de facturação
             <input
               type="number"
               min="0"
@@ -358,6 +413,12 @@ export function ClientRetainerPanel({
               }
               className="control mt-1 w-full px-3"
             />
+          </label>
+          <label className="text-sm font-semibold">
+            Periodicidade da facturação
+            <select value={form.billing_interval_months} onChange={event=>setForm({...form,billing_interval_months:event.target.value})} className="control mt-1 w-full px-3">
+              <option value="1">Mensal</option><option value="2">Bimestral</option><option value="3">Trimestral</option><option value="6">Semestral</option><option value="12">Anual</option>
+            </select>
           </label>
           <label className="text-sm font-semibold">
             Início
@@ -393,6 +454,18 @@ export function ClientRetainerPanel({
               }
               className="control mt-1 w-full px-3"
             />
+          </label>
+          <label className="text-sm font-semibold">
+            Horas incluídas por período (opcional)
+            <input
+              type="number"
+              min="0"
+              step="0.25"
+              value={form.included_hours}
+              onChange={(event) => setForm({ ...form, included_hours: event.target.value })}
+              className="control mt-1 w-full px-3"
+            />
+            <span className="mt-1 block text-xs font-normal text-text-secondary">Permite comparar as horas realizadas com o limite acordado nesse período.</span>
           </label>
           <label className="text-sm font-semibold">
             Moeda
@@ -433,12 +506,12 @@ export function ClientRetainerPanel({
               disabled={saving}
               className="min-h-10 rounded-lg bg-primary px-4 font-semibold text-surface sm:col-span-2 sm:justify-self-end"
             >
-              {saving ? "A guardar…" : "Guardar avença"}
+              {saving ? "A guardar…" : retainer ? "Guardar esta condição" : "Adicionar condição"}
             </button>
           )}
         </fieldset>
       </div>
-      {retainer && (
+      {retainers.length > 0 && (
         <>
           <dl className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-lg bg-surface-subtle p-3">
@@ -454,7 +527,7 @@ export function ClientRetainerPanel({
               <dd className="mt-1 font-semibold">
                 {summary?.effectiveHourlyRate == null
                   ? "Sem horas facturadas"
-                  : money(summary.effectiveHourlyRate, retainer.currency)}
+                  : money(summary.effectiveHourlyRate, retainers[0].currency)}
               </dd>
             </div>
             <div className="rounded-lg bg-warning-soft p-3">
@@ -462,7 +535,7 @@ export function ClientRetainerPanel({
                 Avenças por facturar
               </dt>
               <dd className="mt-1 font-semibold">
-                {money(pending, retainer.currency)}
+                {money(pending, retainers[0].currency)}
               </dd>
             </div>
             <div className="rounded-lg bg-danger-soft p-3">
@@ -470,7 +543,7 @@ export function ClientRetainerPanel({
                 Facturado por liquidar
               </dt>
               <dd className="mt-1 font-semibold">
-                {money(unpaid, retainer.currency)}
+                {money(unpaid, retainers[0].currency)}
               </dd>
             </div>
           </dl>

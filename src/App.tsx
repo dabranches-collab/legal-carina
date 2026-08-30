@@ -18,8 +18,9 @@ const AdminPage=lazy(()=>import('./features/admin/AdminPage').then(module=>({def
 const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then(module=>({default:module.AdminLandingPage})))
 const AccessLogsPage=lazy(()=>import('./features/admin/AccessLogsPage').then(module=>({default:module.AccessLogsPage})))
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
+const RetainersPage=lazy(()=>import('./features/master-data/RetainersPage').then(module=>({default:module.RetainersPage})))
 
-const validViews:ViewId[] = ['overview','work','clients','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
+const validViews:ViewId[] = ['overview','work','clients','retainers','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 const ownerViews:ViewId[]=['admin-access-logs']
 function readLocation() {
@@ -79,7 +80,8 @@ export function AuthenticatedApplication() {
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage />
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
-  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')}/>
+  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')} onRetainers={()=>navigate('retainers')}/>
+  else if (view === 'retainers') content = <RetainersPage />
   else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
   else if (view === 'professionals') content = professional?<EntityDashboard key={`professional-${professional}`} kind="professional" initialSelectionLabel={professional} />:<ProfessionalLandingPage onSelect={(name)=>navigate('professionals',null,null,null,name)}/>
   else if (view === 'imports') content = <ImportWizard />
@@ -89,7 +91,7 @@ export function AuthenticatedApplication() {
   else if (view === 'admin-users') content = <AdminPage />
   else if (view === 'admin-access-logs') content = <AccessLogsPage />
   else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
-  return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
+  return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateRetainers={()=>navigate('retainers')} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
 }
 
 export default function App() {
