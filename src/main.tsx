@@ -2,6 +2,9 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { installQaDemoFetch } from './lib/qaDemoFetch'
+
+installQaDemoFetch()
 
 if (import.meta.env.DEV || import.meta.env.VITE_APP_ENV === 'test') {
   const params = new URLSearchParams(window.location.search)
