@@ -565,3 +565,4 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Os quatro exemplos solicitados foram criados na base real como notas de CARINA SANTOS e partilhados com `dabranches`: Lembrete e Documento para Consulta; Preparar reunião e Mensagem de voz para Edição.
 - A lista contém três itens; as notas Documento e Mensagem incluem, respectivamente, um recurso demonstrativo de imagem e áudio servido pelo frontend. A inserção é idempotente e a auditoria confirmou 4 notas, 3 itens, 2 recursos e 4 partilhas, sem alterar avenças.
 - Segurança de ficheiros, lint, TypeScript, 115/115 testes unitários e build aprovados para a versão 0.6.3.
+- Publicada em 2026-08-30 a partir do commit funcional `4a94ff6`, Cloudflare Version ID `91d12e25-f890-43e9-a8ca-179f78994685`. Produção confirmou HTTP 200, bundle `index-Dp9eifQ2.js`, cache `carina-legal-shell-0.6.3`, imagem com 1 338 479 bytes, áudio com 44 bytes e versão 0.6.3 visível no browser integrado.
