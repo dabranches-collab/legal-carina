@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Em consulta, uma ficha mostra apenas os campos que já têm conteúdo. */
+.master-data-fields[data-compact="true"] label:has(input:not([type="checkbox"])[value=""]),
+.master-data-fields[data-compact="true"] label:has(input:not([type="checkbox"]):placeholder-shown),
+.master-data-fields[data-compact="true"] label:has(textarea:empty) {
+  display: none;
+}
+
+.client-retainer[data-compact="true"] [aria-labelledby="retainer-monthly-usage-title"],
+.client-retainer[data-compact="true"] > details:last-of-type {
+  display: none;
+}
+
 @theme {
   --color-background: #f6f5f1;
   --color-surface: #ffffff;

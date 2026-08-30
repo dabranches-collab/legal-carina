@@ -534,3 +534,12 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - A ficha completa do movimento inclui agora os dois estados Incobrável e sincroniza-os com Facturado/Pago. A sessão real de PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, menus administrativos ausentes e Nota de Honorários/Cobrança com universos correctos no cliente sintético.
 - Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos de preview/produção omitidos como previsto.
 - Código funcional publicado a partir do commit `d0f0f77`: versão 0.4.6 em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`. Confirmação visual pública: login íntegro, versão correcta e nenhum erro de consola.
+
+## Lote 0.6.1 local — avenças e fichas compactas
+
+- Movimentos cobertos por avença foram excluídos de «Sem preço», por facturar, não pagos e estados históricos, tanto nos contadores como nos detalhes. COCKTAIL TEAM confirma 0 sem preço e 91 cobertos.
+- Fichas de dados base abrem em consulta compacta; «Editar» expande os campos, «Guardar alterações» só activa com mudanças e «Cancelar alterações» repõe os dados sem gravar.
+- Facturação da avença controla período, número/data de factura, vencimento e data de liquidação. O dashboard identifica as 172 h como histórico global de COCKTAIL TEAM e INFANTÁRIO DO POVO.
+- EBO: condição única activa corrigida directamente para início em 2021-01-01 e confirmada visualmente no editor.
+- Supabase remoto recebeu `exclude_retainers_from_financial_attention` e `add_retainer_charge_due_date`. Frontend continua apenas local; produção permanece 0.6.0.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 114/114 testes e build.

@@ -31,6 +31,7 @@ type Charge = {
   status: "pending" | "invoiced" | "paid" | "uncollectible";
   invoice_reference: string | null;
   invoice_date: string | null;
+  due_on: string | null;
   paid_on: string | null;
   notes: string | null;
 };
@@ -110,7 +111,7 @@ export function ClientRetainerPanel({
         supabase
           .from("retainer_charges")
           .select(
-            "id,period_start,amount,currency,status,invoice_reference,invoice_date,paid_on,notes",
+            "id,period_start,amount,currency,status,invoice_reference,invoice_date,due_on,paid_on,notes",
           )
           .eq("client_id", clientId)
           .order("period_start", { ascending: false }),
@@ -305,6 +306,7 @@ export function ClientRetainerPanel({
         status: next.status,
         invoice_reference: next.invoice_reference || null,
         invoice_date: next.invoice_date || null,
+        due_on: next.due_on || null,
         paid_on: next.paid_on || null,
         notes: next.notes || null,
         updated_at: new Date().toISOString(),
@@ -356,7 +358,8 @@ export function ClientRetainerPanel({
     );
   return (
     <section
-      className="mt-6 rounded-xl border border-border p-4"
+      className="client-retainer mt-6 rounded-xl border border-border p-4"
+      data-compact={readOnly ? "true" : "false"}
       aria-labelledby="retainer-title"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -605,7 +608,7 @@ export function ClientRetainerPanel({
             <div className="mt-3 grid gap-2">{yearlyUsage.map(([year,months],index)=>{const annualMinutes=months.reduce((sum,item)=>sum+item.minutes,0),annualEntries=months.reduce((sum,item)=>sum+item.entries,0);return <details key={year} open={index===0} className="rounded-lg border border-border"><summary className="flex cursor-pointer items-center justify-between gap-3 bg-surface-subtle px-3 py-2 font-semibold"><span>{year}</span><span className="text-sm tabular-nums">Subtotal anual: {hours(annualMinutes)} · {annualEntries} registos</span></summary><div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 lg:grid-cols-6">{months.sort((a,b)=>a.month.localeCompare(b.month)).map(item=><div key={item.month} className="rounded-lg border border-border p-2"><div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold capitalize">{monthLabel(`${item.month}-01`).split(' de ')[0]}</span><span className="text-[10px] text-text-secondary">{item.entries} reg.</span></div><strong className="mt-1 block text-sm tabular-nums">{hours(item.minutes)}</strong><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-secondary" style={{width:`${item.minutes/monthlyMaximum*100}%`}}/></div></div>)}</div></details>})}</div>
           </section>
           <details className="mt-4 rounded-xl border border-border"><summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Facturação da avença · {charges.length} períodos</summary><div className="overflow-x-auto border-t border-border">
-            <table className="w-full min-w-[58rem] text-sm">
+            <table className="w-full min-w-[68rem] text-sm">
               <thead className="bg-surface-subtle">
                 <tr>
                   <th className="p-2 text-left">Período</th>
@@ -613,6 +616,7 @@ export function ClientRetainerPanel({
                   <th className="p-2 text-center">Estado</th>
                   <th className="p-2 text-left">N.º factura</th>
                   <th className="p-2 text-center">Data factura</th>
+                  <th className="p-2 text-center">Vencimento</th>
                   <th className="p-2 text-center">Liquidação</th>
                 </tr>
               </thead>
@@ -642,6 +646,20 @@ export function ClientRetainerPanel({
                         <option value="paid">Liquidada</option>
                         <option value="uncollectible">Incobrável</option>
                       </select>
+                    </td>
+                    <td className="border-t border-border p-2">
+                      <input
+                        disabled={readOnly}
+                        aria-label={`Data de vencimento de ${monthLabel(charge.period_start)}`}
+                        type="date"
+                        value={charge.due_on ?? ""}
+                        onChange={(event) =>
+                          void updateCharge(charge.id, {
+                            due_on: event.target.value || null,
+                          })
+                        }
+                        className="control w-full px-2"
+                      />
                     </td>
                     <td className="border-t border-border p-2">
                       <input

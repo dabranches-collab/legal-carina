@@ -337,7 +337,7 @@ export function MasterDataPage({
   async function openEditor(row: Row) {
     setCreating(false);
     setEditing(row);
-    setMode("edit");
+    setMode("view");
     setDirty(false);
     setEditName(row.display_name ?? row.name ?? "");
     setEditActive(row.active);
@@ -576,6 +576,14 @@ export function MasterDataPage({
     setEditing(null);
     setCreating(false);
     setError("");
+  }
+  async function cancelChanges() {
+    setError("");
+    if (creating) {
+      closeEditor();
+      return;
+    }
+    if (editing) await openEditor(editing);
   }
   function updateProfile(
     type: "individual" | "company",
@@ -889,8 +897,18 @@ export function MasterDataPage({
     }
     setNotice(`${name} ${creating ? "criado" : "actualizado"}.`);
     setSaving(false);
-    closeEditor();
     await load();
+    if (creating) closeEditor();
+    else {
+      setEditing((current) => current ? {
+        ...current,
+        display_name: section === "billing_entities" ? current.display_name : name,
+        name: section === "billing_entities" ? name : current.name,
+        active: editActive,
+      } : current);
+      setDirty(false);
+      setMode("view");
+    }
   }
   const columns: TableColumn<Row>[] = [
     {
@@ -1223,7 +1241,12 @@ export function MasterDataPage({
                   </button>
                 </nav>
               )}
-              <fieldset disabled={mode === "view"} className="min-w-0">
+              <fieldset
+                disabled={mode === "view"}
+                data-compact={mode === "view" ? "true" : "false"}
+                onDoubleClick={() => { if (mode === "view") setMode("edit") }}
+                className="master-data-fields min-w-0"
+              >
                 <legend className="w-full pt-4">
                   {mode === "view" && (
                     <button
@@ -1950,6 +1973,16 @@ export function MasterDataPage({
               >
                 Fechar
               </button>
+              {dirty && (
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => void cancelChanges()}
+                  className="min-h-11 rounded-lg border border-border px-4 font-semibold disabled:opacity-50"
+                >
+                  Cancelar alterações
+                </button>
+              )}
               {mode === "view" ? (
                 <button
                   type="button"

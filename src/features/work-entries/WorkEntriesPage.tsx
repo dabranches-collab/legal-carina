@@ -573,7 +573,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       value: (row) => row.duration_minutes,
       render: (row) => <InlineDuration value={row.duration_minutes} onCommit={(value)=>saveInline(row,"duration_minutes",String(value))}/>,
     },
-    {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Facturação normal'},{value:'retainer',label:'Coberto por avença'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='retainer'?'Avença':'Normal'}</span>},
+    {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Fora da avença'},{value:'retainer',label:'Coberto por avença'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='retainer'?'Avença':'Fora da avença'}</span>},
     {
       id: "rate",
       label: "Valor/hora (EUR)",

@@ -501,3 +501,11 @@ Actualizado em: 2026-08-17
 - Migration candidata `20260824153000_add_billing_entity_logos.sql` criada localmente; não foi aplicada ao Supabase. Frontend 0.6.0 não publicado.
 - Validação local: segurança de ficheiros, lint, TypeScript, 107/107 testes unitários e build aprovados.
 - Avenças: modelo funcional discutido, mas ainda não implementado neste lote. Os movimentos cobertos deverão preservar horas sem valor individual; a análise calculará o valor/hora efectivo a partir do valor das avenças no período.
+
+# Versão 0.6.1 — avenças em validação local
+
+- Tratamento de avenças implementado com condições temporais, periodicidade financeira independente do período das horas, mapa mensal/anual, valor/hora efectivo e controlo das mensalidades.
+- Registos de avença preservam horas sem preço/valor individual e já não entram nas pendências financeiras normais.
+- Fichas de clientes, sociedades e responsáveis usam consulta compacta e edição explícita, com guardar condicionado a alterações e cancelamento restaurável.
+- EBO inicia a condição activa em 2021-01-01. Migrations remotas do lote aplicadas; frontend ainda não publicado.
+- Validação actual: segurança, lint, TypeScript, 114/114 testes e build aprovados; browser confirmou contadores, ficha EBO e cancelamento sem persistência.
