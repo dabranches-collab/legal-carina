@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { supabase } from "../../lib/supabase";
@@ -84,6 +85,7 @@ export function ClientRetainerPanel({
     [saving, setSaving] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const formRef=useRef<HTMLFieldSetElement>(null);
   const load = useCallback(async () => {
     if (!supabase) return;
     setLoading(true);
@@ -166,6 +168,10 @@ export function ClientRetainerPanel({
     } : empty());
     setError("");
     setNotice("");
+    window.requestAnimationFrame(()=>{
+      formRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
+      formRef.current?.querySelector<HTMLElement>('select,input,textarea')?.focus();
+    });
   }
   async function save() {
     if (!supabase) return;
@@ -371,7 +377,7 @@ export function ClientRetainerPanel({
               <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.billing_interval_months===1?'mês':`${item.billing_interval_months} meses`}`}</td>
               <td className="border-t border-border p-2">{societies.find(s=>s.id===item.billing_entity_id)?.name??'—'}</td>
               <td className="border-t border-border p-2 text-center">{item.active?'Activa':'Inactiva'}</td>
-              <td className="border-t border-border p-2 text-right"><button type="button" onClick={()=>editTerms(item)} className="rounded-lg border border-border px-3 py-2 font-semibold">Editar</button></td>
+              <td className="border-t border-border p-2 text-right"><button type="button" onClick={()=>editTerms(item)} className="rounded-lg border border-primary/50 bg-primary px-3 py-2 font-semibold text-white">Editar condição</button></td>
             </tr>)}</tbody>
           </table>
         </div>
@@ -380,9 +386,11 @@ export function ClientRetainerPanel({
         <button type="button" onClick={()=>editTerms(null)} className="mt-3 min-h-10 rounded-lg border border-primary/40 px-3 font-semibold text-primary">+ Nova condição temporal</button>
       )}
       <div>
+        <h4 className="mt-4 font-display text-lg font-semibold">{retainer?`Editar condição iniciada em ${retainer.starts_on}`:'Adicionar nova condição temporal'}</h4>
         <fieldset
+          ref={formRef}
           disabled={readOnly || saving}
-          className="mt-4 grid gap-3 sm:grid-cols-2"
+          className="mt-2 grid scroll-mt-4 gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:grid-cols-2"
         >
           <label className="text-sm font-semibold">
             Sociedade emissora
@@ -500,14 +508,12 @@ export function ClientRetainerPanel({
             />
           </label>
           {!readOnly && (
-            <button
-              type="button"
-              onClick={() => void save()}
-              disabled={saving}
-              className="min-h-10 rounded-lg bg-primary px-4 font-semibold text-surface sm:col-span-2 sm:justify-self-end"
-            >
-              {saving ? "A guardar…" : retainer ? "Guardar esta condição" : "Adicionar condição"}
-            </button>
+            <div className="flex flex-wrap items-center justify-end gap-3 sm:col-span-2">
+              <span className="text-xs text-text-secondary">Use este botão para guardar a avença; é independente do botão geral da ficha.</span>
+              <button type="button" onClick={() => void save()} disabled={saving} className="min-h-10 rounded-lg bg-primary px-4 font-semibold text-surface">
+                {saving ? "A guardar…" : retainer ? "Guardar esta condição da avença" : "Adicionar condição da avença"}
+              </button>
+            </div>
           )}
         </fieldset>
       </div>

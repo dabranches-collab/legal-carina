@@ -218,6 +218,7 @@ export function MasterDataPage({
     new Set(),
   );
   const loadSequenceRef = useRef(0);
+  const openedRecordRef = useRef<string | null>(null);
   useEffect(() => setSection(initialSection), [initialSection]);
   const load = useCallback(async () => {
     const db = supabase;
@@ -493,6 +494,17 @@ export function MasterDataPage({
           ],
     );
   }
+  useEffect(() => {
+    if (section !== "clients" || loading) return;
+    const recordId = new URLSearchParams(window.location.search).get("record");
+    if (!recordId || openedRecordRef.current === recordId) return;
+    const row = rows.find((item) => item.id === recordId);
+    if (!row) return;
+    openedRecordRef.current = recordId;
+    void openEditor(row);
+    // A abertura é intencionalmente accionada apenas quando a lista/ID pedido muda.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, rows, section]);
   async function openCreator() {
     setEditing(null);
     setCreating(true);
@@ -1145,9 +1157,9 @@ export function MasterDataPage({
                 >
                   {[
                     [
-                      "Todos os movimentos",
+                      "Ver todos os registos",
                       `?view=work&clientId=${editing.id}`,
-                      "Listar todos os movimentos deste Cliente.",
+                      "Abrir a tabela completa de registos filtrada por este Cliente.",
                     ],
                     [
                       "Não facturados",
@@ -1174,7 +1186,7 @@ export function MasterDataPage({
                       key={text}
                       href={href}
                       title={description}
-                      className="flex min-h-9 items-center justify-center rounded-lg border border-secondary/45 bg-secondary-soft px-2 text-center text-[11px] font-semibold leading-tight text-secondary hover:bg-secondary hover:text-white"
+                    className={`flex min-h-9 items-center justify-center rounded-lg border px-2 text-center text-[11px] font-semibold leading-tight hover:text-white ${text === "Ver todos os registos" ? "border-primary bg-primary text-white hover:bg-primary/90" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
                     >
                       {text}
                     </AppLink>
