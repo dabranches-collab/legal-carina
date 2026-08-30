@@ -515,3 +515,4 @@ Actualizado em: 2026-08-17
 - Validação móvel focada aprovada: 26/26 E2E, incluindo iPhone SE antigo a Pro Max, sem overflow horizontal e com Guardar/Cancelar acessíveis por scroll vertical. Unitários: 115/115.
 - Novo menu Notas depois de Registos, com cartões adaptados ao conteúdo, texto, anexos de imagem/áudio, gravação de voz, listas marcáveis, urgência e partilha individual em Consulta/Edição. O acesso é isolado por escritório e utilizador através de RLS; o Dono mantém visão global.
 - As migrations isoladas `add_workspace_notes` e `allow_note_policy_helpers` estão aplicadas ao projecto Supabase confirmado. A página real carrega sem erro de políticas e apresenta a lista de utilizadores activos para partilha.
+- Publicação 0.6.1 concluída em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e243f1e8-7017-4e7d-8772-e728b306a928`. Produção confirmou HTTP 200, bundle `index-CzuQpdVx.js` e service worker/cache `carina-legal-shell-0.6.1`.
