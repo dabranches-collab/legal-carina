@@ -399,8 +399,10 @@ export function ClientRetainerPanel({
           {error}
         </p>
       )}
-      <details open={termsOpen} onToggle={event=>setTermsOpen(event.currentTarget.open)} className="mt-4 rounded-xl border border-border bg-surface">
-        <summary className="cursor-pointer px-4 py-3 font-display text-lg font-semibold">Condições e edição da avença · {retainers.length} {retainers.length===1?'período':'períodos'}</summary>
+      <details open={termsOpen} onToggle={event=>setTermsOpen(event.currentTarget.open)} className="mt-4 overflow-hidden rounded-xl border-2 border-secondary bg-surface shadow-sm">
+        <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 bg-secondary px-4 py-3 font-display text-lg font-semibold text-white marker:text-white hover:bg-secondary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-white">
+          <span>{termsOpen?'Fechar':'Abrir'} condições e edição da avença</span><span className="rounded-full bg-white/20 px-3 py-1 font-sans text-xs">{retainers.length} {retainers.length===1?'período':'períodos'} · {termsOpen?'▲':'▼'}</span>
+        </summary>
         <div className="border-t border-border p-4">
       {retainers.length > 0 && (
         <div className="mt-4 overflow-x-auto rounded-xl border border-border">
