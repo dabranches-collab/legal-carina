@@ -1,11 +1,12 @@
 # Legal Carina — handover
 
-## Versão 0.7.1 — saldo por registos, em preparação
+## Versão 0.7.1 — saldo por registos, publicada
 
 - Correcção solicitada: a própria linha de Provisões apresenta consumo e saldo pelos serviços desde a data efectiva do primeiro depósito válido, incluindo esse dia. Não emitir notas para actualizar o saldo. A autorização anterior de emissão foi cancelada; zero notas emitidas confirmado.
 - Cálculo apenas de leitura, usando tabelas/RPCs e RLS existentes, sem migration ou nova branch Supabase paga. Soma o valor efectivo dos serviços elegíveis da mesma conta (Cliente/Sociedade/moeda), com IVA da sociedade por compatibilidade com 0.7.0; pergunta sobre o critério de IVA enviada ao utilizador. Exclui trabalho anterior ao depósito, futuro, pago/facturado, avenças, anulado/incobrável e serviços de notas já descontadas. Sinaliza registos sem preço.
 - Saldo visível nas primeiras colunas; histórico discrimina os registos e permite guardar mapa de consumo PDF. Removido o botão de emissão do painel de provisões. Os lançamentos contabilizados permanecem separados do acompanhamento calculado, sem alterar facturação ou emitir documentos de cobrança.
-- 127 testes unitários aprovados; cinco E2E de provisões aprovados antes do último ajuste de mapa PDF. Produção permanece 0.7.0 até concluir gates e publicar a correcção já solicitada.
+- Publicada em 02-09-2026 19:50:23 UTC, commit funcional aeb647b19f8f45b3b25b5da265ff834b7b9f1c88, branch codex/client-credit. Deployment ID 2caa6ea0-b4c2-4e15-87c9-563a993342d3, Version ID 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, activa a 100% em https://legal-carina.dabranches.workers.dev. HTTP 200, bundle index-C59OY9Is.js e cache 0.7.1 verificados directamente.
+- Gates aprovados: segurança, lint, TypeScript, 127 testes unitários, cinco E2E específicos incluindo mapa PDF, CI #50 completo, auditoria e secret scan; build/dry-run aprovados. Browser integrado em desktop, tablet e iPhone, claro/escuro, e PDF renderizado. Consulta real pós-publicação confirmou saldo calculado na linha e zero notas/consumos contabilizados; nenhuma escrita adicional de dados, migration ou recurso pago neste lote.
 
 ## Versão 0.7.0 — publicada em 02-09-2026
 
