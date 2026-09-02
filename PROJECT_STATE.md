@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Correcção de saldo inicial e proposta de apresentação — 03-09-2026
+
+- Por indicação expressa do utilizador, uma provisão histórica foi reclassificada como saldo inicial no dia anterior ao primeiro registo, através de estorno e reposição auditáveis no browser autenticado. Montante líquido preservado; data efectiva e recálculo confirmados por SQL e interface. Nenhuma nota emitida. Sem dados pessoais neste documento.
+- Pedido seguinte: apresentar primeiro a provisão e depois os registos por ordem cronológica, com saldo corrente e identificação da parcela não coberta quando o saldo se esgotar. Apenas proposta nesta fase; nenhuma alteração ao formato das notas implementada.
+- Código local e GitHub continuam na versão funcional 0.7.1 (aeb647b19f8f45b3b25b5da265ff834b7b9f1c88), branch codex/client-credit. Produção reconfirmada: deployment 2caa6ea0-b4c2-4e15-87c9-563a993342d3, version 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, 100%, https://legal-carina.dabranches.workers.dev. Este lote altera apenas dados autorizados e documentação; sem deploy, migration ou recurso temporário pago.
+
 ## Versão 0.7.1 — saldo por registos, publicada
 
 - Correcção solicitada: a própria linha de Provisões apresenta consumo e saldo pelos serviços desde a data efectiva do primeiro depósito válido, incluindo esse dia. Não emitir notas para actualizar o saldo. A autorização anterior de emissão foi cancelada; zero notas emitidas confirmado.
