@@ -6,7 +6,7 @@ import { HonorariumNoteModal } from './HonorariumNoteModal'
 
 const today=()=>new Date().toLocaleDateString('sv-SE')
 const button='min-h-11 rounded-lg border border-border px-3 text-sm font-semibold disabled:opacity-40'
-export function ClientCreditPanel({clientId,readOnly=false,onRequestEdit}:{clientId:string;readOnly?:boolean;onRequestEdit?:()=>void}){
+export function ClientCreditPanel({clientId,initialAccountId,readOnly=false,onRequestEdit}:{clientId:string;initialAccountId?:string;readOnly?:boolean;onRequestEdit?:()=>void}){
   const [accounts,setAccounts]=useState<CreditAccount[]>([]),[societies,setSocieties]=useState<{id:string;name:string}[]>([])
   const [accountId,setAccountId]=useState(''),[detail,setDetail]=useState<CreditDetail|null>(null)
   const [loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('')
@@ -20,9 +20,9 @@ export function ClientCreditPanel({clientId,readOnly=false,onRequestEdit}:{clien
     const result=await supabase.rpc('get_client_credit_accounts',{p_client_id:clientId})
     if(result.error)throw result.error
     const rows=(result.data??[]) as CreditAccount[];setAccounts(rows)
-    const next=preferred||rows[0]?.id||'';setAccountId(next)
+    const next=preferred||rows.find(row=>row.id===initialAccountId)?.id||rows[0]?.id||'';setAccountId(next)
     if(next){const response=await supabase.rpc('get_client_credit_detail',{p_account_id:next});if(response.error)throw response.error;setDetail(response.data as CreditDetail)}else setDetail(null)
-  },[clientId])
+  },[clientId,initialAccountId])
   useEffect(()=>{let active=true;setLoading(true);setError('');setDetail(null);void(async()=>{
     try{await refresh();if(supabase){const result=await supabase.from('billing_entities').select('id,name').eq('active',true).order('name');if(result.error)throw result.error;if(active)setSocieties(result.data??[])}}
     catch(cause){if(active)setError(message(cause))}finally{if(active)setLoading(false)}

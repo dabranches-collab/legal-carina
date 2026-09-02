@@ -2,7 +2,8 @@
 
 ## Versão 0.7.0 — provisões e edição por ficha, não publicada
 
-- Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista pré-filtrada por saldo positivo, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.
+- Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista de todas as contas que já tiveram provisões, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.
+- Ajuste de 02-09-2026: sem filtro de saldo positivo; linhas verdes com saldo e vermelhas esgotadas, recebimentos/descontos/saldo e barra de consumo visíveis. Histórico por botão ou duplo clique, seleccionando a conta correspondente à linha. TypeScript, lint, segurança, build sintético, 16 testes da tabela e 5 E2E aprovados; verificação visual integrada em claro/escuro, desktop/tablet/iPhone.
 - A nota abate a provisão ao total com IVA e apresenta valor a pagar/saldo restante. Persistência transaccional, pedidos idempotentes e estornos impedem duplo desconto ou saldo negativo. Registos já utilizados são excluídos de novos documentos; facturação fiscal mantém tratamento separado.
 - Clique simples selecciona e duplo clique abre a ficha editável; eliminados os editores dentro das células dos Registos.
 - Migration candidata `20260902180905_add_client_credit_ledger.sql` não aplicada remotamente. Teste PostgreSQL isolado aprovado com 24 verificações. Supabase ligado confirmado saudável; histórico de migrations consultado, divergência histórica preservada.

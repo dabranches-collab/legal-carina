@@ -1,11 +1,14 @@
 import {test,expect} from '@playwright/test'
 
-test('Provisões filtra saldos, abre por duplo clique e emite sem duplicar desconto',async({page})=>{
+test('Provisões mantém saldos esgotados, abre o histórico e emite sem duplicar desconto',async({page})=>{
  await page.goto('/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions')
  const table=page.getByRole('table',{name:'Clientes com provisões'})
- await expect(table).toContainText('Cliente Sintético');await expect(table).not.toContainText('Cliente Sem Saldo')
- await page.getByLabel('Apenas clientes com saldo disponível').uncheck();await expect(table).toContainText('Cliente Sem Saldo')
- await page.getByLabel('Apenas clientes com saldo disponível').check()
+ await expect(table).toContainText('Cliente Sintético');await expect(table).toContainText('Cliente Sem Saldo')
+ await expect(page.getByLabel('Apenas clientes com saldo disponível')).toHaveCount(0)
+ await expect(table).toContainText('Com saldo');await expect(table).toContainText('Saldo esgotado')
+ await page.getByRole('button',{name:/Histórico de Cliente Sem Saldo/}).click()
+ await expect(page.getByRole('dialog',{name:'Provisões · Cliente Sem Saldo'})).toContainText('Extracto de movimentos')
+ await page.getByRole('button',{name:'Fechar provisões'}).click()
  const row=page.getByRole('row',{name:'Abrir 00000000-0000-4000-8000-000000000050'})
  await row.click();await expect(page.getByRole('dialog')).toHaveCount(0)
  await row.dblclick();const panel=page.getByRole('region',{name:'Provisões para honorários'})

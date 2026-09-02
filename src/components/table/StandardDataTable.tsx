@@ -60,6 +60,8 @@ type Props<Row> = {
   stickyHeaderOffset?: number;
   showSearch?: boolean;
   resultNoun?: string;
+  rowHeight?: number;
+  rowClassName?: (row: Row) => string;
 };
 
 const fold = (value: Scalar) =>
@@ -399,6 +401,8 @@ export function StandardDataTable<Row>({
   stickyHeaderOffset = 104,
   showSearch = true,
   resultNoun = "resultados",
+  rowHeight = 34,
+  rowClassName,
 }: Props<Row>) {
   const { user } = useAuth();
   const legacyStorageKey = `carina.table.${id}`;
@@ -534,8 +538,8 @@ export function StandardDataTable<Row>({
   const virtualized=pageSize==="all"&&shown.length>250,
     virtualCount=40,
     rendered=printing?processed:virtualized?shown.slice(virtualStart,Math.min(shown.length,virtualStart+virtualCount)):shown,
-    virtualTop=virtualized?virtualStart*34:0,
-    virtualBottom=virtualized?Math.max(0,(shown.length-virtualStart-rendered.length)*34):0;
+    virtualTop=virtualized?virtualStart*rowHeight:0,
+    virtualBottom=virtualized?Math.max(0,(shown.length-virtualStart-rendered.length)*rowHeight):0;
   useEffect(()=>{setVirtualStart(0)},[pageSize,query,filters,sorts,universeKey]);
   useEffect(()=>{
     if(!virtualized)return;
@@ -543,13 +547,13 @@ export function StandardDataTable<Row>({
       const container=scrollContainer.current;if(!container)return;
       const documentTop=container.getBoundingClientRect().top+window.scrollY;
       const relativeTop=Math.max(0,window.scrollY-documentTop);
-      setVirtualStart(Math.max(0,Math.min(shown.length-virtualCount,Math.floor(relativeTop/34)-8)));
+      setVirtualStart(Math.max(0,Math.min(shown.length-virtualCount,Math.floor(relativeTop/rowHeight)-8)));
     };
     updateVirtualWindow();
     window.addEventListener("scroll",updateVirtualWindow,{passive:true});
     window.addEventListener("resize",updateVirtualWindow);
     return()=>{window.removeEventListener("scroll",updateVirtualWindow);window.removeEventListener("resize",updateVirtualWindow)};
-  },[virtualized,shown.length]);
+  },[virtualized,shown.length,rowHeight]);
   useEffect(() => {
     const header=headerElement.current,table=tableElement.current,tools=toolsElement.current,scroller=scrollContainer.current;
     if(!header||!table||!tools||!scroller)return;
@@ -1207,7 +1211,8 @@ export function StandardDataTable<Row>({
                         sibling.focus();
                       }
                     }}
-                    className={`group h-[2.125rem] odd:bg-surface-subtle even:bg-surface hover:bg-secondary-soft ${isActive ? "table-row-active outline outline-1 outline-secondary" : ""} ${onRowDoubleClick ? "cursor-pointer" : ""} focus-visible:outline focus-visible:outline-2 focus-visible:outline-secondary`}
+                    style={{ height: rowHeight }}
+                    className={`group ${rowClassName ? rowClassName(row) : "odd:bg-surface-subtle even:bg-surface"} hover:bg-secondary-soft ${isActive ? "table-row-active outline outline-1 outline-secondary" : ""} ${onRowDoubleClick ? "cursor-pointer" : ""} focus-visible:outline focus-visible:outline-2 focus-visible:outline-secondary`}
                     aria-label={onRowDoubleClick ? `Abrir ${key}` : undefined}
                   >
                     {onSelectionChange && (
