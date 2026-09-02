@@ -2,6 +2,8 @@
 
 ## Versão 0.7.0 — provisões e edição por ficha, em preparação
 
+- Gates de publicação concluídos no commit funcional acc7b2ac671e433add7f24e8d1a2cb392f91cff3: CI/secret scan verdes, ensaio remoto com 20/20 pgTAP e zero findings críticos. Backup físico confirmado. A migration foi aplicada apenas em staging. Evidências e limites em docs/database/provisions-070-validation.md; produção ainda 0.6.5 neste ponto.
+
 - Correcção adicional de QA: a demonstração sintética reconhece também o Supabase local configurado pelo CI; isolamento de produção mantido. Os seis E2E de provisões/isolamento passaram com a configuração exacta do CI, lint e TypeScript aprovados.
 
 - Publicação autorizada em 02-09-2026, em validação no PR #13. Gate identificou jsPDF 3.0.3 vulnerável: actualizado para 4.2.1, lockfile preservado e auditoria sem vulnerabilidades conhecidas. Corrigidos fixtures E2E antigos (universo completo/terminologia de registos) e versionamento do service worker em directórios de build alternativos. 122 unitários, 24 verificações PostgreSQL isoladas e 68 E2E passaram (1 cenário exclusivo do servidor Vite omitido no preview estático). Branch Supabase temporária autorizada para ensaio sem dados reais; não promover enquanto não validar esquema/políticas reais e CI.
