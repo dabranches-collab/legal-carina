@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Versão 0.7.0 — publicada em 02-09-2026
+
+- Produção confirmada em https://legal-carina.dabranches.workers.dev: commit 473650fa13e4c048e480253fdbdbd0685ae462b4, branch codex/client-credit, Deployment ID 6a768ae1-f1c8-4c3b-87e9-a89cc480bab6, Version ID 532a50bf-ab68-40f7-97b1-ce9c64b2608d, activa a 100% desde 19:28:30 UTC. Tag 0.7.0 e SHA guardados nos metadados Cloudflare; HTTP 200, bundle index-BdH1XRZh.js e cache carina-legal-shell-0.7.0 verificados sem cache. Sessão autenticada, menu Provisões e abertura da ficha por duplo clique confirmados no browser integrado.
+- Migration local 20260902180905_add_client_credit_ledger.sql aplicada isoladamente em produção como 20260902192704_add_client_credit_ledger. Quatro tabelas com RLS, sem SELECT anónimo ou INSERT directo authenticated, verificadas; advisors sem ERROR/críticos. Nenhuma reparação de staging promovida.
+- CI #48 e secret scan verdes no commit publicado; dry-run aprovado. Ensaio de staging: 20/20 pgTAP; PGlite: 24; unitários: 122. Documentação de validação e recuperação em docs/database/provisions-070-validation.md.
+- Branch Supabase temporária provisions-070-validation eliminada no fim do ensaio; confirmação de sucesso e lista apenas com main recebidas. Não permanece recurso temporário com custo horário.
+- Provisão histórica autorizada registada em produção com a data do depósito; nota de consumo preparada, ainda não emitida por bloqueio da revisão automática que exigiu confirmação expressa da emissão. Pedido concreto de confirmação enviado. Não há desconto efectuado neste ponto.
+
 ## Versão 0.7.0 — provisões e edição por ficha, não publicada
 
 - Gates de publicação concluídos no commit funcional acc7b2ac671e433add7f24e8d1a2cb392f91cff3: CI/secret scan verdes, ensaio remoto com 20/20 pgTAP e zero findings críticos. Backup físico confirmado. A migration foi aplicada apenas em staging. Evidências e limites em docs/database/provisions-070-validation.md; produção ainda 0.6.5 neste ponto.

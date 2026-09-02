@@ -20,4 +20,6 @@ Backup de produção confirmado por consulta Supabase: físico `1552463078`, COM
 
 A migration é aditiva. Em falha do frontend, repor a versão Cloudflare anterior `ac433c71-5464-4bb1-8894-ec490d41c740` (0.6.5), conservando o livro de provisões. Depois de existirem movimentos, não remover tabelas/notas nem repor um backup por rotina: corrigir por migration aditiva/estorno auditável. Não publicar reparações de reconstrução de staging em produção.
 
-Produção recebe exclusivamente a migration candidata após os gates; o carimbo remoto deve ser registado na entrega. A branch temporária deve ser eliminada no fim conforme autorizado.
+Produção recebeu exclusivamente a migration candidata como `20260902192704_add_client_credit_ledger`. RLS e ausência de escrita directa confirmadas, advisors de produção sem ERROR/críticos. Frontend 0.7.0 publicado a partir de `473650fa13e4c048e480253fdbdbd0685ae462b4`, CI #48 e secret scan aprovados. Deployment `6a768ae1-f1c8-4c3b-87e9-a89cc480bab6`, versão Cloudflare `532a50bf-ab68-40f7-97b1-ce9c64b2608d`, 100% desde 19:28:30 UTC.
+
+A branch temporária foi eliminada após o ensaio; o Supabase confirmou sucesso e a listagem posterior contém apenas a branch de produção. Não ficou recurso temporário a cobrar à hora.

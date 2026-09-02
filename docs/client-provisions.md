@@ -19,7 +19,7 @@
 
 ## Preparação e validação
 
-Migration candidata: `supabase/migrations/20260902180905_add_client_credit_ledger.sql`. **Não aplicada ao Supabase.** O histórico remoto foi consultado com `supabase migration list --linked`; a divergência histórica já documentada permanece. Não executar `db push` global.
+Migration: `supabase/migrations/20260902180905_add_client_credit_ledger.sql`, publicada isoladamente em 02-09-2026 como `20260902192704_add_client_credit_ledger`, após ensaio de staging com 20/20 pgTAP e CI verde. O histórico remoto foi consultado com `supabase migration list --linked`; a divergência histórica já documentada permanece. Não executar `db push` global. Evidências em `docs/database/provisions-070-validation.md`.
 
 O ensaio SQL usa PostgreSQL em memória (PGlite 0.5.8), dados sintéticos e um esquema mínimo que representa os contratos usados pela migration. Executar `node scripts/test-provisions-db.mjs <caminho-do-modulo-pglite>`; a biblioteca de ensaio não é uma dependência da aplicação. Este teste não substitui o ensaio contra o esquema completo e as políticas reais em staging antes de publicar.
 
