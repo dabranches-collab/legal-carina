@@ -1,5 +1,22 @@
 import { jsPDF } from 'jspdf'
 import { creditDate, creditKind, creditMoney, creditStatement, type CreditAccount, type ProvisionNote, type CreditMovement } from './credit'
+import type { CreditUsage } from './creditUsage'
+
+export function saveCreditUsagePdf(account:CreditAccount,usage:CreditUsage){
+ const doc=new jsPDF();let y=20
+ const line=(text:string,bold=false)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const part of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(part,15,y);y+=5}y+=2}
+ line('Acompanhamento da provisão',true);line(account.client_name);line(account.society_name)
+ line(`Registos desde ${usage.startsOn?creditDate(usage.startsOn):'o depósito'} até ${creditDate(new Date().toLocaleDateString('sv-SE'))}`)
+ line(`Recebido: ${creditMoney(account.received,account.currency)}`)
+ line(`Provisão utilizada: ${creditMoney(usage.consumed,account.currency)}`)
+ line(`Saldo após registos: ${creditMoney(usage.balance,account.currency)}`,true)
+ if(usage.excess>0)line(`Registos sem cobertura: ${creditMoney(usage.excess,account.currency)}`)
+ if(usage.missingPrice>0)line(`Saldo por apurar: ${usage.missingPrice} registos sem preço.`)
+ for(const row of usage.rows){line(`${creditDate(row.work_date)} · ${row.duration_minutes} min · ${row.effective_amount===null?'Sem preço':creditMoney(row.effective_amount,account.currency)}`,true);line(row.activity_description)}
+ line(`Honorários dos registos: ${creditMoney(usage.subtotal,account.currency)} · IVA: ${creditMoney(usage.vat,account.currency)}`)
+ line('Mapa de acompanhamento calculado com os valores actuais dos registos. Os serviços já descontados em notas anteriores não são contados novamente.')
+ doc.save(`acompanhamento-provisao-${new Date().toISOString().slice(0,10)}.pdf`)
+}
 
 export function createCreditPdf(account:CreditAccount,movements:CreditMovement[],from='',to=''){
   const statement=creditStatement(movements,from,to),doc=new jsPDF()
