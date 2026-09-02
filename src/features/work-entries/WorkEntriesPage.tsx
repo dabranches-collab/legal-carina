@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Icon } from "../../components/ui/Icon";
 import {
   StandardDataTable,
@@ -9,8 +8,6 @@ import { supabase } from "../../lib/supabase";
 import { withTransientRetry } from "../../lib/transientRetry";
 import { CreateWorkEntryModal } from "./CreateWorkEntryModal";
 import { EditWorkEntryModal } from "./EditWorkEntryModal";
-import { DurationSelect } from "./DurationSelect";
-import { getWorkEntryOptions } from "./workEntryCompatibility";
 
 type Entry = {
   id: string;
@@ -47,7 +44,6 @@ const attentionCountsCache=new Map<string,Record<string,number>>();
 const attentionCacheStorageKey='carina-work-attention-counts';
 const readStoredAttentionCounts=()=>{try{const value=sessionStorage.getItem(attentionCacheStorageKey);return value?JSON.parse(value) as Record<string,number>:{};}catch{return {}}};
 type Option = { id: string; label: string };
-type ClientProfileOption = { id: string; client_type: "individual" | "company"; client_code: string; display_name: string };
 type SearchMeta = {
   pageSize?: number;
   items: Entry[];
@@ -182,7 +178,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     }),
     [loading, setLoading] = useState(true),
     [error, setError] = useState("");
-  const [clientProfiles, setClientProfiles] = useState<ClientProfileOption[]>([]);
   const [search, setSearch] = useState(""),
     [query, setQuery] = useState(""),
     [year, setYear] = useState(""),
@@ -230,66 +225,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
   },[]);
   const [creating, setCreating] = useState(false),
     [editingId, setEditingId] = useState<string | null>(null);
-  const saveInline = useCallback(async (row: Entry, field: string, value: string) => {
-    if (!supabase) return;
-    setError("");
-    setNotice("");
-    const reason = requiresReason
-      ? window.prompt("Indique o motivo desta alteração para o registo de auditoria:")?.trim()
-      : "";
-    if (requiresReason && !reason) {
-      setError("A alteração não foi guardada. O Operador tem de indicar um motivo.");
-      setRefreshToken((current) => current + 1);
-      return;
-    }
-    const result = await supabase.rpc("update_work_entry_inline_audited", {
-      p_work_entry_id: row.id,
-      p_field: field,
-      p_value: value,
-      p_reason: reason || null,
-    });
-    if (result.error) {
-      const messages: Record<string, string> = {
-        "invoice date is required": "Preencha primeiro a Data da factura.",
-        "a paid movement must be invoiced": "Só é possível marcar como Pago depois de preencher a Data da factura.",
-        "enter the invoice date before assigning an invoice number": "Preencha primeiro a Data da factura antes de indicar o N.º da factura.",
-        "not authorized": "Não tem permissão para alterar este movimento.",
-      };
-      setError(messages[result.error.message] ?? result.error.message ?? "Não foi possível guardar a alteração.");
-      return;
-    }
-    const optionLabel=(options:{id:string;label:string}[])=>options.find(option=>option.id===value)?.label??null;
-    setRows(current=>current.flatMap(item=>{
-      if(item.id!==row.id)return [item];
-      const next={...item};
-      if(field==="billing_entity_id")next.billing_entity_name=optionLabel(meta.billingEntities);
-      else if(field==="professional_id")next.professional_name=optionLabel(meta.professionals)??item.professional_name;
-      else if(field==="activity_description")next.activity_description=value;
-      else if(field==="duration_minutes")next.duration_minutes=Number(value);
-      else if(field==="effective_hourly_rate")next.effective_hourly_rate=value===""?null:Number(value);
-      else if(field==="effective_amount")next.effective_amount=value===""?null:Number(value);
-      else if(field==="invoice_number")next.invoice_number=value||null;
-      else if(field==="invoice_date")next.invoice_date=value||null;
-      else if(field==="archive_status")next.archive_status=value||null;
-      else if(field==="observations")next.observations=value||null;
-      else if(field==="is_invoiced")next.is_invoiced=value==="true";
-      else if(field==="is_paid")next.is_paid=value==="true";
-      if(reviewIssue==="missing_society"&&field==="billing_entity_id"&&value)return [];
-      if(reviewIssue==="missing_price"&&(field==="effective_hourly_rate"||field==="effective_amount")&&value!=="")return [];
-      return [next];
-    }));
-    invalidateWorkUniverse();
-    setNotice("Alteração guardada e registada na auditoria.");
-    silentRefreshRef.current=true;
-    setRefreshToken((current) => current + 1);
-  }, [requiresReason,meta.billingEntities,meta.professionals,reviewIssue]);
-  useEffect(() => {
-    let active = true;
-    void getWorkEntryOptions().then((result) => {
-      if (active && result.data) setClientProfiles([...result.data.clientProfiles].sort((left,right)=>left.display_name.localeCompare(right.display_name,"pt-PT",{sensitivity:"base"})||left.client_type.localeCompare(right.client_type)||left.client_code.localeCompare(right.client_code,"pt-PT",{numeric:true})));
-    });
-    return () => { active = false; };
-  }, []);
   useEffect(() => {
     const timer = setTimeout(() => setQuery(search.trim()), 300);
     return () => clearTimeout(timer);
@@ -540,7 +475,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       kind: "date",
       essential: true,
       value: (row) => row.work_date,
-      render: (row) => <InlineInput type="date" value={row.work_date} onCommit={(value)=>saveInline(row,"work_date",value)}/> ,
     },
     {
       id: "client",
@@ -548,10 +482,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       sticky: true,
       suggestOptions: true,
       value: (row) => row.client_name,
-      render: (row) => {
-        const selected=clientProfiles.find(option=>option.client_code===row.client_code&&option.display_name===row.client_name);
-        return <InlineSelect value={selected?.id??""} options={clientProfiles.map(option=>[option.id,`${option.display_name} · ${option.client_code} · ${option.client_type==="individual"?"Particular":"Empresa"}`])} placeholder="Seleccionar cliente…" displayValue={row.client_name} onCommit={(value)=>value&&saveInline(row,"client_profile_id",value)}/>;
-      },
+
     },
     { id: "code", label: "Código (automático)", suggestOptions:true, value: (row) => row.client_code },
     {
@@ -560,14 +491,12 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       align: "left",
       suggestOptions: false,
       value: (row) => row.activity_description,
-      render: (row) => <InlineInput value={row.activity_description} onCommit={(value)=>saveInline(row,"activity_description",value)}/>,
     },
     {
       id: "responsible",
       label: "Responsável",
       filterOptions: meta.professionals.map(option=>({value:option.label,label:option.label})),
       value: (row) => row.professional_name,
-      render: (row) => <InlineSelect value={meta.professionals.find(option=>option.label===row.professional_name)?.id??""} options={meta.professionals.map(option=>[option.id,option.label])} placeholder="—" onCommit={(value)=>value&&saveInline(row,"professional_id",value)}/>,
     },
     {
       id: "duration",
@@ -575,7 +504,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       kind: "number",
       align: "right",
       value: (row) => row.duration_minutes,
-      render: (row) => <InlineDuration value={row.duration_minutes} onCommit={(value)=>saveInline(row,"duration_minutes",String(value))}/>,
     },
     {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Fora da avença'},{value:'retainer',label:'Coberto por avença'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='retainer'?'Avença':'Fora da avença'}</span>},
     {
@@ -584,7 +512,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       kind: "money",
       align: "right",
       value: (row) => row.effective_hourly_rate,
-      render: (row) => <InlineMoney value={row.effective_hourly_rate} onCommit={(value)=>saveInline(row,"effective_hourly_rate",value)}/>,
     },
     {
       id: "amount",
@@ -592,7 +519,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       kind: "money",
       align: "right",
       value: (row) => row.effective_amount,
-      render: (row) => <InlineMoney value={row.effective_amount} onCommit={(value)=>saveInline(row,"effective_amount",value)}/>,
     },
     {id:'expenses',label:'Despesas',kind:'money',align:'right',suggestOptions:false,value:row=>row.expense_amount??0,render:row=>{if(!row.expense_count)return <span>—</span>;const first=row.expense_notes?.[0]||'Sem observação',more=row.expense_count-1,details=row.expense_details??[];return <span title={details.join('\n')} aria-label={`${row.expense_count} ${row.expense_count===1?'despesa':'despesas'}: ${details.join('; ')}`} className="block max-w-52 cursor-help text-right"><span className="block tabular-nums font-semibold">{money.format(row.expense_amount??0)} · {row.expense_count}</span><span className="block truncate text-xs text-text-secondary">{first}{more>0?` · +${more}`:''}</span></span>}},
     {
@@ -600,38 +526,33 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       label: "Sociedade",
       filterOptions: [{value:"",label:"Sem sociedade"},...meta.billingEntities.map(option=>({value:option.label,label:option.label}))],
       value: (row) => row.billing_entity_name,
-      render: (row) => <InlineSelect value={meta.billingEntities.find(option=>option.label===row.billing_entity_name)?.id??""} options={meta.billingEntities.map(option=>[option.id,option.label])} placeholder="Sem sociedade" onCommit={(value)=>saveInline(row,"billing_entity_id",value)}/>,
     },
     {
       id: "invoiced",
       label: "Facturado",
       filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
       value: (row) => row.status === "uncollectible_uninvoiced" ? "Incobrável" : row.is_invoiced ? "Sim" : "Não",
-      render: (row) => <InlineSelect value={row.status === "uncollectible_uninvoiced" ? "uncollectible_uninvoiced" : String(row.is_invoiced)} options={[["true","Sim"],["false","Não"],["uncollectible_uninvoiced","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible_uninvoiced" ? "collection_status" : "is_invoiced",value)}/>,
     },
     {
       id: "invoiceNumber",
       label: "N.º factura",
       suggestOptions: true,
       value: (row) => row.invoice_number,
-      render: (row) => <InlineInput value={row.invoice_number??""} onCommit={(value)=>saveInline(row,"invoice_number",value)}/>,
     },
     {
       id: "invoiceDate",
       label: "Data factura",
       kind: "date",
       value: (row) => row.invoice_date,
-      render: (row) => <InlineInput type="date" value={row.invoice_date??""} onCommit={(value)=>saveInline(row,"invoice_date",value)}/>,
     },
     {
       id: "paid",
       label: "Pago",
       filterOptions: [{value:"Sim",label:"Sim"},{value:"Não",label:"Não"},{value:"Incobrável",label:"Incobrável"}],
       value: (row) => row.status === "uncollectible_invoiced" ? "Incobrável" : row.is_paid ? "Sim" : "Não",
-      render: (row) => <InlineSelect value={row.status === "uncollectible_invoiced" ? "uncollectible_invoiced" : String(row.is_paid)} options={[["true","Sim"],["false","Não"],["uncollectible_invoiced","Incobrável"]]} placeholder="—" onCommit={(value)=>value&&saveInline(row,value === "uncollectible_invoiced" ? "collection_status" : "is_paid",value)}/>,
     },
-    { id: "archive", label: "Arquivo", filterOptions:[{value:"",label:"Sem arquivo"},...archives.map(([value,label])=>({value,label}))], value: (row) => row.archive_status, render:(row)=><InlineSelect value={row.archive_status??""} options={archives} placeholder="Sem arquivo" onCommit={(value)=>saveInline(row,"archive_status",value)}/> },
-    { id: "notes", label: "Observações", suggestOptions:false, value: (row) => row.observations, render:(row)=><InlineInput value={row.observations??""} onCommit={(value)=>saveInline(row,"observations",value)}/> },
+    { id: "archive", label: "Arquivo", filterOptions:[{value:"",label:"Sem arquivo"},...archives.map(([value,label])=>({value,label}))], value: (row) => row.archive_status },
+    { id: "notes", label: "Observações", suggestOptions:false, value: (row) => row.observations },
   ];
   return (
     <div className="space-y-4">
@@ -816,7 +737,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         showSearch={false}
         resultNoun="registos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
-        requireActiveRowForCellActions
       />
       {creating && (
         <CreateWorkEntryModal
@@ -847,34 +767,4 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       )}
     </div>
   );
-}
-
-function InlineInput({value,onCommit,type="text"}:{value:string;onCommit:(value:string)=>void;type?:"text"|"date"}){
- const [draft,setDraft]=useState(value)
- const [editing,setEditing]=useState(false)
- useEffect(()=>setDraft(value),[value])
- if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 w-full min-w-0 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{type==='date'&&value?new Date(`${value}T00:00:00`).toLocaleDateString('pt-PT'):value||'—'}</button>
- if(type==='date')return <span onClick={event=>event.stopPropagation()} className="inline-flex items-center gap-1"><input autoFocus type="date" value={draft} onFocus={event=>{try{event.currentTarget.showPicker()}catch{}}} onClick={event=>{event.stopPropagation();try{event.currentTarget.showPicker()}catch{}}} onKeyDown={event=>event.preventDefault()} onPaste={event=>event.preventDefault()} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1 text-center text-xs"/><button type="button" disabled={!draft} title="Limpar a data" onMouseDown={event=>event.preventDefault()} onClick={()=>{setDraft('');setEditing(false);if(value)onCommit('')}} className="h-7 rounded border border-border px-1 text-[0.65rem] disabled:opacity-30">Limpar</button></span>
- return <input autoFocus type="text" value={draft} onClick={event=>event.stopPropagation()} onKeyDown={event=>{event.stopPropagation();if(event.key==='Enter')event.currentTarget.blur();if(event.key==='Escape'){setDraft(value);setEditing(false)}}} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==value)onCommit(draft)}} className="control h-7 min-w-20 px-1.5 text-center text-xs"/>
-}
-function InlineMoney({value,onCommit}:{value:number|null;onCommit:(value:string)=>void}){
- const [draft,setDraft]=useState(value==null?'':String(value))
- const [editing,setEditing]=useState(false)
- useEffect(()=>setDraft(value==null?'':String(value)),[value])
- if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="financial-value min-h-7 whitespace-nowrap px-1 text-xs hover:rounded hover:bg-secondary-soft">{value==null?'—':money.format(value)}</button>
- return <span className="inline-flex items-center gap-1"><input autoFocus type="number" min="0" step="0.01" inputMode="decimal" value={draft} onClick={event=>event.stopPropagation()} onKeyDown={event=>{event.stopPropagation();if(event.key==='Enter')event.currentTarget.blur();if(event.key==='Escape'){setDraft(value==null?'':String(value));setEditing(false)}}} onChange={event=>setDraft(event.target.value)} onBlur={()=>{setEditing(false);if(draft!==(value==null?'':String(value)))onCommit(draft)}} className="control financial-value h-7 w-20 px-1.5 text-right text-xs"/><span className="financial-value text-[0.65rem]">EUR</span></span>
-}
-function InlineSelect({value,options,placeholder,displayValue,onCommit}:{value:string;options:readonly (readonly [string,string])[];placeholder:string;displayValue?:string;onCommit:(value:string)=>void}){
- const [editing,setEditing]=useState(false)
- const label=displayValue??options.find(([optionValue])=>optionValue===value)?.[1]??placeholder
- if(!editing)return <button type="button" onClick={event=>{event.stopPropagation();setEditing(true)}} className="min-h-7 w-full min-w-0 truncate px-1 text-xs hover:rounded hover:bg-secondary-soft">{label}</button>
- return <select autoFocus value={value} onClick={event=>event.stopPropagation()} onBlur={()=>setEditing(false)} onChange={event=>{setEditing(false);onCommit(event.target.value)}} className="control h-7 w-full min-w-20 px-1 text-center text-xs"><option value="">{placeholder}</option>{options.map(([optionValue,optionLabel])=><option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select>
-}
-function InlineDuration({value,onCommit}:{value:number;onCommit:(value:number)=>void}){
- const [draft,setDraft]=useState(value)
- const [open,setOpen]=useState(false)
- useEffect(()=>setDraft(value),[value])
- const days=Math.floor(draft/1440),hours=Math.floor((draft%1440)/60),minutes=draft%60
- const close=(save:boolean)=>{setOpen(false);if(save&&draft!==value)onCommit(draft)}
- return <><button type="button" onClick={event=>{event.stopPropagation();setOpen(true)}} className="min-h-7 whitespace-nowrap px-1 text-xs hover:rounded hover:bg-secondary-soft">{days?`${days} d `:''}{hours?`${hours} h `:''}{minutes} min</button>{open&&createPortal(<div className="fixed inset-0 z-[95] grid place-items-center bg-navigation/15 p-4" onMouseDown={()=>close(true)}><div className="w-full max-w-xs rounded-xl border border-border bg-surface p-4 shadow-2xl" onMouseDown={event=>event.stopPropagation()}><p className="mb-3 text-sm font-semibold">Duração</p><DurationSelect value={draft} onChange={setDraft}/><div className="mt-4 flex justify-end gap-2"><button type="button" onClick={()=>close(false)} className="control min-h-9 px-3 text-xs">Cancelar</button><button type="button" onClick={()=>close(true)} className="min-h-9 rounded-lg bg-secondary px-3 text-xs font-semibold text-surface">Aplicar</button></div></div></div>,document.body)}</>
 }

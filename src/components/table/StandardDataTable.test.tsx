@@ -107,15 +107,14 @@ describe('StandardDataTable',()=>{
     expect(renderedRows[1]).toHaveClass('table-row-active')
   })
 
-  test('numa tabela editável o primeiro clique selecciona e só o segundo activa a célula',async()=>{
+  test('cliques simples só seleccionam e duplo clique abre a ficha',async()=>{
     const user=userEvent.setup(),edit=vi.fn()
-    const editable:TableColumn<Row>[]=[{...columns[0],render:row=><button type="button" onClick={()=>edit(row.id)}>{row.name}</button>},...columns.slice(1)]
-    render(<StandardDataTable id="guarded-edit" label="Tabela editável protegida" rows={rows} columns={editable} rowKey={row=>row.id} requireActiveRowForCellActions/>)
-    const action=screen.getByRole('button',{name:'Álvaro'})
-    await user.click(action)
+    render(<StandardDataTable id="record-edit" label="Tabela de fichas" rows={rows} columns={columns} rowKey={row=>row.id} onRowDoubleClick={edit}/>)
+    const cell=screen.getByText('Álvaro')
+    await user.click(cell);await user.click(cell)
     expect(edit).not.toHaveBeenCalled()
-    expect(action.closest('tr')).toHaveAttribute('aria-selected','true')
-    await user.click(action)
+    expect(cell.closest('tr')).toHaveAttribute('aria-selected','true')
+    await user.dblClick(cell)
     expect(edit).toHaveBeenCalledOnce()
   })
 

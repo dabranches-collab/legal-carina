@@ -57,7 +57,6 @@ type Props<Row> = {
   totalRows?: number;
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
-  requireActiveRowForCellActions?: boolean;
   stickyHeaderOffset?: number;
   showSearch?: boolean;
   resultNoun?: string;
@@ -397,7 +396,6 @@ export function StandardDataTable<Row>({
   totalRows,
   universeKey = "",
   onRowDoubleClick,
-  requireActiveRowForCellActions = false,
   stickyHeaderOffset = 104,
   showSearch = true,
   resultNoun = "resultados",
@@ -1185,16 +1183,11 @@ export function StandardDataTable<Row>({
                     key={key}
                     tabIndex={0}
                     aria-selected={isSelected}
-                    onClickCapture={(event) => {
-                      const interactive=(event.target as Element).closest('button,input,select,textarea,a');
-                      if(requireActiveRowForCellActions&&!isActive&&interactive){
-                        event.preventDefault();
-                        event.stopPropagation();
-                      }
+                    onClickCapture={() => {
                       setActiveRow(key);
                     }}
                     onFocus={(event) => {
-                      if(!requireActiveRowForCellActions||event.target===event.currentTarget)setActiveRow(key);
+                      if(event.target===event.currentTarget)setActiveRow(key);
                     }}
                     onDoubleClick={() => onRowDoubleClick?.(row)}
                     onKeyDown={(event) => {

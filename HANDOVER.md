@@ -1,5 +1,19 @@
 # Legal Carina — handover
 
+## Versão 0.7.0 — provisões e edição por ficha, em preparação
+
+- Branch `codex/client-credit`, baseada no checkout limpo `1120068db17b674e3fbc417e74f55543226f82a9`, sincronizado com `origin/codex/reconcile-full-import` após `fetch`. `origin/main` permanece 99 commits atrás dessa base; não foi feito merge ou alteração de produção.
+- Novo separador **Provisões** na ficha do Cliente e submenu **Clientes > Provisões**, depois de Avenças. A lista usa pesquisa/filtros/exportação comuns e começa com saldo positivo; não retira clientes de Particulares/Empresas.
+- Saldo inicial e reforços por Cliente/Sociedade; a emissão da Nota de Honorários desconta a provisão no total com IVA, permite cobertura parcial e guarda nota/registos/valores. Novo download é idempotente. Extracto por período, cópia discriminativa e estorno auditável disponíveis na ficha. Registos de notas activas ficam fora de novas notas/cobranças; facturação fiscal não é alterada automaticamente.
+- Edição: clique simples selecciona, duplo clique abre a ficha; removida toda a edição de células nos Registos. Clientes/Sociedades/Responsáveis abrem editáveis, com Guardar condicionado a alterações.
+- Migration `20260902180905_add_client_credit_ledger.sql` apenas local/GitHub: **não aplicada ao Supabase**. `supabase migration list --linked` executado/revisto; permanece a divergência histórica conhecida. Projecto `vtvvqyebigflgqccbqsw` confirmado `ACTIVE_HEALTHY` por consulta directa. Ensaio isolado em PostgreSQL/PGlite 0.5.8: 24 verificações, incluindo repetição, dupla emissão, saldo parcial, estorno, RLS e bloqueio de alterações ao serviço. Esquema completo/políticas reais de staging e CI são gates ainda necessários antes de publicar.
+- Browser integrado aberto com demonstração sintética em `http://127.0.0.1:4193/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions`; estado apenas em memória. Servidor estático usado porque Vite na porta 4192 ficou sem responder. Não foram usados dados de clientes reais.
+- Validação visual em claro/escuro, desktop/iPhone e PDFs renderizados; fluxo de provisões aprovado em 320, 390, 768 e 1440 px. E2E: 5 cenários de provisões, 9 de fichas/permissões e 14 iPhone aprovados; o cenário `/iphone-preview` foi omitido por ser exclusivo do servidor Vite.
+- **Produção CONFIRMADA e preservada:** 0.6.5, URL `https://legal-carina.dabranches.workers.dev`, Version ID `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100% em consulta Wrangler de 02-09-2026. Deployment ID documentado `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af`; commit funcional associado `f77e58a` pelo handover/GitHub. Nenhum deploy, migration ou escrita de dados remota neste lote. Publicação requer ordem explícita **publica**.
+- Detalhes e limites: `docs/client-provisions.md`.
+
+- Verificação final: segurança de ficheiros, lint sem avisos, TypeScript, 122/122 testes unitários e build aprovados. Os comandos foram executados pelos entrypoints locais instalados, equivalentes aos scripts pnpm, após o wrapper pnpm ficar preso a tentativas de rede.
+
 ## Versão 0.6.5 — carregamento dos Registos publicada
 
 - Corrigido o alerta transitório `TypeError: Failed to fetch` ao entrar em «Registos»: a consulta repete automaticamente apenas falhas de rede transitórias e conserva o estado «A recolher os registos…» durante as tentativas.

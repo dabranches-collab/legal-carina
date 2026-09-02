@@ -1,5 +1,16 @@
 # Estado do projecto
 
+## Versão 0.7.0 — provisões e edição por ficha, não publicada
+
+- Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista pré-filtrada por saldo positivo, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.
+- A nota abate a provisão ao total com IVA e apresenta valor a pagar/saldo restante. Persistência transaccional, pedidos idempotentes e estornos impedem duplo desconto ou saldo negativo. Registos já utilizados são excluídos de novos documentos; facturação fiscal mantém tratamento separado.
+- Clique simples selecciona e duplo clique abre a ficha editável; eliminados os editores dentro das células dos Registos.
+- Migration candidata `20260902180905_add_client_credit_ledger.sql` não aplicada remotamente. Teste PostgreSQL isolado aprovado com 24 verificações. Supabase ligado confirmado saudável; histórico de migrations consultado, divergência histórica preservada.
+- Demonstração local no browser integrado, porta 4193, só com dados sintéticos. 28 E2E aplicáveis aprovados entre provisões, fichas/permissões e iPhone; 1 cenário exclusivo de Vite omitido. PDF e extracto revistos por renderização.
+- Produção permanece em 0.6.5: Version ID Cloudflare confirmada `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100%, URL `https://legal-carina.dabranches.workers.dev`, em 02-09-2026. Deployment ID `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af` e commit funcional `f77e58a` associados no handover anterior. CI, staging com esquema real e gates de publicação pendentes; não publicar sem **publica**.
+
+- Verificação final: segurança de ficheiros, lint sem avisos, TypeScript, 122/122 testes unitários e build aprovados. Os comandos foram executados pelos entrypoints locais instalados, equivalentes aos scripts pnpm, após o wrapper pnpm ficar preso a tentativas de rede.
+
 ## Versão 0.6.5 — carregamento dos Registos publicada
 
 - A entrada em «Registos» mantém agora o estado informativo «A recolher os registos…» enquanto repete automaticamente falhas transitórias de rede como `Failed to fetch`; o alerta com «Tentar novamente» só aparece se as três tentativas falharem.
