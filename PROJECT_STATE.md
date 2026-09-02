@@ -1,5 +1,47 @@
 # Estado do projecto
 
+## Correcção de saldo inicial e proposta de apresentação — 03-09-2026
+
+- Por indicação expressa do utilizador, uma provisão histórica foi reclassificada como saldo inicial no dia anterior ao primeiro registo, através de estorno e reposição auditáveis no browser autenticado. Montante líquido preservado; data efectiva e recálculo confirmados por SQL e interface. Nenhuma nota emitida. Sem dados pessoais neste documento.
+- Pedido seguinte: apresentar primeiro a provisão e depois os registos por ordem cronológica, com saldo corrente e identificação da parcela não coberta quando o saldo se esgotar. Apenas proposta nesta fase; nenhuma alteração ao formato das notas implementada.
+- Código local e GitHub continuam na versão funcional 0.7.1 (aeb647b19f8f45b3b25b5da265ff834b7b9f1c88), branch codex/client-credit. Produção reconfirmada: deployment 2caa6ea0-b4c2-4e15-87c9-563a993342d3, version 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, 100%, https://legal-carina.dabranches.workers.dev. Este lote altera apenas dados autorizados e documentação; sem deploy, migration ou recurso temporário pago.
+
+## Versão 0.7.1 — saldo por registos, publicada
+
+- Correcção solicitada: a própria linha de Provisões apresenta consumo e saldo pelos serviços desde a data efectiva do primeiro depósito válido, incluindo esse dia. Não emitir notas para actualizar o saldo. A autorização anterior de emissão foi cancelada; zero notas emitidas confirmado.
+- Cálculo apenas de leitura, usando tabelas/RPCs e RLS existentes, sem migration ou nova branch Supabase paga. Soma o valor efectivo dos serviços elegíveis da mesma conta (Cliente/Sociedade/moeda), com IVA da sociedade por compatibilidade com 0.7.0; pergunta sobre o critério de IVA enviada ao utilizador. Exclui trabalho anterior ao depósito, futuro, pago/facturado, avenças, anulado/incobrável e serviços de notas já descontadas. Sinaliza registos sem preço.
+- Saldo visível nas primeiras colunas; histórico discrimina os registos e permite guardar mapa de consumo PDF. Removido o botão de emissão do painel de provisões. Os lançamentos contabilizados permanecem separados do acompanhamento calculado, sem alterar facturação ou emitir documentos de cobrança.
+- Publicada em 02-09-2026 19:50:23 UTC, commit funcional aeb647b19f8f45b3b25b5da265ff834b7b9f1c88, branch codex/client-credit. Deployment ID 2caa6ea0-b4c2-4e15-87c9-563a993342d3, Version ID 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, activa a 100% em https://legal-carina.dabranches.workers.dev. HTTP 200, bundle index-C59OY9Is.js e cache 0.7.1 verificados directamente.
+- Gates aprovados: segurança, lint, TypeScript, 127 testes unitários, cinco E2E específicos incluindo mapa PDF, CI #50 completo, auditoria e secret scan; build/dry-run aprovados. Browser integrado em desktop, tablet e iPhone, claro/escuro, e PDF renderizado. Consulta real pós-publicação confirmou saldo calculado na linha e zero notas/consumos contabilizados; nenhuma escrita adicional de dados, migration ou recurso pago neste lote.
+
+## Versão 0.7.0 — publicada em 02-09-2026
+
+- Produção confirmada em https://legal-carina.dabranches.workers.dev: commit 473650fa13e4c048e480253fdbdbd0685ae462b4, branch codex/client-credit, Deployment ID 6a768ae1-f1c8-4c3b-87e9-a89cc480bab6, Version ID 532a50bf-ab68-40f7-97b1-ce9c64b2608d, activa a 100% desde 19:28:30 UTC. Tag 0.7.0 e SHA guardados nos metadados Cloudflare; HTTP 200, bundle index-BdH1XRZh.js e cache carina-legal-shell-0.7.0 verificados sem cache. Sessão autenticada, menu Provisões e abertura da ficha por duplo clique confirmados no browser integrado.
+- Migration local 20260902180905_add_client_credit_ledger.sql aplicada isoladamente em produção como 20260902192704_add_client_credit_ledger. Quatro tabelas com RLS, sem SELECT anónimo ou INSERT directo authenticated, verificadas; advisors sem ERROR/críticos. Nenhuma reparação de staging promovida.
+- CI #48 e secret scan verdes no commit publicado; dry-run aprovado. Ensaio de staging: 20/20 pgTAP; PGlite: 24; unitários: 122. Documentação de validação e recuperação em docs/database/provisions-070-validation.md.
+- Branch Supabase temporária provisions-070-validation eliminada no fim do ensaio; confirmação de sucesso e lista apenas com main recebidas. Não permanece recurso temporário com custo horário.
+- Provisão histórica autorizada registada em produção com a data do depósito; nota de consumo preparada, ainda não emitida por bloqueio da revisão automática que exigiu confirmação expressa da emissão. Pedido concreto de confirmação enviado. Não há desconto efectuado neste ponto.
+
+## Versão 0.7.0 — provisões e edição por ficha, não publicada
+
+- Gates de publicação concluídos no commit funcional acc7b2ac671e433add7f24e8d1a2cb392f91cff3: CI/secret scan verdes, ensaio remoto com 20/20 pgTAP e zero findings críticos. Backup físico confirmado. A migration foi aplicada apenas em staging. Evidências e limites em docs/database/provisions-070-validation.md; produção ainda 0.6.5 neste ponto.
+
+- Correcção adicional de QA: a demonstração sintética reconhece também o Supabase local configurado pelo CI; isolamento de produção mantido. Os seis E2E de provisões/isolamento passaram com a configuração exacta do CI, lint e TypeScript aprovados.
+
+- Publicação autorizada em 02-09-2026; PR #13 em validação. jsPDF actualizado para 4.2.1 para resolver o bloqueio da auditoria; instalação frozen e auditoria sem vulnerabilidades conhecidas. Fixtures E2E alinhados com o carregamento integral e termo Registos; service worker versionado também em builds com outDir alternativo. 122 unitários, 24 verificações SQL isoladas e 68 E2E aprovados, um cenário exclusivo de Vite omitido no preview estático. Staging com esquema/políticas reais e CI ainda em curso.
+
+- Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista de todas as contas que já tiveram provisões, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.
+- Ajuste de 02-09-2026: sem filtro de saldo positivo; linhas verdes com saldo e vermelhas esgotadas, recebimentos/descontos/saldo e barra de consumo visíveis. Histórico por botão ou duplo clique, seleccionando a conta correspondente à linha. TypeScript, lint, segurança, build sintético, 16 testes da tabela e 5 E2E aprovados; verificação visual integrada em claro/escuro, desktop/tablet/iPhone.
+- A nota abate a provisão ao total com IVA e apresenta valor a pagar/saldo restante. Persistência transaccional, pedidos idempotentes e estornos impedem duplo desconto ou saldo negativo. Registos já utilizados são excluídos de novos documentos; facturação fiscal mantém tratamento separado.
+- Clique simples selecciona e duplo clique abre a ficha editável; eliminados os editores dentro das células dos Registos.
+- Migration candidata `20260902180905_add_client_credit_ledger.sql` não aplicada remotamente. Teste PostgreSQL isolado aprovado com 24 verificações. Supabase ligado confirmado saudável; histórico de migrations consultado, divergência histórica preservada.
+- Demonstração local no browser integrado, porta 4193, só com dados sintéticos. 28 E2E aplicáveis aprovados entre provisões, fichas/permissões e iPhone; 1 cenário exclusivo de Vite omitido. PDF e extracto revistos por renderização.
+- Produção permanece em 0.6.5: Version ID Cloudflare confirmada `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100%, URL `https://legal-carina.dabranches.workers.dev`, em 02-09-2026. Deployment ID `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af` e commit funcional `f77e58a` associados no handover anterior. CI, staging com esquema real e gates de publicação pendentes; não publicar sem **publica**.
+
+- Verificação final: segurança de ficheiros, lint sem avisos, TypeScript, 122/122 testes unitários e build aprovados. Os comandos foram executados pelos entrypoints locais instalados, equivalentes aos scripts pnpm, após o wrapper pnpm ficar preso a tentativas de rede.
+
+- GitHub confirmado após push: commit funcional `7020e845aed3d53f288511ad1ebfea06b16c7999`, branch `codex/client-credit`, HEAD local e remoto coincidentes em 02-09-2026. Este registo documental segue num commit adicional.
+
 ## Versão 0.6.5 — carregamento dos Registos publicada
 
 - A entrada em «Registos» mantém agora o estado informativo «A recolher os registos…» enquanto repete automaticamente falhas transitórias de rede como `Failed to fetch`; o alerta com «Tentar novamente» só aparece se as três tentativas falharem.

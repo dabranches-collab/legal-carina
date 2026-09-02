@@ -33,7 +33,7 @@ test.beforeEach(async ({ page }) => {
       await route.fulfill({
         contentType: 'application/json',
         body: JSON.stringify({
-          items: workRows.slice(0, 100),
+          items: workRows,
           total: workRows.length,
           professionals: [{ id: 'qa-professional', label: 'OPERADOR TESTE' }],
           billingEntities: [{ id: 'qa-billing', label: 'SOCIEDADE TESTE A' }],
@@ -49,7 +49,7 @@ test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) =
   await page.setViewportSize({ width: 1440, height: 800 })
   await page.goto('/?qa-iphone=1&view=work')
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
-  await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+  await expect(table.getByText('180 registos de 180')).toBeVisible()
 
   const tools = table.locator('.table-tools')
   const header = table.locator('thead')
@@ -92,7 +92,7 @@ test('cabeçalho e filtros mantêm o centro exacto das células com larguras per
   await page.addInitScript(()=>localStorage.setItem('carina.table.anonymous.work-entries',JSON.stringify({widths:{date:113,client:287,clientCode:121,activity:419,responsible:173,duration:137,rate:151,amount:149,expenses:207,society:193}})))
   await page.goto('/?qa-iphone=1&view=work')
   const table=page.getByRole('region',{name:'Registos de trabalho'})
-  await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+  await expect(table.getByText('180 registos de 180')).toBeVisible()
   for(const zoom of [0.8,1,1.25,1.5,2]){
     await page.evaluate(value=>{document.body.style.zoom=String(value);window.scrollTo(0,1200)},zoom)
     await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))))
@@ -115,7 +115,7 @@ test('sticky compacto não ocupa o ecrã num iPhone e filtros abrem dentro do vi
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/?qa-iphone=1&view=work&safe-top=47&safe-bottom=34&theme=dark')
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
-  await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+  await expect(table.getByText('180 registos de 180')).toBeVisible()
   const clientHeader = table.getByRole('columnheader', { name: /Cliente/ })
   await clientHeader.getByRole('button', { name: 'Filtrar…' }).click()
   const panel = page.getByRole('dialog', { name: 'Filtro Cliente' })
@@ -139,7 +139,7 @@ test('zoom equivalente a 150% liberta as pendências e conserva a tabela fixa', 
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
   const tools = table.locator('.table-tools')
   const header = table.locator('thead')
-  await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+  await expect(table.getByText('180 registos de 180')).toBeVisible()
 
   await page.evaluate(() => window.scrollTo(0, 650))
   await expect(filters).not.toBeInViewport()
@@ -190,7 +190,7 @@ for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/?qa-iphone=1&view=work')
     const table = page.getByRole('region', { name: 'Registos de trabalho' })
-    await expect(table.getByText('180 movimentos de 180')).toBeVisible()
+    await expect(table.getByText('180 registos de 180')).toBeVisible()
     const tools = table.locator('.table-tools')
     const header = table.locator('thead')
     await page.evaluate((factor) => { document.body.style.zoom = String(factor) }, zoom)

@@ -3,10 +3,12 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { readFileSync, writeFileSync } from 'node:fs'
 import packageJson from './package.json' with { type: 'json' }
+import { resolve } from 'node:path'
 
 // A importação torna package.json uma dependência observada pelo Vite: ao subir a
 // versão durante o desenvolvimento, o servidor reinicia e actualiza a indicação local.
 const packageVersion = packageJson.version
+let buildDirectory = resolve('dist')
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,8 +19,11 @@ export default defineConfig({
     {
       name: 'version-service-worker',
       apply: 'build',
+      configResolved(config) {
+        buildDirectory = resolve(config.root, config.build.outDir)
+      },
       closeBundle() {
-        const serviceWorkerUrl = new URL('./dist/sw.js', import.meta.url)
+        const serviceWorkerUrl = resolve(buildDirectory, 'sw.js')
         const serviceWorker = readFileSync(serviceWorkerUrl, 'utf8')
         writeFileSync(serviceWorkerUrl, serviceWorker.replaceAll('__APP_VERSION__', packageVersion))
       },

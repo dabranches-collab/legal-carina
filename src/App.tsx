@@ -18,10 +18,11 @@ const AdminPage=lazy(()=>import('./features/admin/AdminPage').then(module=>({def
 const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then(module=>({default:module.AdminLandingPage})))
 const AccessLogsPage=lazy(()=>import('./features/admin/AccessLogsPage').then(module=>({default:module.AccessLogsPage})))
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
+const ProvisionsPage=lazy(()=>import('./features/clients/ProvisionsPage').then(module=>({default:module.ProvisionsPage})))
 const RetainersPage=lazy(()=>import('./features/master-data/RetainersPage').then(module=>({default:module.RetainersPage})))
 const NotesPage=lazy(()=>import('./features/notes/NotesPage').then(module=>({default:module.NotesPage})))
 
-const validViews:ViewId[] = ['overview','work','notes','clients','retainers','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
+const validViews:ViewId[] = ['overview','work','notes','clients','retainers','provisions','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 const ownerViews:ViewId[]=['admin-access-logs']
 function readLocation() {
@@ -83,6 +84,7 @@ export function AuthenticatedApplication() {
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
   else if (view === 'notes') content = <NotesPage />
   else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')} onRetainers={()=>navigate('retainers')}/>
+  else if (view === 'provisions') content = <ProvisionsPage />
   else if (view === 'retainers') content = <RetainersPage />
   else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
   else if (view === 'professionals') content = professional?<EntityDashboard key={`professional-${professional}`} kind="professional" initialSelectionLabel={professional} />:<ProfessionalLandingPage onSelect={(name)=>navigate('professionals',null,null,null,name)}/>

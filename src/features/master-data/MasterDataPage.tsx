@@ -15,6 +15,7 @@ import { supabase } from "../../lib/supabase";
 import { ClientDocumentsPanel } from "../clients/ClientDocumentsPanel";
 import { AppLink } from "../../components/ui/AppLink";
 import { SocietyLogoCropper } from "./SocietyLogoCropper";
+import { ClientCreditPanel } from "../clients/ClientCreditPanel";
 import { ClientRetainerPanel } from "./ClientRetainerPanel";
 import { ClientCredentialsPanel } from "./ClientCredentialsPanel";
 import { withTransientRetry } from "../../lib/transientRetry";
@@ -187,7 +188,7 @@ export function MasterDataPage({
     [profiles, setProfiles] = useState<Profile[]>(emptyProfiles),
     [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
-  const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"credentials"|"documents">("general");
+  const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"provisions"|"credentials"|"documents">("general");
   const [mode, setMode] = useState<"view" | "edit">("view"),
     [details, setDetails] = useState<ClientDetails>(emptyDetails),
     [identifiers, setIdentifiers] = useState<Identifier[]>([]);
@@ -338,7 +339,7 @@ export function MasterDataPage({
   async function openEditor(row: Row) {
     setCreating(false);
     setEditing(row);
-    setMode("view");
+    setMode("edit");
     setDirty(false);
     setClientPage("general");
     setEditName(row.display_name ?? row.name ?? "");
@@ -1245,7 +1246,7 @@ export function MasterDataPage({
               )}
               {section === "clients" && (
                 <nav aria-label="Páginas da ficha do cliente" className="sticky top-0 z-20 -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
-                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-white shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
+                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['provisions','Provisões'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-white shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
                 </nav>
               )}
               <fieldset
@@ -1962,6 +1963,7 @@ export function MasterDataPage({
                   />
                 </>
               )}{" "}
+              {section === "clients" && editing && clientPage === "provisions" && <ClientCreditPanel key={editing.id} clientId={editing.id} readOnly={mode === "view"} onRequestEdit={()=>setMode("edit")}/>}
               {section === "clients" && editing && clientPage === "credentials" && <ClientCredentialsPanel clientId={editing.id} readOnly={mode === "view"}/>}
               {section === "clients" && editing && clientPage === "documents" && <ClientDocumentsPanel firmId={editing.firm_id} clientId={editing.id} readOnly={mode === "view"}/>}
               {error && (
