@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.6.5 — carregamento dos Registos em preparação
+
+- Corrigido o alerta transitório `TypeError: Failed to fetch` ao entrar em «Registos»: a consulta repete automaticamente apenas falhas de rede transitórias e conserva o estado «A recolher os registos…» durante as tentativas.
+- Erros persistentes e funcionais continuam a apresentar o aviso com «Tentar novamente»; não são ocultados nem repetidos indiscriminadamente.
+- Código apenas local na branch `codex/reconcile-full-import`; sem commit, push, deploy Cloudflare ou alteração do Supabase nesta sessão. Produção permanece na versão 0.6.4, Version ID `9988876c-ef87-4ae5-9a69-ac2f6609aa71`.
+- Validação: ficheiros sensíveis, lint, TypeScript, 115/115 testes e build de produção aprovados.
+
 ## Avenças temporais e tratamento — base ligada em 30-08-2026
 
 - Migração `add_retainer_terms_history` aplicada ao Supabase ligado: condições históricas sem sobreposição, periodicidade mensal/bimestral/trimestral/semestral/anual, horas incluídas por ciclo e resumo de consumo corrente.

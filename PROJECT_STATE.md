@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Versão 0.6.5 — carregamento dos Registos em preparação
+
+- A entrada em «Registos» mantém agora o estado informativo «A recolher os registos…» enquanto repete automaticamente falhas transitórias de rede como `Failed to fetch`; o alerta com «Tentar novamente» só aparece se as três tentativas falharem.
+- Alteração exclusivamente local, sem deploy nem alteração do Supabase. Produção permanece na versão 0.6.4.
+- Gates aprovados: ficheiros sensíveis, lint, TypeScript, 115/115 testes e build de produção.
+
 ## Avenças temporais e tratamento — 30-08-2026
 
 - Backend ligado já tem condições temporais de avença, periodicidade de facturação e cálculo do consumo de horas do ciclo actual.

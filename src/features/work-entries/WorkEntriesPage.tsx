@@ -6,6 +6,7 @@ import {
   type TableColumn,
 } from "../../components/table/StandardDataTable";
 import { supabase } from "../../lib/supabase";
+import { withTransientRetry } from "../../lib/transientRetry";
 import { CreateWorkEntryModal } from "./CreateWorkEntryModal";
 import { EditWorkEntryModal } from "./EditWorkEntryModal";
 import { DurationSelect } from "./DurationSelect";
@@ -350,19 +351,22 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         setLoading(false);
         return;
       }
+      const client = supabase;
       let metadata;
       try {
-        metadata = clientType === "mixed"
-          ? { data: await searchMixedClientEntries(searchArgs), error: null }
-          : uncollectibleOnly
-            ? await supabase.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
-            : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"||reviewIssue==="retainer"||reviewIssue==="missing_price"
-              ? await supabase.rpc("get_attention_work_entries",{p_kind:reviewIssue,p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
-            : await supabase.rpc("search_work_entries", {
-              p_page: 1,
-              p_page_size: 100,
-              ...searchArgs,
-            });
+        metadata = await withTransientRetry(async () =>
+          clientType === "mixed"
+            ? { data: await searchMixedClientEntries(searchArgs), error: null }
+            : uncollectibleOnly
+              ? await client.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
+              : reviewIssue==="uninvoiced"||reviewIssue==="unpaid"||reviewIssue==="historical"||reviewIssue==="retainer"||reviewIssue==="missing_price"
+                ? await client.rpc("get_attention_work_entries",{p_kind:reviewIssue,p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
+                : await client.rpc("search_work_entries", {
+                  p_page: 1,
+                  p_page_size: 100,
+                  ...searchArgs,
+                }),
+        );
       } catch (cause) {
         if (active) {
           setError(cause instanceof Error ? cause.message : "Não foi possível carregar os movimentos.");
@@ -779,7 +783,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         )}
         <p className="mt-1.5 text-[11px] leading-tight text-text-secondary">
           {loading
-            ? "A actualizar…"
+            ? "A recolher os registos…"
             : `${number.format(meta.total)} movimentos acessíveis`}
         </p>
       </section>
@@ -810,7 +814,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         universeKey={JSON.stringify(searchArgs)}
         stickyHeaderOffset={tableStickyOffset}
         showSearch={false}
-        resultNoun="movimentos"
+        resultNoun="registos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
         requireActiveRowForCellActions
       />
