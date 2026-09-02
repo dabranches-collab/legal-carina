@@ -2,6 +2,8 @@
 
 ## Versão 0.7.0 — provisões e edição por ficha, não publicada
 
+- Correcção adicional de QA: a demonstração sintética reconhece também o Supabase local configurado pelo CI; isolamento de produção mantido. Os seis E2E de provisões/isolamento passaram com a configuração exacta do CI, lint e TypeScript aprovados.
+
 - Publicação autorizada em 02-09-2026; PR #13 em validação. jsPDF actualizado para 4.2.1 para resolver o bloqueio da auditoria; instalação frozen e auditoria sem vulnerabilidades conhecidas. Fixtures E2E alinhados com o carregamento integral e termo Registos; service worker versionado também em builds com outDir alternativo. 122 unitários, 24 verificações SQL isoladas e 68 E2E aprovados, um cenário exclusivo de Vite omitido no preview estático. Staging com esquema/políticas reais e CI ainda em curso.
 
 - Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista de todas as contas que já tiveram provisões, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.

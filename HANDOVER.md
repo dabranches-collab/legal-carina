@@ -2,6 +2,8 @@
 
 ## Versão 0.7.0 — provisões e edição por ficha, em preparação
 
+- Correcção adicional de QA: a demonstração sintética reconhece também o Supabase local configurado pelo CI; isolamento de produção mantido. Os seis E2E de provisões/isolamento passaram com a configuração exacta do CI, lint e TypeScript aprovados.
+
 - Publicação autorizada em 02-09-2026, em validação no PR #13. Gate identificou jsPDF 3.0.3 vulnerável: actualizado para 4.2.1, lockfile preservado e auditoria sem vulnerabilidades conhecidas. Corrigidos fixtures E2E antigos (universo completo/terminologia de registos) e versionamento do service worker em directórios de build alternativos. 122 unitários, 24 verificações PostgreSQL isoladas e 68 E2E passaram (1 cenário exclusivo do servidor Vite omitido no preview estático). Branch Supabase temporária autorizada para ensaio sem dados reais; não promover enquanto não validar esquema/políticas reais e CI.
 
 - Branch `codex/client-credit`, baseada no checkout limpo `1120068db17b674e3fbc417e74f55543226f82a9`, sincronizado com `origin/codex/reconcile-full-import` após `fetch`. `origin/main` permanece 99 commits atrás dessa base; não foi feito merge ou alteração de produção.

@@ -19,9 +19,10 @@ export function installQaDemoFetch(){
  if(!(import.meta.env.DEV||import.meta.env.VITE_APP_ENV==='test')||params.get('qa-demo')!=='1')return
  const provisions=params.get('qa-provisions')==='1'?createQaProvisionData():null
  const nativeFetch=window.fetch.bind(window)
+ const configuredOrigin=import.meta.env.VITE_SUPABASE_URL?new URL(import.meta.env.VITE_SUPABASE_URL).origin:null
  window.fetch=async(input,init)=>{
   const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,window.location.href)
-  if(!url.hostname.endsWith('.supabase.co')||!url.pathname.startsWith('/rest/v1/'))return nativeFetch(input,init)
+  if((url.origin!==configuredOrigin&&!url.hostname.endsWith('.supabase.co'))||!url.pathname.startsWith('/rest/v1/'))return nativeFetch(input,init)
   const rpc=url.pathname.match(/\/rest\/v1\/rpc\/([^/]+)/)?.[1]
   if(provisions){try{const args=typeof init?.body==='string'?JSON.parse(init.body):{};return new Response(JSON.stringify(provisions(rpc,url.pathname.split('/').at(-1)??'',args)),{status:200,headers:{'Content-Type':'application/json'}})}catch(cause){return new Response(JSON.stringify({message:cause instanceof Error?cause.message:'Operação inválida.'}),{status:400,headers:{'Content-Type':'application/json'}})}}
   const payload=rpc?(demoRpc[rpc]??[]):[]
