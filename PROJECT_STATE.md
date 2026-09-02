@@ -11,6 +11,8 @@
 
 - Verificação final: segurança de ficheiros, lint sem avisos, TypeScript, 122/122 testes unitários e build aprovados. Os comandos foram executados pelos entrypoints locais instalados, equivalentes aos scripts pnpm, após o wrapper pnpm ficar preso a tentativas de rede.
 
+- GitHub confirmado após push: commit funcional `7020e845aed3d53f288511ad1ebfea06b16c7999`, branch `codex/client-credit`, HEAD local e remoto coincidentes em 02-09-2026. Este registo documental segue num commit adicional.
+
 ## Versão 0.6.5 — carregamento dos Registos publicada
 
 - A entrada em «Registos» mantém agora o estado informativo «A recolher os registos…» enquanto repete automaticamente falhas transitórias de rede como `Failed to fetch`; o alerta com «Tentar novamente» só aparece se as três tentativas falharem.
