@@ -2,6 +2,8 @@
 
 ## Versão 0.7.0 — provisões e edição por ficha, não publicada
 
+- Publicação autorizada em 02-09-2026; PR #13 em validação. jsPDF actualizado para 4.2.1 para resolver o bloqueio da auditoria; instalação frozen e auditoria sem vulnerabilidades conhecidas. Fixtures E2E alinhados com o carregamento integral e termo Registos; service worker versionado também em builds com outDir alternativo. 122 unitários, 24 verificações SQL isoladas e 68 E2E aprovados, um cenário exclusivo de Vite omitido no preview estático. Staging com esquema/políticas reais e CI ainda em curso.
+
 - Em preparação na branch `codex/client-credit`: separador Provisões na ficha, submenu abaixo de Avenças, lista de todas as contas que já tiveram provisões, saldo inicial/reforços, desconto na Nota de Honorários, histórico, cópia discriminativa e extracto PDF. Clientes permanecem nas categorias existentes.
 - Ajuste de 02-09-2026: sem filtro de saldo positivo; linhas verdes com saldo e vermelhas esgotadas, recebimentos/descontos/saldo e barra de consumo visíveis. Histórico por botão ou duplo clique, seleccionando a conta correspondente à linha. TypeScript, lint, segurança, build sintético, 16 testes da tabela e 5 E2E aprovados; verificação visual integrada em claro/escuro, desktop/tablet/iPhone.
 - A nota abate a provisão ao total com IVA e apresenta valor a pagar/saldo restante. Persistência transaccional, pedidos idempotentes e estornos impedem duplo desconto ou saldo negativo. Registos já utilizados são excluídos de novos documentos; facturação fiscal mantém tratamento separado.
