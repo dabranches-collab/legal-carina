@@ -1,11 +1,12 @@
 # Legal Carina — handover
 
-## Versão 0.6.5 — carregamento dos Registos em preparação
+## Versão 0.6.5 — carregamento dos Registos publicada
 
 - Corrigido o alerta transitório `TypeError: Failed to fetch` ao entrar em «Registos»: a consulta repete automaticamente apenas falhas de rede transitórias e conserva o estado «A recolher os registos…» durante as tentativas.
 - Erros persistentes e funcionais continuam a apresentar o aviso com «Tentar novamente»; não são ocultados nem repetidos indiscriminadamente.
-- Código apenas local na branch `codex/reconcile-full-import`; sem commit, push, deploy Cloudflare ou alteração do Supabase nesta sessão. Produção permanece na versão 0.6.4, Version ID `9988876c-ef87-4ae5-9a69-ac2f6609aa71`.
-- Validação: ficheiros sensíveis, lint, TypeScript, 115/115 testes e build de produção aprovados.
+- Publicada em 02-09-2026 a partir do commit funcional `f77e58a`, branch `codex/reconcile-full-import`: Deployment ID `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af` e Version ID `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100% em `https://legal-carina.dabranches.workers.dev`. Supabase não foi alterado.
+- Verificação sem cache: HTTP 200, bundle `/assets/index-BeVkmjPK.js` e service worker/cache `carina-legal-shell-0.6.5`.
+- Validação: ficheiros sensíveis, lint, TypeScript, 115/115 testes, build e dry-run aprovados. A matriz E2E local foi interrompida após o Chromium abortar a navegação para o servidor local antes de chegar à aplicação (`ERR_ABORTED`), limitação já documentada neste computador; o smoke test online foi aprovado.
 
 ## Avenças temporais e tratamento — base ligada em 30-08-2026
 

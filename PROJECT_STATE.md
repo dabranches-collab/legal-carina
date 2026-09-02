@@ -1,10 +1,10 @@
 # Estado do projecto
 
-## Versão 0.6.5 — carregamento dos Registos em preparação
+## Versão 0.6.5 — carregamento dos Registos publicada
 
 - A entrada em «Registos» mantém agora o estado informativo «A recolher os registos…» enquanto repete automaticamente falhas transitórias de rede como `Failed to fetch`; o alerta com «Tentar novamente» só aparece se as três tentativas falharem.
-- Alteração exclusivamente local, sem deploy nem alteração do Supabase. Produção permanece na versão 0.6.4.
-- Gates aprovados: ficheiros sensíveis, lint, TypeScript, 115/115 testes e build de produção.
+- Publicada em 02-09-2026 a partir do commit `f77e58a`: Deployment ID `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af`, Version ID `ac433c71-5464-4bb1-8894-ec490d41c740`, bundle `index-BeVkmjPK.js` e cache PWA 0.6.5. Supabase não foi alterado.
+- Gates aprovados: ficheiros sensíveis, lint, TypeScript, 115/115 testes, build e dry-run. A matriz E2E local foi interrompida porque o Chromium abortou a navegação para o servidor local antes de chegar à aplicação (`ERR_ABORTED`), limitação já documentada neste computador; o smoke test online confirmou HTTP 200 e os artefactos 0.6.5 activos a 100%.
 
 ## Avenças temporais e tratamento — 30-08-2026
 
