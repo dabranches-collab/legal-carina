@@ -1243,7 +1243,7 @@ export function MasterDataPage({
                       key={text}
                       href={href}
                       title={description}
-                    className={`flex min-h-9 items-center justify-center rounded-lg border px-2 text-center text-[11px] font-semibold leading-tight hover:text-white ${text === "Ver todos os registos" ? "border-primary bg-primary text-white hover:bg-primary/90" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
+                    className={`flex min-h-9 items-center justify-center rounded-lg border px-2 text-center text-[11px] font-semibold leading-tight hover:text-white ${text === "Ver todos os registos" ? "border-primary bg-primary text-surface hover:bg-primary/90" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
                     >
                       {text}
                     </AppLink>
@@ -1282,7 +1282,7 @@ export function MasterDataPage({
               )}
               {section === "clients" && (
                 <nav aria-label="Páginas da ficha do cliente" className="sticky top-0 z-20 -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
-                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['provisions','Provisões'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-white shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
+                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['provisions','Provisões'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-surface shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
                 </nav>
               )}
               <fieldset

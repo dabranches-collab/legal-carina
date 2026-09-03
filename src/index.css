@@ -213,7 +213,7 @@ main .overscroll-contain { overscroll-behavior: auto; }
 .dashboard-summary-pair > section { display: flex; min-width: 0; flex-direction: column; }
 .dashboard-summary-pair > section > div:last-child { flex: 1; grid-auto-rows: 1fr; }
 
-.record-save { background: var(--color-success); border-color: var(--color-success); color: #fff; }
-.record-cancel { background: var(--color-danger); border-color: var(--color-danger); color: #fff; }
+.record-save { background: var(--color-success); border-color: var(--color-success); color: var(--color-surface); }
+.record-cancel { background: var(--color-danger); border-color: var(--color-danger); color: var(--color-surface); }
 .record-save:not(:disabled):hover, .record-cancel:not(:disabled):hover { filter: brightness(.9); }
 .record-save:disabled, .record-cancel:disabled { background: var(--color-surface-subtle); border-color: var(--color-border); color: var(--color-text-secondary); cursor: not-allowed; opacity: .55; }
