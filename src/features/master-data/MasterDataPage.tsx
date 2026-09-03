@@ -173,8 +173,14 @@ const identifierLabels: Record<Identifier["identifier_type"], string> = {
 export function MasterDataPage({
   initialSection = "clients",
   clientTypeFilter = null,
+  focusedRecordId,
+  onDismiss,
+  onRecordSaved,
 }: {
   initialSection?: Section;
+  focusedRecordId?: string;
+  onDismiss?:()=>void;
+  onRecordSaved?:()=>void;
   clientTypeFilter?: "individual" | "company" | "mixed" | null;
 }) {
   const [section, setSection] = useState<Section>(initialSection),
@@ -253,14 +259,13 @@ export function MasterDataPage({
         : section === "clients"
           ? "id,firm_id,display_name,client_code,client_type,active"
           : "id,firm_id,display_name,active";
-    const { data, error: failure } = await withTransientRetry(() =>
-      db
-        .from(section)
-        .select(fields)
-        .order(section === "billing_entities" ? "name" : "display_name"),
-    );
+    const { data, error: failure } = await withTransientRetry(() => {
+      const query=db.from(section).select(fields).order(section === "billing_entities" ? "name" : "display_name");
+      return focusedRecordId?query.eq('id',focusedRecordId):query;
+    });
     if (!isCurrent()) return;
     if (failure) setError(failure.message);
+    else if (focusedRecordId) setRows((data??[]) as unknown as Row[]);
     else if (section === "clients") {
       const [profileResult, flagsResult, retainerResult] = await Promise.all([
         withTransientRetry(() =>
@@ -332,7 +337,7 @@ export function MasterDataPage({
       );
     } else setRows((data ?? []) as unknown as Row[]);
     if (isCurrent()) setLoading(false);
-  }, [section]);
+  }, [section,focusedRecordId]);
   useEffect(() => {
     void load();
     return () => {
@@ -501,8 +506,8 @@ export function MasterDataPage({
     );
   }
   useEffect(() => {
-    if (section !== "clients" || loading) return;
-    const recordId = new URLSearchParams(window.location.search).get("record");
+    if (loading) return;
+    const recordId = focusedRecordId ?? new URLSearchParams(window.location.search).get("record");
     if (!recordId || openedRecordRef.current === recordId) return;
     const row = rows.find((item) => item.id === recordId);
     if (!row) return;
@@ -510,7 +515,7 @@ export function MasterDataPage({
     void openEditor(row);
     // A abertura é intencionalmente accionada apenas quando a lista/ID pedido muda.
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, rows, section]);
+  }, [loading, rows, section,focusedRecordId]);
   async function openCreator() {
     setEditing(null);
     setCreating(true);
@@ -579,6 +584,8 @@ export function MasterDataPage({
     };
   }, []);
   function closeEditor() {
+    if(saving)return;
+    onDismiss?.();
     setEditing(null);
     setCreating(false);
     setError("");
@@ -905,6 +912,7 @@ export function MasterDataPage({
     setNotice(`${name} ${creating ? "criado" : "actualizado"}.`);
     setSaving(false);
     await load();
+    onRecordSaved?.();
     if (creating) closeEditor();
     else {
       setEditing((current) => current ? {
@@ -1090,7 +1098,7 @@ export function MasterDataPage({
       : rows;
   return (
     <div className="space-y-5">
-      {notice && (
+      {!focusedRecordId && notice && (
         <p
           role="status"
           className="rounded-lg bg-success-soft p-3 text-sm text-success"
@@ -1098,7 +1106,7 @@ export function MasterDataPage({
           {notice}
         </p>
       )}
-      <section className="card p-4">
+      {!focusedRecordId && <section className="card p-4">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-xl font-semibold">
@@ -1138,7 +1146,8 @@ export function MasterDataPage({
           onRowDoubleClick={(row) => void openEditor(row)}
           defaultPageSize={20}
         />
-      </section>
+      </section>}
+      {focusedRecordId&&!editorOpen&&<div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-4"><section role="dialog" aria-modal="true" aria-label="Abrir ficha" className="card max-w-lg p-6"><p role={loading?'status':'alert'}>{loading?'A abrir ficha…':error||'A ficha não foi encontrada ou não está acessível.'}</p><button type="button" data-close-record disabled={saving} onClick={closeEditor} className="control mt-4 px-4">Fechar</button></section></div>}
       {editorOpen && (
         <div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-0 sm:p-4">
           <form
@@ -1167,7 +1176,7 @@ export function MasterDataPage({
               </div>
               <button
                 type="button"
-                onClick={closeEditor}
+                data-close-record disabled={saving} onClick={closeEditor}
                 className="min-h-11 min-w-11 shrink-0 rounded-lg border border-border text-xl"
                 aria-label="Fechar"
               >
@@ -1987,7 +1996,7 @@ export function MasterDataPage({
             <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-border bg-surface px-4 py-3 sm:flex sm:justify-end sm:px-6">
               <button
                 type="button"
-                onClick={closeEditor}
+                data-close-record disabled={saving} onClick={closeEditor}
                 className="min-h-11 rounded-lg border border-border px-4 font-semibold"
               >
                 Fechar

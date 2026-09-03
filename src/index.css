@@ -202,3 +202,9 @@ main .overscroll-contain { overscroll-behavior: auto; }
     display: none !important;
   }
 }
+
+/* Editable assumptions in the LEGALTEAM allocation panel. */
+.control.allocation-editable { border: 2px solid var(--color-secondary); background: var(--color-secondary-soft); font-weight: 600; }
+.control.allocation-editable:hover { box-shadow: 0 0 0 2px var(--color-secondary-soft); }
+.control.allocation-editable:focus { background: var(--color-surface); box-shadow: 0 0 0 3px var(--color-secondary-soft); }
+.control.allocation-editable:disabled { opacity: .65; }

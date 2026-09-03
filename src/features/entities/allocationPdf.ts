@@ -13,7 +13,28 @@ export async function createAllocationPdf(report:AllocationReport){
  const text=(value:string,size=9,bold=false)=>{doc.setFontSize(size);doc.setFont('helvetica',bold?'bold':'normal');const lines=doc.splitTextToSize(value,width) as string[];for(const line of lines){ensure(5);doc.setFontSize(size);doc.setFont('helvetica',bold?'bold':'normal');doc.setTextColor('#24364b');doc.text(line,margin,y);y+=5}y+=2}
  header()
  text(`Período: ${date(report.start)} a ${date(report.end)} | ${report.paidOnly?'Apenas registos pagos':'Todos os estados de pagamento'}`,10,true)
- text(`${report.allClients?'Todos os clientes do período':'Clientes seleccionados'}: ${report.clientNames.join('; ')||'Nenhum'}`)
+ text(`${report.allClients?'Clientes da LEGALTEAM no período':'Clientes seleccionados'} (${report.clientNames.length})`,10,true)
+ if(!report.clientNames.length)text('Nenhum')
+ else{
+  doc.setFont('helvetica','normal');doc.setFontSize(9)
+  const gap=6,names=report.clientNames
+  let columns=Math.min(4,names.length)
+  const measured=(count:number)=>Array.from({length:count},(_,column)=>{const lengths=names.filter((_,i)=>i%count===column).map(name=>doc.getTextWidth(name)+3).sort((a,b)=>a-b);return Math.max(30,lengths[Math.floor((lengths.length-1)*.85)]??30)})
+  while(columns>2&&measured(columns).reduce((n,w)=>n+w,0)+gap*(columns-1)>width)columns--
+  const preferred=measured(columns),available=width-gap*(columns-1),sum=preferred.reduce((n,w)=>n+w,0)
+  const widths=preferred.map(w=>sum>available?w*available/sum:w+(available-sum)/columns)
+  for(let offset=0;offset<names.length;offset+=columns){
+   doc.setFontSize(9);doc.setFont('helvetica','normal')
+   const cells=names.slice(offset,offset+columns).map((name,i)=>doc.splitTextToSize(name,widths[i]-2) as string[])
+   const height=Math.max(...cells.map(lines=>lines.length))*4.5+3
+   if(y+height>276){doc.addPage();header();text('Clientes da LEGALTEAM (continuação)',10,true)}
+   doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor('#24364b')
+   let left=margin
+   cells.forEach((lines,i)=>{doc.text(lines,left,y,{lineHeightFactor:1.4});left+=widths[i]+gap})
+   y+=height
+  }
+  y+=3
+ }
  text('Base: honorários efectivos em EUR, sem IVA, após descontos e sem despesas debitadas ao cliente.')
  text(`Angariação do cliente: ${report.rates.client}% | Angariação da tarefa: ${report.rates.task}% | Execução: ${report.rates.execution}% | Escritório: ${report.rates.office}%`)
  ensure(39);y+=2
@@ -22,8 +43,8 @@ export async function createAllocationPdf(report:AllocationReport){
  let x=margin;for(const [key,rate] of parts){doc.setFillColor(allocationColors[key]);doc.rect(x,y,width*rate/100,4,'F');x+=width*rate/100}y+=11
  text(`Escritório: ${money(map.office)} | Parcelas por atribuir: ${money(map.unassigned)}`,10,true)
  text(`${report.work.length} registos considerados. Avenças e trabalho não facturável contribuem apenas horas.`)
- if(map.missingPrice)text(`${map.missingPrice} registo(s) sem preço válido: os montantes apresentados são parciais.`,10,true)
- text('Distribuição por pessoa',12,true)
+ if(map.missingPrice)text(`${map.missingPrice} registo(s) sem montante para repartir: as horas estão incluídas e os valores apresentados são parciais.`,10,true)
+ ensure(40);text('Distribuição por pessoa',12,true)
  const starts=[15,65,86,111,138,165],ends=[65,86,111,138,165,195]
  const tableHeader=()=>{ensure(15);doc.setFillColor('#17293f');doc.rect(margin,y,width,12,'F');doc.setTextColor('#ffffff');doc.setFontSize(8);doc.setFont('helvetica','bold');['Pessoa','Horas','Cliente','Tarefa','Execução','Total'].forEach((label,i)=>doc.text(label,starts[i]+2,y+7));y+=16}
  tableHeader()

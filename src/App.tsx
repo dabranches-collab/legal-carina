@@ -1,3 +1,4 @@
+import { RecordDialogHost } from './features/master-data/RecordDialogHost'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { AppShell } from './components/layout/AppShell'
 import { PlaceholderPage } from './components/feedback/PlaceholderPage'
@@ -76,7 +77,7 @@ export function AuthenticatedApplication() {
     if(nextClientType) url.searchParams.set('clientType',nextClientType); else url.searchParams.delete('clientType')
     if(nextEntity) url.searchParams.set('entity',nextEntity); else url.searchParams.delete('entity')
     if(nextProfessional) url.searchParams.set('professional',nextProfessional); else url.searchParams.delete('professional')
-    url.searchParams.delete('clientMode'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
+    url.searchParams.delete('clientMode'); url.searchParams.delete('record'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
   }
   function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
   let content: React.ReactNode
@@ -95,7 +96,7 @@ export function AuthenticatedApplication() {
   else if (view === 'admin-users') content = <AdminPage />
   else if (view === 'admin-access-logs') content = <AccessLogsPage />
   else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
-  return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateRetainers={()=>navigate('retainers')} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense></AppShell>
+  return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateRetainers={()=>navigate('retainers')} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><div key={refreshKey}>{content}</div></Suspense><RecordDialogHost/></AppShell>
 }
 
 export default function App() {

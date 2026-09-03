@@ -26,14 +26,14 @@ export function creditHistoryData(account:CreditAccount,usage:CreditUsage,moveme
  return {header,rows,summary}
 }
 
-export async function saveCreditHistory(account:CreditAccount,usage:CreditUsage,movements:CreditMovement[],mode:HistoryMode,format:'pdf'|'xlsx'){
+export async function createCreditHistoryFile(account:CreditAccount,usage:CreditUsage,movements:CreditMovement[],mode:HistoryMode,format:'pdf'|'xlsx'){
  const data=creditHistoryData(account,usage,movements,mode),name=`historico-provisoes-${new Date().toLocaleDateString('sv-SE')}`
  if(format==='xlsx'){
   const XLSX=await import('xlsx'),book=XLSX.utils.book_new()
   const sheet=XLSX.utils.aoa_to_sheet([[account.client_name],[account.society_name],['Histórico de provisões · '+account.currency],[],data.header,...data.rows,[],['Resumo final'],...data.summary])
   sheet['!cols']=data.header.map((_,i)=>({wch:i===1?65:i===0?14:22}))
   if(mode==='values')for(let r=5;r<5+data.rows.length;r++)for(let c=3;c<data.header.length;c++){const cell=sheet[XLSX.utils.encode_cell({r,c})];if(cell?.t==='n')cell.z='#,##0.00'}
-  XLSX.utils.book_append_sheet(book,sheet,'Histórico');XLSX.writeFile(book,`${name}.xlsx`);return
+  XLSX.utils.book_append_sheet(book,sheet,'Histórico');return {blob:new Blob([XLSX.write(book,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),filename:`${name}.xlsx`}
  }
  const {jsPDF}=await import('jspdf'),doc=new jsPDF();let y=20
  const line=(text:string,bold=false)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const part of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(part,15,y);y+=5}y+=2}
@@ -42,5 +42,5 @@ export async function saveCreditHistory(account:CreditAccount,usage:CreditUsage,
  line('Resumo final',true);for(const [label,value] of data.summary)line(`${label}: ${label.includes('(min)')||label.includes('sem preço')?value:creditMoney(Number(value),account.currency)}`,label==='Saldo disponível')
  line('Mapa de acompanhamento. Não emite uma Nota de Honorários nem altera pagamentos.')
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}
- doc.save(`${name}.pdf`)
+ return {blob:doc.output('blob'),filename:`${name}.pdf`}
 }

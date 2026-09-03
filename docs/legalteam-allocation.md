@@ -39,3 +39,13 @@ O ensaio local `scripts/test-allocation-db.mjs` usa PGlite com funções anterio
 O utilizador autorizou expressamente aplicar os campos e funções à base original depois do ensaio com rollback, substituindo neste lote o staging separado. Aplicada isoladamente como `20260903011816_add_legalteam_allocation`; frontend 0.8.0 ainda não publicado. Mapa real, limites do período e permissões das RPCs verificados.
 
 Duplo clique na repartição ou lista inferior abre a ficha do próprio movimento. Guardar actualiza o mapa e a lista sem perder o período/taxas; clique simples continua a seleccionar. Os clientes da lista de pendências abrem a ficha de cliente. Prestações de avença usam uma caixa com gravação explícita e cancelamento sem escrita.
+
+## Consulta e continuidade
+
+As fichas de clientes abertas pelos pré-filtros são sobrepostas ao painel, mantendo URL, menu, filtros e posição. Depois de guardar e fechar, o mapa é actualizado sem substituir a tabela. Resumos operacionais precedem a repartição.
+
+A consulta inicial carrega a primeira página e depois até três páginas em paralelo. Confirma total, comprimento e ausência de IDs repetidos antes de publicar o resultado na interface. Pedidos são cancelados ao desmontar o painel. Os quatro pré-filtros partilham o âmbito da LEGALTEAM, período, clientes e pagamento; os serviços sem montante contribuem horas mas ficam fora dos totais financeiros.
+
+Campos editáveis têm destaque próprio, contagens de pendências positivas aparecem a vermelho. O PDF dispõe os clientes em até quatro colunas segundo as larguras dos nomes, quebra nomes longos e continua em novas páginas.
+
+Os pré-filtros e cartões pessoais deslocam para o início dos resultados, depois de actualizar a tabela, preservando o menu e o URL. O cabeçalho fixo não tapa os resultados; o foco acompanha a tabela.

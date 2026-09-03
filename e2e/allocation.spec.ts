@@ -3,6 +3,27 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
 
+test('resumos ficam acima da repartição e páginas seguintes carregam em paralelo',async({page})=>{
+ const fixture=createQaAllocationData();let active=0,peak=0
+ await page.route('**/rest/v1/**',async route=>{
+  const request=route.request(),url=new URL(request.url()),rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=request.method()==='POST'?request.postDataJSON():{}
+  let result=fixture(rpc,url.pathname.split('/').at(-1)??'',args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
+  if(rpc==='get_legalteam_allocation_work'){
+   const sample=fixture(rpc,'', {...args,p_offset:0,p_limit:500},url,'POST',false) as {items:Array<Record<string,unknown>>}
+   const offset=Number(args.p_offset),items=Array.from({length:Math.min(500,1501-offset)},(_,i)=>({...sample.items[0],id:`synthetic-${offset+i}`}))
+   active++;peak=Math.max(peak,active);await new Promise(resolve=>setTimeout(resolve,100));active--
+   result={items,total:1501}
+  }
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')
+ const summary=page.getByRole('region',{name:'Resumo Operacional',exact:true}),map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ await expect(summary).toBeVisible()
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('1501 registos')
+ expect(peak).toBe(3)
+ expect((await summary.boundingBox())!.y).toBeLessThan((await map.boundingBox())!.y)
+})
+
 test('lista inferior abre o próprio registo e actualiza a repartição sem perder filtros',async({page})=>{
  await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
  const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
@@ -27,7 +48,24 @@ test('lista inferior abre o próprio registo e actualiza a repartição sem perd
  await map.getByRole('button',{name:/Clientes sem angariador/}).click()
  const client=map.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true})
  await client.click();await expect(page.getByRole('dialog')).toHaveCount(0)
+ const origin=page.url()
  await client.dblclick();await expect(page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true})).toHaveValue('')
+ await expect(page).toHaveURL(origin)
+ await page.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).first().click()
+ await expect(page).toHaveURL(origin)
+ await expect(map.getByLabel('Data final da repartição')).toHaveValue('2026-09-30')
+ await expect(map.getByLabel('Escritório (%)',{exact:true})).toHaveValue('20')
+ await expect(map.getByRole('button',{name:/Clientes sem angariador/})).toHaveAttribute('aria-pressed','true')
+ await expect(page.getByRole('region',{name:'Acompanhamento',exact:true}).getByRole('article')).toHaveCount(4)
+ await map.getByRole('link',{name:'Abrir ficha',exact:true}).click()
+ await expect(page).toHaveURL(origin)
+ await page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true}).selectOption('hugo')
+ await page.getByRole('dialog').getByRole('button',{name:'Guardar alterações',exact:true}).click()
+ await expect(page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true})).toBeDisabled()
+ await page.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).first().click()
+ await expect(page).toHaveURL(origin)
+ await expect(map.getByLabel('Escritório (%)',{exact:true})).toHaveValue('20')
+ await expect(map.getByRole('button',{name:/Clientes sem angariador/})).toContainText('0 registos')
 })
 
 test('PDF da repartição respeita clientes, datas e percentagens e gráficos acompanham o resumo',async({page},testInfo)=>{
@@ -47,6 +85,27 @@ test('PDF da repartição respeita clientes, datas e percentagens e gráficos ac
  const pdf=(await readFile(target)).toString('latin1')
  expect(pdf).toContain('%PDF-');expect(pdf).toContain('LEGALTEAM');expect(pdf).toContain('200,00 EUR');expect(pdf).toContain('40,00 EUR')
  expect(pdf).toContain('Beta');expect(pdf).not.toContain('Alfa')
+})
+
+test('PDF distribui uma lista extensa de clientes em colunas e páginas',async({page},testInfo)=>{
+ const fixture=createQaAllocationData()
+ await page.route('**/rest/v1/**',async route=>{
+  const request=route.request(),url=new URL(request.url()),rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=request.method()==='POST'?request.postDataJSON():{}
+  let result=fixture(rpc,url.pathname.split('/').at(-1)??'',args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
+  if(rpc==='get_legalteam_allocation_work'){
+   const original=(result as {items:Array<Record<string,unknown>>}).items[0]
+   const items=Array.from({length:138},(_,i)=>({...original,id:`synthetic-work-${i}`,client_id:`synthetic-client-${i}`,client_name:i%17===0?`Cliente Sintetico ${String(i+1).padStart(3,'0')} Sociedade Internacional de Consultoria e Desenvolvimento`:`Cliente Sintetico ${String(i+1).padStart(3,'0')}`}))
+   result={items,total:items.length}
+  }
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')
+ const download=page.waitForEvent('download')
+ await page.getByRole('button',{name:'Exportar resumo PDF',exact:true}).click()
+ const file=await download,target=testInfo.outputPath('clientes-colunas.pdf');await file.saveAs(target)
+ const pdf=(await readFile(target)).toString('latin1')
+ expect(pdf).toContain('Cliente Sintetico 001');expect(pdf).toContain('Cliente Sintetico 138')
+ expect(pdf.match(/\/Type \/Page\b/g)?.length).toBeGreaterThan(1)
 })
 
 test('datas automáticas, percentagens editáveis e selecção múltipla recalculam imediatamente',async({page})=>{
@@ -147,4 +206,17 @@ for(const width of [320,390,768,1440])test(`repartição responsiva claro/escuro
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
  await page.getByRole('button',{name:'Activar modo escuro',exact:true}).click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
+})
+
+for(const width of [390,1440])test(`pré-filtros mostram o início dos resultados no mesmo menu ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:844})
+ await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
+ const origin=page.url(),map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ for(const name of [/Clientes sem angariador/,/Registos sem angariador da tarefa/,/Registos sem responsável de execução/,/Ver registos sem montante/,/Total do período/,/Carina Santos/]){
+  await map.getByRole('button',{name}).click()
+  const results=map.getByRole('region',{name:'Resultados do pré-filtro',exact:true})
+  await expect(results).toBeFocused();await expect(page).toHaveURL(origin)
+  const top=(await results.boundingBox())!.y,headerBottom=await page.locator('.app-shell-header').evaluate(el=>el.getBoundingClientRect().bottom)
+  expect(top).toBeGreaterThanOrEqual(headerBottom);expect(top).toBeLessThan(headerBottom+40)
+ }
 })

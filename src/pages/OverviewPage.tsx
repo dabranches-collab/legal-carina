@@ -248,7 +248,7 @@ export function OverviewPage() {
     "Sem sociedade": "?view=work&missingSociety=true",
     "Incobráveis": "?view=work&collectionState=uncollectible",
   };
-  const followUpMetrics = metrics.filter(([label]) => detailLinks[label]),
+  const followUpMetrics = metrics.filter(([label]) => detailLinks[label] && (label !== "Incobráveis" || m.uncollectibleCount !== 0)),
     generalMetrics = metrics.filter(([label]) => !detailLinks[label]);
   const followUpCount:Record<string,number|null>={
     "Por receber":m.receivable,
