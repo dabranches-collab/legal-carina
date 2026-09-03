@@ -1,15 +1,95 @@
 import { test,expect } from '@playwright/test'
+import { createQaAllocationData } from '../src/lib/qaAllocationData'
+import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
+
+test('PDF da repartição respeita clientes, datas e percentagens e gráficos acompanham o resumo',async({page},testInfo)=>{
+ await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
+ const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ await expect(map.getByRole('img',{name:/Repartição total/})).toBeVisible()
+ await expect(map.getByRole('img',{name:/Composição de Carina Santos/})).toBeVisible()
+ await map.getByLabel('Escritório (%)',{exact:true}).fill('20')
+ await map.getByLabel('Execução (%)',{exact:true}).fill('60')
+ await expect(map.getByRole('img',{name:/Parcela do escritório/})).toHaveAttribute('aria-label',/Escritório 20%/)
+ await map.getByText('Registos considerados · Todos os clientes',{exact:true}).click()
+ await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).uncheck()
+ await map.getByRole('checkbox',{name:/Cliente Demonstração Beta/}).check()
+ const downloaded=page.waitForEvent('download');await map.getByRole('button',{name:'Exportar resumo PDF',exact:true}).click();const file=await downloaded
+ expect(file.suggestedFilename()).toBe('legalteam-reparticao-2026-09-01-2026-09-03.pdf')
+ const target=testInfo.outputPath('reparticao.pdf');await file.saveAs(target)
+ const pdf=(await readFile(target)).toString('latin1')
+ expect(pdf).toContain('%PDF-');expect(pdf).toContain('LEGALTEAM');expect(pdf).toContain('200,00 EUR');expect(pdf).toContain('40,00 EUR')
+ expect(pdf).toContain('Beta');expect(pdf).not.toContain('Alfa')
+})
+
+test('datas automáticas, percentagens editáveis e selecção múltipla recalculam imediatamente',async({page})=>{
+ await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
+ const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ await expect(page.getByLabel('Data inicial da repartição')).toHaveValue('2026-09-01')
+ await expect(page.getByLabel('Data final da repartição')).toHaveValue('2026-09-03')
+ await expect(map.getByRole('button',{name:'Actualizar repartição'})).toHaveCount(0)
+ await map.getByLabel('Escritório (%)',{exact:true}).fill('20')
+ await expect(map.getByRole('alert')).toContainText('totalizar 100%')
+ await expect(map.getByRole('button',{name:/Total do período/})).toHaveCount(0)
+ await map.getByLabel('Execução (%)',{exact:true}).fill('60')
+ await expect(map.getByRole('alert')).toHaveCount(0)
+ await expect(map.getByRole('button',{name:/Despesas do escritório · 20%/})).toContainText('400,00')
+ await expect(map.getByRole('button',{name:/Carina Santos/})).toContainText('660,00')
+ await map.getByText('Registos considerados · Todos os clientes',{exact:true}).click()
+ await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).uncheck()
+ await expect(map).toContainText('Não há registos para a selecção actual.')
+ await map.getByRole('checkbox',{name:/Cliente Demonstração Beta/}).check()
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('200,00')
+ await expect(map.getByRole('table',{name:'Registos da repartição'})).not.toContainText('Cliente Demonstração Alfa')
+ await map.getByRole('checkbox',{name:/Cliente Demonstração Alfa/}).check()
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('2000,00')
+ await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).check()
+ await page.getByLabel('Data final da repartição').fill('2026-09-02')
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('1300,00')
+ await expect(map.getByRole('checkbox',{name:/Cliente Demonstração Beta/})).toHaveCount(0)
+ await expect(map.getByRole('button',{name:/Registos sem angariador da tarefa/})).toContainText('0 registos')
+ await map.getByRole('button',{name:'Usar todo o período'}).click()
+ await expect(page.getByLabel('Data final da repartição')).toHaveValue('2026-09-03')
+ await expect(map.getByRole('button',{name:/Registos sem angariador da tarefa/})).toContainText('1 registo')
+})
+
+test('pré-filtros contam registos sem preço e distinguem clientes de tarefas e execução',async({page})=>{
+ const fixture=createQaAllocationData()
+ await page.route('**/rest/v1/**',async route=>{
+  const request=route.request(),url=new URL(request.url()),rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=request.method()==='POST'?request.postDataJSON():{}
+  let result=fixture(rpc,url.pathname.split('/').at(-1)??'',args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
+  if(rpc==='get_legalteam_allocation_work'){
+   const data=result as {items:Array<Record<string,unknown>>;total:number}
+   const missing=data.items.at(-1)!
+   result={items:[...data.items,{...missing,id:'00000000-0000-4000-8000-000000000045',activity_description:'Trabalho sem preço nem executor',effective_amount:null,professional_name:'',work_date:'2026-09-04'}],total:5}
+  }
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')
+ const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ await expect(page.getByLabel('Data final da repartição')).toHaveValue('2026-09-04')
+ const client=map.getByRole('button',{name:/Clientes sem angariador/}),task=map.getByRole('button',{name:/Registos sem angariador da tarefa/}),executor=map.getByRole('button',{name:/Registos sem responsável de execução/})
+ await expect(client).toContainText('1 cliente');await expect(client).toContainText('2 registos')
+ await expect(task).toContainText('2 registos');await expect(executor).toContainText('1 registo')
+ await executor.click();await expect(map.getByRole('table')).toContainText('Trabalho sem preço nem executor');await expect(map.getByRole('table')).not.toContainText('Reunião de acompanhamento')
+ await client.click();await expect(map.getByRole('table')).toContainText('Cliente Demonstração Beta');await expect(map.getByRole('table')).not.toContainText('Cliente Demonstração Alfa')
+ await expect(map.getByRole('link',{name:'Abrir ficha'})).toHaveAttribute('href',/record=00000000-0000-4000-8000-000000000021/)
+ await map.getByRole('button',{name:'Ver registos',exact:true}).click();await expect(map.getByRole('table')).toContainText('Trabalho sem preço nem executor');await expect(map.getByRole('table')).toContainText('Reunião de acompanhamento')
+ await page.getByLabel('Data final da repartição').fill('2026-09-02');await expect(executor).toContainText('0 registos');await expect(task).toContainText('0 registos')
+ await map.getByRole('button',{name:'Usar todo o período'}).click();await client.click()
+ await map.getByRole('link',{name:'Abrir ficha'}).click()
+ await expect(page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true})).toHaveValue('')
+})
 test('repartição por período, pagos, campos e responsáveis completos',async({page})=>{
  await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
  const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
  await page.getByLabel('Data final da repartição').fill('2026-09-30')
  await expect(map.getByRole('button',{name:/Total do período/})).toContainText('2000,00')
- await expect(map).toContainText('40,00 € ainda por atribuir')
- await map.getByLabel('Registos considerados').selectOption('paid')
+ await expect(map).toContainText('Parcelas por atribuir:')
+ await map.getByLabel('Estado de pagamento').selectOption('paid')
  await expect(map.getByRole('button',{name:/Total do período/})).toContainText('1300,00')
- await map.getByLabel('Registos considerados').selectOption('all')
- await map.getByRole('button',{name:/Angariações por identificar/}).click()
+ await map.getByLabel('Estado de pagamento').selectOption('all')
+ await map.getByRole('button',{name:/Registos sem angariador da tarefa/}).click()
  await expect(map.getByRole('table')).toContainText('Cliente Demonstração Beta')
  await map.getByRole('cell',{name:'Reunião de acompanhamento',exact:true}).dblclick()
  const dialog=page.getByRole('dialog',{name:'Editar movimento'})

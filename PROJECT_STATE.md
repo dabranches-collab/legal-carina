@@ -1,5 +1,17 @@
 # Estado do projecto
 
+## Revisão 0.8.0 com base original — 03-09-2026
+
+- O utilizador autorizou expressamente trabalhar na versão local com a base original, criar dados de teste e apagá-los no fim, preservando os utilizadores de teste. Esta indicação substitui neste lote a restrição anterior a previews sintéticos. Frontend ainda **não publicado**.
+- Painel LEGALTEAM: datas compactas com extremos automáticos do período completo, taxas 10/10/50/30 editáveis (soma obrigatória 100%), cálculo imediato, selecção múltipla de clientes e filtro de pagamento independente. Três pré-filtros com contagens exactas: clientes sem angariador, tarefas sem angariador e registos sem executor; incluem trabalho sem preço. Fichas de clientes acessíveis pela lista de pendências.
+- Totais e cartões por pessoa reorganizados, gráficos de composição e exportação do resumo PDF com período, clientes, taxas, horas, parcelas pessoais, escritório e valores por atribuir.
+- Limpeza autorizada concluída na base original: dois clientes sintéticos, 23 movimentos (seis incobráveis), uma factura sintética, duas despesas, os perfis/ajustes associados e um anexo sintético. Transacção auditável, contagens dos restantes clientes/movimentos preservadas; dois utilizadores de teste mantidos. Não foram apagadas auditorias, clientes reais ou provisões reais.
+- Login local: corrigido erro 502/EACCES iniciando Vite com acesso de rede autorizado. Processo actual na porta 4194 usa `.env.local` e a base original; URL sem flags de demonstração: `http://127.0.0.1:4194/?view=billing&society=LEGALTEAM`. Prova sem credenciais reais: o pedido sintético chega à autenticação e recebe a rejeição funcional de utilizador/PIN inválido.
+- Migration candidata revista para preservar as RPCs da versão publicada: obrigatoriedade do angariador nas novas RPCs, sem trigger global que bloquearia o frontend 0.7.1. Consulta completa paginada, identificadores de cliente e limites automáticos. Histórico ligado revisto, divergência histórica preservada.
+- Ensaio expressamente autorizado na base original em BEGIN/ROLLBACK, usando esquema, triggers e permissões reais: preço, criação/edição, recusa de dados inválidos, rollback atómico, compatibilidade com a RPC publicada, paginação e recusa a outra firma/anónimo aprovados. Zero firmas/utilizadores/cliente de ensaio persistidos. Script: `scripts/test-allocation-original.sql`; sem branch temporária paga.
+- Verificações locais: sete testes de repartição, 22 verificações PGlite, nove cenários E2E de repartição (incluindo PDF e 320/390/768/1440 px), tipos, lint e segurança aprovados. PDF sintético renderizado e revisto. Migration persistente ainda por aplicar neste ponto documental.
+- Produção frontend reconfirmada em 0.7.1: commit `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, 100%, https://legal-carina.dabranches.workers.dev. Sem deploy Cloudflare neste lote.
+
 ## Versão 0.8.0 — preparada para revisão local, 03-09-2026
 
 - Commit funcional `56be98f70d3eb494053752c7b30837fbe4d8cf8d` confirmado em GitHub e local na branch `codex/legalteam-distribution`. Este apontamento segue em commit documental posterior; produção permanece separada.

@@ -1,6 +1,16 @@
 # Distribuição LEGALTEAM e histórico de provisões — 0.8.0
 
-Versão preparada para revisão local. Produção e dados reais permanecem em 0.7.1.
+Versão preparada para revisão local. Frontend publicado permanece em 0.7.1. O utilizador autorizou a ligação local à base original e a limpeza dos dados sintéticos em 03-09-2026.
+
+## Revisão solicitada
+
+As datas predefinidas abrangem o primeiro e último trabalho elegível da LEGALTEAM, sem limitar ao ano actual. A consulta carrega todas as páginas autorizadas e aplica de imediato datas, selecção múltipla de clientes e pagamento. A lista de clientes apresenta apenas quem tem trabalho no período. A selecção de clientes é preservada ao mudar datas; se nenhum dos escolhidos tiver registos, o resultado fica vazio.
+
+As quatro percentagens são editáveis na própria consulta, com até duas casas decimais, entre 0 e 100, e devem somar 100%. Enquanto a soma for inválida, os montantes da repartição e a exportação ficam suspensos, sem reutilizar resultados antigos. Ao reabrir, os valores predefinidos são 10/10/50/30; não altera movimentos ou acordos na base de dados.
+
+Os pré-filtros usam o período, clientes e pagamento seleccionados, independentemente de haver preço ou avença. O filtro de clientes sem angariador mostra clientes únicos e o número de movimentos afectados, com acesso à ficha. Os outros dois mostram movimentos sem angariador da tarefa ou sem executor. Os cartões financeiros resumem o universo seleccionado; clicar num cartão ou pendência apenas restringe a lista de detalhe.
+
+«Exportar resumo PDF» guarda os totais financeiros do período/clientes/pagamento e as taxas actualmente escolhidas, incluindo as horas por pessoa, parcelas de cada função, escritório e valores por atribuir. Os gráficos mostram a composição dos mesmos totais nos cartões. O PDF não emite notas nem pagamentos.
 
 ## Distribuição
 
@@ -18,8 +28,8 @@ O histórico normal omite movimentos estornados e os respectivos estornos. A aud
 
 ## Base de dados e validação
 
-A migration aditiva `20260902235343_add_legalteam_allocation.sql` acrescenta campos opcionais históricos, validações e RPCs que preservam as funções existentes. A consulta do mapa exige acesso ao âmbito e permissão de consulta financeira. As novas gravações usam wrappers transaccionais; erro de angariador não deixa trabalho parcialmente criado. Um trigger diferido verifica a atribuição final de novos trabalhos LEGALTEAM.
+A migration aditiva `20260902235343_add_legalteam_allocation.sql` acrescenta campos opcionais históricos, validações e RPCs que preservam as funções existentes. A consulta do mapa exige acesso ao âmbito e permissão de consulta financeira. As novas gravações usam wrappers transaccionais; erro de angariador não deixa trabalho parcialmente criado. As RPCs anteriores continuam compatíveis enquanto o frontend publicado não disponibiliza o campo.
 
-Antes de publicar, ensaiar no esquema real de staging, incluindo importações antigas que criem trabalho LEGALTEAM sem angariador: esses novos trabalhos são rejeitados até serem preenchidos. Alterações históricas que não mudem a sociedade/angariação mantêm a atribuição vazia. Não executar `db push` global nem reparar o histórico divergente por suposição.
+O utilizador autorizou em 03-09-2026 o ensaio na base original. `scripts/test-allocation-original.sql` foi executado numa transacção com rollback integral, usando triggers e permissões reais e identidades temporárias; confirmou também a compatibilidade com a versão publicada. Os ensaios não deixam utilizadores/dados sintéticos. Não executar `db push` global nem reparar o histórico divergente por suposição.
 
 O ensaio local `scripts/test-allocation-db.mjs` usa PGlite com funções anteriores e permissões simuladas. Aceita como argumento o caminho absoluto do módulo PGlite instalado; por omissão usa a instalação temporária local `.tmp/provision-db/package/dist/index.js`. As 20 verificações cobrem transacções, campos obrigatórios, históricos, filtros, paginação e recusas de acesso. Não substitui o gate Supabase/staging. Unitários e E2E usam exclusivamente dados sintéticos.

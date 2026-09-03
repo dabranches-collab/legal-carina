@@ -23,7 +23,7 @@ const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0
 const rejects=async(sql,args,pattern)=>{await assert.rejects(()=>db.query(sql,args),pattern);passed++}
 assert.equal(await scalar('select task_referrer from work_entries where id=$1',[legacy]),null);passed++
 await db.query('update work_entries set activity_description=$1 where id=$2',['Legacy edit',legacy]);passed++
-await rejects('insert into work_entries(firm_id,client_id,billing_entity_id) values($1,$2,$3)',[firm,client,soc],/angariador/)
+await db.exec('begin');await db.query('insert into work_entries(firm_id,client_id,billing_entity_id) values($1,$2,$3)',[firm,client,soc]);await db.exec('rollback');passed++
 await rejects('update work_entries set task_referrer_other=$1 where id=$2',['Incomplete',legacy],/check constraint/)
 await db.exec('set role authenticated')
 const create='select public.create_work_entry_with_allocation($1,$2,null,$3,$4,$5,60,p_task_referrer=>$6,p_task_referrer_other=>$7)'
@@ -36,6 +36,8 @@ const other=await scalar(create,[...args.slice(0,5),'other','Parceiro Sintético
 const report='select public.get_legalteam_allocation_work($1,$2,$3,$4,$5)'
 let result=await scalar(report,[soc,'2026-01-01','2026-01-02',0,1]);assert.equal(result.total,3);assert.equal(result.items.length,1);passed++
 result=await scalar(report,[soc,'2026-01-02','2026-01-02',1,500]);assert.equal(result.total,2);assert.equal(result.items.length,1);passed++
+result=await scalar(report,[soc,null,null,0,500]);assert.equal(result.total,3);assert.ok(result.items.every(row=>row.client_id===client));passed++
+await rejects(report,[soc,null,'2026-01-02',0,500],/inválidos/)
 await rejects(report,[soc,'2026-02-01','2026-01-01',0,500],/inválidos/)
 const update='select public.update_work_entry_with_allocation($1,$2,$3)'
 await rejects(update,[legacy,{billing_entity_id:soc,task_referrer:null},''],/angariador/)

@@ -15,7 +15,7 @@ export function createQaAllocationData(){
    return single?rows[0]??null:rows
   }
   if(rpc==='get_entity_dashboard_rolling')return {selectedId:society.id,identity:{title:society.name,subtitle:'Sociedade',code:''},options:[{id:society.id,label:society.name}],metrics:{minutes:600,total:2000,invoiced:1300,paid:1300,pending:0,averageRate:200,movements:4,clients:2,professionals:3,billingEntities:1},annual:[],monthly:[],recent:[]}
-  if(rpc==='get_legalteam_allocation_work'){const eligible=work.filter(w=>w.work_date>=String(args.p_start)&&w.work_date<=String(args.p_end));return {items:eligible.slice(Number(args.p_offset),Number(args.p_offset)+Number(args.p_limit)),total:eligible.length}}
+  if(rpc==='get_legalteam_allocation_work'){const eligible=work.filter(w=>args.p_start==null||(w.work_date>=String(args.p_start)&&w.work_date<=String(args.p_end))).map(w=>({...w,client_referrer:clients.find(c=>c.id===w.client_id)?.client_referrer??null}));return {items:eligible.slice(Number(args.p_offset),Number(args.p_offset)+Number(args.p_limit)),total:eligible.length}}
   if(rpc==='get_work_entry_form_options')return {societies:[society],responsibles:people,clientProfiles:profiles,processes:[]}
   if(rpc==='get_work_entry_for_edit')return work.find(w=>w.id===args.p_work_entry_id)??null
   if(rpc==='update_work_entry_with_allocation'){const row=work.find(w=>w.id===args.p_work_entry_id);if(row)Object.assign(row,args.p_values);return null}
