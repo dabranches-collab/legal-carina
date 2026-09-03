@@ -1,5 +1,15 @@
 # Estado do projecto
 
+## Publicação 0.9.0 confirmada — 03-09-2026
+
+- Produção confirmada directamente: https://legal-carina.dabranches.workers.dev, Worker legal-carina, 100% desde 03-09-2026 13:57:39 UTC.
+- Commit funcional 77a72686bf83ada53cce74cbbd7206bcce6a6728 na branch codex/legalteam-distribution, preservado no GitHub antes do deploy; PR #14, CI 33763645066 e Secret scan 33763645022 aprovados.
+- Deployment ID 3d29554a-13fa-4d3d-947a-bffe3bd4d20f; version ID fb291024-59bc-45b3-b93f-51be8ca3b7a4.
+- HTTP release-notes.json e browser integrado confirmam 0.9.0. Aviso Aplicação actualizada mostra a predefinição do valor/hora na primeira linha. Ficha existente abre a opção publicada, aceita preenchimento e activa Guardar/Cancelar; ensaio fechado sem guardar.
+- Supabase original com a migration aditiva confirmada, testes transaccionais revertidos, apenas main e sem novos recursos temporários. Nenhuma nota nem movimento real criado. Vite 4194 continua disponível.
+- Local e GitHub mantêm 0.9.0; este registo documental é posterior ao commit funcional publicado. Gates e detalhes do lote estão na secção seguinte.
+
+
 ## Valor/hora por cliente — 0.9.0 em preparação, 03-09-2026
 
 - Pedido e publicação autorizados pelo utilizador. Local: 0.9.0, branch codex/legalteam-distribution; próximo commit centraliza o lote no GitHub antes de publicar.
