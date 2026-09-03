@@ -1,5 +1,17 @@
 # Legal Carina — handover
 
+## Versão 0.8.0 — preparada para revisão local, 03-09-2026
+
+- Branch `codex/legalteam-distribution`, baseada em `5535dde0f3cc15c0daaf53992aa75b9c030d2cb0`. Código e documentação deste lote seguem juntos para GitHub. O utilizador pediu para ver antes de publicar: **sem deploy, migration remota, emissão de notas ou alteração de dados reais**.
+- LEGALTEAM: período inclusivo pela data do trabalho, filtro todos/só pagos, horas por responsável e distribuição dos honorários sem IVA: 10% angariador do cliente, 10% angariador da tarefa, 50% executor e 30% escritório. Despesas excluídas; avenças contribuem apenas horas. Partes históricas sem angariador ficam por atribuir.
+- Campo Angariador do cliente no separador Geral de todos os clientes, opcional para preenchimento retroactivo. Tarefas LEGALTEAM exigem Carina, Hugo ou Outro com nome. Menus apresentam Carina Santos, Hugo Mendonça e Paula Chaves, preservando identidades existentes.
+- Histórico de provisões mostra apenas movimentos válidos: correcções estornadas deixam de aparecer no histórico normal, sem apagar a auditoria. O botão PDF existente e o novo XLSX abrem sempre a escolha entre tempos/valores por registo e apenas tempos com resumo monetário final.
+- Validação: segurança de ficheiros, lint, TypeScript, build sintético e 134 testes unitários aprovados; 20 verificações PostgreSQL/PGlite com dados sintéticos. E2E: 75 cenários aplicáveis aprovados (74 na execução integral e o cenário restante após corrigir um selector que apanhava o menu oculto); dois exclusivos de produção omitidos. XLSX verificado nos dois formatos. Browser integrado revisto em claro/escuro; layouts automatizados em 320/390/768/1440 px.
+- Migration `20260902235343_add_legalteam_allocation.sql` **apenas local/GitHub**. Histórico ligado consultado antes da operação; divergência histórica conhecida preservada. Supabase `vtvvqyebigflgqccbqsw` consultado apenas para confirmar contratos/permissões. Ensaio de staging com esquema real, CI e dry-run continuam gates de publicação; PGlite não substitui staging.
+- Produção **CONFIRMADA** e preservada: 0.7.1, commit funcional `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, 100%, https://legal-carina.dabranches.workers.dev, publicação de 02-09-2026 19:50:23 UTC reconfirmada por Wrangler neste lote.
+- Preview sintético em `http://127.0.0.1:4194/`, flags `qa-iphone=1&qa-demo=1&qa-allocation=1&view=billing&society=LEGALTEAM` ou `qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions`. Não foi criado recurso temporário pago; a anterior branch de ensaio já foi eliminada.
+- Critérios e limites: `docs/legalteam-allocation.md`.
+
 ## Correcção de saldo inicial e proposta de apresentação — 03-09-2026
 
 - Por indicação expressa do utilizador, uma provisão histórica foi reclassificada como saldo inicial no dia anterior ao primeiro registo, através de estorno e reposição auditáveis no browser autenticado. Montante líquido preservado; data efectiva e recálculo confirmados por SQL e interface. Nenhuma nota emitida. Sem dados pessoais neste documento.

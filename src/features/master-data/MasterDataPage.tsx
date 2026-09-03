@@ -1,3 +1,4 @@
+import { referrerNames } from '../../lib/professionalNames'
 import {
   lazy,
   Suspense,
@@ -54,6 +55,7 @@ type ClientDetails = {
   honorarium_delivery_method: "email" | "post" | "hand";
   honorarium_recipient_name: string;
   default_billing_entity_id: string;
+  client_referrer: string;
 };
 type BillingDetails = {
   legal_name: string;
@@ -117,6 +119,7 @@ const emptyDetails = (): ClientDetails => ({
   honorarium_delivery_method: "email",
   honorarium_recipient_name: "",
   default_billing_entity_id: "",
+  client_referrer: "",
 });
 const emptyBillingDetails = (): BillingDetails => ({
   legal_name: "",
@@ -428,7 +431,7 @@ export function MasterDataPage({
       supabase!
         .from("clients")
         .select(
-          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id",
+          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer",
         )
         .eq("id", row.id)
         .single(),
@@ -709,6 +712,7 @@ export function MasterDataPage({
     }
     const savedDetails = {
       ...details,
+      client_referrer: details.client_referrer || null,
       email: storedContacts(emails),
       phone: storedContacts(phones),
       honorarium_recipient_name:
@@ -1369,6 +1373,11 @@ export function MasterDataPage({
                         </p>
                       )}
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        <label className="text-sm font-semibold sm:col-span-2">
+                          Angariador do cliente
+                          <select aria-label="Angariador do cliente" value={details.client_referrer} onChange={e=>setDetails({...details,client_referrer:e.target.value})} className="control mt-1 w-full px-3"><option value="">Por preencher</option>{Object.entries(referrerNames).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
+                          <span className="mt-1 block text-xs font-normal text-text-secondary">Parcela de 10% nos registos da LEGALTEAM. Os clientes antigos podem ser completados posteriormente.</span>
+                        </label>
                         <label className="text-sm font-semibold">
                           Denominação legal
                           <input

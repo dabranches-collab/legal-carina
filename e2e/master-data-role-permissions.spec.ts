@@ -76,7 +76,7 @@ test('Operador edita fichas existentes de Cliente, Sociedade e Responsável',asy
   {query:'professionals',current:'Responsável existente',next:'tcodexoperador responsável editado',table:'professionals'},
  ] as const){
   await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}`)
-  await expect(page.getByText(entity.current,{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Abrir ficha'}).click()
+  await expect(page.getByRole('main').getByText(entity.current,{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Abrir ficha'}).click()
   const dialog=page.getByRole('dialog');await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeDisabled();await dialog.getByLabel('Nome').fill(entity.next);await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeEnabled();await dialog.getByRole('button',{name:'Guardar alterações'}).click()
   await expect(page.getByRole('status').filter({hasText:`${entity.next} actualizado.`})).toBeVisible()
   expect(writes.some(item=>item.table===entity.table&&item.method==='PATCH'&&item.body.display_name===entity.next||item.table===entity.table&&item.method==='PATCH'&&item.body.name===entity.next)).toBe(true)

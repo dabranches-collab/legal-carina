@@ -1,3 +1,5 @@
+import { TaskReferrerFields } from './TaskReferrerFields'
+import { isLegalteam, professionalName } from '../../lib/professionalNames'
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "../../lib/supabase";
 import { useModalLifecycle } from "../../hooks/useModalLifecycle";
@@ -128,6 +130,7 @@ export function EditWorkEntryModal({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!supabase || !entry) return;
+    if(isLegalteam(options?.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&(!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim()))){setError('Indique o angariador da tarefa.');return}
     if (entry.is_paid && !entry.is_invoiced) {
       setError("Um movimento pago tem de estar facturado.");
       return;
@@ -236,7 +239,7 @@ export function EditWorkEntryModal({
               >
                 {options.responsibles.map((item) => (
                   <option key={item.id} value={item.id}>
-                    {item.display_name}
+                    {professionalName(item.display_name)}
                   </option>
                 ))}
               </select>
@@ -286,6 +289,7 @@ export function EditWorkEntryModal({
                 ))}
               </select>
             </label>
+            {isLegalteam(options.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&<TaskReferrerFields value={entry.task_referrer??''} other={entry.task_referrer_other??''} onChange={(task_referrer,task_referrer_other)=>setEntry({...entry,task_referrer,task_referrer_other})}/>}
             <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer';setEntry({...entry,billing_scope,...(billing_scope==='retainer'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:'retainer',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Fora da avença · facturação normal</option><option value="retainer">Coberto pela avença · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao escolher avença, o movimento perde preço e valor individual.</span></label>
             <label className="text-sm sm:col-span-2 lg:col-span-3">
               Actividade

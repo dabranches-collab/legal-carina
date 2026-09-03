@@ -1,3 +1,4 @@
+import {readFile} from 'node:fs/promises'
 import {test,expect} from '@playwright/test'
 
 test('Provisões calcula o saldo na linha e abre os registos sem emitir notas',async({page})=>{
@@ -13,7 +14,7 @@ test('Provisões calcula o saldo na linha e abre os registos sem emitir notas',a
  await usage.getByText('Ver os registos considerados no saldo',{exact:true}).click()
  await expect(usage).toContainText('Preparação de requerimento')
  await expect(page.getByRole('button',{name:'Emitir Nota de Honorários com provisão'})).toHaveCount(0)
- const download=page.waitForEvent('download');await usage.getByRole('button',{name:'Guardar mapa de consumo PDF'}).click();await (await download).saveAs('.tmp/provision-usage.pdf')
+ const download=page.waitForEvent('download');await usage.getByRole('button',{name:'Guardar mapa de consumo PDF'}).click();await page.getByRole('dialog',{name:'Apresentação do histórico'}).getByRole('button',{name:'Guardar PDF',exact:true}).click();await (await download).saveAs('.tmp/provision-usage.pdf')
  expect(notesIssued).toBe(0)
 })
 
@@ -36,3 +37,18 @@ for(const viewport of [{width:320,height:568},{width:390,height:844},{width:768,
   expect(await dialog.evaluate(element=>element.scrollWidth<=element.clientWidth+1)).toBe(true)
  })
 }
+
+for(const mode of ['values','time'])test('exportação XLSX de provisões: '+mode,async({page})=>{
+ await page.goto('/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions')
+ await page.getByRole('button',{name:/Histórico de Cliente Sintético/}).click()
+ await page.getByRole('button',{name:'Guardar histórico XLSX',exact:true}).click()
+ const dialog=page.getByRole('dialog',{name:'Apresentação do histórico'})
+ await dialog.getByRole('radio',{name:mode==='time'?/Apenas tempos/:/Tempos e valores/}).check()
+ const pending=page.waitForEvent('download');await dialog.getByRole('button',{name:'Guardar XLSX',exact:true}).click()
+ const file=await pending,path='.tmp/provision-history-'+mode+'.xlsx';await file.saveAs(path)
+ const XLSX=await import('xlsx');const book=XLSX.read(await readFile(path),{type:'buffer'}),rows=XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]],{header:1}) as unknown[][]
+ expect(rows.flat()).toContain('Resumo final');expect(rows.flat()).toContain('Saldo disponível')
+ expect(rows[4]).toHaveLength(mode==='time'?3:8)
+ expect(rows.find(r=>r[0]==='Saldo disponível')?.[1]).toBe(631)
+ await expect(dialog).toHaveCount(0)
+})
