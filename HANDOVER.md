@@ -1,5 +1,16 @@
 # Legal Carina — handover
 
+## Valor/hora por cliente — 0.9.0 em preparação, 03-09-2026
+
+- Pedido e publicação autorizados pelo utilizador. Local: 0.9.0, branch codex/legalteam-distribution; próximo commit centraliza o lote no GitHub antes de publicar.
+- Na ficha Geral, Predefinir valor/hora abre a preferência opcional em EUR. Guardar/Cancelar seguem a edição da ficha; zero é aceite e Retirar predefinição repõe vazio.
+- Criar movimento consulta sociedade-mãe e valor/hora num único pedido, copia o preço para o novo movimento e permite substituí-lo. Troca de cliente reinicia a preferência; respostas atrasadas não sobrepõem alterações manuais. Avenças mantêm-se sem preço por registo; movimentos anteriores não são recalculados.
+- Supabase original vtvvqyebigflgqccbqsw: coluna clients.default_hourly_rate numeric(12,2), nullable, check não negativo/finito. Migration local 20260903134329, remota 20260903134646, add_client_default_hourly_rate. migration list --linked revista; divergências históricas preservadas, sem db push/repair.
+- Ensaio sintético scripts/audit-client-hourly-rate-rollback.sql aprovado antes/depois da migration, integralmente revertido. Gravação autenticada, cálculo de 90 min a 125,50 = 188,25, override independente, conservação histórica, zero, remoção e rejeição de negativo/NaN. Advisors sem ERROR. Apenas branch main; nenhum ambiente temporário facturado.
+- Validações: pnpm security:files, lint, typecheck, 145 unitários, build, 101 E2E aplicáveis (100 execução geral + novo cenário iPhone/tablet claro/escuro) e três PWA produção local aprovados. Browser integrado claro/escuro sem guardar a ficha de ensaio; imagens 390/768 px revistas. Dry-run Cloudflare aprovado.
+- Produção ainda 0.8.1 neste ponto: código df7e12897d6b1d738ad5f912f37604576613fa19, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, deployment 73b52cc8-a1a7-4abe-9821-f1a09e3885cc, version abf19826-9453-4576-9dc9-c026873ebba1, desde 03-09-2026 03:23:14 UTC. Confirmada directamente antes deste lote. Publicação 0.9.0 aguarda CI deste commit.
+
+
 ## Publicação final 0.8.1 confirmada — 03-09-2026
 
 - Produção: https://legal-carina.dabranches.workers.dev, Cloudflare legal-carina, 100% desde 03-09-2026 03:23:14 UTC.

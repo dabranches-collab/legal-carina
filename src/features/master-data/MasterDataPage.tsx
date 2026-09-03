@@ -58,6 +58,7 @@ type ClientDetails = {
   client_referrer: string;
   client_referrer_other: string;
   primary_billing_entity_id: string;
+  default_hourly_rate: string;
 };
 type BillingDetails = {
   legal_name: string;
@@ -124,6 +125,7 @@ const emptyDetails = (): ClientDetails => ({
   client_referrer: "",
   client_referrer_other: "",
   primary_billing_entity_id: "",
+  default_hourly_rate: "",
 });
 const emptyBillingDetails = (): BillingDetails => ({
   legal_name: "",
@@ -204,6 +206,7 @@ export function MasterDataPage({
     [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [showOtherProfile,setShowOtherProfile]=useState(false);
+  const [showHourlyRate,setShowHourlyRate]=useState(false);
   const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"provisions"|"credentials"|"documents">("general");
   const [mode, setMode] = useState<"view" | "edit">("view"),
     [details, setDetails] = useState<ClientDetails>(emptyDetails),
@@ -363,6 +366,7 @@ export function MasterDataPage({
     setEditActive(row.active);
     setError("");
     setDetails(emptyDetails());
+    setShowHourlyRate(false);
     setEmails([""]);
     setPhones([""]);
     setIdentifiers([]);
@@ -445,7 +449,7 @@ export function MasterDataPage({
       supabase!
         .from("clients")
         .select(
-          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer,client_referrer_other,primary_billing_entity_id",
+          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer,client_referrer_other,primary_billing_entity_id,default_hourly_rate",
         )
         .eq("id", row.id)
         .single(),
@@ -472,7 +476,7 @@ export function MasterDataPage({
         ...Object.fromEntries(
           Object.keys(emptyDetails()).map((key) => [
             key,
-            data[key] ?? emptyDetails()[key as keyof ClientDetails],
+            data[key] == null ? emptyDetails()[key as keyof ClientDetails] : String(data[key]),
           ]),
         ),
       } as ClientDetails);
@@ -540,6 +544,7 @@ export function MasterDataPage({
     setEditActive(true);
     setProfiles(unselectedProfiles());
     setDetails(emptyDetails());
+    setShowHourlyRate(false);
     setBillingDetails(emptyBillingDetails());
     setBankAccounts([]);
     setLogoPath("");
@@ -734,11 +739,15 @@ export function MasterDataPage({
         return;
       }
     }
+    if(section==='clients' && details.default_hourly_rate!=='' && (!Number.isFinite(Number(details.default_hourly_rate)) || Number(details.default_hourly_rate)<0 || Number(details.default_hourly_rate)>9999999999.99)){
+      setError('Indique um valor/hora válido, igual ou superior a zero.');setSaving(false);return;
+    }
     const savedDetails = {
       ...details,
       client_referrer: details.client_referrer || null,
       client_referrer_other: details.client_referrer==='other'?details.client_referrer_other.trim():null,
       primary_billing_entity_id: details.primary_billing_entity_id || null,
+      default_hourly_rate: details.default_hourly_rate === '' ? null : Number(details.default_hourly_rate),
       email: storedContacts(emails),
       phone: storedContacts(phones),
       honorarium_recipient_name:
@@ -1413,6 +1422,17 @@ export function MasterDataPage({
                         </label>
                         {details.client_referrer==='other'&&<label className="text-sm font-semibold sm:col-span-2">Nome do angariador<input aria-label="Nome do angariador" required maxLength={200} value={details.client_referrer_other} onChange={e=>setDetails({...details,client_referrer_other:e.target.value})} className="control mt-1 w-full px-3"/><span className="mt-1 block text-xs font-normal text-text-secondary">Ao guardar, fica disponível para outros clientes e para a repartição.</span></label>}
                         <label className="text-sm font-semibold sm:col-span-2">Sociedade do cliente<select aria-label="Sociedade do cliente" value={details.primary_billing_entity_id} onChange={e=>setDetails({...details,primary_billing_entity_id:e.target.value})} className="control mt-1 w-full px-3"><option value="">Por atribuir</option>{billingOptions.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}</select><span className="mt-1 block text-xs font-normal text-text-secondary">Sociedade pela qual o cliente foi angariado. Cada movimento pode ser facturado por outra sociedade.</span></label>
+                        <div className="rounded-xl border border-secondary/40 bg-secondary-soft p-3 sm:col-span-2">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-sm font-semibold">Valor/hora do cliente</p>
+                            {!showHourlyRate&&details.default_hourly_rate===''&&<button type="button" onClick={()=>setShowHourlyRate(true)} className="control px-3 text-sm font-semibold">Predefinir valor/hora</button>}
+                          </div>
+                          {(showHourlyRate||details.default_hourly_rate!=='')&&<div className="mt-3 flex flex-wrap items-end gap-3">
+                            <label className="min-w-0 flex-1 text-sm font-semibold">Valor/hora predefinido (€)<input aria-label="Valor/hora predefinido (€)" type="number" min="0" max="9999999999.99" step="0.01" inputMode="decimal" value={details.default_hourly_rate} onChange={e=>setDetails({...details,default_hourly_rate:e.target.value})} className="control mt-1 w-full border-secondary px-3"/></label>
+                            <button type="button" disabled={details.default_hourly_rate===''} onClick={()=>{setDetails({...details,default_hourly_rate:''});setShowHourlyRate(true);setDirty(true)}} className="control px-3 text-sm text-danger">Retirar predefinição</button>
+                          </div>}
+                          <p className="mt-2 text-xs text-text-secondary">Preenche os novos registos deste cliente. Pode alterar o valor em cada movimento. Guarde a ficha para aplicar a predefinição.</p>
+                        </div>
                         <label className="text-sm font-semibold">
                           Denominação legal
                           <input

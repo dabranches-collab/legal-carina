@@ -1,6 +1,7 @@
 {
-  "version": "0.8.1",
+  "version": "0.9.0",
   "changes": [
+    "Valor/hora predefinido na ficha do cliente, preenchido automaticamente nos novos movimentos e alterável em cada registo.",
     "Repartição com opção Só os não pagos, aplicada aos totais, gráficos, pendências e exportação.",
     "Selecção de clientes com Todos assinalado ou primeiro nome e número de seleccionados.",
     "Carregamento dos registos em lotes pequenos e recuperação automática de falhas transitórias.",

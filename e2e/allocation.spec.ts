@@ -3,10 +3,6 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
 
-test.beforeEach(async({page})=>{
- await page.addInitScript(()=>{localStorage.setItem('carina-release-notes-seen','0.8.1')})
-})
-
 test('pagamento limita totais, clientes, todos os pré-filtros e PDF',async({page},testInfo)=>{
  await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
  const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
