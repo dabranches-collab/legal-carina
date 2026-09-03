@@ -25,7 +25,9 @@ export default defineConfig({
       closeBundle() {
         const serviceWorkerUrl = resolve(buildDirectory, 'sw.js')
         const serviceWorker = readFileSync(serviceWorkerUrl, 'utf8')
-        writeFileSync(serviceWorkerUrl, serviceWorker.replaceAll('__APP_VERSION__', packageVersion))
+        const releaseNotes=JSON.parse(readFileSync(resolve(buildDirectory,'release-notes.json'),'utf8'))
+        if(releaseNotes.version!==packageVersion)throw new Error('Actualize as notas da versão antes de publicar.')
+        writeFileSync(serviceWorkerUrl, serviceWorker.replaceAll('__APP_VERSION__', packageVersion).replace('/*__RELEASE_NOTES__*/ null',JSON.stringify(releaseNotes)))
       },
     },
     {

@@ -1,0 +1,11 @@
+{
+  "version": "0.8.0",
+  "changes": [
+    "Repartição LEGALTEAM por período e clientes, com percentagens editáveis, gráficos e exportação PDF.",
+    "Sociedade-mãe na ficha do cliente, preenchida automaticamente nos novos movimentos e sempre alterável.",
+    "Novos angariadores reutilizáveis, com participação na repartição de honorários.",
+    "Fichas logo editáveis; Guardar a verde e Cancelar a vermelho quando existem alterações.",
+    "Pré-filtros no mesmo menu, cabeçalhos maiores, resumos alinhados e cálculo com indicador animado.",
+    "Histórico de provisões em PDF ou XLSX, com escolha entre valores por registo ou apenas tempos."
+  ]
+}

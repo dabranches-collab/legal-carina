@@ -22,6 +22,16 @@ test('preview de produção regista e ativa o service worker', async ({ page }) 
   expect(state.active).toBe(true)
   expect(state.scope).toBe(new URL('/',page.url()).href)
   expect(state.caches).toContain(`carina-legal-shell-${packageVersion}`)
+  const release=await page.evaluate(async()=>{
+    const registration=await navigator.serviceWorker.ready
+    return new Promise<{version:string;changes:string[]}>((resolve,reject)=>{
+      const timer=setTimeout(()=>reject(new Error('O service worker não devolveu as alterações.')),5000)
+      navigator.serviceWorker.addEventListener('message',function receive(event){if(event.data?.type==='RELEASE_NOTES'){clearTimeout(timer);navigator.serviceWorker.removeEventListener('message',receive);resolve(event.data.release)}})
+      registration.active?.postMessage({type:'GET_RELEASE_NOTES'})
+    })
+  })
+  expect(release.version).toBe(packageVersion)
+  expect(release.changes.length).toBeGreaterThan(0)
   await page.evaluate(async () => {
     const registrations=await navigator.serviceWorker.getRegistrations()
     await Promise.all(registrations.map(registration=>registration.unregister()))

@@ -2,6 +2,8 @@
 
 ## Preparação da publicação 0.8.0 — 03-09-2026
 
+- Aviso de actualização passa a mostrar a versão em espera e as alterações incluídas, obtidas do próprio service worker. Notas em public/release-notes.json; build recusa versão divergente. Uma página ainda executando 0.7.1 conserva o aviso antigo até actualizar. Corrigido foco das fichas para não roubar a escrita nem fechar fichas sobrepostas ao usar Escape.
+
 - Ordem autorizada: terminar e validar alterações, publicar 0.8.0, auditar intensivamente movimentos/relações/saldos, corrigir e voltar a publicar. A auditoria posterior ainda não foi concluída neste ponto.
 - Fichas de clientes, sociedades e responsáveis abrem editáveis. Guardar e Cancelar ficam inactivos sem alterações; após alteração, Guardar a verde e Cancelar a vermelho. A mesma apresentação aplica-se aos movimentos, condições/prestações de avença e credenciais. Fechar mantém-se disponível. A outra vertente do cliente só aparece por opção Acrescentar vertente e só persiste quando activa, preenchida e guardada; cancelar não grava. Novas vertentes conservam o ID devolvido, impedindo nova inserção na gravação seguinte.
 - Sociedade do cliente na página Geral, independente da sociedade emissora documental. Ao escolher cliente na criação de movimento, assume a sociedade-mãe; permite alteração manual e limpa/redefine a escolha ao mudar cliente. Clientes históricos sem atribuição ficam Por atribuir; não se presumiu uma sociedade a partir do histórico.
