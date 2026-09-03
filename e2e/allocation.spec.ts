@@ -3,6 +3,33 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
 
+test('lista inferior abre o próprio registo e actualiza a repartição sem perder filtros',async({page})=>{
+ await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
+ const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ await map.getByLabel('Data final da repartição').fill('2026-09-30')
+ await map.getByLabel('Escritório (%)',{exact:true}).fill('20')
+ await map.getByLabel('Execução (%)',{exact:true}).fill('60')
+ const table=page.getByRole('table',{name:'Registos do painel',exact:true})
+ const cell=table.getByRole('cell',{name:'Consulta e preparação de processo',exact:true})
+ await cell.click();await expect(page.getByRole('dialog',{name:'Editar movimento'})).toHaveCount(0)
+ await expect(table.locator('input,select,textarea,[contenteditable="true"]')).toHaveCount(0)
+ await cell.dblclick()
+ const dialog=page.getByRole('dialog',{name:'Editar movimento',exact:true})
+ await expect(dialog.getByLabel('Angariador da tarefa',{exact:true})).toHaveValue('hugo')
+ await dialog.getByLabel('Angariador da tarefa',{exact:true}).selectOption('carina')
+ await dialog.getByRole('button',{name:'Guardar alterações',exact:true}).click()
+ await expect(dialog).toHaveCount(0)
+ await expect(map.getByLabel('Data final da repartição')).toHaveValue('2026-09-30')
+ await expect(map.getByLabel('Escritório (%)',{exact:true})).toHaveValue('20')
+ await expect(map.getByRole('button',{name:/Carina Santos/})).toContainText('720,00')
+ await cell.dblclick();await expect(dialog.getByLabel('Angariador da tarefa',{exact:true})).toHaveValue('carina')
+ await dialog.getByRole('button',{name:'Cancelar',exact:true}).click()
+ await map.getByRole('button',{name:/Clientes sem angariador/}).click()
+ const client=map.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true})
+ await client.click();await expect(page.getByRole('dialog')).toHaveCount(0)
+ await client.dblclick();await expect(page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true})).toHaveValue('')
+})
+
 test('PDF da repartição respeita clientes, datas e percentagens e gráficos acompanham o resumo',async({page},testInfo)=>{
  await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
  const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})

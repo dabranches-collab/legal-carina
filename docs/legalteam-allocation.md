@@ -32,4 +32,10 @@ A migration aditiva `20260902235343_add_legalteam_allocation.sql` acrescenta cam
 
 O utilizador autorizou em 03-09-2026 o ensaio na base original. `scripts/test-allocation-original.sql` foi executado numa transacção com rollback integral, usando triggers e permissões reais e identidades temporárias; confirmou também a compatibilidade com a versão publicada. Os ensaios não deixam utilizadores/dados sintéticos. Não executar `db push` global nem reparar o histórico divergente por suposição.
 
-O ensaio local `scripts/test-allocation-db.mjs` usa PGlite com funções anteriores e permissões simuladas. Aceita como argumento o caminho absoluto do módulo PGlite instalado; por omissão usa a instalação temporária local `.tmp/provision-db/package/dist/index.js`. As 20 verificações cobrem transacções, campos obrigatórios, históricos, filtros, paginação e recusas de acesso. Não substitui o gate Supabase/staging. Unitários e E2E usam exclusivamente dados sintéticos.
+O ensaio local `scripts/test-allocation-db.mjs` usa PGlite com funções anteriores e permissões simuladas. Aceita como argumento o caminho absoluto do módulo PGlite instalado; por omissão usa a instalação temporária local `.tmp/provision-db/package/dist/index.js`. As 22 verificações cobrem transacções, campos obrigatórios, históricos, filtros, paginação e recusas de acesso. Não substitui o gate Supabase/staging. Unitários e E2E usam exclusivamente dados sintéticos.
+
+## Activação autorizada e fichas — 03-09-2026
+
+O utilizador autorizou expressamente aplicar os campos e funções à base original depois do ensaio com rollback, substituindo neste lote o staging separado. Aplicada isoladamente como `20260903011816_add_legalteam_allocation`; frontend 0.8.0 ainda não publicado. Mapa real, limites do período e permissões das RPCs verificados.
+
+Duplo clique na repartição ou lista inferior abre a ficha do próprio movimento. Guardar actualiza o mapa e a lista sem perder o período/taxas; clique simples continua a seleccionar. Os clientes da lista de pendências abrem a ficha de cliente. Prestações de avença usam uma caixa com gravação explícita e cancelamento sem escrita.

@@ -14,7 +14,7 @@ export function AdminUsersTable({rows,loading,onConfigure}:{rows:UserRow[];loadi
     {id:'last',label:'Último acesso',kind:'date',value:row=>row.lastSignInAt,render:row=>row.lastSignInAt?new Date(row.lastSignInAt).toLocaleString('pt-PT'):'Ainda não entrou'},
     {id:'actions',label:'Acções',sortable:false,searchable:false,exportable:false,value:()=>null,render:row=><button type="button" onClick={()=>onConfigure(row)} className="rounded-lg border border-border px-3 py-2 font-semibold text-primary">Configurar</button>},
   ]
-  return <StandardDataTable id="admin-users" label="Utilizadores existentes" rows={rows} columns={columns} rowKey={row=>row.userId} loading={loading} defaultPageSize={20}/>
+  return <StandardDataTable id="admin-users" label="Utilizadores existentes" rows={rows} columns={columns} rowKey={row=>row.userId} loading={loading} onRowDoubleClick={onConfigure} defaultPageSize={20}/>
 }
 
 export function LoginActivityTable({rows}:{rows:LoginRow[]}){

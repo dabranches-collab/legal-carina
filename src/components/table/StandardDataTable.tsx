@@ -1193,9 +1193,12 @@ export function StandardDataTable<Row>({
                     onFocus={(event) => {
                       if(event.target===event.currentTarget)setActiveRow(key);
                     }}
-                    onDoubleClick={() => onRowDoubleClick?.(row)}
+                    onDoubleClick={(event) => {
+                      if ((event.target as HTMLElement).closest('button,a,input,select,textarea,[contenteditable="true"]')) return;
+                      onRowDoubleClick?.(row);
+                    }}
                     onKeyDown={(event) => {
-                      if (event.key === "Enter" && onRowDoubleClick) {
+                      if (event.key === "Enter" && event.target === event.currentTarget && onRowDoubleClick) {
                         event.preventDefault();
                         onRowDoubleClick(row);
                         return;

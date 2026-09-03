@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { openClientRecord } from '../master-data/openClientRecord'
 import { EditWorkEntryModal } from '../work-entries/EditWorkEntryModal'
 import { CalendarDateInput } from '../../components/CalendarDateInput'
 import { StandardDataTable, type TableColumn } from '../../components/table/StandardDataTable'
@@ -19,7 +20,7 @@ function clientHref(id:string){
  query.set('view','master-data');query.set('entity','clients');query.set('record',id);query.delete('society');query.delete('clientType');query.delete('clientMode')
  return `?${query}`
 }
-export function LegalteamAllocation({societyId}:{societyId:string}){
+export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:string;refreshKey?:number;onSaved?:()=>void}){
  const [editing,setEditing]=useState<string|null>(null)
  const [exporting,setExporting]=useState(false),[exportError,setExportError]=useState('')
  const [dates,setDates]=useState<{start:string;end:string}|null>(null)
@@ -42,7 +43,7 @@ export function LegalteamAllocation({societyId}:{societyId:string}){
    if(active)setWork(rows)
   }catch(cause){if(active)setError(cause instanceof Error?cause.message:'Não foi possível carregar o mapa.')}
   finally{if(active)setLoading(false)}
- })();return()=>{active=false}},[societyId,refresh])
+ })();return()=>{active=false}},[societyId,refresh,refreshKey])
  const bounds=useMemo(()=>allocationPeriod(work),[work]),{start,end}=dates??bounds
  const validDates=!!start&&!!end&&start<=end
  const periodWork=useMemo(()=>validDates?work.filter(r=>eligibleAllocationWork(r)&&r.work_date>=start&&r.work_date<=end):[],[work,start,end,validDates])
@@ -137,8 +138,8 @@ export function LegalteamAllocation({societyId}:{societyId:string}){
    </>}
    {scope.length===0&&<p role="status" className="mt-4 text-sm">Não há registos para a selecção actual.</p>}
    <p className="mt-4 text-xs text-text-secondary">Os cartões permitem consultar os registos de cada pessoa. As parcelas acumulam-se quando alguém exerce várias funções.</p>
-   <div className="mt-4">{attention==='client'?<StandardDataTable key="clients" id="legalteam-missing-client-referrer" label="Clientes sem angariador" rows={missingClients} columns={clientColumns} rowKey={c=>c.id}/>:<StandardDataTable key="work" id="legalteam-allocation" label="Registos da repartição" rows={filtered} columns={columns} rowKey={r=>r.id} onRowDoubleClick={r=>setEditing(r.id)}/>}</div>
+   <div className="mt-4">{attention==='client'?<StandardDataTable key="clients" id="legalteam-missing-client-referrer" label="Clientes sem angariador" rows={missingClients} columns={clientColumns} rowKey={c=>c.id} onRowDoubleClick={c=>openClientRecord(c.id)}/>:<StandardDataTable key="work" id="legalteam-allocation" label="Registos da repartição" rows={filtered} columns={columns} rowKey={r=>r.id} onRowDoubleClick={r=>setEditing(r.id)}/>}</div>
   </>}
-  {editing&&<EditWorkEntryModal entryId={editing} canDelete={false} requiresReason={false} onClose={()=>setEditing(null)} onSaved={()=>{setEditing(null);setRefresh(n=>n+1)}}/>}
+  {editing&&<EditWorkEntryModal entryId={editing} canDelete={false} requiresReason={false} onClose={()=>setEditing(null)} onSaved={()=>{setEditing(null);if(onSaved)onSaved();else setRefresh(n=>n+1)}}/>}
  </section>
 }

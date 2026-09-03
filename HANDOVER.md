@@ -1,5 +1,16 @@
 # Legal Carina — handover
 
+## Base original activada e duplo clique — 03-09-2026
+
+- Após bloqueio inicial da revisão automática, o utilizador autorizou expressamente os campos de angariação e três RPCs na base original, aceitando o ensaio com rollback em substituição de staging separado. Migration candidata `20260902235343_add_legalteam_allocation.sql` aplicada isoladamente como `20260903011816_add_legalteam_allocation` no Supabase `vtvvqyebigflgqccbqsw`. Três colunas e três RPCs confirmadas; execução authenticated autorizada e anon recusada. Histórico divergente preservado, sem db push/repair.
+- Preview normal na porta 4194, sem flags de demonstração e com a base original: login, mapa com 4424 movimentos, 138 clientes e período 21-02-2018 a 02-09-2026 confirmados pelo browser. O mapa já apresenta gráficos, taxas, pendências e PDF. Campos históricos sem angariador permanecem por preencher.
+- Duplo clique abre a ficha do registo na lista inferior comum das Sociedades/Responsáveis, na repartição e nos registos de consumo das provisões; mantém o clique simples sem edição de células. Gravações nas listas do painel actualizam a repartição/lista/indicadores, preservando as datas e percentagens da consulta.
+- Clientes sem angariador, mistos e avenças abrem a ficha pelo duplo clique; utilizadores abrem a configuração e documentos abrem a consulta. Clientes/Sociedades/Responsáveis/Registos e Provisões já usavam a ficha comum. Botões e campos dentro das linhas não desencadeiam outra ficha por propagação do duplo clique/Enter.
+- Prestações de avença deixam de gravar por alteração de célula: duplo clique ou «Abrir prestação» apresenta a caixa, só «Guardar prestação» envia os dados; Cancelar preserva a prestação. Fichas de movimentos/prestações são renderizadas fora do formulário do cliente para impedir submissões cruzadas. Tabelas técnicas de auditoria/origem continuam apenas de consulta.
+- Validação deste lote: 25 testes unitários dirigidos, 17 E2E de repartição e fichas/permissões mais um E2E de prestação (só a prestação é gravada), TypeScript, lint, segurança e build aprovados. Cenários responsivos claro/escuro em 320/390/768/1440 px incluídos. Abertura de movimento real confirmada no browser e fechada sem gravar. Testes de escrita só com fixtures sintéticas.
+- Frontend 0.8.0 continua em revisão local/GitHub na branch `codex/legalteam-distribution`; **não publicado**. Produção Cloudflare mantém 0.7.1, commit funcional `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, URL https://legal-carina.dabranches.workers.dev (reconfirmados neste lote antes da alteração da base). Não se criou recurso temporário pago nem se emitiram notas.
+
+
 ## Revisão 0.8.0 com base original — 03-09-2026
 
 - O utilizador autorizou expressamente trabalhar na versão local com a base original, criar dados de teste e apagá-los no fim, preservando os utilizadores de teste. Esta indicação substitui neste lote a restrição anterior a previews sintéticos. Frontend ainda **não publicado**.

@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { TaskReferrerFields } from './TaskReferrerFields'
 import { isLegalteam, professionalName } from '../../lib/professionalNames'
 import { useEffect, useState, type FormEvent } from "react";
@@ -129,6 +130,7 @@ export function EditWorkEntryModal({
   const dirty=Boolean(entry&&(JSON.stringify(entry)!==originalEntry||expenseDrafts.length));
   async function submit(event: FormEvent) {
     event.preventDefault();
+    event.stopPropagation();
     if (!supabase || !entry) return;
     if(isLegalteam(options?.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&(!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim()))){setError('Indique o angariador da tarefa.');return}
     if (entry.is_paid && !entry.is_invoiced) {
@@ -177,7 +179,7 @@ export function EditWorkEntryModal({
     }
     onSaved("deleted");
   }
-  return (
+  return createPortal(
     <div
       className="app-safe-fixed fixed z-[85] grid place-items-center overflow-y-auto bg-navigation/60 p-4"
       role="dialog"
@@ -648,6 +650,6 @@ export function EditWorkEntryModal({
           </div>
         </div>
       </form>
-    </div>
+    </div>, document.body
   );
 }

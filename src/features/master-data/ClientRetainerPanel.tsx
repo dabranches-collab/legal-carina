@@ -1,3 +1,5 @@
+import { chargeStatuses } from './retainerCharge';
+import { RetainerChargeDialog } from './RetainerChargeDialog';
 import {
   useCallback,
   useEffect,
@@ -81,6 +83,7 @@ export function ClientRetainerPanel({
   readOnly: boolean;
   onRequestEdit?: () => void;
 }) {
+  const [editingCharge,setEditingCharge]=useState<Charge|null>(null);
   const [retainers, setRetainers] = useState<Retainer[]>([]),
     [retainer, setRetainer] = useState<Retainer | null>(null),
     [form, setForm] = useState(empty),
@@ -279,11 +282,11 @@ export function ClientRetainerPanel({
     }
     setSaving(false);
   }
-  async function updateCharge(id: string, change: Partial<Charge>) {
-    if (!supabase) return;
+  async function updateCharge(id: string, change: Partial<Charge>):Promise<boolean> {
+    if (!supabase||readOnly) return false;
     setError("");
     const current = charges.find((item) => item.id === id);
-    if (!current) return;
+    if (!current) return false;
     const next = { ...current, ...change };
     if (change.status === "invoiced" && !next.invoice_date)
       next.invoice_date = new Date().toISOString().slice(0, 10);
@@ -314,8 +317,8 @@ export function ClientRetainerPanel({
         updated_at: new Date().toISOString(),
       })
       .eq("id", id);
-    if (result.error) setError(result.error.message);
-    else await load();
+    if (result.error) {setError(result.error.message);return false;}
+    await load();return true;
   }
   const pending = useMemo(
       () =>
@@ -403,7 +406,7 @@ export function ClientRetainerPanel({
         <div className="mt-4 overflow-x-auto rounded-xl border border-border">
           <table className="w-full min-w-[48rem] text-sm">
             <thead className="bg-surface-subtle"><tr><th className="p-2 text-left">Vigência</th><th className="p-2 text-right">Valor mensal</th><th className="p-2 text-right">Horas incluídas</th><th className="p-2 text-left">Sociedade</th><th className="p-2 text-center">Estado</th><th className="p-2"></th></tr></thead>
-            <tbody>{retainers.map(item=><tr key={item.id} className={retainer?.id===item.id?'bg-secondary-soft':''}>
+            <tbody>{retainers.map(item=><tr key={item.id} tabIndex={0} onDoubleClick={()=>editTerms(item)} onKeyDown={event=>{if(event.key==='Enter'&&event.target===event.currentTarget){event.preventDefault();editTerms(item)}}} className={retainer?.id===item.id?'bg-secondary-soft':''}>
               <td className="border-t border-border p-2">{item.starts_on} — {item.ends_on??'sem fim'}</td>
               <td className="border-t border-border p-2 text-right">{money(item.monthly_amount,item.currency)}</td>
               <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.hours_interval_months===1?'mês':item.hours_interval_months===12?'ano':`${item.hours_interval_months} meses`}`}</td>
@@ -632,98 +635,14 @@ export function ClientRetainerPanel({
               </thead>
               <tbody>
                 {charges.map((charge) => (
-                  <tr key={charge.id}>
-                    <td className="border-t border-border p-2 capitalize">
-                      {monthLabel(charge.period_start)}
-                    </td>
-                    <td className="border-t border-border p-2 text-right">
-                      {money(charge.amount, charge.currency)}
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <select
-                        disabled={readOnly}
-                        aria-label={`Estado de ${monthLabel(charge.period_start)}`}
-                        value={charge.status}
-                        onChange={(event) =>
-                          void updateCharge(charge.id, {
-                            status: event.target.value as Charge["status"],
-                          })
-                        }
-                        className="control w-full px-2"
-                      >
-                        <option value="pending">Por facturar</option>
-                        <option value="invoiced">Facturada</option>
-                        <option value="paid">Liquidada</option>
-                        <option value="uncollectible">Incobrável</option>
-                      </select>
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <input
-                        disabled={readOnly || charge.status === "pending"}
-                        aria-label={`N.º factura de ${monthLabel(charge.period_start)}`}
-                        value={charge.invoice_reference ?? ""}
-                        onBlur={(event) =>
-                          void updateCharge(charge.id, {
-                            invoice_reference: event.target.value,
-                          })
-                        }
-                        onChange={(event) =>
-                          setCharges((current) =>
-                            current.map((item) =>
-                              item.id === charge.id
-                                ? {
-                                    ...item,
-                                    invoice_reference: event.target.value,
-                                  }
-                                : item,
-                            ),
-                          )
-                        }
-                        className="control w-full px-2"
-                      />
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <input
-                        disabled={readOnly || charge.status === "pending"}
-                        aria-label={`Data da factura de ${monthLabel(charge.period_start)}`}
-                        type="date"
-                        value={charge.invoice_date ?? ""}
-                        onChange={(event) =>
-                          void updateCharge(charge.id, {
-                            invoice_date: event.target.value || null,
-                          })
-                        }
-                        className="control w-full px-2"
-                      />
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <input
-                        disabled={readOnly}
-                        aria-label={`Data de vencimento de ${monthLabel(charge.period_start)}`}
-                        type="date"
-                        value={charge.due_on ?? ""}
-                        onChange={(event) =>
-                          void updateCharge(charge.id, {
-                            due_on: event.target.value || null,
-                          })
-                        }
-                        className="control w-full px-2"
-                      />
-                    </td>
-                    <td className="border-t border-border p-2">
-                      <input
-                        disabled={readOnly || charge.status !== "paid"}
-                        aria-label={`Data de liquidação de ${monthLabel(charge.period_start)}`}
-                        type="date"
-                        value={charge.paid_on ?? ""}
-                        onChange={(event) =>
-                          void updateCharge(charge.id, {
-                            paid_on: event.target.value || null,
-                          })
-                        }
-                        className="control w-full px-2"
-                      />
-                    </td>
+                  <tr key={charge.id} tabIndex={0} className="cursor-pointer hover:bg-secondary-soft" onDoubleClick={()=>setEditingCharge(charge)} onKeyDown={event=>{if(event.key==='Enter'&&event.target===event.currentTarget){event.preventDefault();setEditingCharge(charge)}}}>
+                    <td className="border-t border-border p-2 capitalize">{monthLabel(charge.period_start)}</td>
+                    <td className="border-t border-border p-2 text-right">{money(charge.amount,charge.currency)}</td>
+                    <td className="border-t border-border p-2">{chargeStatuses[charge.status]}</td>
+                    <td className="border-t border-border p-2">{charge.invoice_reference||'—'}</td>
+                    <td className="border-t border-border p-2">{charge.invoice_date||'—'}</td>
+                    <td className="border-t border-border p-2">{charge.due_on||'—'}</td>
+                    <td className="border-t border-border p-2">{charge.paid_on||'—'}<button type="button" onClick={()=>setEditingCharge(charge)} className="control ml-2 px-3">Abrir prestação</button></td>
                   </tr>
                 ))}
               </tbody>
@@ -737,6 +656,7 @@ export function ClientRetainerPanel({
           </div></details>
         </>
       )}
+    {editingCharge&&<RetainerChargeDialog charge={editingCharge} readOnly={readOnly} onClose={()=>setEditingCharge(null)} onSave={value=>updateCharge(value.id,value)}/>}
     </section>
   );
 }
