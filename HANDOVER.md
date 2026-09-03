@@ -2,6 +2,7 @@
 
 ## Versão 0.8.0 — preparada para revisão local, 03-09-2026
 
+- Commit funcional `56be98f70d3eb494053752c7b30837fbe4d8cf8d` confirmado em GitHub e local na branch `codex/legalteam-distribution`. Este apontamento segue em commit documental posterior; produção permanece separada.
 - Branch `codex/legalteam-distribution`, baseada em `5535dde0f3cc15c0daaf53992aa75b9c030d2cb0`. Código e documentação deste lote seguem juntos para GitHub. O utilizador pediu para ver antes de publicar: **sem deploy, migration remota, emissão de notas ou alteração de dados reais**.
 - LEGALTEAM: período inclusivo pela data do trabalho, filtro todos/só pagos, horas por responsável e distribuição dos honorários sem IVA: 10% angariador do cliente, 10% angariador da tarefa, 50% executor e 30% escritório. Despesas excluídas; avenças contribuem apenas horas. Partes históricas sem angariador ficam por atribuir.
 - Campo Angariador do cliente no separador Geral de todos os clientes, opcional para preenchimento retroactivo. Tarefas LEGALTEAM exigem Carina, Hugo ou Outro com nome. Menus apresentam Carina Santos, Hugo Mendonça e Paula Chaves, preservando identidades existentes.
