@@ -1,6 +1,6 @@
 export type CreditAccount = { id:string; client_id:string; client_name:string; billing_entity_id:string; society_name:string; currency:string; received:number; consumed:number; balance:number; noted_work_ids?:string[] }
 export type ProvisionWork = { id:string; work_date:string; activity_description:string; duration_minutes:number; effective_amount:number }
-export type ProvisionNote = { id:string; number:string; issued_at:string; subtotal:number; vat_rate:number; vat:number; total:number; deducted:number; remaining:number; balance_after:number; items:ProvisionWork[]; document_options?:{client_name?:string;society_name?:string} }
+export type ProvisionNote = { id:string; revision?:number; number:string; issued_at:string; subtotal:number; vat_rate:number; vat:number; total:number; deducted:number; remaining:number; balance_after:number; items:ProvisionWork[]; document_options?:{client_name?:string;society_name?:string} }
 export type CreditMovement = { id:string; recorded_at:string; movement_date:string; kind:'payment'|'consumption'|'reversal'; amount:number; reference:string; note_id:string|null; note:ProvisionNote|null; reverses_id:string|null; reversed:boolean }
 export type CreditDetail = { account:CreditAccount; movements:CreditMovement[] }
 export const creditMoney=(value:number,currency='EUR')=>new Intl.NumberFormat('pt-PT',{style:'currency',currency}).format(value)

@@ -21,6 +21,10 @@ test.beforeEach(async({page})=>{
     if(pathname.endsWith('/rpc/search_work_entries')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify({items:rows,total:rows.length,pageSize:10000})});return
     }
+    if(pathname.endsWith('/rpc/save_honorarium_document')){
+      const args=request.postDataJSON(),items=rows.filter(row=>args.p_work_entry_ids.includes(row.id)),subtotal=items.reduce((sum,row)=>sum+row.effective_amount,0),vat=Math.round(subtotal*args.p_vat_rate)/100
+      await route.fulfill({contentType:'application/json',body:JSON.stringify({id:'note-qa',document_id:'note-qa',revision:1,number:'NH-QA-1',issued_at:'2026-08-21T12:00:00Z',subtotal,vat,total:subtotal+vat,deducted:0,remaining:subtotal+vat,balance_after:0,items})});return
+    }
     if(pathname.endsWith('/firm_members')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'firm-pdf-qa'})});return
     }
@@ -53,11 +57,11 @@ for(const document of [
     await page.setViewportSize({width:1440,height:900})
     await page.addInitScript(()=>{const NativeDate=Date;class FixedDate extends NativeDate{constructor(...args:ConstructorParameters<typeof Date>){super(...(args.length?args:['2026-08-21T12:00:00Z']) as ConstructorParameters<typeof Date>)}static now(){return new NativeDate('2026-08-21T12:00:00Z').getTime()}};window.Date=FixedDate as DateConstructor})
     await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
-    await page.getByTitle(document.button==='Cobrança'?'Seleccionar movimentos facturados e não pagos para reforçar a cobrança.':'Seleccionar movimentos não facturados para preparar a Nota de Honorários.').click()
+    await page.getByTitle(document.button==='Cobrança'?'Seleccionar movimentos facturados e não pagos para reforçar a cobrança.':'Preparar, consultar ou rever notas de honorários deste cliente.').click()
     await expect(page.getByText(`Seleccionar todos os ${rows.length} movimentos`)).toBeVisible()
     await page.getByLabel(`Seleccionar todos os ${rows.length} movimentos`).check()
     const downloadPromise=page.waitForEvent('download')
-    await page.getByRole('button',{name:'Guardar PDF'}).click()
+    await page.getByRole('button',{name:document.button==='Cobrança'?'Guardar PDF':'Emitir nota e guardar PDF'}).click()
     const download=await downloadPromise
     expect(download.suggestedFilename()).toBe(document.file)
     await download.saveAs(path.resolve('output/pdf',document.file))

@@ -231,10 +231,7 @@ export function MasterDataPage({
     row: Row;
     kind: "honorarium" | "collection";
   } | null>(null);
-  const [uninvoicedClientIds, setUninvoicedClientIds] = useState<Set<string>>(
-      new Set(),
-    ),
-    [unpaidClientIds, setUnpaidClientIds] = useState<Set<string>>(new Set());
+  const [unpaidClientIds, setUnpaidClientIds] = useState<Set<string>>(new Set());
   const [retainerClientIds, setRetainerClientIds] = useState<Set<string>>(
     new Set(),
   );
@@ -317,21 +314,12 @@ export function MasterDataPage({
         );
       }
       if (flagsResult.error) {
-        setUninvoicedClientIds(new Set());
         setUnpaidClientIds(new Set());
       } else {
         const flags = (flagsResult.data ?? []) as Array<{
           client_id: string;
-          has_uninvoiced: boolean;
           has_unpaid: boolean;
         }>;
-        setUninvoicedClientIds(
-          new Set(
-            flags
-              .filter((item) => item.has_uninvoiced)
-              .map((item) => item.client_id),
-          ),
-        );
         setUnpaidClientIds(
           new Set(
             flags
@@ -1053,20 +1041,15 @@ export function MasterDataPage({
           {
             id: "honorarium_available",
             label: "Nota de Honorários",
-            kind: "boolean" as const,
+            sortable: false,
+            filterable: false,
             width: 190,
-            value: (row: Row) => uninvoicedClientIds.has(row.id),
+            value: () => '',
             render: (row: Row) => {
-              const available = uninvoicedClientIds.has(row.id);
               return (
                 <button
                   type="button"
-                  disabled={!available}
-                  title={
-                    available
-                      ? "Seleccionar movimentos não facturados para preparar a Nota de Honorários."
-                      : "Sem movimentos não facturados disponíveis."
-                  }
+                  title="Preparar, consultar ou rever notas de honorários deste cliente."
                   onClick={() => setDocumentClient({ row, kind: "honorarium" })}
                   className="min-h-9 whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 font-semibold text-surface disabled:cursor-not-allowed disabled:border disabled:border-border disabled:bg-surface-subtle disabled:text-text-secondary"
                 >
@@ -1259,12 +1242,7 @@ export function MasterDataPage({
                   ))}
                   <button
                     type="button"
-                    disabled={!uninvoicedClientIds.has(editing.id)}
-                    title={
-                      uninvoicedClientIds.has(editing.id)
-                        ? "Seleccionar movimentos não facturados para preparar a Nota de Honorários."
-                        : "Sem movimentos não facturados disponíveis."
-                    }
+                    title="Preparar, consultar ou rever as notas de honorários do cliente."
                     onClick={() =>
                       setDocumentClient({ row: editing, kind: "honorarium" })
                     }

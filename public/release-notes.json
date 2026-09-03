@@ -1,16 +1,12 @@
 {
-  "version": "0.9.0",
+  "version": "0.10.0",
   "changes": [
-    "Valor/hora predefinido na ficha do cliente, preenchido automaticamente nos novos movimentos e alterável em cada registo.",
-    "Repartição com opção Só os não pagos, aplicada aos totais, gráficos, pendências e exportação.",
-    "Selecção de clientes com Todos assinalado ou primeiro nome e número de seleccionados.",
-    "Carregamento dos registos em lotes pequenos e recuperação automática de falhas transitórias.",
-    "Lista de alterações também apresentada depois de actualizar a aplicação, até ser fechada.",
-    "Repartição LEGALTEAM por período e clientes, com percentagens editáveis, gráficos e exportação PDF.",
-    "Sociedade-mãe na ficha do cliente, preenchida automaticamente nos novos movimentos e sempre alterável.",
-    "Novos angariadores reutilizáveis, com participação na repartição de honorários.",
-    "Fichas logo editáveis; Guardar a verde e Cancelar a vermelho quando existem alterações.",
-    "Pré-filtros no mesmo menu, cabeçalhos maiores, resumos alinhados e cálculo com indicador animado.",
-    "Histórico de provisões em PDF ou XLSX, com escolha entre valores por registo ou apenas tempos."
+    "Notas de honorários com histórico de versões, revisão da selecção e filtros Todos, Com nota, Sem nota e Estornada.",
+    "Estornar uma nota repõe o abate no saldo disponível e liberta os registos para nova emissão.",
+    "Saldo efectivo de provisões separado da estimativa pelas horas, na ficha, na lista e nas exportações PDF/XLSX.",
+    "Reemitir uma nota mantém o histórico e evita descontar duas vezes a mesma provisão; facturação e pagamento continuam independentes.",
+    "Correcção das permissões de criação e partilha de notas de trabalho para o perfil da Paula Chaves.",
+    "Notas de honorários respeitam a sociedade emissora predefinida do cliente, mesmo quando a ficha demora mais a carregar do que os movimentos.",
+    "Valor/hora predefinido na ficha do cliente, preenchido automaticamente nos novos movimentos e alterável em cada registo."
   ]
 }

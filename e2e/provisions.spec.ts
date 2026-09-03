@@ -7,7 +7,7 @@ test('Provisões calcula o saldo na linha e abre os registos sem emitir notas',a
  await page.goto('/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions')
  const table=page.getByRole('table',{name:'Clientes com provisões'})
  await expect(table).toContainText('Cliente Sintético');await expect(table).toContainText('Cliente Sem Saldo')
- await expect(table).toContainText('631,00');await expect(table).toContainText('Saldo esgotado')
+ await expect(table).toContainText('877,00');await expect(table).toContainText('Saldo esgotado')
  await page.getByRole('button',{name:/Histórico de Cliente Sintético/}).click()
  const usage=page.getByRole('region',{name:'Consumo da provisão nos registos'})
  await expect(usage).toContainText('01/08/2026');await expect(usage).toContainText('631,00')
@@ -24,6 +24,21 @@ test('Provisões calcula o saldo na linha e abre os registos sem emitir notas',a
  const timeFile=await timeDownload;await timeFile.saveAs('.tmp/provision-usage-time.pdf')
  const contents=(await readFile('.tmp/provision-usage-time.pdf')).toString('latin1');expect(contents).toContain('631,00');expect(contents).not.toContain('Honorários:')
  expect(notesIssued).toBe(0)
+})
+
+test('estornar a nota repõe o saldo efectivo na ficha e na linha do cliente',async({page})=>{
+ await page.goto('/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions')
+ await page.getByRole('button',{name:/Histórico de Cliente Sintético/}).click()
+ const balance=page.getByRole('region',{name:'Saldo disponível da provisão',exact:true})
+ await expect(balance).toContainText('877,00')
+ const note=page.getByRole('article').filter({has:page.getByText(/01\/09\/2026 · Nota de Honorários/)})
+ await note.getByRole('button',{name:'Estornar',exact:true}).click()
+ await note.getByLabel('Motivo do estorno').fill('Correcção sintética para nova emissão')
+ await note.getByRole('button',{name:'Confirmar estorno'}).click()
+ await expect(balance).toContainText('1000,00')
+ await expect(page.getByText('Estorno concluído. O saldo foi actualizado.')).toBeVisible()
+ await page.getByRole('button',{name:'Fechar provisões'}).click()
+ await expect(page.getByRole('table',{name:'Clientes com provisões'})).toContainText('1000,00')
 })
 
 for(const viewport of [{width:320,height:568},{width:390,height:844},{width:768,height:1024},{width:1440,height:900}]){
@@ -57,7 +72,8 @@ for(const mode of ['values','time'])test('exportação XLSX de provisões: '+mod
  const XLSX=await import('xlsx');const book=XLSX.read(await readFile(path),{type:'buffer'}),rows=XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]],{header:1}) as unknown[][]
  expect(rows.flat()).toContain('Resumo final');expect(rows.flat()).toContain('Saldo disponível')
  expect(rows[4]).toHaveLength(mode==='time'?3:8)
- expect(rows.find(r=>r[0]==='Saldo disponível')?.[1]).toBe(631)
+ expect(rows.find(r=>r[0]==='Saldo disponível')?.[1]).toBe(877)
+ expect(rows.find(r=>r[0]==='Saldo estimado após registos')?.[1]).toBe(631)
  await expect(dialog.getByRole('status')).toContainText('XLSX preparado')
  const repeat=page.waitForEvent('download');await dialog.getByRole('link',{name:'Descarregar XLSX novamente'}).click();expect((await repeat).suggestedFilename()).toBe(file.suggestedFilename())
  await dialog.getByRole('button',{name:'Fechar',exact:true}).click();await expect(dialog).toHaveCount(0)

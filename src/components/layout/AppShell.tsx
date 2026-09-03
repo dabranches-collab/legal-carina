@@ -66,7 +66,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
     overview:'Resumo global da actividade, facturação e acompanhamento.',
     clients:'Consulta e gestão dos clientes e respectivas vertentes.',
     notes:'Notas pessoais e partilhadas, listas, imagens e gravações de voz.',
-    provisions:'Saldos de provisões actualizados pelos registos.',
+    provisions:'Saldos de provisões, notas e estornos.',
     retainers:'Tratamento das condições, horas e facturação das avenças.',
     billing:'Análise e acompanhamento por sociedade.',
     professionals:'Análise e acompanhamento por responsável.',

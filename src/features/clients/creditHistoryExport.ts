@@ -18,10 +18,10 @@ export function creditHistoryData(account:CreditAccount,usage:CreditUsage,moveme
  for(const m of active)if(m.note&&m.kind==='consumption')services(m.note.items,m.note.total)
  services(usage.rows,usage.total)
  events.sort((a,b)=>a.date.localeCompare(b.date)||(b.receipt-a.receipt)||a.id.localeCompare(b.id))
- const header=mode==='values'?['Data','Descrição','Tempo (min)','Provisão recebida','Honorários sem IVA','IVA','Total com IVA','Saldo da provisão']:['Data','Descrição','Tempo (min)']
+ const header=mode==='values'?['Data','Descrição','Tempo (min)','Provisão recebida','Honorários sem IVA','IVA','Total com IVA','Saldo estimado']:['Data','Descrição','Tempo (min)']
  let balance=0
  const rows=events.map(e=>{balance+=e.receipt-e.total;return mode==='values'?[creditDate(e.date),e.description,e.minutes,e.receipt/100,e.missing?'Sem preço':e.base/100,(e.total-e.base)/100,e.missing?'Por apurar':e.total/100,Math.max(0,balance)/100]:[creditDate(e.date),e.receipt?`${e.description} · ${creditMoney(e.receipt/100,account.currency)}`:e.description,e.minutes]})
- const summary:[string,number|string][]=[['Provisões recebidas',Number(account.received)],['Provisão utilizada',usage.consumed],['Saldo disponível',usage.balance],['Valor dos registos sem cobertura',usage.excess],['Tempo total (min)',events.reduce((n,e)=>n+e.minutes,0)]]
+ const summary:[string,number|string][]=[['Provisões recebidas',Number(account.received)],['Abatido em notas válidas',Number(account.consumed)],['Saldo disponível',Number(account.balance)],['Utilização estimada pelos registos',usage.consumed],['Saldo estimado após registos',usage.balance],['Valor dos registos sem cobertura',usage.excess],['Tempo total (min)',events.reduce((n,e)=>n+e.minutes,0)]]
  if(usage.missingPrice)summary.push(['Registos sem preço · saldo por apurar',usage.missingPrice])
  return {header,rows,summary}
 }
@@ -38,7 +38,7 @@ export async function createCreditHistoryFile(account:CreditAccount,usage:Credit
  const {jsPDF}=await import('jspdf'),doc=new jsPDF();let y=20
  const line=(text:string,bold=false)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const part of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(part,15,y);y+=5}y+=2}
  line('Histórico de provisões',true);line(account.client_name);line(account.society_name);line(mode==='values'?'Registos com valores e saldo corrente':'Registos com tempos · resumo monetário no final')
- for(const row of data.rows){line(`${row[0]} · ${row[2]} min`,true);line(String(row[1]));if(mode==='values'){if(Number(row[3]))line(`Provisão: ${creditMoney(Number(row[3]),account.currency)}`);else line(`Honorários: ${typeof row[4]==='number'?creditMoney(row[4],account.currency):row[4]} · IVA: ${creditMoney(Number(row[5]),account.currency)} · Total: ${typeof row[6]==='number'?creditMoney(row[6],account.currency):row[6]}`);line(`Saldo: ${creditMoney(Number(row[7]),account.currency)}`)}}
+ for(const row of data.rows){line(`${row[0]} · ${row[2]} min`,true);line(String(row[1]));if(mode==='values'){if(Number(row[3]))line(`Provisão: ${creditMoney(Number(row[3]),account.currency)}`);else line(`Honorários: ${typeof row[4]==='number'?creditMoney(row[4],account.currency):row[4]} · IVA: ${creditMoney(Number(row[5]),account.currency)} · Total: ${typeof row[6]==='number'?creditMoney(row[6],account.currency):row[6]}`);line(`Saldo estimado: ${creditMoney(Number(row[7]),account.currency)}`)}}
  line('Resumo final',true);for(const [label,value] of data.summary)line(`${label}: ${label.includes('(min)')||label.includes('sem preço')?value:creditMoney(Number(value),account.currency)}`,label==='Saldo disponível')
  line('Mapa de acompanhamento. Não emite uma Nota de Honorários nem altera pagamentos.')
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}

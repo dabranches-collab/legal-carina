@@ -7,9 +7,10 @@ export function saveCreditUsagePdf(account:CreditAccount,usage:CreditUsage){
  const line=(text:string,bold=false)=>{doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const part of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(part,15,y);y+=5}y+=2}
  line('Acompanhamento da provisão',true);line(account.client_name);line(account.society_name)
  line(`Registos desde ${usage.startsOn?creditDate(usage.startsOn):'o depósito'} até ${creditDate(new Date().toLocaleDateString('sv-SE'))}`)
+ line(`Saldo disponível: ${creditMoney(account.balance,account.currency)}`,true)
  line(`Recebido: ${creditMoney(account.received,account.currency)}`)
- line(`Provisão utilizada: ${creditMoney(usage.consumed,account.currency)}`)
- line(`Saldo após registos: ${creditMoney(usage.balance,account.currency)}`,true)
+ line(`Utilização estimada: ${creditMoney(usage.consumed,account.currency)}`)
+ line(`Saldo estimado após registos: ${creditMoney(usage.balance,account.currency)}`,true)
  if(usage.excess>0)line(`Registos sem cobertura: ${creditMoney(usage.excess,account.currency)}`)
  if(usage.missingPrice>0)line(`Saldo por apurar: ${usage.missingPrice} registos sem preço.`)
  for(const row of usage.rows){line(`${creditDate(row.work_date)} · ${row.duration_minutes} min · ${row.effective_amount===null?'Sem preço':creditMoney(row.effective_amount,account.currency)}`,true);line(row.activity_description)}
@@ -51,7 +52,7 @@ export function saveCreditPdf(account:CreditAccount,movements:CreditMovement[],f
 export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){
  const doc=new jsPDF();let y=20
  function line(text:string,bold=false){doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const row of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(row,15,y);y+=5}y+=2}
- line(`Nota de Honorários · ${note.number}`,true);if(reversed)line('ESTORNADA — cópia histórica',true)
+ line(`Nota de Honorários · ${note.number}${note.revision?` · v${note.revision}`:''}`,true);if(reversed)line('ESTORNADA — cópia histórica',true)
  line(note.document_options?.society_name??account.society_name,true);line(note.document_options?.client_name??account.client_name);line(`Emissão: ${creditDate(note.issued_at)}`)
  for(const item of note.items){line(`${creditDate(item.work_date)} · ${item.duration_minutes} min · ${creditMoney(item.effective_amount,account.currency)}`,true);line(item.activity_description)}
  line(`Honorários: ${creditMoney(note.subtotal,account.currency)}`);line(`IVA (${note.vat_rate}%): ${creditMoney(note.vat,account.currency)}`)
@@ -60,4 +61,4 @@ export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${note.number} · ${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}
  return doc
 }
-export function saveProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){createProvisionNotePdf(account,note,reversed).save(`${note.number}${reversed?'-estornada':''}.pdf`)}
+export function saveProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){createProvisionNotePdf(account,note,reversed).save(`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`)}

@@ -1,33 +1,33 @@
-import { render,screen,waitFor } from '@testing-library/react'
+import { act,render,screen,waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach,describe,expect,it,vi } from 'vitest'
 import { HonorariumNoteModal } from './HonorariumNoteModal'
 
-const {rpc,from,provisionRpc}=vi.hoisted(()=>({rpc:vi.fn(),from:vi.fn(),provisionRpc:vi.fn()}))
-vi.mock('../../lib/supabase',()=>({supabase:{rpc:(name:string,...args:unknown[])=>name==='get_client_credit_accounts'?provisionRpc(name,...args):rpc(name,...args),from}}))
+const {rpc,from,provisionRpc,historyRpc,documentRpc}=vi.hoisted(()=>({rpc:vi.fn(),from:vi.fn(),provisionRpc:vi.fn(),historyRpc:vi.fn(),documentRpc:vi.fn()}))
+vi.mock('../../lib/supabase',()=>({supabase:{rpc:(name:string,...args:unknown[])=>name==='get_client_credit_accounts'?provisionRpc(name,...args):name==='get_client_honorarium_documents'?historyRpc(name,...args):name==='save_honorarium_document'||name==='void_honorarium_document'?documentRpc(name,...args):rpc(name,...args),from}}))
 const {pdfRect,pdfText,pdfAddPage,pdfSetPage,pdfState}=vi.hoisted(()=>({pdfRect:vi.fn(),pdfText:vi.fn(),pdfAddPage:vi.fn(),pdfSetPage:vi.fn(),pdfState:{pages:1}}))
 vi.mock('jspdf',()=>({jsPDF:class{constructor(){pdfState.pages=1}setFont(){}setFontSize(){}text=pdfText;setFillColor(){}rect=pdfRect;addPage(){pdfState.pages+=1;pdfAddPage()}getNumberOfPages(){return pdfState.pages}setPage=pdfSetPage;setProperties(){}splitTextToSize(value:string){return value.length>80?[value.slice(0,40),value.slice(40,80),value.slice(80)]:[value]}output(){return new Blob(['pdf'],{type:'application/pdf'})}}}))
 const downloads:string[]=[]
 const query=(data:unknown)=>{const result={error:null,data};const chain:any={select:()=>chain,eq:()=>chain,in:()=>chain,order:()=>chain,range:()=>chain,maybeSingle:async()=>result,then:(resolve:(value:typeof result)=>void)=>Promise.resolve(result).then(resolve)};return chain}
 
 describe('HonorariumNoteModal',()=>{
- beforeEach(()=>{provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockReturnValue(query(null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
+ beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:args.p_expected_total-args.p_expected_deduction,balance_after:0}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockReturnValue(query(null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
   {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade'},
   {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
  ]}})})
- it('consulta apenas movimentos não facturados e prepara só os seleccionados',async()=>{
+ it('consulta todos os movimentos independentemente da facturação e prepara só os seleccionados',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-1" clientName="Cliente Teste" onClose={()=>{}}/> )
   expect(await screen.findByText('Análise documental')).toBeInTheDocument()
-  await waitFor(()=>expect(rpc).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_client_id:'client-1',p_invoiced:false,p_page_size:10000})))
+  await waitFor(()=>expect(rpc).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_client_id:'client-1',p_invoiced:null,p_page_size:10000})))
   expect(document.querySelector('.overflow-x-auto table')).not.toHaveTextContent('Responsável')
   expect(screen.queryByLabelText('Responsável')).not.toBeInTheDocument()
   expect(screen.queryByLabelText('Valor')).not.toBeInTheDocument()
   expect(screen.getByLabelText('Total de tempo')).toBeChecked()
   expect(screen.getByLabelText('Total monetário')).not.toBeChecked()
   expect(screen.getByText(/despesas associadas aos movimentos seleccionados/i)).toBeInTheDocument()
-  expect(screen.getByRole('button',{name:'Guardar PDF'})).toBeDisabled()
+  expect(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/})).toBeDisabled()
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
-  expect(screen.getByRole('button',{name:'Guardar PDF'})).toBeEnabled()
+  expect(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/})).toBeEnabled()
   const printable=document.querySelector('.honorarium-print-area')!
   expect(printable).toHaveTextContent('Cliente: Cliente Teste')
   expect(printable).toHaveTextContent('NOTA DE HONORÁRIOS')
@@ -35,7 +35,7 @@ describe('HonorariumNoteModal',()=>{
   expect(printable).toHaveTextContent('Análise documental')
   expect(printable).toHaveTextContent('1:15:00')
   expect(printable).not.toHaveTextContent('Reunião')
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
   expect(downloads).toEqual([expect.stringMatching(/^nota-honorarios-cliente-teste-\d{4}-\d{2}-\d{2}\.pdf$/)])
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='07-2026'&&options?.align==='center')).toBe(true)
@@ -43,26 +43,32 @@ describe('HonorariumNoteModal',()=>{
  })
  it('emite uma nota, desconta a provisão uma vez e permite repetir o download',async()=>{
   provisionRpc.mockResolvedValue({data:[{id:'account',client_id:'client',society_name:'Sociedade',currency:'EUR',balance:1000}],error:null})
-  rpc.mockImplementation(async(name:string)=>name==='issue_provision_honorarium_note'?{data:{id:'note',number:'NH-P-00000001',issued_at:'2026-09-02T12:00:00Z',subtotal:100,vat:23,total:123,deducted:123,remaining:0,balance_after:877},error:null}:{data:{total:1,items:[{id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:60,billing_entity_name:'Sociedade',effective_amount:100}]},error:null})
+  rpc.mockResolvedValue({data:{total:1,items:[{id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:60,billing_entity_name:'Sociedade',effective_amount:100}]},error:null})
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByRole('button',{name:'Emitir nota e descontar provisão'}))
+  await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
   await screen.findByRole('button',{name:'Guardar novamente a nota'})
-  expect(rpc.mock.calls.filter(([name])=>name==='issue_provision_honorarium_note')).toHaveLength(1)
-  expect(rpc).toHaveBeenCalledWith('issue_provision_honorarium_note',expect.objectContaining({p_account_id:'account',p_work_entry_ids:['one'],p_expected_total:123,p_expected_deduction:123}))
+  expect(documentRpc.mock.calls.filter(([name])=>name==='save_honorarium_document')).toHaveLength(1)
+  expect(documentRpc).toHaveBeenCalledWith('save_honorarium_document',expect.objectContaining({p_client_id:'client',p_work_entry_ids:['one'],p_expected_total:123,p_expected_deduction:123}))
   await user.click(screen.getByRole('button',{name:'Guardar novamente a nota'}))
   await waitFor(()=>expect(downloads).toHaveLength(2))
-  expect(rpc.mock.calls.filter(([name])=>name==='issue_provision_honorarium_note')).toHaveLength(1)
+  expect(documentRpc.mock.calls.filter(([name])=>name==='save_honorarium_document')).toHaveLength(1)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Provisão descontada: 123,00 EUR'))).toBe(true)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Valor a pagar: 0,00 EUR'))).toBe(true)
   expect(pdfText.mock.calls.flatMap(([text])=>Array.isArray(text)?text:[text]).join(' ')).toContain('Não existe valor adicional a pagar nesta nota.')
   expect(screen.getByLabelText('Seleccionar movimento de 2026-07-03')).toBeDisabled()
  })
- it('exclui registos já incluídos numa nota com provisão descontada',async()=>{
+ it('permite seleccionar registos já incluídos numa nota com provisão descontada',async()=>{
   provisionRpc.mockResolvedValue({data:[{id:'account',society_name:'Sociedade',currency:'EUR',balance:877,noted_work_ids:['one']}],error:null})
   render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
   await screen.findByLabelText('Seleccionar movimento de 2026-06-30')
-  expect(screen.queryByLabelText('Seleccionar movimento de 2026-07-03')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Seleccionar movimento de 2026-07-03')).toBeInTheDocument()
+ })
+ it('mantém todos os movimentos disponíveis mesmo com saldo esgotado e nota anterior',async()=>{
+  provisionRpc.mockResolvedValue({data:[{id:'account',society_name:'Sociedade',currency:'EUR',balance:0,noted_work_ids:['one','two']}],error:null})
+  render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+  expect(await screen.findByLabelText('Seleccionar todos os 2 movimentos')).toBeInTheDocument()
+  expect(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/})).toBeDisabled()
  })
  it('não volta a cobrar os registos de uma nota com provisão',async()=>{
   provisionRpc.mockResolvedValue({data:[{id:'account',society_name:'Sociedade',currency:'EUR',balance:0,noted_work_ids:['one']}],error:null})
@@ -70,6 +76,26 @@ describe('HonorariumNoteModal',()=>{
   await screen.findByLabelText('Seleccionar movimento de 2026-06-30')
   expect(screen.queryByLabelText('Seleccionar movimento de 2026-07-03')).not.toBeInTheDocument()
   expect(screen.getByText(/Consulte essas notas e o respectivo valor a pagar/)).toBeInTheDocument()
+ })
+ it('aguarda a emissora predefinida sem fixar a primeira sociedade que carrega',async()=>{
+  let finishClient!:(value:unknown)=>void
+  const clientResponse=new Promise(resolve=>{finishClient=resolve})
+  from.mockImplementation((table:string)=>{const request=query(table==='billing_entities'?{name:'Sociedade B',default_vat_rate:23,default_currency:'EUR'}:[]);if(table==='clients')request.maybeSingle=()=>clientResponse;return request})
+  rpc.mockResolvedValue({error:null,data:{total:2,items:[
+   {id:'a',work_date:'2026-07-03',activity_description:'Movimento A',duration_minutes:60,billing_entity_name:'Sociedade A'},
+   {id:'b',work_date:'2026-07-04',activity_description:'Movimento B',duration_minutes:30,billing_entity_name:'Sociedade B'},
+  ]}})
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+  await waitFor(()=>expect(from).toHaveBeenCalledWith('clients'))
+  expect(screen.queryByLabelText('Sociedade emissora do documento')).not.toBeInTheDocument()
+  await act(async()=>finishClient({error:null,data:{default_billing_entity_id:'issuer-b'}}))
+  const society=await screen.findByLabelText('Sociedade emissora do documento')
+  await waitFor(()=>expect(society).toHaveValue('Sociedade B'))
+  expect(screen.getByText('Movimento B')).toBeInTheDocument()
+  expect(screen.queryByText('Movimento A')).not.toBeInTheDocument()
+  await user.selectOptions(society,'Sociedade A')
+  expect(society).toHaveValue('Sociedade A')
+  expect(screen.getByText('Movimento A')).toBeInTheDocument()
  })
  it('separa movimentos por sociedade emissora',async()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:2,items:[
@@ -103,7 +129,7 @@ describe('HonorariumNoteModal',()=>{
   expect(screen.queryByLabelText('Despesas')).not.toBeInTheDocument()
   await waitFor(()=>expect(rpc).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_client_id:'client-2',p_invoiced:true,p_paid:false})))
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
   expect(downloads).toEqual([expect.stringMatching(/^cobranca-cliente-cobranca-\d{4}-\d{2}-\d{2}\.pdf$/)])
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('COBRANÇA')
@@ -119,7 +145,7 @@ describe('HonorariumNoteModal',()=>{
   await user.clear(recipient);await user.type(recipient,'Destinatário específico')
   await user.selectOptions(screen.getByLabelText('Idioma do documento'),'fr')
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   expect(pdfText.mock.calls.some(([value])=>value==='Destinatário específico')).toBe(true)
   expect(pdfText.mock.calls.some(([value])=>value===(documentKind==='collection'?'OBJET : RELANCE DE PAIEMENT':"OBJET : HONORAIRES"))).toBe(true)
  })
@@ -132,7 +158,7 @@ describe('HonorariumNoteModal',()=>{
   await user.click(screen.getByLabelText('Total monetário'))
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('Frais informatifs — non inclus dans les totaux')
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('PrestationMontantObservations')
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   const generatedText=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[String(value)]).join(' ')
   expect(generatedText).toContain('Certidões')
   expect(generatedText).toContain('Frais informatifs — non inclus dans les totaux')
@@ -149,7 +175,7 @@ describe('HonorariumNoteModal',()=>{
   const accounts=screen.getAllByRole('checkbox',{name:/Banco [AB]/})
   await waitFor(()=>expect(accounts[0]).toBeChecked());expect(accounts[1]).not.toBeChecked()
   await user.click(accounts[1]);await user.clear(screen.getByLabelText('IVA do documento'));await user.type(screen.getByLabelText('IVA do documento'),'10')
-  await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'));await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'));await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   const generatedText=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[String(value)]).join(' ')
   expect(generatedText).toContain('PT50000000000000000000001');expect(generatedText).toContain('PT50000000000000000000002');expect(generatedText).toContain('110,00')
  })
@@ -189,7 +215,7 @@ describe('HonorariumNoteModal',()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:1,items:[{id:'longa',work_date:'2026-07-03',activity_description:'Descrição muito longa destinada a ocupar várias linhas no documento PDF sem cortar, ocultar ou sobrepor o movimento seguinte.',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:100}]}})
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-long" clientName="Cliente Longo" onClose={()=>{}}/> )
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   expect(pdfRect.mock.calls.some((call)=>Number(call[3])>8&&Number(call[3])!==9)).toBe(true)
  })
  it.each([
@@ -201,7 +227,7 @@ describe('HonorariumNoteModal',()=>{
   from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Açores Teste',address:'Ponta Delgada',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,default_billing_entity_id:'sociedade-1'}:table==='billing_entities'?{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}:[]))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-many" clientName="Cliente Açores / Teste" documentKind={documentKind} onClose={()=>{}}/> )
   await user.click(await screen.findByLabelText(`Seleccionar todos os ${manyRows.length} movimentos`))
-  await user.click(screen.getByRole('button',{name:'Guardar PDF'}))
+  await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   expect(pdfAddPage).toHaveBeenCalled()
   expect(pdfState.pages).toBeGreaterThan(1)
   expect(pdfSetPage).toHaveBeenCalledTimes(pdfState.pages)
