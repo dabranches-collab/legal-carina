@@ -1,6 +1,10 @@
 {
-  "version": "0.8.0",
+  "version": "0.8.1",
   "changes": [
+    "Repartição com opção Só os não pagos, aplicada aos totais, gráficos, pendências e exportação.",
+    "Selecção de clientes com Todos assinalado ou primeiro nome e número de seleccionados.",
+    "Carregamento dos registos em lotes pequenos e recuperação automática de falhas transitórias.",
+    "Lista de alterações também apresentada depois de actualizar a aplicação, até ser fechada.",
     "Repartição LEGALTEAM por período e clientes, com percentagens editáveis, gráficos e exportação PDF.",
     "Sociedade-mãe na ficha do cliente, preenchida automaticamente nos novos movimentos e sempre alterável.",
     "Novos angariadores reutilizáveis, com participação na repartição de honorários.",

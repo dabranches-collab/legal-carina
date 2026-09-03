@@ -12,6 +12,18 @@ test('manifest abre e reabre o PWA na Visão geral',()=>{
 
 test.skip(!process.env.PWA_PRODUCTION_QA, 'Executado apenas contra o preview de produção local.')
 
+test('depois de actualizar mostra as alterações até serem fechadas',async({page})=>{
+ await page.goto('/')
+ await page.evaluate(()=>localStorage.setItem('carina-release-notes-seen','0.7.1'))
+ await page.reload()
+ const notice=page.getByRole('status',{name:'Alterações da versão instalada'})
+ await expect(notice).toContainText(`Aplicação actualizada · ${packageVersion}`)
+ await expect(notice.getByRole('listitem').first()).toBeVisible()
+ await notice.getByRole('button',{name:'Fechar alterações'}).click()
+ await page.reload()
+ await expect(notice).toHaveCount(0)
+})
+
 test('preview de produção regista e ativa o service worker', async ({ page }) => {
   await page.goto('/')
   const state=await page.evaluate(async () => {

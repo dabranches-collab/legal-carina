@@ -1,5 +1,17 @@
 # Legal Carina — handover
 
+## 0.8.0 publicada; auditoria concluída e 0.8.1 em validação — 03-09-2026
+
+- CONFIRMADO: primeira publicação em 03-09-2026 02:53:44 UTC, commit 5a5cc274a7b2f6223d2dc17bd680954cb9494464, codex/legalteam-distribution, PR #14/CI verde. Produção https://legal-carina.dabranches.workers.dev, deployment 9fffdaab-d01d-4a24-9440-2ef16f4db64c, version 020d9eaa-01a9-456d-a6e4-5a7aed978e05, 100%. HTTP/notas de versão e browser original com 4424 movimentos LEGALTEAM confirmados.
+- Ordem cumprida: publicação inicial, ajustes pedidos aos filtros/selector e correcção do erro nos Registos, depois auditoria. Segunda publicação 0.8.1 autorizada e ainda por efectuar neste ponto. Local 0.8.1; GitHub será actualizado com este lote.
+- Auditoria documentada em docs/audit-2026-09-03.md: 368 verificações de integridade sem violações; ensaios transaccionais de estados/consolidação, provisões (20), despesas (16), preços/descontos (12), avenças e angariação aprovados. Nenhuma nota real emitida, nenhum dado real alterado, nenhum ensaio persistido. Advisors sem ERROR, avisos existentes identificados no relatório.
+- Corrigidas consultas com listas de IDs demasiado grandes; lotes de 80, concorrência três e paginação de despesas. Recuperação de rede limitada a leituras. Registos reais confirmados: 7235, contador e tabela completos, sem Failed to fetch na repetição. Teste com 7235 linhas e falha de rede injectada aprovado.
+- Repartição inclui Não pagos, que condiciona totais, gráficos, todos os pré-filtros, clientes disponíveis e PDF. Selector fechado com Todos assinalado ou primeiro nome/contagem. Avisos de versão apresentam alterações depois de actualizar e persistem até fechar. Cache separada entre utilizadores e Sem preço coerente na tabela/exportação.
+- Validação: 143 unitários; 99 E2E da execução integral mais o novo ensaio de recuperação (100 aplicáveis), três cenários PWA aprovados em preview de produção. Claro/escuro, desktop/tablet/iPhone/zoom, PDF/XLSX e permissões incluídos. A confirmação das alterações foi fechada no estado inicial dos testes de outros fluxos, para não sobrepor as suas acções.
+- Supabase reconfirmado: apenas main, sem branch temporária facturada à hora. Utilizadores de teste autorizados preservados.
+
+
+
 ## Preparação da publicação 0.8.0 — 03-09-2026
 
 - Aviso de actualização passa a mostrar a versão em espera e as alterações incluídas, obtidas do próprio service worker. Notas em public/release-notes.json; build recusa versão divergente. Compatibilidade: uma página ainda executando 0.7.1 conserva o aviso antigo até actualizar; a publicação seguinte já apresenta a lista. Corrigido foco das fichas para não roubar a escrita nem fechar fichas sobrepostas ao usar Escape.

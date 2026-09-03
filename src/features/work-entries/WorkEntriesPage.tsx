@@ -6,6 +6,7 @@ import {
 } from "../../components/table/StandardDataTable";
 import { supabase } from "../../lib/supabase";
 import { withTransientRetry } from "../../lib/transientRetry";
+import { readIdBatches } from "../../lib/readBatches";
 import { CreateWorkEntryModal } from "./CreateWorkEntryModal";
 import { EditWorkEntryModal } from "./EditWorkEntryModal";
 
@@ -42,7 +43,6 @@ type Entry = {
 };
 const attentionCountsCache=new Map<string,Record<string,number>>();
 const attentionCacheStorageKey='carina-work-attention-counts';
-const readStoredAttentionCounts=()=>{try{const value=sessionStorage.getItem(attentionCacheStorageKey);return value?JSON.parse(value) as Record<string,number>:{};}catch{return {}}};
 type Option = { id: string; label: string };
 type SearchMeta = {
   pageSize?: number;
@@ -55,6 +55,13 @@ type SearchArgs = Record<string, string | number | boolean | null>;
 const workUniverseCache = new Map<string, { rows: Entry[]; expiresAt: number }>();
 const workUniverseRequests = new Map<string, Promise<Entry[]>>();
 let backgroundPrefetch: Promise<Entry[]> | null = null;
+let cacheGeneration=0;
+let cacheUser:string|null=null;
+const cacheAuthSubscription=supabase?.auth.onAuthStateChange((_event,session)=>{
+  const next=session?.user.id??null;
+  if(next!==cacheUser){cacheUser=next;invalidateWorkUniverse();attentionCountsCache.clear();try{sessionStorage.removeItem(attentionCacheStorageKey)}catch{/* Sem armazenamento. */}}
+});
+if(import.meta.hot)import.meta.hot.dispose(()=>cacheAuthSubscription?.data.subscription.unsubscribe());
 
 async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchMeta> {
   if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
@@ -107,31 +114,32 @@ async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchM
 }
 async function loadWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,total:number)=>void) {
   if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
+  const generation=cacheGeneration;
   const cacheKey=JSON.stringify(searchArgs),cached=workUniverseCache.get(cacheKey);
   if(cached&&cached.expiresAt>Date.now()){onProgress?.(cached.rows.length,cached.rows.length);return cached.rows;}
   if(searchArgs.p_client_type==="mixed"){
     const items=(await searchMixedClientEntries(searchArgs)).items;
-    workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});onProgress?.(items.length,items.length);return items;
+    if(generation===cacheGeneration)workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});onProgress?.(items.length,items.length);return items;
   }
   const requestedPageSize=10000;
-  const first=await supabase.rpc("search_work_entries",{...searchArgs,p_page:1,p_page_size:requestedPageSize});
+  const first=await withTransientRetry(()=>supabase!.rpc("search_work_entries",{...searchArgs,p_page:1,p_page_size:requestedPageSize}));
   if(first.error)throw new Error(first.error.message??"Não foi possível carregar os movimentos.");
   const firstPage=first.data as SearchMeta,total=firstPage.total??0,pageSize=Math.max(1,firstPage.pageSize??requestedPageSize),pages=Math.ceil(total/pageSize),items=[...(firstPage.items??[])];
   onProgress?.(items.length,total);
   for(let start=2;start<=pages;start+=3){
-    const batch=await Promise.all(Array.from({length:Math.min(3,pages-start+1)},(_,index)=>supabase!.rpc("search_work_entries",{...searchArgs,p_page:start+index,p_page_size:requestedPageSize})));
+    const batch=await Promise.all(Array.from({length:Math.min(3,pages-start+1)},(_,index)=>withTransientRetry(()=>supabase!.rpc("search_work_entries",{...searchArgs,p_page:start+index,p_page_size:requestedPageSize}))));
     const failure=batch.find(response=>response.error)?.error;if(failure)throw new Error(failure.message);
     items.push(...batch.flatMap(response=>((response.data as SearchMeta).items??[])));onProgress?.(items.length,total);
   }
   if(items.length!==total)throw new Error(`Foram recebidos ${items.length} de ${total} movimentos. Tente novamente.`);
-  workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});return items;
+  if(generation===cacheGeneration)workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});return items;
 }
 function fetchWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:number,total:number)=>void) {
   const cacheKey=JSON.stringify(searchArgs),cached=workUniverseCache.get(cacheKey);
   if(cached&&cached.expiresAt>Date.now()){onProgress?.(cached.rows.length,cached.rows.length);return Promise.resolve(cached.rows)}
   const active=workUniverseRequests.get(cacheKey);
   if(active)return active.then(rows=>{onProgress?.(rows.length,rows.length);return rows});
-  const request=loadWorkUniverse(searchArgs,onProgress).finally(()=>workUniverseRequests.delete(cacheKey));
+  const request=loadWorkUniverse(searchArgs,onProgress).finally(()=>{if(workUniverseRequests.get(cacheKey)===request)workUniverseRequests.delete(cacheKey)});
   workUniverseRequests.set(cacheKey,request);
   return request;
 }
@@ -141,16 +149,15 @@ export function prefetchWorkEntries(){
   backgroundPrefetch??=fetchWorkUniverse(baseUniverseArgs).finally(()=>{backgroundPrefetch=null});
   return backgroundPrefetch;
 }
-function invalidateWorkUniverse(){workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
+function invalidateWorkUniverse(){cacheGeneration++;workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
 async function hydrateExpenseSummaries(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
-  const scopeResult=await supabase.from('work_entries').select('id,billing_scope').in('id',entries.map(row=>row.id));
-  const scopes=new Map<string,'standard'|'retainer'>();if(!scopeResult.error)for(const item of scopeResult.data??[])scopes.set(item.id,(item.billing_scope??'standard') as 'standard'|'retainer');
+  const db=supabase;
+  const scopeRows=await readIdBatches(entries.filter(row=>!row.billing_scope).map(row=>row.id),(ids,from,to)=>db.from('work_entries').select('id,billing_scope').in('id',ids).order('id').range(from,to));
+  const scopes=new Map(scopeRows.map(item=>[item.id,(item.billing_scope??'standard') as 'standard'|'retainer']));
   const summaries=new Map<string,{amount:number;count:number;notes:string[];details:string[]}>();
-  for(let start=0;start<entries.length;start+=800){
-    const results=await Promise.all(Array.from({length:Math.min(4,Math.ceil((entries.length-start)/200))},(_,index)=>supabase!.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',entries.slice(start+index*200,start+(index+1)*200).map(row=>row.id)).eq('status','active')));
-    for(const result of results){if(result.error){if(result.error.code==='42P01'||result.error.code==='PGRST205')return entries;throw result.error}for(const item of result.data??[]){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count+=1;if(item.observations)current.notes.push(item.observations);current.details.push(`${money.format(amount)} — ${item.observations||'Sem observação'}`);summaries.set(item.work_entry_id,current)}}
-  }
+  const expenses=await readIdBatches(entries.map(row=>row.id),(ids,from,to)=>db.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',ids).eq('status','active').order('id').range(from,to));
+  for(const item of expenses){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count++;if(item.observations)current.notes.push(item.observations);current.details.push(money.format(amount)+' — '+(item.observations||'Sem observação'));summaries.set(item.work_entry_id,current)}
   return entries.map(row=>{const summary=summaries.get(row.id),billing_scope=row.billing_scope??scopes.get(row.id)??'standard';return summary?{...row,billing_scope,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,billing_scope,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
 }
 const money = new Intl.NumberFormat("pt-PT", {
@@ -206,7 +213,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     clientId = initialParams.get("clientId");
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
-  const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>(()=>readStoredAttentionCounts());
+  const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>({});
   const silentRefreshRef=useRef(false);
   const filtersBarRef=useRef<HTMLDivElement>(null);
   const [tableStickyOffset,setTableStickyOffset]=useState(112);
@@ -340,7 +347,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       const counts=result.data as Record<string,number>;
       const normalized=Object.fromEntries(Object.entries(counts).map(([key,value])=>[key,Number(value)]));
       attentionCountsCache.set(cacheKey,normalized);setReviewCounts(normalized);
-      try{sessionStorage.setItem(attentionCacheStorageKey,JSON.stringify(normalized))}catch{/* armazenamento indisponível */}
     })();
     return()=>{active=false};
   },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
@@ -432,7 +438,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       });
       if (response.error) throw new Error(response.error.message);
       entries = ((response.data as SearchMeta).items ?? []);
-    } else if (["uninvoiced", "unpaid", "historical", "retainer"].includes(reviewIssue)) {
+    } else if (["uninvoiced", "unpaid", "historical", "retainer", "missing_price"].includes(reviewIssue)) {
       const response = await supabase.rpc("get_attention_work_entries", {
         p_kind: reviewIssue,
         p_search: exportArgs.p_search,

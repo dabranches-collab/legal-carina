@@ -3,6 +3,41 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
 
+test.beforeEach(async({page})=>{
+ await page.addInitScript(()=>{localStorage.setItem('carina-release-notes-seen','0.8.1')})
+})
+
+test('pagamento limita totais, clientes, todos os pré-filtros e PDF',async({page},testInfo)=>{
+ await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
+ const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
+ const summary=map.locator('summary')
+ await expect(summary).toContainText('✓Todos')
+ await map.getByLabel('Estado de pagamento').selectOption('unpaid')
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('700,00')
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('2 registos')
+ await expect(map.getByRole('button',{name:/Clientes sem angariador/})).toContainText('1 registo')
+ await expect(map.getByRole('button',{name:/Registos sem angariador da tarefa/})).toContainText('1 registo')
+ await expect(map.getByRole('button',{name:/Registos sem responsável de execução/})).toContainText('0 registos')
+ await expect(map.getByRole('button',{name:/Ver registos sem montante/})).toContainText('0 registos')
+ await map.getByRole('button',{name:/Registos sem angariador da tarefa/}).click()
+ await expect(map.getByRole('table',{name:'Registos da repartição'})).toContainText('Reunião de acompanhamento')
+ await map.getByLabel('Estado de pagamento').selectOption('paid')
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('1300,00')
+ await expect(map.getByRole('button',{name:/Registos sem angariador da tarefa/})).toContainText('0 registos')
+ await expect(map).toContainText('Não existem dados.')
+ await summary.click();await expect(map.getByRole('checkbox',{name:/Cliente Demonstração Beta/})).toHaveCount(0)
+ await map.getByLabel('Estado de pagamento').selectOption('unpaid')
+ await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).uncheck()
+ await map.getByRole('checkbox',{name:/Cliente Demonstração Beta/}).check()
+ await expect(summary).toContainText('Cliente Demonstração Beta')
+ await map.getByRole('checkbox',{name:/Cliente Demonstração Alfa/}).check()
+ await expect(summary).toContainText('Cliente Demonstração Alfa (2)')
+ const pending=page.waitForEvent('download');await map.getByRole('button',{name:'Exportar resumo PDF'}).click()
+ const file=await pending,path=testInfo.outputPath('nao-pagos.pdf');await file.saveAs(path)
+ const pdf=(await readFile(path)).toString('latin1')
+ expect(pdf).toContain('Apenas registos n\u00e3o pagos');expect(pdf).toContain('700,00 EUR');expect(pdf).not.toContain('1300,00 EUR')
+})
+
 test('volume de 4424 registos carrega num pedido com indicador animado',async({page})=>{
  const fixture=createQaAllocationData();let calls=0,release!:()=>void
  const pending=new Promise<void>(resolve=>{release=resolve})

@@ -6,7 +6,8 @@ vi.stubGlobal('ResizeObserver',class { observe(){} unobserve(){} disconnect(){} 
 
 vi.mock('./lib/supabase', () => ({
   supabase: {
-   from: vi.fn(() => ({ select: () => ({ eq: () => ({ order: async () => ({ data:[],error:null }),in: () => ({ limit: () => ({ maybeSingle: async () => ({ data:{ firm_id:'firm-1',role:'owner' },error:null }) }) }) }) }) })),
+   auth:{onAuthStateChange:vi.fn(()=>({data:{subscription:{unsubscribe:vi.fn()}}}))},
+   from: vi.fn(()=>{const chain:any={select:()=>chain,eq:()=>chain,in:()=>chain,order:()=>chain,range:()=>chain,limit:()=>chain,maybeSingle:async()=>({data:{firm_id:'firm-1',role:'owner'},error:null}),then:(resolve:(value:unknown)=>void)=>Promise.resolve({data:[],error:null}).then(resolve)};return chain}),
    functions: { invoke: vi.fn(async () => ({ data:{ users:[{userId:'user-1',email:'admin@example.test',role:'owner',active:true,invitedAt:'2026-01-01',lastSignInAt:null}] },error:null })) },
    rpc: vi.fn(async (name:string, args?:{p_kind?:string}) => {
     if (name === 'get_dashboard_overview') return { error:null, data:{ metrics:{minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,overrides:0,importErrors:1}, annual:[{label:2026,value:200,minutes:120}],monthly:[{label:4,value:200}],latestYear:2026,byClient:[{label:'Cliente Atlas',value:200}],byBilling:[{label:'Carina Santos',value:200}],byProfessional:[{label:'Carina',value:200}],byArchive:[{label:'dossier',value:1}],clientTypes:[{label:'company',value:1}] } }

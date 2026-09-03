@@ -1,7 +1,7 @@
 import type { AllocationRates, AllocationWork } from './allocation'
 import { allocateHonoraria, allocationColors } from './allocation'
 
-export type AllocationReport={start:string;end:string;paidOnly:boolean;clientNames:string[];allClients:boolean;rates:AllocationRates;work:AllocationWork[]}
+export type AllocationReport={start:string;end:string;payment:'all'|'paid'|'unpaid';clientNames:string[];allClients:boolean;rates:AllocationRates;work:AllocationWork[]}
 const money=(cents:number)=>new Intl.NumberFormat('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(cents/100)+' EUR'
 const date=(value:string)=>value.split('-').reverse().join('/')
 const time=(minutes:number)=>`${Math.floor(minutes/60)}h ${minutes%60}m`
@@ -12,7 +12,7 @@ export async function createAllocationPdf(report:AllocationReport){
  const ensure=(height:number)=>{if(y+height>276){doc.addPage();header()}}
  const text=(value:string,size=9,bold=false)=>{doc.setFontSize(size);doc.setFont('helvetica',bold?'bold':'normal');const lines=doc.splitTextToSize(value,width) as string[];for(const line of lines){ensure(5);doc.setFontSize(size);doc.setFont('helvetica',bold?'bold':'normal');doc.setTextColor('#24364b');doc.text(line,margin,y);y+=5}y+=2}
  header()
- text(`Período: ${date(report.start)} a ${date(report.end)} | ${report.paidOnly?'Apenas registos pagos':'Todos os estados de pagamento'}`,10,true)
+ text(`Período: ${date(report.start)} a ${date(report.end)} | ${report.payment==='paid'?'Apenas registos pagos':report.payment==='unpaid'?'Apenas registos não pagos':'Todos os estados de pagamento'}`,10,true)
  text(`${report.allClients?'Clientes da LEGALTEAM no período':'Clientes seleccionados'} (${report.clientNames.length})`,10,true)
  if(!report.clientNames.length)text('Nenhum')
  else{

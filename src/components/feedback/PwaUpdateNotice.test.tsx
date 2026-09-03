@@ -2,9 +2,21 @@ import { cleanup,render,screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach,expect,test,vi } from 'vitest'
 import { PwaUpdateNotice } from './PwaUpdateNotice'
+import installedNotes from '../../../public/release-notes.json'
 
 const original=Object.getOwnPropertyDescriptor(navigator,'serviceWorker')
-afterEach(()=>{cleanup();if(original)Object.defineProperty(navigator,'serviceWorker',original);else Reflect.deleteProperty(navigator,'serviceWorker')})
+afterEach(()=>{cleanup();localStorage.clear();if(original)Object.defineProperty(navigator,'serviceWorker',original);else Reflect.deleteProperty(navigator,'serviceWorker')})
+
+test('mostra alterações depois de actualizar e conserva a confirmação até à próxima versão',async()=>{
+ render(<PwaUpdateNotice/>);
+ expect(screen.getByText(`Aplicação actualizada · ${installedNotes.version}`)).toBeInTheDocument()
+ expect(screen.getByText(installedNotes.changes[0])).toBeInTheDocument()
+ await userEvent.click(screen.getByRole('button',{name:'Fechar alterações'}))
+ cleanup();render(<PwaUpdateNotice/>);
+ expect(screen.queryByRole('status')).not.toBeInTheDocument()
+ localStorage.setItem('carina-release-notes-seen','0.7.1');cleanup();render(<PwaUpdateNotice/>);
+ expect(screen.getByText(`Aplicação actualizada · ${installedNotes.version}`)).toBeInTheDocument()
+})
 test('o aviso identifica a versão em espera e as suas alterações antes de actualizar',async()=>{
  const service=new EventTarget(),waiting={postMessage:vi.fn((message:{type:string})=>{
   if(message.type==='GET_RELEASE_NOTES')queueMicrotask(()=>{
