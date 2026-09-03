@@ -1,5 +1,17 @@
 # Legal Carina — handover
 
+## Publicação final 0.8.1 confirmada — 03-09-2026
+
+- Produção: https://legal-carina.dabranches.workers.dev, Cloudflare legal-carina, 100% desde 03-09-2026 03:23:14 UTC.
+- Código funcional: df7e12897d6b1d738ad5f912f37604576613fa19, branch codex/legalteam-distribution, preservado no GitHub antes de publicar. CI 33710885526 e secret scan 33710885614 aprovados.
+- Deployment ID: 73b52cc8-a1a7-4abe-9821-f1a09e3885cc. Version ID: abf19826-9453-4576-9dc9-c026873ebba1.
+- Gates finais: segurança de ficheiros, lint, tipos, 143 unitários e build aprovados; 100 E2E aplicáveis e três cenários PWA de produção local aprovados; dry-run Cloudflare concluído. Auditoria posterior à primeira publicação concluída; relatório em docs/audit-2026-09-03.md.
+- Smoke real no browser integrado: clicar Actualizar aplicação, recarregar em 0.8.1 e ver Aplicação actualizada com as dez alterações e Fechar alterações. Registos apresenta 7235 movimentos acessíveis / 7235 registos, sem alertas nessa abertura. HTTP release-notes.json confirma 0.8.1. Revisão local da repartição confirma selector Todos assinalado e opções de pagamento.
+- Supabase confirmado novamente depois da segunda publicação: apenas main, sem recurso temporário de teste a cobrar por hora. Ensaios revertidos; utilizadores de teste anteriores preservados. Nenhuma emissão de nota real nesta sessão.
+- Local e GitHub: 0.8.1, mesma branch; este registo documental fica num commit posterior ao código funcional publicado. Vite original permanece na porta 4194.
+
+
+
 ## 0.8.0 publicada; auditoria concluída e 0.8.1 em validação — 03-09-2026
 
 - CONFIRMADO: primeira publicação em 03-09-2026 02:53:44 UTC, commit 5a5cc274a7b2f6223d2dc17bd680954cb9494464, codex/legalteam-distribution, PR #14/CI verde. Produção https://legal-carina.dabranches.workers.dev, deployment 9fffdaab-d01d-4a24-9440-2ef16f4db64c, version 020d9eaa-01a9-456d-a6e4-5a7aed978e05, 100%. HTTP/notas de versão e browser original com 4424 movimentos LEGALTEAM confirmados.
