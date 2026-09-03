@@ -117,7 +117,7 @@ button:disabled { cursor: not-allowed; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
-.app-shell-header { min-height: calc(6.5rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
+.app-shell-header { min-height: calc(9.75rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); padding-left: var(--safe-left); }
 .app-shell-sidebar [aria-current="page"] { color: var(--color-navigation) !important; }
@@ -208,3 +208,12 @@ main .overscroll-contain { overscroll-behavior: auto; }
 .control.allocation-editable:hover { box-shadow: 0 0 0 2px var(--color-secondary-soft); }
 .control.allocation-editable:focus { background: var(--color-surface); box-shadow: 0 0 0 3px var(--color-secondary-soft); }
 .control.allocation-editable:disabled { opacity: .65; }
+
+.dashboard-summary-pair { align-items: stretch; }
+.dashboard-summary-pair > section { display: flex; min-width: 0; flex-direction: column; }
+.dashboard-summary-pair > section > div:last-child { flex: 1; grid-auto-rows: 1fr; }
+
+.record-save { background: var(--color-success); border-color: var(--color-success); color: #fff; }
+.record-cancel { background: var(--color-danger); border-color: var(--color-danger); color: #fff; }
+.record-save:not(:disabled):hover, .record-cancel:not(:disabled):hover { filter: brightness(.9); }
+.record-save:disabled, .record-cancel:disabled { background: var(--color-surface-subtle); border-color: var(--color-border); color: var(--color-text-secondary); cursor: not-allowed; opacity: .55; }

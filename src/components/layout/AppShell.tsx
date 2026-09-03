@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Icon, type IconName } from '../ui/Icon'
 import type { NavigationItem, ViewId } from '../../types/navigation'
 import { useAuth } from '../../features/auth/AuthContext'
@@ -20,6 +20,13 @@ const navigation: NavigationItem[] = [
 interface AppShellProps { activeView: ViewId; selectedSociety:string|null; selectedProfessional:string|null; selectedClientType:'individual'|'company'|'mixed'|null; selectedClientMode:'dashboard'|'list'; settingsEntity:'clients'|'billing_entities'|'professionals'|null; onRefresh:()=>void; onNavigate: (view: ViewId) => void; onNavigateSociety:(name:string)=>void; onNavigateProfessional:(name:string)=>void; onNavigateClientType:(type:'individual'|'company'|'mixed',mode:'dashboard'|'list')=>void; onNavigateRetainers:()=>void; onNavigateSettings:(target:'admin'|'clients'|'billing_entities'|'professionals')=>void; children: ReactNode }
 
 export function AppShell({ activeView, selectedSociety, selectedProfessional, selectedClientType, selectedClientMode, settingsEntity, onRefresh, onNavigate, onNavigateSociety, onNavigateProfessional, onNavigateClientType, onNavigateRetainers, onNavigateSettings, children }: AppShellProps) {
+ const headerRef=useRef<HTMLElement>(null)
+ useEffect(()=>{
+  const header=headerRef.current;if(!header)return
+  const update=()=>document.documentElement.style.setProperty('--app-header-height',`${header.getBoundingClientRect().height}px`)
+  update();const observer=new ResizeObserver(update);observer.observe(header)
+  return()=>{observer.disconnect();document.documentElement.style.removeProperty('--app-header-height')}
+ },[])
   const { user, role, signOut } = useAuth()
   const canManageSettings=role==='owner'||role==='admin',canManageMasterData=canManageSettings||role==='operator'
   const [collapsed, setCollapsed] = useState(false)
@@ -137,9 +144,9 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
       </aside>
 
       <div className={`transition-[padding] duration-200 ${collapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
-        <header className="app-shell-header sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-accent/30 bg-navigation text-navigation-text shadow-sm sm:flex-nowrap sm:gap-4">
+        <header ref={headerRef} className="app-shell-header sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-accent/30 bg-navigation text-navigation-text shadow-sm sm:flex-nowrap sm:gap-4">
           <button className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Abrir navegação"><Icon name="menu" className="size-5" /></button>
-          <nav aria-label="Localização" className="order-last min-w-0 basis-full pb-2 sm:order-none sm:flex-1 sm:basis-auto sm:py-2"><ol className="space-y-0.5">{locationLevels.map((level,index)=><li key={`${level.label}-${index}`} aria-current={index===locationLevels.length-1?'page':undefined} className={`flex min-w-0 items-center gap-2 ${index===0?'font-display text-2xl font-semibold leading-tight sm:text-3xl':index===1?'text-sm font-semibold leading-tight text-accent/90':'text-xs font-medium leading-tight text-accent/75'}`}><Icon name={level.icon} className={`${index===0?'size-6':'size-3.5'} shrink-0`}/><span className="truncate">{level.label}</span></li>)}<li className="truncate pl-8 text-[0.68rem] leading-tight text-accent/65">{pageDescription[activeView] ?? 'Área de trabalho da plataforma.'}</li></ol></nav>
+          <nav aria-label="Localização" className="order-last min-w-0 basis-full pb-2 sm:order-none sm:flex-1 sm:basis-auto sm:py-2"><ol className="space-y-0.5">{locationLevels.map((level,index)=><li key={`${level.label}-${index}`} aria-current={index===locationLevels.length-1?'page':undefined} className={`flex min-w-0 items-center gap-2 ${index===0?'font-display text-4xl font-semibold leading-tight sm:text-[2.8125rem]':index===1?'text-[1.3125rem] font-semibold leading-tight text-accent/90':'text-lg font-medium leading-tight text-accent/75'}`}><Icon name={level.icon} className={`${index===0?'size-9':'size-[1.3125rem]'} shrink-0`}/><span className="min-w-0 break-words">{level.label}</span></li>)}<li className="truncate pl-8 text-[0.68rem] leading-tight text-accent/65">{pageDescription[activeView] ?? 'Área de trabalho da plataforma.'}</li></ol></nav>
           <button type="button" aria-pressed={!financialValuesVisible} onClick={()=>setFinancialValuesVisible(value=>!value)} className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 hover:bg-surface/10" aria-label={financialValuesVisible?'Ocultar valores financeiros':'Mostrar valores financeiros'} title={financialValuesVisible?'Ocultar valores financeiros':'Mostrar valores financeiros'}><Icon name={financialValuesVisible?'eye':'eyeOff'} className="size-5"/></button>
           <button type="button" onClick={()=>setTheme(value=>value==='light'?'dark':'light')} className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 hover:bg-surface/10" aria-label={theme==='light'?'Activar modo escuro':'Activar modo claro'} title={theme==='light'?'Modo escuro':'Modo claro'}><Icon name={theme==='light'?'moon':'sun'} className="size-5"/></button>
           <button type="button" onClick={refreshData} disabled={refreshing} className="grid size-10 place-items-center rounded-lg border border-accent/40 bg-surface/5 hover:bg-surface/10 disabled:opacity-60" aria-label="Actualizar dados apresentados" title="Actualizar dados"><Icon name="refresh" className={`size-5 ${refreshing?'animate-spin':''}`}/></button>

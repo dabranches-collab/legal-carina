@@ -56,6 +56,8 @@ type ClientDetails = {
   honorarium_recipient_name: string;
   default_billing_entity_id: string;
   client_referrer: string;
+  client_referrer_other: string;
+  primary_billing_entity_id: string;
 };
 type BillingDetails = {
   legal_name: string;
@@ -120,6 +122,8 @@ const emptyDetails = (): ClientDetails => ({
   honorarium_recipient_name: "",
   default_billing_entity_id: "",
   client_referrer: "",
+  client_referrer_other: "",
+  primary_billing_entity_id: "",
 });
 const emptyBillingDetails = (): BillingDetails => ({
   legal_name: "",
@@ -183,6 +187,8 @@ export function MasterDataPage({
   onRecordSaved?:()=>void;
   clientTypeFilter?: "individual" | "company" | "mixed" | null;
 }) {
+  const [clientDetailsReady,setClientDetailsReady]=useState(false);
+  const [referrerOptions,setReferrerOptions]=useState<Array<{id:string;name:string}>>([]);
   const [section, setSection] = useState<Section>(initialSection),
     [rows, setRows] = useState<Row[]>([]),
     [firmId, setFirmId] = useState("");
@@ -197,6 +203,7 @@ export function MasterDataPage({
     [profiles, setProfiles] = useState<Profile[]>(emptyProfiles),
     [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [showOtherProfile,setShowOtherProfile]=useState(false);
   const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"provisions"|"credentials"|"documents">("general");
   const [mode, setMode] = useState<"view" | "edit">("view"),
     [details, setDetails] = useState<ClientDetails>(emptyDetails),
@@ -346,8 +353,10 @@ export function MasterDataPage({
   }, [load]);
   async function openEditor(row: Row) {
     setCreating(false);
+    setClientDetailsReady(false);
     setEditing(row);
     setMode("edit");
+    setShowOtherProfile(false);
     setDirty(false);
     setClientPage("general");
     setEditName(row.display_name ?? row.name ?? "");
@@ -432,11 +441,11 @@ export function MasterDataPage({
       setProfiles([]);
       return;
     }
-    const [clientResult, profileResult, identifierResult] = await Promise.all([
+    const [clientResult, profileResult, identifierResult, referrersResult] = await Promise.all([
       supabase!
         .from("clients")
         .select(
-          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer",
+          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer,client_referrer_other,primary_billing_entity_id",
         )
         .eq("id", row.id)
         .single(),
@@ -451,7 +460,11 @@ export function MasterDataPage({
         )
         .eq("client_id", row.id)
         .order("created_at"),
+      supabase!.from("client_referrers").select("id,name").order("name"),
     ]);
+    setReferrerOptions(referrersResult.data??[]);
+    if(clientResult.error||profileResult.error){setError(clientResult.error?.message??profileResult.error!.message);return;}
+    setClientDetailsReady(true);
     if (clientResult.data) {
       const data = clientResult.data as Record<string, string | null>;
       setDetails({
@@ -517,10 +530,12 @@ export function MasterDataPage({
     // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, rows, section,focusedRecordId]);
   async function openCreator() {
+    setClientDetailsReady(true);
+    if(supabase){const result=await supabase.from("client_referrers").select("id,name").order("name");setReferrerOptions(result.data??[]);}
     setEditing(null);
     setCreating(true);
     setMode("edit");
-    setDirty(true);
+    setDirty(false);
     setEditName("");
     setEditActive(true);
     setProfiles(unselectedProfiles());
@@ -662,6 +677,8 @@ export function MasterDataPage({
   async function save(event: FormEvent) {
     event.preventDefault();
     if (!supabase || (!editing && !creating) || !firmId) return;
+    if (!dirty) return;
+    if (section === "clients" && !clientDetailsReady) return;
     setSaving(true);
     setError("");
     const name = editName.trim();
@@ -720,6 +737,8 @@ export function MasterDataPage({
     const savedDetails = {
       ...details,
       client_referrer: details.client_referrer || null,
+      client_referrer_other: details.client_referrer==='other'?details.client_referrer_other.trim():null,
+      primary_billing_entity_id: details.primary_billing_entity_id || null,
       email: storedContacts(emails),
       phone: storedContacts(phones),
       honorarium_recipient_name:
@@ -810,6 +829,7 @@ export function MasterDataPage({
       }
     }
     if (section === "clients" && targetId) {
+      const persistedProfiles:Profile[]=[];
       for (const item of profiles.filter((value) => value.active || value.id)) {
         const payload = {
           firm_id: firmId,
@@ -823,13 +843,15 @@ export function MasterDataPage({
               .from("client_profiles")
               .update(payload)
               .eq("id", item.id)
-          : await supabase.from("client_profiles").insert(payload);
+          : await supabase.from("client_profiles").insert(payload).select("id").single();
         if (result.error) {
           setError(result.error.message);
           setSaving(false);
           return;
         }
+        persistedProfiles.push({...item,id:item.id??result.data?.id});
       }
+      setProfiles(current=>current.map(item=>persistedProfiles.find(saved=>saved.client_type===item.client_type)??item));
     }
     if (section === "clients" && targetId && identifiersAvailable) {
       for (const item of identifiers.filter((value) =>
@@ -922,7 +944,8 @@ export function MasterDataPage({
         active: editActive,
       } : current);
       setDirty(false);
-      setMode("view");
+      setMode("edit");
+      setShowOtherProfile(false);
     }
   }
   const columns: TableColumn<Row>[] = [
@@ -1109,7 +1132,7 @@ export function MasterDataPage({
       {!focusedRecordId && <section className="card p-4">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-display text-xl font-semibold">
+            <h2 className="sr-only">
               Lista · {label}
             </h2>
             <p className="mt-1 text-sm text-text-secondary">
@@ -1152,7 +1175,7 @@ export function MasterDataPage({
         <div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-0 sm:p-4">
           <form
             onSubmit={save}
-            onChangeCapture={() => setDirty(true)}
+            onChangeCapture={event=>{if(!(event.target instanceof HTMLElement)||!event.target.closest('[data-independent-form]'))setDirty(true)}}
             role="dialog"
             aria-modal="true"
             aria-labelledby="entity-edit-title"
@@ -1263,7 +1286,7 @@ export function MasterDataPage({
                 </nav>
               )}
               <fieldset
-                disabled={mode === "view"}
+                disabled={mode === "view" || (section === "clients" && !clientDetailsReady)}
                 data-compact={mode === "view" ? "true" : "false"}
                 data-client-page={section === "clients" ? clientPage : undefined}
                 onDoubleClick={() => { if (mode === "view") setMode("edit") }}
@@ -1317,7 +1340,7 @@ export function MasterDataPage({
                         </p>
                       )}
                       {(["individual", "company"] as const)
-                        .filter((type) => mode !== "view" || profile(type).active)
+                        .filter((type) => creating || showOtherProfile || profile(type).active)
                         .map((type) => {
                         const item = profile(type);
                         return (
@@ -1375,6 +1398,7 @@ export function MasterDataPage({
                           </div>
                         );
                         })}
+                      {!creating && !showOtherProfile && !profiles.every(item=>item.active) && <button type="button" className="control mt-3 px-3 text-sm font-semibold" onClick={()=>setShowOtherProfile(true)}>Acrescentar vertente {profile('individual').active?'Empresa':'Particular'}</button>}
                       {!creating && (
                         <p className="mt-2 text-xs text-text-secondary">
                           As vertentes existentes permanecem editáveis para
@@ -1384,9 +1408,11 @@ export function MasterDataPage({
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
                         <label className="text-sm font-semibold sm:col-span-2">
                           Angariador do cliente
-                          <select aria-label="Angariador do cliente" value={details.client_referrer} onChange={e=>setDetails({...details,client_referrer:e.target.value})} className="control mt-1 w-full px-3"><option value="">Por preencher</option>{Object.entries(referrerNames).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
+                          <select aria-label="Angariador do cliente" value={details.client_referrer==='other'?(referrerOptions.find(item=>item.name===details.client_referrer_other)?.id??'other'):details.client_referrer} onChange={e=>{const recipient=referrerOptions.find(item=>item.id===e.target.value);setDetails({...details,client_referrer:recipient?'other':e.target.value,client_referrer_other:recipient?.name??''})}} className="control mt-1 w-full px-3"><option value="">Por preencher</option>{Object.entries(referrerNames).map(([id,label])=><option key={id} value={id}>{label}</option>)}{referrerOptions.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}<option value="other">Outro · acrescentar angariador</option></select>
                           <span className="mt-1 block text-xs font-normal text-text-secondary">Parcela de 10% nos registos da LEGALTEAM. Os clientes antigos podem ser completados posteriormente.</span>
                         </label>
+                        {details.client_referrer==='other'&&<label className="text-sm font-semibold sm:col-span-2">Nome do angariador<input aria-label="Nome do angariador" required maxLength={200} value={details.client_referrer_other} onChange={e=>setDetails({...details,client_referrer_other:e.target.value})} className="control mt-1 w-full px-3"/><span className="mt-1 block text-xs font-normal text-text-secondary">Ao guardar, fica disponível para outros clientes e para a repartição.</span></label>}
+                        <label className="text-sm font-semibold sm:col-span-2">Sociedade do cliente<select aria-label="Sociedade do cliente" value={details.primary_billing_entity_id} onChange={e=>setDetails({...details,primary_billing_entity_id:e.target.value})} className="control mt-1 w-full px-3"><option value="">Por atribuir</option>{billingOptions.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}</select><span className="mt-1 block text-xs font-normal text-text-secondary">Sociedade pela qual o cliente foi angariado. Cada movimento pode ser facturado por outra sociedade.</span></label>
                         <label className="text-sm font-semibold">
                           Denominação legal
                           <input
@@ -2001,12 +2027,12 @@ export function MasterDataPage({
               >
                 Fechar
               </button>
-              {dirty && (
+              {(
                 <button
                   type="button"
-                  disabled={saving}
+                  disabled={saving || !dirty}
                   onClick={() => void cancelChanges()}
-                  className="min-h-11 rounded-lg border border-border px-4 font-semibold disabled:opacity-50"
+                  className="record-cancel min-h-11 rounded-lg border px-4 font-semibold"
                 >
                   Cancelar alterações
                 </button>
@@ -2025,8 +2051,8 @@ export function MasterDataPage({
               ) : (
                 <button
                   type="submit"
-                  disabled={saving || !dirty || !editName.trim()}
-                  className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface disabled:opacity-50"
+                  disabled={saving || !dirty || !editName.trim() || (section==="clients"&&!clientDetailsReady)}
+                  className="record-save min-h-11 rounded-lg border px-4 font-semibold"
                 >
                   {saving ? "A guardar…" : "Guardar alterações"}
                 </button>

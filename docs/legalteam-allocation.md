@@ -49,3 +49,13 @@ A consulta inicial carrega a primeira página e depois até três páginas em pa
 Campos editáveis têm destaque próprio, contagens de pendências positivas aparecem a vermelho. O PDF dispõe os clientes em até quatro colunas segundo as larguras dos nomes, quebra nomes longos e continua em novas páginas.
 
 Os pré-filtros e cartões pessoais deslocam para o início dos resultados, depois de actualizar a tabela, preservando o menu e o URL. O cabeçalho fixo não tapa os resultados; o foco acompanha a tabela.
+
+## Sociedade-mãe, cadastro de angariadores e desempenho
+
+A sociedade-mãe encontra-se na página Geral do cliente. A criação de um movimento preenche-a ao seleccionar o cliente; a sociedade desse movimento pode ser alterada, sem mudar a ficha do cliente. A sociedade emissora predefinida dos documentos mantém o seu campo independente. Não existe atribuição automática aos clientes históricos.
+
+Outro angariador de cliente exige nome e fica no cadastro por firma, reutilizável nas restantes fichas. Espaços e capitalização não duplicam o cadastro. O nome participa na repartição e pode acumular a parcela de angariação da tarefa. A criação do cadastro é atómica com a gravação do cliente; não cria utilizadores de autenticação.
+
+A consulta usa páginas até 5000 registos; o volume actual de 4424 exige apenas um pedido. O indicador animado e o progresso permanecem visíveis durante recargas. Depois da primeira página, volumes maiores usam até três pedidos simultâneos, validando total e IDs antes de apresentar resultados completos.
+
+As fichas abrem logo editáveis, com Guardar verde e Cancelar vermelho activos após alteração. Vertentes de cliente ausentes podem ser acrescentadas explicitamente; a simples abertura não as cria. Acompanhamento de clientes, sociedades e responsáveis apresenta a tabela no próprio menu, enquanto Visão Geral conserva a navegação para Registos.

@@ -304,7 +304,7 @@ export function OverviewPage() {
     data.clientTypes.find((p) => p.label === "company")?.value ?? 0;
   return (
     <div className="space-y-6">
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="grid dashboard-summary-pair gap-6 lg:grid-cols-2">
         <section aria-labelledby="summary-title">
           <div className="mb-4">
             <h2 id="summary-title" className="font-semibold">

@@ -2,6 +2,8 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+vi.stubGlobal('ResizeObserver',class { observe(){} unobserve(){} disconnect(){} })
+
 vi.mock('./lib/supabase', () => ({
   supabase: {
    from: vi.fn(() => ({ select: () => ({ eq: () => ({ order: async () => ({ data:[],error:null }),in: () => ({ limit: () => ({ maybeSingle: async () => ({ data:{ firm_id:'firm-1',role:'owner' },error:null }) }) }) }) }) })),
@@ -61,7 +63,7 @@ describe('interface principal', () => {
     await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
     expect(await screen.findByRole('heading',{name:'Particulares'})).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Particulares'}))
-    expect(await screen.findByRole('heading',{name:'Cliente Atlas',level:2})).toBeInTheDocument()
+    expect(await screen.findByRole('region',{name:'Resumo do Cliente'})).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Sociedades' })[0])
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Sociedades')).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Responsáveis' })[0])

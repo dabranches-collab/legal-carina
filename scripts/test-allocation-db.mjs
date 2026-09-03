@@ -18,6 +18,11 @@ create function public.create_work_entry_with_treatment(date,uuid,uuid,uuid,uuid
 create function public.update_work_entry_full(uuid,jsonb,text) returns void language sql as $$update public.work_entries set activity_description=$2->>'activity_description' where id=$1$$;
 select set_config('test.user','${u}',false),set_config('test.scope','allowed',false),set_config('test.financial','allowed',false);`)
 await db.exec(await readFile('supabase/migrations/20260902235343_add_legalteam_allocation.sql','utf8'))
+await db.exec(await readFile('supabase/migrations/20260903033000_expand_allocation_read_page.sql','utf8'))
+await db.exec(`create table public.law_firms(id uuid primary key);insert into law_firms values('${firm}');
+create function private.has_firm_role(uuid,text[]) returns boolean language sql stable as $$select auth.uid()='${u}'$$;
+grant select on public.clients to authenticated;`)
+await db.exec(await readFile('supabase/migrations/20260903034500_add_client_referrer_directory.sql','utf8'))
 let passed=0
 const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0]
 const rejects=async(sql,args,pattern)=>{await assert.rejects(()=>db.query(sql,args),pattern);passed++}
@@ -37,6 +42,8 @@ const report='select public.get_legalteam_allocation_work($1,$2,$3,$4,$5)'
 let result=await scalar(report,[soc,'2026-01-01','2026-01-02',0,1]);assert.equal(result.total,3);assert.equal(result.items.length,1);passed++
 result=await scalar(report,[soc,'2026-01-02','2026-01-02',1,500]);assert.equal(result.total,2);assert.equal(result.items.length,1);passed++
 result=await scalar(report,[soc,null,null,0,500]);assert.equal(result.total,3);assert.ok(result.items.every(row=>row.client_id===client));passed++
+result=await scalar(report,[soc,null,null,0,5000]);assert.equal(result.total,3);assert.equal(result.items.length,3);passed++
+await rejects(report,[soc,null,null,0,5001],/inválidos/)
 await rejects(report,[soc,null,'2026-01-02',0,500],/inválidos/)
 await rejects(report,[soc,'2026-02-01','2026-01-01',0,500],/inválidos/)
 const update='select public.update_work_entry_with_allocation($1,$2,$3)'
@@ -47,4 +54,12 @@ await scalar("select set_config('test.financial','allowed',false)");await scalar
 await rejects(create,args,/authorized/)
 await db.exec('reset role;set role anon');await rejects(report,[soc,'2026-01-01','2026-01-02',0,500],/permission denied/)
 await db.exec('reset role');assert.equal(await scalar('select count(*)::int from work_entries'),3);passed++
+await db.exec(`update clients set client_referrer='other',client_referrer_other='  Parceiro   Sintético  ',primary_billing_entity_id='${soc}' where id='${client}'`)
+assert.equal(await scalar('select name from client_referrers'),'Parceiro Sintético');passed++
+assert.ok(await scalar('select client_referrer_id from clients'));passed++
+await db.exec(`update clients set client_referrer_other='parceiro sintético' where id='${client}'`)
+assert.equal(await scalar('select count(*)::int from client_referrers'),1);passed++
+await rejects(`update clients set client_referrer_other='' where id='${client}'`,[],/nome do angariador/)
+await scalar("select set_config('test.scope','allowed',false)");
+const named=await scalar(report,[soc,null,null,0,5000]);assert.equal(named.items[0].client_referrer_other,'Parceiro Sintético');passed++
 console.log(passed+' PostgreSQL assertions passed: validation, atomic rollback, historical gaps, pagination, period boundaries and access controls.');await db.close()

@@ -3,23 +3,46 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 import { readFile } from 'node:fs/promises'
 const demo='/?qa-iphone=1&qa-demo=1&qa-allocation=1'
 
+test('volume de 4424 registos carrega num pedido com indicador animado',async({page})=>{
+ const fixture=createQaAllocationData();let calls=0,release!:()=>void
+ const pending=new Promise<void>(resolve=>{release=resolve})
+ await page.route('**/rest/v1/**',async route=>{
+  const req=route.request(),url=new URL(req.url()),rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=req.method()==='POST'?req.postDataJSON():{}
+  let result=fixture(rpc,url.pathname.split('/').at(-1)??'',args,url,req.method(),req.headers().accept?.includes('vnd.pgrst.object')??false)
+  if(rpc==='get_legalteam_allocation_work'){
+   calls++;expect(args.p_limit).toBe(5000)
+   const sample=(result as {items:Record<string,unknown>[]}).items[0]
+   result={items:Array.from({length:4424},(_,i)=>({...sample,id:`synthetic-${i}`})),total:4424}
+   await pending
+  }
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')
+ const status=page.getByRole('status',{name:'A calcular a repartição',exact:true})
+ await expect(status).toBeVisible()
+ expect(await status.locator('.animate-spin').evaluate(el=>getComputedStyle(el).animationName)).not.toBe('none')
+ release()
+ await expect(page.getByRole('button',{name:/Total do período/})).toContainText('4424 registos')
+ await expect(status).toHaveCount(0);expect(calls).toBe(1)
+})
+
 test('resumos ficam acima da repartição e páginas seguintes carregam em paralelo',async({page})=>{
  const fixture=createQaAllocationData();let active=0,peak=0
  await page.route('**/rest/v1/**',async route=>{
   const request=route.request(),url=new URL(request.url()),rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=request.method()==='POST'?request.postDataJSON():{}
   let result=fixture(rpc,url.pathname.split('/').at(-1)??'',args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
   if(rpc==='get_legalteam_allocation_work'){
-   const sample=fixture(rpc,'', {...args,p_offset:0,p_limit:500},url,'POST',false) as {items:Array<Record<string,unknown>>}
-   const offset=Number(args.p_offset),items=Array.from({length:Math.min(500,1501-offset)},(_,i)=>({...sample.items[0],id:`synthetic-${offset+i}`}))
+   const sample=fixture(rpc,'', {...args,p_offset:0,p_limit:5000},url,'POST',false) as {items:Array<Record<string,unknown>>}
+   const offset=Number(args.p_offset),items=Array.from({length:Math.min(5000,15001-offset)},(_,i)=>({...sample.items[0],id:`synthetic-${offset+i}`}))
    active++;peak=Math.max(peak,active);await new Promise(resolve=>setTimeout(resolve,100));active--
-   result={items,total:1501}
+   result={items,total:15001}
   }
   await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')
  const summary=page.getByRole('region',{name:'Resumo Operacional',exact:true}),map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
  await expect(summary).toBeVisible()
- await expect(map.getByRole('button',{name:/Total do período/})).toContainText('1501 registos')
+ await expect(map.getByRole('button',{name:/Total do período/})).toContainText('15001 registos')
  expect(peak).toBe(3)
  expect((await summary.boundingBox())!.y).toBeLessThan((await map.boundingBox())!.y)
 })
@@ -44,7 +67,7 @@ test('lista inferior abre o próprio registo e actualiza a repartição sem perd
  await expect(map.getByLabel('Escritório (%)',{exact:true})).toHaveValue('20')
  await expect(map.getByRole('button',{name:/Carina Santos/})).toContainText('720,00')
  await cell.dblclick();await expect(dialog.getByLabel('Angariador da tarefa',{exact:true})).toHaveValue('carina')
- await dialog.getByRole('button',{name:'Cancelar',exact:true}).click()
+ await dialog.getByRole('button',{name:'Fechar',exact:true}).click()
  await map.getByRole('button',{name:/Clientes sem angariador/}).click()
  const client=map.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true})
  await client.click();await expect(page.getByRole('dialog')).toHaveCount(0)
@@ -59,9 +82,10 @@ test('lista inferior abre o próprio registo e actualiza a repartição sem perd
  await expect(page.getByRole('region',{name:'Acompanhamento',exact:true}).getByRole('article')).toHaveCount(4)
  await map.getByRole('link',{name:'Abrir ficha',exact:true}).click()
  await expect(page).toHaveURL(origin)
+
  await page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true}).selectOption('hugo')
  await page.getByRole('dialog').getByRole('button',{name:'Guardar alterações',exact:true}).click()
- await expect(page.getByRole('dialog').getByLabel('Angariador do cliente',{exact:true})).toBeDisabled()
+ await expect(page.getByRole('dialog').getByRole('button',{name:'Guardar alterações',exact:true})).toBeDisabled()
  await page.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).first().click()
  await expect(page).toHaveURL(origin)
  await expect(map.getByLabel('Escritório (%)',{exact:true})).toHaveValue('20')
@@ -76,7 +100,7 @@ test('PDF da repartição respeita clientes, datas e percentagens e gráficos ac
  await map.getByLabel('Escritório (%)',{exact:true}).fill('20')
  await map.getByLabel('Execução (%)',{exact:true}).fill('60')
  await expect(map.getByRole('img',{name:/Parcela do escritório/})).toHaveAttribute('aria-label',/Escritório 20%/)
- await map.getByText('Registos considerados · Todos os clientes',{exact:true}).click()
+ await map.getByText('Registos considerados · Clientes com movimentos no período seleccionado',{exact:true}).click()
  await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).uncheck()
  await map.getByRole('checkbox',{name:/Cliente Demonstração Beta/}).check()
  const downloaded=page.waitForEvent('download');await map.getByRole('button',{name:'Exportar resumo PDF',exact:true}).click();const file=await downloaded
@@ -121,7 +145,7 @@ test('datas automáticas, percentagens editáveis e selecção múltipla recalcu
  await expect(map.getByRole('alert')).toHaveCount(0)
  await expect(map.getByRole('button',{name:/Despesas do escritório · 20%/})).toContainText('400,00')
  await expect(map.getByRole('button',{name:/Carina Santos/})).toContainText('660,00')
- await map.getByText('Registos considerados · Todos os clientes',{exact:true}).click()
+ await map.getByText('Registos considerados · Clientes com movimentos no período seleccionado',{exact:true}).click()
  await map.getByRole('checkbox',{name:'Todos os clientes',exact:true}).uncheck()
  await expect(map).toContainText('Não há registos para a selecção actual.')
  await map.getByRole('checkbox',{name:/Cliente Demonstração Beta/}).check()
@@ -193,6 +217,7 @@ test('angariador existe na ficha de todos os clientes e permite preencher retroa
  await page.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true}).dblclick()
  const select=page.getByLabel('Angariador do cliente',{exact:true})
  await expect(select).toHaveValue('')
+
  await select.selectOption('hugo')
  await page.getByRole('button',{name:'Guardar alterações',exact:true}).click()
  await expect(page.getByText('Cliente Demonstração Beta actualizado.',{exact:true})).toBeVisible()

@@ -22,6 +22,7 @@ test('prestação abre por duplo clique e só grava a própria prestação na co
  await expect(page.getByLabel('Pesquisar avenças',{exact:true})).toHaveValue('Alfa')
  await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
  await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).dblclick()
+
  await page.getByRole('dialog').getByRole('button',{name:'Avença',exact:true}).click()
  const row=page.getByRole('row').filter({has:page.getByRole('button',{name:'Abrir prestação',exact:true})})
  await row.getByRole('cell').first().click();await expect(page.getByRole('dialog',{name:/Prestação de avença/})).toHaveCount(0)

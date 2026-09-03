@@ -1,6 +1,6 @@
 import { professionalName, referrerNames, type Referrer } from '../../lib/professionalNames'
 
-export type AllocationWork = {id:string;client_id:string;work_date:string;client_name:string;professional_name:string;activity_description:string;duration_minutes:number;effective_amount:number|null;currency:string;billing_scope:string;is_billable:boolean;is_paid:boolean;status:string;client_referrer:Referrer|null;task_referrer:Referrer|'other'|null;task_referrer_other:string|null}
+export type AllocationWork = {id:string;client_id:string;work_date:string;client_name:string;professional_name:string;activity_description:string;duration_minutes:number;effective_amount:number|null;currency:string;billing_scope:string;is_billable:boolean;is_paid:boolean;status:string;client_referrer:Referrer|'other'|null;client_referrer_other?:string|null;task_referrer:Referrer|'other'|null;task_referrer_other:string|null}
 export type AllocationRates = {client:number;task:number;execution:number;office:number}
 export const defaultAllocationRates:AllocationRates={client:10,task:10,execution:50,office:30}
 export const allocationColors={client:'#247d89',task:'#b18637',execution:'#5368ab',office:'#667c78',pending:'#bf605b'}
@@ -9,6 +9,7 @@ export function validAllocationRates(rates:AllocationRates){
  return values.every(n=>Number.isFinite(n)&&n>=0&&n<=100&&Math.abs(n*100-Math.round(n*100))<1e-7)&&values.reduce((n,p)=>n+Math.round(p*100),0)===10000
 }
 export const eligibleAllocationWork=(entry:AllocationWork)=>entry.currency==='EUR'&&!['cancelled','uncollectible_uninvoiced','uncollectible_invoiced'].includes(entry.status)
+export const clientReferrerName=(entry:AllocationWork)=>entry.client_referrer==='other'?entry.client_referrer_other?.trim()??'':entry.client_referrer?referrerNames[entry.client_referrer]:''
 export const missingTaskReferrer=(entry:AllocationWork)=>!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim())
 export function allocationPeriod(work:AllocationWork[]){
  const dates=work.filter(eligibleAllocationWork).map(r=>r.work_date).sort()
@@ -35,7 +36,7 @@ export function allocateHonoraria(work:AllocationWork[],paidOnly=false,rates:All
   const remainder=cents-shares.reduce((a,b)=>a+b,0)
   for(let n=0;n<remainder;n++)shares[order[n].i]++
   const [clientShare,taskShare,executionShare,officeShare]=shares
-  const clientRecipient=entry.client_referrer?referrerNames[entry.client_referrer]:''
+  const clientRecipient=clientReferrerName(entry)
   const taskRecipient=entry.task_referrer==='other'?entry.task_referrer_other?.trim()??'':entry.task_referrer?referrerNames[entry.task_referrer]:''
   if(clientRecipient)recipient(clientRecipient).client+=clientShare;else unassigned+=clientShare
   if(taskRecipient)recipient(taskRecipient).task+=taskShare;else unassigned+=taskShare

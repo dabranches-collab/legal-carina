@@ -5,7 +5,7 @@ import { CalendarDateInput } from '../../components/CalendarDateInput'
 import { StandardDataTable, type TableColumn } from '../../components/table/StandardDataTable'
 import { supabase } from '../../lib/supabase'
 import { professionalName, referrerNames } from '../../lib/professionalNames'
-import { allocateHonoraria, allocationPeriod, eligibleAllocationWork, missingTaskReferrer, validAllocationRates, type AllocationWork, type AllocationRates } from './allocation'
+import { allocateHonoraria, clientReferrerName, allocationPeriod, eligibleAllocationWork, missingTaskReferrer, validAllocationRates, type AllocationWork, type AllocationRates } from './allocation'
 import { AllocationChart } from './AllocationChart'
 import { allocationColors } from './allocation'
 import { saveAllocationPdf } from './allocationPdf'
@@ -36,24 +36,27 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
   target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'})
  },[resultsRequest])
  const [paidOnly,setPaidOnly]=useState(false),[work,setWork]=useState<AllocationWork[]>([]),[loading,setLoading]=useState(true),[error,setError]=useState(''),[refresh,setRefresh]=useState(0)
+ const [progress,setProgress]=useState<{loaded:number;total:number}|null>(null)
  useEffect(()=>{setDates(null);setClientIds(null);setAttention(null);setSelected('all')},[societyId])
- useEffect(()=>{let active=true;const controller=new AbortController();setLoading(true);setError('');void(async()=>{
+ useEffect(()=>{let active=true;const controller=new AbortController();setLoading(true);setProgress(null);setError('');void(async()=>{
   try{
    if(!supabase)throw new Error('Ligação indisponível.')
    const readPage=async(offset:number)=>{
-    const result=await supabase!.rpc('get_legalteam_allocation_work',{p_billing_entity_id:societyId,p_start:null,p_end:null,p_offset:offset,p_limit:500}).abortSignal(controller.signal)
+    const result=await supabase!.rpc('get_legalteam_allocation_work',{p_billing_entity_id:societyId,p_start:null,p_end:null,p_offset:offset,p_limit:5000}).abortSignal(controller.signal)
     if(result.error)throw new Error(result.error.code==='PGRST202'?'O mapa ficará disponível após a actualização da base de dados.':result.error.message)
     return result.data as {items:AllocationWork[];total:number}
    }
    const first=await readPage(0),total=first.total,pages:AllocationWork[][]=[first.items]
-   if(first.items.length!==Math.min(500,total))throw new Error('Não foi possível obter todos os registos.')
-   let nextOffset=500
-   await Promise.all(Array.from({length:Math.max(0,Math.min(3,Math.ceil(total/500)-1))},async()=>{
+   if(active)setProgress({loaded:first.items.length,total})
+   if(first.items.length!==Math.min(5000,total))throw new Error('Não foi possível obter todos os registos.')
+   let nextOffset=5000
+   await Promise.all(Array.from({length:Math.max(0,Math.min(3,Math.ceil(total/5000)-1))},async()=>{
     while(active&&nextOffset<total){
-     const offset=nextOffset;nextOffset+=500
+     const offset=nextOffset;nextOffset+=5000
      const page=await readPage(offset)
-     if(page.total!==total||page.items.length!==Math.min(500,total-offset))throw new Error('Os registos mudaram durante a consulta. Volte a tentar.')
-     pages[offset/500]=page.items
+     if(page.total!==total||page.items.length!==Math.min(5000,total-offset))throw new Error('Os registos mudaram durante a consulta. Volte a tentar.')
+     pages[offset/5000]=page.items
+     if(active)setProgress(previous=>({loaded:(previous?.loaded??0)+page.items.length,total}))
     }
    }))
    if(!active)return
@@ -76,7 +79,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
  const validRates=validAllocationRates(rates),rateTotal=Object.values(rates).reduce((n,p)=>n+(Number.isFinite(p)?p:0),0)
  const map=useMemo(()=>validRates?allocateHonoraria(scope,false,rates):null,[scope,validRates,rates])
  const allocations=useMemo(()=>new Map(map?.rows.map(r=>[r.id,r])??[]),[map])
- const gaps=useMemo(()=>({client:scope.filter(r=>!r.client_referrer),task:scope.filter(missingTaskReferrer),executor:scope.filter(r=>!r.professional_name?.trim()),price:scope.filter(r=>r.is_billable&&r.billing_scope!=='retainer'&&(r.effective_amount==null||!Number.isFinite(Number(r.effective_amount))||Number(r.effective_amount)<0))}),[scope])
+ const gaps=useMemo(()=>({client:scope.filter(r=>!clientReferrerName(r)),task:scope.filter(missingTaskReferrer),executor:scope.filter(r=>!r.professional_name?.trim()),price:scope.filter(r=>r.is_billable&&r.billing_scope!=='retainer'&&(r.effective_amount==null||!Number.isFinite(Number(r.effective_amount))||Number(r.effective_amount)<0))}),[scope])
  const missingClients=useMemo(()=>{
   const grouped=new Map<string,ClientSummary>()
   for(const row of gaps.client){const client=grouped.get(row.client_id)??{id:row.client_id,name:row.client_name,records:0,minutes:0};client.records++;client.minutes+=row.duration_minutes;grouped.set(client.id,client)}
@@ -87,7 +90,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
   if(selected==='all'||selected==='office')return rows
   return rows.filter(row=>[
    professionalName(row.professional_name?.trim()||'Responsável por identificar'),
-   row.client_referrer?referrerNames[row.client_referrer]:'',
+   clientReferrerName(row),
    row.task_referrer==='other'?professionalName(row.task_referrer_other??''):row.task_referrer?referrerNames[row.task_referrer]:'',
   ].some(name=>name.normalize('NFC').trim().toLocaleLowerCase('pt-PT')===selected))
  },[attention,gaps,scope,selected])
@@ -103,7 +106,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
   {id:'responsible',label:'Responsável',value:r=>professionalName(r.professional_name?.trim()||'Por identificar'),width:170},
   {id:'hours',label:'Horas',value:r=>r.duration_minutes/60,render:r=>hours(r.duration_minutes),width:110},
   shareColumn('amount','Honorários sem IVA','amount'),
-  {id:'clientRef',label:'Angariador do cliente',value:r=>r.client_referrer?referrerNames[r.client_referrer]:'Por identificar',width:185},
+  {id:'clientRef',label:'Angariador do cliente',value:r=>clientReferrerName(r)||'Por identificar',width:185},
   shareColumn('clientShare',`Cliente · ${percentage('client')}`,'clientShare'),
   {id:'taskRef',label:'Angariador da tarefa',value:r=>r.task_referrer==='other'?r.task_referrer_other?.trim()||'Por identificar':r.task_referrer?referrerNames[r.task_referrer]:'Por identificar',width:185},
   shareColumn('taskShare',`Tarefa · ${percentage('task')}`,'taskShare'),
@@ -121,6 +124,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
  const selectedClients=clients.filter(c=>clientIds===null||clientIds.includes(c.id))
  return <section className="card min-w-0 p-4 sm:p-6" aria-label="Repartição LEGALTEAM">
   <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-display text-xl font-semibold">Horas e repartição de honorários</h2><button type="button" disabled={exporting||loading||!!error||!validRates||!validDates||!scope.length} className="control min-h-11 px-4 text-sm font-semibold disabled:opacity-50" onClick={()=>{setExporting(true);setExportError('');void saveAllocationPdf({start,end,rates,paidOnly,clientNames:selectedClients.map(c=>c.name),allClients:clientIds===null,work:scope}).catch(cause=>setExportError(cause instanceof Error?cause.message:'Não foi possível guardar o PDF.')).finally(()=>setExporting(false))}}>{exporting?'A preparar PDF…':'Exportar resumo PDF'}</button></div>
+  {loading&&<div role="status" aria-label="A calcular a repartição" className="mt-4 flex items-center gap-4 rounded-xl border-2 border-secondary bg-secondary-soft p-5 shadow-sm"><span aria-hidden="true" className="size-9 shrink-0 animate-spin rounded-full border-4 border-secondary/25 border-t-secondary"/><div className="min-w-0 flex-1"><p className="text-lg font-bold text-secondary">A calcular a repartição…</p><p className="mt-1 text-sm text-text-secondary">{progress?`${progress.loaded.toLocaleString('pt-PT')} de ${progress.total.toLocaleString('pt-PT')} registos carregados`:'A consultar os registos da LEGALTEAM.'}</p>{progress&&<progress aria-label="Registos carregados para a repartição" max={Math.max(progress.total,1)} value={progress.loaded} className="mt-2 h-2 w-full accent-secondary"/>}</div></div>}
   {exportError&&<p role="alert" className="mt-2 text-sm text-danger">{exportError}</p>}
   <p className="mt-1 text-sm text-text-secondary">Apenas tarefas da LEGALTEAM e clientes com trabalho nesta sociedade. Datas, percentagens e filtros recalculam os resultados automaticamente.</p><div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold"><span className="rounded-full bg-secondary px-3 py-1 text-surface">Só LEGALTEAM</span><span className="rounded-full border border-secondary bg-secondary-soft px-3 py-1 text-secondary">✎ Campos destacados são editáveis</span></div>
   <div className="mt-5 flex flex-wrap items-end gap-4">
@@ -134,7 +138,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
   </div>
   <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-text-secondary"><span>{dates?'Período personalizado.':'Do primeiro ao último registo da LEGALTEAM.'} {dates&&<button type="button" className="underline" onClick={()=>setDates(null)}>Usar todo o período</button>}</span><span className={validRates?'text-success':'text-danger'}>Total das percentagens: {Number(rateTotal.toFixed(2)).toLocaleString('pt-PT')}%</span></div>
   <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_13rem]">
-   <details className="rounded-lg border border-border bg-surface-subtle p-3"><summary className="cursor-pointer text-sm font-semibold">Registos considerados · {clientIds===null?'Todos os clientes':`${selectedClients.length} de ${clients.length} clientes`}</summary>
+   <details className="rounded-lg border border-border bg-surface-subtle p-3"><summary className="cursor-pointer text-sm font-semibold">Registos considerados · {clientIds===null?'Clientes com movimentos no período seleccionado':`${selectedClients.length} de ${clients.length} clientes com movimentos no período seleccionado`}</summary>
     <div className="mt-3 space-y-3"><input aria-label="Pesquisar clientes do período" type="search" placeholder="Pesquisar clientes…" value={clientSearch} onChange={e=>setClientSearch(e.target.value)} className="control allocation-editable w-full px-3"/>
      <label className="flex min-h-10 cursor-pointer items-center gap-2 text-sm"><input type="checkbox" aria-label="Todos os clientes" checked={clientIds===null} onChange={e=>{setClientIds(e.target.checked?null:[]);setSelected('all')}}/>Todos os clientes <span className="text-text-secondary">({clients.length})</span></label>
      <div className="max-h-48 overflow-y-auto" role="group" aria-label="Clientes com registos no período">{clients.filter(c=>c.name.toLocaleLowerCase('pt-PT').includes(clientSearch.toLocaleLowerCase('pt-PT'))).map(c=><label key={c.id} className="flex min-h-10 cursor-pointer items-center gap-2 text-sm"><input type="checkbox" checked={clientIds===null||clientIds.includes(c.id)} onChange={e=>{const ids=clientIds??clients.map(c=>c.id);setClientIds(e.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id));setSelected('all')}}/><span className="min-w-0 flex-1 break-words">{c.name}</span><span className="text-xs text-text-secondary">{c.records}</span></label>)}</div>

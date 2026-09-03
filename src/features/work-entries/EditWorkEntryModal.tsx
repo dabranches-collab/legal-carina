@@ -301,7 +301,7 @@ export function EditWorkEntryModal({
                 onChange={(e) =>
                   setEntry({ ...entry, activity_description: e.target.value })
                 }
-                className="control mt-1 min-h-24 w-full p-3"
+                className="control mt-1 h-48 w-full resize-y p-3"
               />
             </label>
             <label className="text-sm sm:col-span-2 lg:col-span-3">
@@ -311,7 +311,7 @@ export function EditWorkEntryModal({
                 onChange={(e) =>
                   setEntry({ ...entry, observations: e.target.value })
                 }
-                className="control mt-1 min-h-20 w-full p-3"
+                className="control mt-1 h-16 w-full resize-y p-3"
               />
             </label>
             <label className="text-sm">
@@ -635,15 +635,15 @@ export function EditWorkEntryModal({
             <button
               type="button"
               onClick={onClose}
-              disabled={saving}
-              className="control px-4 py-2 font-semibold"
+              disabled={saving || !dirty}
+              className="record-cancel rounded-lg border px-4 py-2 font-semibold"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={saving || !entry || !options || !dirty}
-              className="rounded-lg bg-primary px-4 py-2 font-semibold text-surface disabled:opacity-50"
+              className="record-save rounded-lg border px-4 py-2 font-semibold"
             >
               {saving ? "A guardar…" : "Guardar alterações"}
             </button>

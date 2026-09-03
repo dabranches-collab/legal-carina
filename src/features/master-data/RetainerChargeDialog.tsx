@@ -19,6 +19,6 @@ export function RetainerChargeDialog({charge,readOnly,onClose,onSave}:{charge:Re
    <label className="sm:col-span-2">Observações<textarea aria-label="Observações" className="control mt-1 w-full p-2" value={draft.notes??''} onChange={event=>setDraft({...draft,notes:event.target.value})}/></label>
   </fieldset>
   {error&&<p role="alert" className="mt-3 text-danger">{error}</p>}
-  <footer className="mt-4 flex justify-end gap-2"><button type="button" disabled={busy} className="control px-3" onClick={onClose}>Cancelar</button>{!readOnly&&<button type="submit" disabled={busy||JSON.stringify(draft)===JSON.stringify(charge)} className="control bg-primary px-3 text-surface disabled:opacity-50">{busy?'A guardar…':'Guardar prestação'}</button>}</footer>
+  <footer className="mt-4 flex justify-end gap-2"><button type="button" disabled={busy||JSON.stringify(draft)===JSON.stringify(charge)} className="record-cancel min-h-10 rounded-lg border px-3" onClick={onClose}>Cancelar</button>{!readOnly&&<button type="submit" disabled={busy||JSON.stringify(draft)===JSON.stringify(charge)} className="record-save min-h-10 rounded-lg border px-3">{busy?'A guardar…':'Guardar prestação'}</button>}</footer>
  </form></div>,document.body)
 }

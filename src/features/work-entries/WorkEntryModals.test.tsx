@@ -8,7 +8,7 @@ import { AuthContext } from '../auth/AuthContext'
 
 const rpc=vi.fn()
 let retainerContract:{starts_on:string;ends_on:string|null}|null=null
-const emptyQuery=()=>{const result={data:[],error:null};const chain:any={select:()=>chain,eq:()=>chain,in:()=>chain,order:()=>chain,maybeSingle:async()=>({data:null,error:null}),then:(resolve:(value:typeof result)=>void)=>Promise.resolve(result).then(resolve)};return chain}
+const emptyQuery=()=>{const result={data:[],error:null};const chain:any={select:()=>chain,eq:()=>chain,in:()=>chain,order:()=>chain,single:async()=>({data:{primary_billing_entity_id:null},error:null}),maybeSingle:async()=>({data:null,error:null}),then:(resolve:(value:typeof result)=>void)=>Promise.resolve(result).then(resolve)};return chain}
 const retainerQuery=()=>{const chain:any={select:()=>chain,eq:()=>chain,maybeSingle:async()=>({data:retainerContract,error:null})};return chain}
 vi.mock('../../lib/supabase',()=>({supabase:{rpc:(name:string,...args:unknown[])=>rpc(name==='create_work_entry_with_allocation'?'create_classified_work_entry':name,...args),from:(name:string)=>name==='client_retainers'?retainerQuery():emptyQuery(),functions:{invoke:vi.fn()},storage:{from:()=>({createSignedUrl:vi.fn()})}}}))
 

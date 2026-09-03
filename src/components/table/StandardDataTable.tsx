@@ -398,13 +398,21 @@ export function StandardDataTable<Row>({
   totalRows,
   universeKey = "",
   onRowDoubleClick,
-  stickyHeaderOffset = 104,
+  stickyHeaderOffset: requestedStickyOffset,
   showSearch = true,
   resultNoun = "resultados",
   rowHeight = 34,
   rowClassName,
 }: Props<Row>) {
   const { user } = useAuth();
+  const [appHeaderHeight,setAppHeaderHeight]=useState(156);
+  useLayoutEffect(()=>{
+    const header=document.querySelector('.app-shell-header');if(!header)return;
+    const update=()=>setAppHeaderHeight(header.getBoundingClientRect().height);
+    update();const observer=new ResizeObserver(update);observer.observe(header);return()=>observer.disconnect();
+  },[]);
+  const stickyHeaderOffset=requestedStickyOffset??appHeaderHeight;
+
   const legacyStorageKey = `carina.table.${id}`;
   const storageKey = `carina.table.${user?.id ?? "anonymous"}.${id}`;
   const saved = useMemo(() => {

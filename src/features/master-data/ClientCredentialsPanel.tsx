@@ -30,6 +30,7 @@ export function ClientCredentialsPanel({
   clientId: string;
   readOnly: boolean;
 }) {
+  const [dirty,setDirty]=useState(false);
   const [items, setItems] = useState<Credential[]>([]),
     [editing, setEditing] = useState(empty),
     [open, setOpen] = useState(false),
@@ -132,6 +133,7 @@ export function ClientCredentialsPanel({
             type="button"
             onClick={() => {
               setEditing(empty());
+              setDirty(false);
               setOpen(true);
             }}
             className="min-h-10 rounded-lg bg-primary px-3 font-semibold text-surface"
@@ -217,6 +219,7 @@ export function ClientCredentialsPanel({
                           password: item.password,
                         });
                         setOpen(true);
+                        setDirty(false);
                       }}
                       className="min-h-9 rounded-lg border border-border px-3 text-xs font-semibold text-primary"
                     >
@@ -279,11 +282,14 @@ export function ClientCredentialsPanel({
       )}
       {open && (
         <div
+          data-independent-form
+          onChangeCapture={()=>setDirty(true)}
           className="mt-4 rounded-xl border border-primary/35 bg-primary/5 p-4"
         >
           <h4 className="font-semibold">
             {editing.id ? "Editar credencial" : "Nova credencial"}
           </h4>
+          <button type="button" disabled={saving} onClick={()=>setOpen(false)} className="control mt-2 px-3">Fechar credencial</button>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <label className="text-sm font-semibold">
               Nome da plataforma
@@ -339,15 +345,16 @@ export function ClientCredentialsPanel({
                 setOpen(false);
                 setEditing(empty());
               }}
-              className="min-h-10 rounded-lg border border-border px-3 font-semibold"
+              disabled={saving||!dirty}
+              className="record-cancel min-h-10 rounded-lg border px-3 font-semibold"
             >
               Cancelar
             </button>
             <button
               type="button"
               onClick={() => void save()}
-              disabled={saving}
-              className="min-h-10 rounded-lg bg-primary px-3 font-semibold text-surface"
+              disabled={saving||!dirty}
+              className="record-save min-h-10 rounded-lg border px-3 font-semibold"
             >
               {saving ? "A guardar…" : "Guardar credencial"}
             </button>

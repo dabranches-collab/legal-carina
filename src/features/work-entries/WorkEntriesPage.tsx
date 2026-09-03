@@ -166,8 +166,8 @@ const archives = [
   ["other", "Outro"],
 ] as const;
 
-export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete?:boolean;requiresReason?:boolean}={}) {
-  const initialParams = new URLSearchParams(window.location.search);
+export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQuery,onEntrySaved}:{canDelete?:boolean;requiresReason?:boolean;embeddedQuery?:string;onEntrySaved?:()=>void}={}) {
+  const initialParams = new URLSearchParams(embeddedQuery??window.location.search);
   const [uncollectibleOnly,setUncollectibleOnly]=useState(()=>initialParams.get("collectionState")==="uncollectible");
   const [rows, setRows] = useState<Entry[]>([]),
     [meta, setMeta] = useState<SearchMeta>({
@@ -211,16 +211,16 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
   const filtersBarRef=useRef<HTMLDivElement>(null);
   const [tableStickyOffset,setTableStickyOffset]=useState(112);
   useEffect(()=>{
-    const bar=filtersBarRef.current;if(!bar)return;
+    const bar=filtersBarRef.current;
     const update=()=>{
       const appHeader=document.querySelector<HTMLElement>('.app-shell-header');
       const headerHeight=Math.ceil(appHeader?.getBoundingClientRect().height??64);
-      const keepFiltersSticky = window.innerWidth >= 1024 && window.innerHeight > 760;
-      setTableStickyOffset(headerHeight+(keepFiltersSticky?Math.ceil(bar.getBoundingClientRect().height):0));
+      const keepFiltersSticky = !!bar && window.innerWidth >= 1024 && window.innerHeight > 760;
+      setTableStickyOffset(headerHeight+(keepFiltersSticky?Math.ceil(bar!.getBoundingClientRect().height):0));
     };
     update();
     const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(update);
-    observer?.observe(bar);window.addEventListener('resize',update);
+    if(bar)observer?.observe(bar);const header=document.querySelector('.app-shell-header');if(header)observer?.observe(header);window.addEventListener('resize',update);
     return()=>{observer?.disconnect();window.removeEventListener('resize',update)};
   },[]);
   const [creating, setCreating] = useState(false),
@@ -327,6 +327,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
     };
   }, [searchArgs, refreshToken, clientType, reviewIssue, uncollectibleOnly]);
   useEffect(()=>{
+    if(embeddedQuery!==undefined)return;
     let active=true;
     void(async()=>{
       if(!supabase)return;
@@ -342,7 +343,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
       try{sessionStorage.setItem(attentionCacheStorageKey,JSON.stringify(normalized))}catch{/* armazenamento indisponível */}
     })();
     return()=>{active=false};
-  },[query,year,professional,billing,archive,clientType,clientId,refreshToken]);
+  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
   const clear = () => {
     setSearch("");
     setQuery("");
@@ -564,7 +565,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
           {notice}
         </p>
       )}
-      <div ref={filtersBarRef} className="work-filters-bar grid gap-2 bg-background pb-2 lg:sticky lg:top-[6.5rem] lg:z-50 lg:grid-cols-[minmax(0,1fr)_7.5rem]">
+      {embeddedQuery===undefined&&<div ref={filtersBarRef} className="work-filters-bar grid gap-2 bg-background pb-2 lg:sticky lg:top-[var(--app-header-height,9.75rem)] lg:z-50 lg:grid-cols-[minmax(0,1fr)_7.5rem]">
       <section aria-label="Filtros dos registos" className="card p-2 shadow-sm">
       <div
         aria-labelledby="review-issues-title"
@@ -716,9 +717,9 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         >
           <span><span className="mb-1 block text-xl leading-none" aria-hidden="true">＋</span>Criar<br />movimento</span>
         </button>
-      </div>
+      </div>}
       <StandardDataTable
-        id="work-entries"
+        id={embeddedQuery===undefined?"work-entries":"accompaniment-work-entries"}
         label="Registos de trabalho"
         rows={rows}
         columns={columns}
@@ -734,7 +735,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
         totalRows={meta.total}
         universeKey={JSON.stringify(searchArgs)}
         stickyHeaderOffset={tableStickyOffset}
-        showSearch={false}
+        showSearch={embeddedQuery!==undefined}
         resultNoun="registos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
       />
@@ -762,6 +763,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false}:{canDelete
               ? "Movimento apagado e preservado no histórico de auditoria."
               : "Movimento actualizado e registado na auditoria.");
             setRefreshToken((value) => value + 1);
+            onEntrySaved?.();
           }}
         />
       )}

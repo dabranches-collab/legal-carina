@@ -84,6 +84,7 @@ export function ClientRetainerPanel({
   onRequestEdit?: () => void;
 }) {
   const [editingCharge,setEditingCharge]=useState<Charge|null>(null);
+  const [dirty,setDirty]=useState(false);
   const [retainers, setRetainers] = useState<Retainer[]>([]),
     [retainer, setRetainer] = useState<Retainer | null>(null),
     [form, setForm] = useState(empty),
@@ -132,6 +133,7 @@ export function ClientRetainerPanel({
       return;
     }
     const allRetainers = (retainerResult.data ?? []) as Retainer[];
+    setDirty(false);
     const found = allRetainers[0] ?? null;
     setRetainers(allRetainers);
     setRetainer(found);
@@ -167,6 +169,7 @@ export function ClientRetainerPanel({
     void load();
   }, [load]);
   function editTerms(item: Retainer | null) {
+    setDirty(false);
     setTermsOpen(true);
     setRetainer(item);
     setForm(item ? {
@@ -424,6 +427,8 @@ export function ClientRetainerPanel({
         <h4 className="mt-4 font-display text-lg font-semibold">{retainer?`Editar condição iniciada em ${retainer.starts_on}`:'Adicionar nova condição temporal'}</h4>
         <fieldset
           ref={formRef}
+          data-independent-form
+          onChangeCapture={()=>setDirty(true)}
           disabled={readOnly || saving}
           className="mt-2 grid scroll-mt-4 gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:grid-cols-2"
         >
@@ -552,7 +557,8 @@ export function ClientRetainerPanel({
           {!readOnly && (
             <div className="flex flex-wrap items-center justify-end gap-3 sm:col-span-2">
               <span className="text-xs text-text-secondary">Use este botão para guardar a avença; é independente do botão geral da ficha.</span>
-              <button type="button" onClick={() => void save()} disabled={saving} className="min-h-10 rounded-lg bg-primary px-4 font-semibold text-surface">
+              <button type="button" onClick={()=>editTerms(retainer)} disabled={saving||!dirty} className="record-cancel min-h-10 rounded-lg border px-4 font-semibold">Cancelar alterações da avença</button>
+              <button type="button" onClick={() => void save()} disabled={saving||!dirty} className="record-save min-h-10 rounded-lg border px-4 font-semibold">
                 {saving ? "A guardar…" : retainer ? "Guardar esta condição da avença" : "Adicionar condição da avença"}
               </button>
             </div>

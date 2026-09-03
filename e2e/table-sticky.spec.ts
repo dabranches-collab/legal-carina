@@ -147,7 +147,7 @@ test('zoom equivalente a 150% liberta as pendências e conserva a tabela fixa', 
   const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
   expect(toolsBox).not.toBeNull()
   expect(headerBox).not.toBeNull()
-  expect(toolsBox!.y).toBeLessThan(130)
+  expect(Math.abs(toolsBox!.y-(await page.locator('.app-shell-header').boundingBox())!.height)).toBeLessThan(2)
   expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y+toolsBox!.height-1)
   await page.screenshot({ path: 'test-results/table-sticky-150-dark.png', fullPage: false })
 })
