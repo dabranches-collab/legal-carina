@@ -43,7 +43,7 @@ export function EntityDashboard({kind,initialSelectionLabel=null,aggregateClient
   ['Valor Facturado',financial(m.invoiced),'Movimentos facturados','invoice',true],
   ['Valor Recebido',financial(m.paid),'Movimentos pagos','payment',true],
   ['Preço Médio/Hora',m.averageRate==null?'Sem acesso':`${money.format(m.averageRate)}/h`,'Média ponderada','rules',true],
-  ['Clientes Activos',number.format(m.clients),'Com movimentos','clients',false],
+  ['Clientes',number.format(m.clients),'Com movimentos','clients',false],
  ].map(([label,value,detail,icon,isFinancial])=><MetricCard key={String(label)} label={String(label)} value={String(value)} detail={String(detail)} icon={icon as 'clock'} financial={Boolean(isFinancial)}/>)}</div></section><section aria-labelledby="entity-attention"><div className="mb-4"><h3 id="entity-attention" className="font-semibold text-danger">Acompanhamento</h3><p className="mt-1 text-xs text-text-secondary">Pendências {kind==='billing'?'desta Sociedade':'deste Responsável'}</p></div><div className="grid grid-cols-2 gap-3">{[
   ['Por Receber',financial(m.pending),'Facturado e ainda não pago','warning',`?view=work&${scopeQuery}&collectionState=unpaid`,true,m.pending??0],
   ['Não Facturados',number.format(m.uninvoicedCount??0),'Movimentos','invoice',`?view=work&${scopeQuery}&collectionState=uninvoiced`,false,m.uninvoicedCount??0],

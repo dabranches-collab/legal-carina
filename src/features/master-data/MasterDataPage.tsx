@@ -201,8 +201,7 @@ export function MasterDataPage({
   const [editing, setEditing] = useState<Row | null>(null),
     [creating, setCreating] = useState(false),
     [editName, setEditName] = useState("");
-  const [editActive, setEditActive] = useState(true),
-    [profiles, setProfiles] = useState<Profile[]>(emptyProfiles),
+  const [profiles, setProfiles] = useState<Profile[]>(emptyProfiles),
     [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [showOtherProfile,setShowOtherProfile]=useState(false);
@@ -351,7 +350,6 @@ export function MasterDataPage({
     setDirty(false);
     setClientPage("general");
     setEditName(row.display_name ?? row.name ?? "");
-    setEditActive(row.active);
     setError("");
     setDetails(emptyDetails());
     setShowHourlyRate(false);
@@ -429,6 +427,8 @@ export function MasterDataPage({
           } else {
             setLogoUrl(URL.createObjectURL(storedLogo.data));
           }
+        } else if (/legal\s*team/i.test(row.name ?? row.display_name ?? "")) {
+          setLogoUrl("/brand/legalteam-logo.jpg");
         }
       }
       return;
@@ -533,7 +533,6 @@ export function MasterDataPage({
     setMode("edit");
     setDirty(false);
     setEditName("");
-    setEditActive(true);
     setProfiles(unselectedProfiles());
     setDetails(emptyDetails());
     setShowHourlyRate(false);
@@ -777,7 +776,7 @@ export function MasterDataPage({
               .insert({
                 firm_id: firmId,
                 name,
-                active: editActive,
+                active: true,
                 ...savedBillingDetails,
               })
               .select("id")
@@ -788,7 +787,7 @@ export function MasterDataPage({
                 .insert({
                   firm_id: firmId,
                   display_name: name,
-                  active: editActive,
+                  active: true,
                 })
                 .select("id")
                 .single()
@@ -799,7 +798,7 @@ export function MasterDataPage({
                   display_name: name,
                   client_code: primary.client_code.trim(),
                   client_type: primary.client_type,
-                  active: editActive,
+                  active: true,
                   ...savedDetails,
                 })
                 .select("id")
@@ -815,10 +814,10 @@ export function MasterDataPage({
       const field = section === "billing_entities" ? "name" : "display_name";
       const updatePayload =
         section === "clients"
-          ? { [field]: name, active: editActive, ...savedDetails }
+          ? { [field]: name, active: true, ...savedDetails }
           : section === "billing_entities"
-            ? { [field]: name, active: editActive, ...savedBillingDetails }
-            : { [field]: name, active: editActive };
+            ? { [field]: name, active: true, ...savedBillingDetails }
+            : { [field]: name, active: true };
       const { error: updateError } = await supabase
         .from(section)
         .update(updatePayload)
@@ -902,7 +901,9 @@ export function MasterDataPage({
         const update = await supabase
           .from("billing_entities")
           .update({ logo_path: path })
-          .eq("id", targetId);
+          .eq("id", targetId)
+          .select("logo_path")
+          .single();
         if (update.error) {
           setError(
             `O logótipo foi carregado, mas não foi associado: ${update.error.message}`,
@@ -910,6 +911,22 @@ export function MasterDataPage({
           setSaving(false);
           return;
         }
+        if (update.data.logo_path !== path) {
+          setError("O logótipo foi carregado, mas a associação não ficou confirmada.");
+          setSaving(false);
+          return;
+        }
+        const confirmation = await supabase.storage
+          .from("billing-entity-logos")
+          .download(path);
+        if (confirmation.error || !confirmation.data) {
+          setError(`O logótipo foi associado, mas a leitura de confirmação falhou: ${confirmation.error?.message ?? "ficheiro indisponível"}`);
+          setSaving(false);
+          return;
+        }
+        setLogoPath(path);
+        setLogoUrl(URL.createObjectURL(confirmation.data));
+        setLogoBlob(null);
       } else if (removeLogo && logoPath) {
         const removed = await supabase.storage
           .from("billing-entity-logos")
@@ -942,7 +959,7 @@ export function MasterDataPage({
         ...current,
         display_name: section === "billing_entities" ? current.display_name : name,
         name: section === "billing_entities" ? name : current.name,
-        active: editActive,
+        active: true,
       } : current);
       setDirty(false);
       setMode("edit");
@@ -1008,17 +1025,6 @@ export function MasterDataPage({
               ] as TableColumn<Row>[])
             : []),
         ] as TableColumn<Row>[])
-      : []),
-    ...(!clientTypeFilter
-      ? [
-          {
-            id: "active",
-            label: "Estado",
-            kind: "boolean" as const,
-            value: (row: Row) => row.active,
-            render: (row: Row) => (row.active ? "Activo" : "Inactivo"),
-          },
-        ]
       : []),
     {
       id: clientTypeFilter ? "client_actions" : "actions",
@@ -1307,16 +1313,6 @@ export function MasterDataPage({
                     className="control mt-1 w-full px-3"
                   />
                 </label>
-                {section !== "clients" && (
-                  <label className="mt-4 flex min-h-11 items-center gap-3 rounded-lg border border-border px-3 text-sm font-semibold">
-                    <input
-                      type="checkbox"
-                      checked={editActive}
-                      onChange={(event) => setEditActive(event.target.checked)}
-                    />
-                    {editActive ? "Entidade activa" : "Entidade inactiva"}
-                  </label>
-                )}
                 {section === "clients" && (
                   <>
                     <fieldset className="mt-5">

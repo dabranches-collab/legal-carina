@@ -219,7 +219,7 @@ export function OverviewPage() {
       "default",
     ],
     [
-      "Clientes activos",
+      "Clientes",
       number.format(m.activeClients),
       "Com movimentos",
       "clients",
@@ -267,7 +267,7 @@ export function OverviewPage() {
     "Não facturados": "uninvoicedCount",
     "Facturados não pagos": "unpaidCount",
     "Preço médio/hora": "averageRate",
-    "Clientes activos": "activeClients",
+    "Clientes": "activeClients",
     "Movimentos sem preço": "missingPrice",
     "Sem sociedade": "missingBilling",
   };

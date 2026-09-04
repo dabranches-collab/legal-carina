@@ -3,10 +3,11 @@
 ## Versão 0.10.3 em preparação — 04-09-2026
 
 - Local confirmado no browser integrado em `0.10.3`, sobre a branch `codex/legalteam-distribution`; produção permanece em `0.10.2` e não foi alterada.
-- A geração de Nota de Honorários e de Cobrança usa o mesmo `logo_path` privado da sociedade emissora e, por isso, está preparada para apresentar o logótipo da MASSIVE SEARCH nos dois documentos.
-- Validação com sessão autenticada e base real: a ficha da MASSIVE SEARCH não tem actualmente qualquer imagem associada/carregada no campo «Logótipo dos documentos». Sem esse ficheiro, ambos os documentos usam a designação da sociedade em texto.
-- Não foi emitido qualquer documento nem alterado qualquer dado real. Para gerar o exemplo visual pedido falta voltar a fornecer e guardar o ficheiro exacto do logótipo da MASSIVE SEARCH.
-- Segurança de ficheiros, lint, TypeScript e build aprovados. A alteração de versão exigiu actualizar o cenário sintético da próxima actualização PWA; os cinco testes directamente afectados passaram. A execução unitária integral teve apenas o timeout concorrente conhecido em `ClientHourlyDefault`, que passou imediatamente na repetição isolada.
+- O logótipo MASSIVE SEARCH foi recortado em quadrado a partir do ficheiro indicado pelo utilizador, guardado na ficha da sociedade e confirmado por nova leitura do Storage depois de reabrir a ficha. Notas de Honorários e Cobranças usam o mesmo `logo_path` privado da emissora.
+- O editor mantém sempre uma área quadrada, permite arrastar directamente as quatro margens e inclui «Ajustar aos limites» para retirar margens brancas dentro do menor quadrado possível. Guardar só termina depois de confirmar associação e leitura do ficheiro persistido.
+- A ficha da LEGALTEAM apresenta o mesmo logótipo incorporado que já era usado como alternativa nos PDF, mesmo quando a linha não tem `logo_path`; o cabeçalho publicado permanece inalterado.
+- Exemplo MASSIVE SEARCH gerado com quatro movimentos reais apenas por leitura, sem criar uma Nota na base: uma página A4, logótipo superior esquerdo, data formal, 450,00 EUR sem IVA e 553,50 EUR com IVA em número e por extenso, caixa alinhada e rodapé integral.
+- Segurança de ficheiros, lint, TypeScript, 158/158 testes unitários, build e verificação visual do PDF aprovados. Produção não foi publicada nem alterada.
 
 ## Publicação 0.10.2 confirmada — 04-09-2026
 
