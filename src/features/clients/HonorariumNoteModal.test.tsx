@@ -55,7 +55,11 @@ describe('HonorariumNoteModal',()=>{
   expect(documentRpc.mock.calls.filter(([name])=>name==='save_honorarium_document')).toHaveLength(1)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Provisão descontada: 123,00 EUR'))).toBe(true)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Valor a pagar: 0,00 EUR'))).toBe(true)
-  expect(pdfText.mock.calls.flatMap(([text])=>Array.isArray(text)?text:[text]).join(' ')).toContain('Não existe valor adicional a pagar nesta nota.')
+  const generatedText=pdfText.mock.calls.flatMap(([text])=>Array.isArray(text)?text:[text]).join(' ')
+  expect(generatedText).toContain('Alfragide, 03 de Setembro de 2026')
+  expect(generatedText).toContain('valor de 100,00 EUR (cem euros)')
+  expect(generatedText).toContain('perfazendo 123,00 EUR (cento e vinte e três euros)')
+  expect(generatedText).toContain('Não existe valor adicional a pagar nesta nota.')
   expect(screen.getByLabelText('Seleccionar movimento de 2026-07-03')).toBeDisabled()
  })
  it('permite seleccionar registos já incluídos numa nota com provisão descontada',async()=>{

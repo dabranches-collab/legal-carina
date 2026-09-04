@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Publicação 0.10.0 autorizada — 04-09-2026
+
+- O utilizador autorizou expressamente a publicação. Ordem de execução: preservar o lote no GitHub e obter CI verde; aplicar isoladamente a migration aditiva de documentos revisáveis; publicar o Worker; confirmar versão e smoke real. Produção permanece 0.9.0 até estes gates terminarem.
+- Correcções finais das Notas de Honorários: conteúdo e rodapé contidos na página; data formal no formato «Alfragide, 04 de Setembro de 2026»; logótipo LEGALTEAM no canto superior esquerdo, ampliado e elevado; montante sem IVA e montante com IVA, ambos em número e por extenso; resumo total separado da tabela, com altura e quebra de linha dinâmicas.
+- Fichas de sociedades carregam o logótipo autenticado a partir do Storage. O recorte permite retirar margens independentes à esquerda, direita, topo e base, além de remoção automática de margens brancas; a imagem resultante conserva a proporção útil.
+- Gates locais: segurança de ficheiros, lint, TypeScript, build e dry-run Cloudflare aprovados; 154/154 testes unitários aprovados em execução isolada. E2E: 101 aprovados e três cenários exclusivos de produção omitidos na execução integral; os dois cenários de estabilidade afectados pela concorrência passaram isoladamente, ficando 104 verificações aplicáveis aprovadas. PDF real multipágina revisto no browser integrado.
+- Estado Supabase confirmado directamente no projecto original: migration de revisões ainda ausente e nenhuma migration deste lote aplicada. Divergências históricas preservadas; sem `db push` ou `migration repair`. O lote não altera clientes, movimentos ou documentos reais.
+
+
 ## Notas e saldo após estorno — 0.10.0 em preparação, 03-09-2026
 
 - Local: branch codex/legalteam-distribution, versão 0.10.0. Este lote será centralizado no GitHub; não publicar os assets antes de instalar a migration de revisões abaixo. Produção web permanece 0.9.0, código 77a72686bf83ada53cce74cbbd7206bcce6a6728, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, deployment 3d29554a-13fa-4d3d-947a-bffe3bd4d20f, version fb291024-59bc-45b3-b93f-51be8ca3b7a4 (última confirmação directa neste lote).

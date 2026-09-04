@@ -39,6 +39,12 @@ export default defineConfig({
           response.setHeader('Cache-Control', 'no-store')
           response.end(readFileSync(new URL('./qa/iphone-preview.html', import.meta.url), 'utf8'))
         })
+        server.middlewares.use('/preview/nota-honorarios-exemplo.pdf', (_request, response) => {
+          response.setHeader('Content-Type', 'application/pdf')
+          response.setHeader('Content-Disposition', 'inline; filename="nota-honorarios-exemplo.pdf"')
+          response.setHeader('Cache-Control', 'no-store')
+          response.end(readFileSync(resolve('output/pdf/nota-honorarios-cliente-acores-qa-2026-09-04.pdf')))
+        })
       },
     },
   ],

@@ -421,10 +421,14 @@ export function MasterDataPage({
         const path = String(data.logo_path ?? "");
         setLogoPath(path);
         if (path) {
-          const signed = await supabase!.storage
+          const storedLogo = await supabase!.storage
             .from("billing-entity-logos")
-            .createSignedUrl(path, 3600);
-          if (!signed.error) setLogoUrl(signed.data.signedUrl);
+            .download(path);
+          if (storedLogo.error || !storedLogo.data) {
+            setError(`Não foi possível apresentar o logótipo guardado: ${storedLogo.error?.message ?? "ficheiro indisponível"}`);
+          } else {
+            setLogoUrl(URL.createObjectURL(storedLogo.data));
+          }
         }
       }
       return;
