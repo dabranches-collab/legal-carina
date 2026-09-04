@@ -2,8 +2,9 @@
 
 ## Publicação 0.10.1 confirmada — 04-09-2026
 
-- Produção activa a 100% desde 04-09-2026 11:27:07 UTC em https://legal-carina.dabranches.workers.dev. Commit funcional `0269c5be4a96cce623b0c8677cc807b8ba4717d9`, preservado na branch `codex/legalteam-distribution` e PR #14 antes do deploy.
-- Cloudflare: deployment `d3a952ae-b26e-4fc8-9d72-d5b44a68fc6f`, version `87bbb5cb-8daf-48a8-ac91-dbd967186e8c`, tag `0.10.1`, 100% do tráfego. `release-notes.json` confirma directamente 0.10.1, três alterações e histórico incremental.
+- Produção activa a 100% desde 04-09-2026 11:35:21 UTC em https://legal-carina.dabranches.workers.dev. Commit funcional `0269c5be4a96cce623b0c8677cc807b8ba4717d9`, preservado na branch `codex/legalteam-distribution` e PR #14 antes do deploy.
+- Cloudflare: deployment `7a32a313-74e7-4a35-be95-4b608ef763e8`, version `0380f254-55cf-4c8b-9c71-b9acd6e856fe`, tag `0.10.1`, 100% do tráfego. `release-notes.json` confirma directamente 0.10.1; o asset publicado confirma a configuração pública do Supabase, o atalho «Novo registo» e a versão 0.10.1.
+- Incidente de publicação resolvido: o primeiro artefacto 0.10.1 foi construído numa worktree sem a configuração pública local do Supabase e apresentou «Supabase Auth não configurado». Produção foi imediatamente reposta na versão 0.10.0 por rollback `6c41282c-72a4-4fd5-8b13-62ade3acc3ee`; depois de verificar a configuração no artefacto sem expor credenciais, a 0.10.1 foi reconstruída e republicada no deployment acima.
 - A barra superior tem um atalho global quadrado «Novo registo», imediatamente à esquerda do controlo de visibilidade financeira, com 80 × 80 px e texto em duas linhas. Abre o formulário real de criação a partir de qualquer área e actualiza os dados depois de guardar.
 - «Importações» e «Revisão de importações» foram retiradas da navegação e do painel de Administração. As rotas internas foram preservadas apenas para compatibilidade, sem as apresentar como fonte de alimentação corrente.
 - O resumo de actualização conserva a versão de origem da instalação e filtra o histórico até à versão de destino. Cada instalação vê apenas as alterações posteriores à versão que tinha, incluindo saltos por várias versões; após confirmação, a origem deixa de ser repetida.
