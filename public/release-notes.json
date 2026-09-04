@@ -1,9 +1,8 @@
 {
-  "version": "0.10.1",
+  "version": "0.10.2",
   "changes": [
-    "Novo atalho global e destacado na barra superior para criar um registo a partir de qualquer área da plataforma.",
-    "Importações e Revisão de importações deixam de aparecer na navegação, porque a plataforma passa a ser a fonte única da informação.",
-    "O resumo de actualização apresenta a cada utilizador apenas as alterações posteriores à versão que tinha instalada."
+    "Recorte de logótipos com moldura visual e quatro margens arrastáveis directamente sobre a imagem, em substituição das barras de ajuste.",
+    "Botão Cortar aplica imediatamente a área seleccionada, com reposição da moldura e detecção opcional de margens brancas."
   ],
   "releases": [
     {
@@ -27,6 +26,13 @@
         "Novo atalho global e destacado na barra superior para criar um registo a partir de qualquer área da plataforma.",
         "Importações e Revisão de importações deixam de aparecer na navegação, porque a plataforma passa a ser a fonte única da informação.",
         "O resumo de actualização apresenta a cada utilizador apenas as alterações posteriores à versão que tinha instalada."
+      ]
+    },
+    {
+      "version": "0.10.2",
+      "changes": [
+        "Recorte de logótipos com moldura visual e quatro margens arrastáveis directamente sobre a imagem, em substituição das barras de ajuste.",
+        "Botão Cortar aplica imediatamente a área seleccionada, com reposição da moldura e detecção opcional de margens brancas."
       ]
     }
   ]

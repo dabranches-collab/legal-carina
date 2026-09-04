@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Recorte visual de logótipos — 0.10.2 em preparação, 04-09-2026
+
+- O editor de logótipos substitui as quatro barras por uma moldura sobre a imagem, com margens esquerda, direita, superior e inferior directamente arrastáveis. Os mesmos controlos aceitam setas do teclado e mantêm uma área útil mínima.
+- «Cortar» gera a imagem PNG a partir da área seleccionada e mostra imediatamente o resultado. «Repor moldura» volta à imagem integral e «Detectar margens brancas» conserva a remoção automática como opção complementar.
+- Validação local: lint e TypeScript aprovados; 156/156 testes aprovados, incluindo o novo ensaio da moldura; build aprovado. Verificação real no browser integrado confirmou o ajuste de 0% para 1% e a reposição sem guardar dados. Sessão local activa na ficha da LEGALTEAM.
+- Trabalho centralizado apenas como próxima versão; não publicado. Produção permanece na 0.10.1 confirmada abaixo e não houve alterações de base de dados nem gravação de dados reais.
+
 ## Publicação 0.10.1 confirmada — 04-09-2026
 
 - Produção activa a 100% desde 04-09-2026 11:35:21 UTC em https://legal-carina.dabranches.workers.dev. Commit funcional `0269c5be4a96cce623b0c8677cc807b8ba4717d9`, preservado na branch `codex/legalteam-distribution` e PR #14 antes do deploy.
