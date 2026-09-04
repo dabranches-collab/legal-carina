@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Versão 0.10.3 em preparação — 04-09-2026
+
+- Local confirmado no browser integrado em `0.10.3`, sobre a branch `codex/legalteam-distribution`; produção permanece em `0.10.2` e não foi alterada.
+- A geração de Nota de Honorários e de Cobrança usa o mesmo `logo_path` privado da sociedade emissora e, por isso, está preparada para apresentar o logótipo da MASSIVE SEARCH nos dois documentos.
+- Validação com sessão autenticada e base real: a ficha da MASSIVE SEARCH não tem actualmente qualquer imagem associada/carregada no campo «Logótipo dos documentos». Sem esse ficheiro, ambos os documentos usam a designação da sociedade em texto.
+- Não foi emitido qualquer documento nem alterado qualquer dado real. Para gerar o exemplo visual pedido falta voltar a fornecer e guardar o ficheiro exacto do logótipo da MASSIVE SEARCH.
+- Segurança de ficheiros, lint, TypeScript e build aprovados. A alteração de versão exigiu actualizar o cenário sintético da próxima actualização PWA; os cinco testes directamente afectados passaram. A execução unitária integral teve apenas o timeout concorrente conhecido em `ClientHourlyDefault`, que passou imediatamente na repetição isolada.
+
 ## Publicação 0.10.2 confirmada — 04-09-2026
 
 - O editor de logótipos substitui as quatro barras por uma moldura sobre a imagem, com margens esquerda, direita, superior e inferior directamente arrastáveis. Os mesmos controlos aceitam setas do teclado e mantêm uma área útil mínima.

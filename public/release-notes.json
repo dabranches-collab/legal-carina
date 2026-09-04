@@ -1,8 +1,7 @@
 {
-  "version": "0.10.2",
+  "version": "0.10.3",
   "changes": [
-    "Recorte de logótipos com moldura visual e quatro margens arrastáveis directamente sobre a imagem, em substituição das barras de ajuste.",
-    "Botão Cortar aplica imediatamente a área seleccionada, com reposição da moldura e detecção opcional de margens brancas."
+    "Preparação local da próxima versão, posterior à publicação 0.10.2."
   ],
   "releases": [
     {
@@ -33,6 +32,12 @@
       "changes": [
         "Recorte de logótipos com moldura visual e quatro margens arrastáveis directamente sobre a imagem, em substituição das barras de ajuste.",
         "Botão Cortar aplica imediatamente a área seleccionada, com reposição da moldura e detecção opcional de margens brancas."
+      ]
+    },
+    {
+      "version": "0.10.3",
+      "changes": [
+        "Preparação local da próxima versão, posterior à publicação 0.10.2."
       ]
     }
   ]
