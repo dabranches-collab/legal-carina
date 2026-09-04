@@ -28,6 +28,11 @@ for (const [name,width,height,safeTop] of models) {
     await page.setViewportSize({ width, height })
     await page.goto(`/?qa-iphone=1&safe-top=${safeTop}&safe-bottom=34&display-mode=standalone&theme=light`)
     await expect(page.getByRole('navigation', { name:'Localização' }).getByText('Visão Geral', { exact:true })).toBeVisible()
+    const createShortcut=page.getByRole('button',{name:'Criar novo registo'})
+    await expect(createShortcut).toBeVisible()
+    const createShortcutBox=await createShortcut.boundingBox()
+    expect(createShortcutBox?.width).toBeGreaterThanOrEqual(75)
+    expect(createShortcutBox?.height).toBeGreaterThanOrEqual(75)
     const metrics = await page.evaluate(() => {
       const header=document.querySelector<HTMLElement>('header')!
       const title=document.querySelector<HTMLElement>('header nav[aria-label="Localização"]')!
@@ -59,6 +64,19 @@ for (const [name,width,height,safeTop] of models) {
     await page.screenshot({path:`test-results/sidebar-${name.replaceAll(' ','-')}.png`,fullPage:false})
   })
 }
+
+test('atalho global cria registos e importações deixam de aparecer na navegação',async({page})=>{
+  await page.setViewportSize({width:390,height:844})
+  await page.goto('/?qa-iphone=1&qa-role=admin&safe-top=47&safe-bottom=34&view=overview')
+  await page.getByRole('button',{name:'Criar novo registo'}).click()
+  await expect(page.getByRole('dialog',{name:'Criar movimento'})).toBeVisible()
+  await page.getByRole('button',{name:'Fechar'}).click()
+  await page.getByRole('button',{name:'Abrir navegação'}).click()
+  await page.getByRole('button',{name:'Definições'}).click()
+  await expect(page.getByRole('button',{name:'Importações'})).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'Revisão de Importações'})).toHaveCount(0)
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
+})
 
 test('rotação, tema escuro, texto ampliado e teclado não criam overflow horizontal', async ({ page }) => {
   await page.setViewportSize({ width:844, height:390 })

@@ -1,15 +1,33 @@
 {
-  "version": "0.10.0",
+  "version": "0.10.1",
   "changes": [
-    "Notas de honorários com histórico de versões, revisão da selecção e filtros Todos, Com nota, Sem nota e Estornada.",
-    "Estornar uma nota repõe o abate no saldo disponível e liberta os registos para nova emissão.",
-    "Saldo efectivo de provisões separado da estimativa pelas horas, na ficha, na lista e nas exportações PDF/XLSX.",
-    "Reemitir uma nota mantém o histórico e evita descontar duas vezes a mesma provisão; facturação e pagamento continuam independentes.",
-    "Correcção das permissões de criação e partilha de notas de trabalho para o perfil da Paula Chaves.",
-    "Notas de honorários respeitam a sociedade emissora predefinida do cliente, mesmo quando a ficha demora mais a carregar do que os movimentos.",
-    "Valor/hora predefinido na ficha do cliente, preenchido automaticamente nos novos movimentos e alterável em cada registo.",
-    "Notas da LEGALTEAM com logótipo no cabeçalho, data formal por extenso, montantes antes e depois de IVA também por extenso e rodapé integralmente visível.",
-    "Paginação das notas revista para manter tabelas e caixas de totais separadas, sem conteúdo fora da página.",
-    "Logótipos das sociedades com recorte independente dos quatro lados e remoção automática de margens brancas."
+    "Novo atalho global e destacado na barra superior para criar um registo a partir de qualquer área da plataforma.",
+    "Importações e Revisão de importações deixam de aparecer na navegação, porque a plataforma passa a ser a fonte única da informação.",
+    "O resumo de actualização apresenta a cada utilizador apenas as alterações posteriores à versão que tinha instalada."
+  ],
+  "releases": [
+    {
+      "version": "0.10.0",
+      "changes": [
+        "Notas de honorários com histórico de versões, revisão da selecção e filtros Todos, Com nota, Sem nota e Estornada.",
+        "Estornar uma nota repõe o abate no saldo disponível e liberta os registos para nova emissão.",
+        "Saldo efectivo de provisões separado da estimativa pelas horas, na ficha, na lista e nas exportações PDF/XLSX.",
+        "Reemitir uma nota mantém o histórico e evita descontar duas vezes a mesma provisão; facturação e pagamento continuam independentes.",
+        "Correcção das permissões de criação e partilha de notas de trabalho para o perfil da Paula Chaves.",
+        "Notas de honorários respeitam a sociedade emissora predefinida do cliente, mesmo quando a ficha demora mais a carregar do que os movimentos.",
+        "Valor/hora predefinido na ficha do cliente, preenchido automaticamente nos novos movimentos e alterável em cada registo.",
+        "Notas da LEGALTEAM com logótipo no cabeçalho, data formal por extenso, montantes antes e depois de IVA também por extenso e rodapé integralmente visível.",
+        "Paginação das notas revista para manter tabelas e caixas de totais separadas, sem conteúdo fora da página.",
+        "Logótipos das sociedades com recorte independente dos quatro lados e remoção automática de margens brancas."
+      ]
+    },
+    {
+      "version": "0.10.1",
+      "changes": [
+        "Novo atalho global e destacado na barra superior para criar um registo a partir de qualquer área da plataforma.",
+        "Importações e Revisão de importações deixam de aparecer na navegação, porque a plataforma passa a ser a fonte única da informação.",
+        "O resumo de actualização apresenta a cada utilizador apenas as alterações posteriores à versão que tinha instalada."
+      ]
+    }
   ]
 }

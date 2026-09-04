@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Versão 0.10.1 em revisão local — 04-09-2026
+
+- Local: branch `codex/legalteam-distribution`, versão 0.10.1. Produção permanece confirmadamente na 0.10.0, deployment `21eba032-fe6b-4080-aefc-30198578bf1d`, version `7aa87458-ce5c-4101-bf3a-dff630db8509`; este lote não foi publicado.
+- A barra superior tem um atalho global quadrado «Novo registo», imediatamente à esquerda do controlo de visibilidade financeira, com 80 × 80 px e texto em duas linhas. Abre o formulário real de criação a partir de qualquer área e actualiza os dados depois de guardar.
+- «Importações» e «Revisão de importações» foram retiradas da navegação e do painel de Administração. As rotas internas foram preservadas apenas para compatibilidade, sem as apresentar como fonte de alimentação corrente.
+- O resumo de actualização conserva a versão de origem da instalação e filtra o histórico até à versão de destino. Cada instalação vê apenas as alterações posteriores à versão que tinha, incluindo saltos por várias versões; após confirmação, a origem deixa de ser repetida.
+- Validação local aprovada: segurança de ficheiros, lint sem avisos, TypeScript, build, 155/155 testes unitários em execução serial e 16/16 E2E do conjunto iPhone/PWA. O atalho foi confirmado nos 11 modelos, abre «Criar movimento» e os menus removidos não aparecem. Não houve alterações de base de dados nem dados reais gravados.
+- Browser integrado fixado em `http://localhost:4194/?view=overview`, com ambiente real configurado e versão 0.10.1 confirmada. A autenticação de produção não é partilhada com localhost; o separador aguarda login para apresentar a área autenticada e o novo atalho. Produção será verificada sem voltar a navegar este separador.
+
+
 ## Publicação 0.10.0 confirmada — 04-09-2026
 
 - Produção activa a 100% em https://legal-carina.dabranches.workers.dev desde 04-09-2026 10:21:03 UTC. Commit funcional `e4add6cad4e87a079d0b15bbb56a30184cf97686`, branch `codex/legalteam-distribution`, preservado no GitHub antes do deploy; PR #14, CI `33862361537` e secret scan `33862361526` aprovados.

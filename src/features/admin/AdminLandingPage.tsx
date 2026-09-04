@@ -4,8 +4,6 @@ import { useAuth } from '../auth/AuthContext'
 
 const options:{view:ViewId;label:string;icon:IconName;ownerOnly?:boolean}[]=[
   {view:'admin-users',label:'Utilizadores',icon:'people'},
-  {view:'imports',label:'Importações',icon:'import'},
-  {view:'import-review',label:'Revisão de importações',icon:'warning'},
   {view:'admin-access-logs',label:'Registos de acesso',icon:'audit',ownerOnly:true},
 ]
 
