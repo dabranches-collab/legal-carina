@@ -1,11 +1,14 @@
 # Legal Carina — handover
 
-## Recorte visual de logótipos — 0.10.2 em preparação, 04-09-2026
+## Publicação 0.10.2 confirmada — 04-09-2026
 
 - O editor de logótipos substitui as quatro barras por uma moldura sobre a imagem, com margens esquerda, direita, superior e inferior directamente arrastáveis. Os mesmos controlos aceitam setas do teclado e mantêm uma área útil mínima.
 - «Cortar» gera a imagem PNG a partir da área seleccionada e mostra imediatamente o resultado. «Repor moldura» volta à imagem integral e «Detectar margens brancas» conserva a remoção automática como opção complementar.
-- Validação local: lint e TypeScript aprovados; 156/156 testes aprovados, incluindo o novo ensaio da moldura; build aprovado. Verificação real no browser integrado confirmou o ajuste de 0% para 1% e a reposição sem guardar dados. Sessão local activa na ficha da LEGALTEAM.
-- Trabalho centralizado apenas como próxima versão; não publicado. Produção permanece na 0.10.1 confirmada abaixo e não houve alterações de base de dados nem gravação de dados reais.
+- Produção activa a 100% desde 04-09-2026 12:37:50 UTC em https://legal-carina.dabranches.workers.dev. Commit publicado `d3393726d1768707fd9d9c10db59c994e96565c6`, branch `codex/legalteam-distribution`, preservado no GitHub antes do deploy; PR #14, CI `33872859561` e secret scan verdes.
+- Cloudflare: deployment `4d204505-c630-4e55-b6f3-1d00e6a2e17a`, version `fd2f5c88-d327-4497-8588-b16b87ffc33b`, tag `0.10.2`, 100% do tráfego. HTTP 200 e `release-notes.json` 0.10.2 confirmados directamente.
+- Validação: segurança de ficheiros, lint, TypeScript, build, dry-run Cloudflare e 156/156 testes unitários aprovados. Os 104 E2E locais aplicáveis foram aprovados entre a execução integral e a repetição isolada dos dois cenários afectados pela concorrência; três cenários exclusivos de produção foram omitidos como previsto.
+- O artefacto publicado foi verificado antes e depois do deploy: contém a configuração pública do Supabase, a versão 0.10.2 e a interface de recorte. Após recarregar e activar o service worker, a sessão protegida de DIOGO ABRANCHES permaneceu autenticada, a versão visível passou a 0.10.2 e os dados reais carregaram sem erro de login.
+- Não houve alterações de base de dados nem gravação de dados reais. O separador do browser integrado permanece na versão local para as próximas alterações; a verificação pós-publicação foi feita no separador de produção já autenticado.
 
 ## Publicação 0.10.1 confirmada — 04-09-2026
 
