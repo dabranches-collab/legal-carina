@@ -40,7 +40,18 @@ Deno.serve(async (request) => {
     const { error: auditError } = await admin.from('audit_log').insert({ firm_id: credential.firm_id, actor_user_id: authData.user.id, action: 'update', entity_type: 'user_access', entity_id: authData.user.id, new_data: { pin_changed: true, mandatory_change_completed: true } })
     if (auditError) throw auditError
     const { error: eventError } = await admin.from('security_events').insert({ user_id: authData.user.id, event_type: 'pin_changed', user_agent: request.headers.get('user-agent'), metadata: { mandatory_change: Boolean(credential.must_change_pin) } })
-    if (eventError) throw eventError
-    return json(request, { changed: true })
+    if (eventError) console.error('Não foi possível registar o evento de segurança da alteração de PIN.', eventError.code)
+    const { data: newAuthData, error: newSignInError } = await authClient.auth.signInWithPassword({
+      email: credential.auth_email,
+      password: await deriveAuthPassword(credential.id, newPin),
+    })
+    if (newSignInError || !newAuthData.session) throw newSignInError ?? new Error('Nova sessão indisponível.')
+    return json(request, {
+      changed: true,
+      session: {
+        access_token: newAuthData.session.access_token,
+        refresh_token: newAuthData.session.refresh_token,
+      },
+    })
   } catch { return json(request, { error: 'Não foi possível alterar o PIN.' }, 400) }
 })

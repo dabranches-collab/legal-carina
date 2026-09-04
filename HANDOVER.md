@@ -1,6 +1,580 @@
 # Legal Carina — handover
 
+## Versão 0.10.3 em preparação — 04-09-2026
+
+- Local confirmado no browser integrado em `0.10.3`, sobre a branch `codex/legalteam-distribution`; produção permanece em `0.10.2` e não foi alterada.
+- A geração de Nota de Honorários e de Cobrança usa o mesmo `logo_path` privado da sociedade emissora e, por isso, está preparada para apresentar o logótipo da MASSIVE SEARCH nos dois documentos.
+- Validação com sessão autenticada e base real: a ficha da MASSIVE SEARCH não tem actualmente qualquer imagem associada/carregada no campo «Logótipo dos documentos». Sem esse ficheiro, ambos os documentos usam a designação da sociedade em texto.
+- Não foi emitido qualquer documento nem alterado qualquer dado real. Para gerar o exemplo visual pedido falta voltar a fornecer e guardar o ficheiro exacto do logótipo da MASSIVE SEARCH.
+- Segurança de ficheiros, lint, TypeScript e build aprovados. A alteração de versão exigiu actualizar o cenário sintético da próxima actualização PWA; os cinco testes directamente afectados passaram. A execução unitária integral teve apenas o timeout concorrente conhecido em `ClientHourlyDefault`, que passou imediatamente na repetição isolada.
+
+## Publicação 0.10.2 confirmada — 04-09-2026
+
+- O editor de logótipos substitui as quatro barras por uma moldura sobre a imagem, com margens esquerda, direita, superior e inferior directamente arrastáveis. Os mesmos controlos aceitam setas do teclado e mantêm uma área útil mínima.
+- «Cortar» gera a imagem PNG a partir da área seleccionada e mostra imediatamente o resultado. «Repor moldura» volta à imagem integral e «Detectar margens brancas» conserva a remoção automática como opção complementar.
+- Produção activa a 100% desde 04-09-2026 12:37:50 UTC em https://legal-carina.dabranches.workers.dev. Commit publicado `d3393726d1768707fd9d9c10db59c994e96565c6`, branch `codex/legalteam-distribution`, preservado no GitHub antes do deploy; PR #14, CI `33872859561` e secret scan verdes.
+- Cloudflare: deployment `4d204505-c630-4e55-b6f3-1d00e6a2e17a`, version `fd2f5c88-d327-4497-8588-b16b87ffc33b`, tag `0.10.2`, 100% do tráfego. HTTP 200 e `release-notes.json` 0.10.2 confirmados directamente.
+- Validação: segurança de ficheiros, lint, TypeScript, build, dry-run Cloudflare e 156/156 testes unitários aprovados. Os 104 E2E locais aplicáveis foram aprovados entre a execução integral e a repetição isolada dos dois cenários afectados pela concorrência; três cenários exclusivos de produção foram omitidos como previsto.
+- O artefacto publicado foi verificado antes e depois do deploy: contém a configuração pública do Supabase, a versão 0.10.2 e a interface de recorte. Após recarregar e activar o service worker, a sessão protegida de DIOGO ABRANCHES permaneceu autenticada, a versão visível passou a 0.10.2 e os dados reais carregaram sem erro de login.
+- Não houve alterações de base de dados nem gravação de dados reais. O separador do browser integrado permanece na versão local para as próximas alterações; a verificação pós-publicação foi feita no separador de produção já autenticado.
+
+## Publicação 0.10.1 confirmada — 04-09-2026
+
+- Produção activa a 100% desde 04-09-2026 11:35:21 UTC em https://legal-carina.dabranches.workers.dev. Commit funcional `0269c5be4a96cce623b0c8677cc807b8ba4717d9`, preservado na branch `codex/legalteam-distribution` e PR #14 antes do deploy.
+- Cloudflare: deployment `7a32a313-74e7-4a35-be95-4b608ef763e8`, version `0380f254-55cf-4c8b-9c71-b9acd6e856fe`, tag `0.10.1`, 100% do tráfego. `release-notes.json` confirma directamente 0.10.1; o asset publicado confirma a configuração pública do Supabase, o atalho «Novo registo» e a versão 0.10.1.
+- Incidente de publicação resolvido: o primeiro artefacto 0.10.1 foi construído numa worktree sem a configuração pública local do Supabase e apresentou «Supabase Auth não configurado». Produção foi imediatamente reposta na versão 0.10.0 por rollback `6c41282c-72a4-4fd5-8b13-62ade3acc3ee`; depois de verificar a configuração no artefacto sem expor credenciais, a 0.10.1 foi reconstruída e republicada no deployment acima.
+- A barra superior tem um atalho global quadrado «Novo registo», imediatamente à esquerda do controlo de visibilidade financeira, com 80 × 80 px e texto em duas linhas. Abre o formulário real de criação a partir de qualquer área e actualiza os dados depois de guardar.
+- «Importações» e «Revisão de importações» foram retiradas da navegação e do painel de Administração. As rotas internas foram preservadas apenas para compatibilidade, sem as apresentar como fonte de alimentação corrente.
+- O resumo de actualização conserva a versão de origem da instalação e filtra o histórico até à versão de destino. Cada instalação vê apenas as alterações posteriores à versão que tinha, incluindo saltos por várias versões; após confirmação, a origem deixa de ser repetida.
+- CI `33866684354` verde: segurança de ficheiros, lint, TypeScript, testes, build, E2E e auditoria de dependências aprovados; secret scan `33866684316` verde. A auditoria teve dois timeouts externos do registry npm e passou integralmente na terceira execução. Dry-run Cloudflare aprovado sobre uma cópia exacta do commit.
+- O crop por moldura arrastável ficou deliberadamente fora desta publicação e permanece como trabalho local para a versão seguinte. Não houve alterações de base de dados nem dados reais gravados. O browser integrado continua fixado em `http://localhost:4194/?view=overview` para revisão local.
+
+
+## Publicação 0.10.0 confirmada — 04-09-2026
+
+- Produção activa a 100% em https://legal-carina.dabranches.workers.dev desde 04-09-2026 10:21:03 UTC. Commit funcional `e4add6cad4e87a079d0b15bbb56a30184cf97686`, branch `codex/legalteam-distribution`, preservado no GitHub antes do deploy; PR #14, CI `33862361537` e secret scan `33862361526` aprovados.
+- Cloudflare: deployment `21eba032-fe6b-4080-aefc-30198578bf1d`, version `7aa87458-ce5c-4101-bf3a-dff630db8509`, tag `0.10.0`. `release-notes.json` confirma 0.10.0 e o asset `/brand/legalteam-logo.jpg` responde 200 `image/jpeg`.
+- Correcções finais das Notas de Honorários: conteúdo e rodapé contidos na página; data formal no formato «Alfragide, 04 de Setembro de 2026»; logótipo LEGALTEAM no canto superior esquerdo, ampliado e elevado; montante sem IVA e montante com IVA, ambos em número e por extenso; resumo total separado da tabela, com altura e quebra de linha dinâmicas.
+- Fichas de sociedades carregam o logótipo autenticado a partir do Storage. O recorte permite retirar margens independentes à esquerda, direita, topo e base, além de remoção automática de margens brancas; a imagem resultante conserva a proporção útil.
+- Gates locais: segurança de ficheiros, lint, TypeScript, build e dry-run Cloudflare aprovados; 154/154 testes unitários aprovados em execução isolada. E2E: 101 aprovados e três cenários exclusivos de produção omitidos na execução integral; os dois cenários de estabilidade afectados pela concorrência passaram isoladamente, ficando 104 verificações aplicáveis aprovadas. PDF real multipágina revisto no browser integrado.
+- Supabase original `vtvvqyebigflgqccbqsw`: migration aditiva remota `20260904101950_add_revisable_honorarium_documents` instalada isoladamente após CI verde. Tabela e RPCs de consulta, gravação e estorno confirmados; advisors sem ERROR, divergências históricas preservadas, sem `db push` ou `migration repair`. O lote não alterou clientes, movimentos ou documentos reais.
+- Browser integrado aberto na produção real, actualização 0.10.0 activada e caixa «Aplicação actualizada · 0.10.0» confirmada com a sessão de teste autorizada. O único separador integrado permanece nesta página para revisão do utilizador.
+
+
+## Notas e saldo após estorno — 0.10.0 em preparação, 03-09-2026
+
+- Local: branch codex/legalteam-distribution, versão 0.10.0. Este lote será centralizado no GitHub; não publicar os assets antes de instalar a migration de revisões abaixo. Produção web permanece 0.9.0, código 77a72686bf83ada53cce74cbbd7206bcce6a6728, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, deployment 3d29554a-13fa-4d3d-947a-bffe3bd4d20f, version fb291024-59bc-45b3-b93f-51be8ca3b7a4 (última confirmação directa neste lote).
+- Pedido corrigido pelo utilizador: as notas são documentos revisáveis, independentes de facturação/pagamento. A preparação mostra todos os serviços elegíveis da sociedade, filtros Com nota/Sem nota/Estornada, versões e revisão da selecção. A emissora predefinida aguarda o carregamento da ficha, evitando fixar a primeira sociedade por ordem alfabética.
+- Saldo efectivo do livro em destaque na ficha e na linha de Provisões; um estorno repõe o abate. A estimativa pelas horas continua separada e explicitamente identificada, incluindo PDF/XLSX. Cópias de notas estornadas permanecem no histórico; os recebimentos de ensaios antigos já anulados continuam ocultos da lista operacional.
+- Candidata NÃO INSTALADA: 20260903140910_add_revisable_honorarium_documents.sql. Tabela de versões e RPCs get_client_honorarium_documents/save_honorarium_document/void_honorarium_document. Guarda cópias dos serviços, verifica âmbito/valores/revisão esperada, evita novo débito na reemissão, recalcula o abate próprio em revisões e devolve excesso. Não altera is_invoiced/is_paid. Ensaios sintéticos completos com BEGIN/ROLLBACK aprovados, incluindo notas antigas, anulação sem provisão e rejeição de acesso externo.
+- BLOQUEIO: revisão automática rejeitou a instalação permanente deste novo lote por faltar autorização específica e confirmação do recálculo de provisão nas revisões. Pergunta assíncrona enviada ao utilizador; resposta ainda pendente. Não contornar nem reaplicar antes de autorização. A interface local desta versão depende dessa instalação para emitir/rever notas na base original; usar fixtures apenas para os ensaios.
+- Correcção urgente das notas de trabalho JÁ APLICADA na base original vtvvqyebigflgqccbqsw: workspace_notes_select avalia directamente created_by=auth.uid() antes do helper STABLE. Corrige INSERT RETURNING que falhava para o perfil operator, apesar da autorização de INSERT. Migration local 20260903143052_fix_workspace_note_insert_returning, remota 20260903143150. Nenhuma outra permissão alterada. scripts/audit-workspace-note-permissions-rollback.sql passou antes/depois: criação, partilha de consulta/edição, privacidade e rejeição de autoria falsa. Pode usar-se já no site 0.9.0.
+- Validação local: segurança de ficheiros, lint, typecheck, 151 testes unitários e build aprovados, mais um novo teste de regressão aprovado para estorno de aplicação usada noutro documento (25 testes do modal/cálculo na última passagem). 103 E2E gerais aprovados; três PWA específicos de produção omitidos nesta execução local. Inclui revisão/reemissão, estorno e saldo da linha, PDF real multipágina, XLSX e claro/escuro em 320/390/768/1440 px. Browser integrado revisto em claro/escuro; separação saldo/estimativa visível.
+- migration list --linked executado e revisto; divergências históricas mantidas, sem db push/repair. Advisors após a correcção de notas: sem ERROR; 5 INFO/43 WARN da base existente. Supabase confirma apenas main às 14:35 UTC, sem branch temporária a cobrar. Nenhum cliente, nota de honorários ou movimento real criado/alterado neste lote; dados de testes revertidos.
+
+
+## Publicação 0.9.0 confirmada — 03-09-2026
+
+- Produção confirmada directamente: https://legal-carina.dabranches.workers.dev, Worker legal-carina, 100% desde 03-09-2026 13:57:39 UTC.
+- Commit funcional 77a72686bf83ada53cce74cbbd7206bcce6a6728 na branch codex/legalteam-distribution, preservado no GitHub antes do deploy; PR #14, CI 33763645066 e Secret scan 33763645022 aprovados.
+- Deployment ID 3d29554a-13fa-4d3d-947a-bffe3bd4d20f; version ID fb291024-59bc-45b3-b93f-51be8ca3b7a4.
+- HTTP release-notes.json e browser integrado confirmam 0.9.0. Aviso Aplicação actualizada mostra a predefinição do valor/hora na primeira linha. Ficha existente abre a opção publicada, aceita preenchimento e activa Guardar/Cancelar; ensaio fechado sem guardar.
+- Supabase original com a migration aditiva confirmada, testes transaccionais revertidos, apenas main e sem novos recursos temporários. Nenhuma nota nem movimento real criado. Vite 4194 continua disponível.
+- Local e GitHub mantêm 0.9.0; este registo documental é posterior ao commit funcional publicado. Gates e detalhes do lote estão na secção seguinte.
+
+
+## Valor/hora por cliente — 0.9.0 em preparação, 03-09-2026
+
+- Pedido e publicação autorizados pelo utilizador. Local: 0.9.0, branch codex/legalteam-distribution; próximo commit centraliza o lote no GitHub antes de publicar.
+- Na ficha Geral, Predefinir valor/hora abre a preferência opcional em EUR. Guardar/Cancelar seguem a edição da ficha; zero é aceite e Retirar predefinição repõe vazio.
+- Criar movimento consulta sociedade-mãe e valor/hora num único pedido, copia o preço para o novo movimento e permite substituí-lo. Troca de cliente reinicia a preferência; respostas atrasadas não sobrepõem alterações manuais. Avenças mantêm-se sem preço por registo; movimentos anteriores não são recalculados.
+- Supabase original vtvvqyebigflgqccbqsw: coluna clients.default_hourly_rate numeric(12,2), nullable, check não negativo/finito. Migration local 20260903134329, remota 20260903134646, add_client_default_hourly_rate. migration list --linked revista; divergências históricas preservadas, sem db push/repair.
+- Ensaio sintético scripts/audit-client-hourly-rate-rollback.sql aprovado antes/depois da migration, integralmente revertido. Gravação autenticada, cálculo de 90 min a 125,50 = 188,25, override independente, conservação histórica, zero, remoção e rejeição de negativo/NaN. Advisors sem ERROR. Apenas branch main; nenhum ambiente temporário facturado.
+- Validações: pnpm security:files, lint, typecheck, 145 unitários, build, 101 E2E aplicáveis (100 execução geral + novo cenário iPhone/tablet claro/escuro) e três PWA produção local aprovados. Browser integrado claro/escuro sem guardar a ficha de ensaio; imagens 390/768 px revistas. Dry-run Cloudflare aprovado.
+- Produção ainda 0.8.1 neste ponto: código df7e12897d6b1d738ad5f912f37604576613fa19, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, deployment 73b52cc8-a1a7-4abe-9821-f1a09e3885cc, version abf19826-9453-4576-9dc9-c026873ebba1, desde 03-09-2026 03:23:14 UTC. Confirmada directamente antes deste lote. Publicação 0.9.0 aguarda CI deste commit.
+
+
+## Publicação final 0.8.1 confirmada — 03-09-2026
+
+- Produção: https://legal-carina.dabranches.workers.dev, Cloudflare legal-carina, 100% desde 03-09-2026 03:23:14 UTC.
+- Código funcional: df7e12897d6b1d738ad5f912f37604576613fa19, branch codex/legalteam-distribution, preservado no GitHub antes de publicar. CI 33710885526 e secret scan 33710885614 aprovados.
+- Deployment ID: 73b52cc8-a1a7-4abe-9821-f1a09e3885cc. Version ID: abf19826-9453-4576-9dc9-c026873ebba1.
+- Gates finais: segurança de ficheiros, lint, tipos, 143 unitários e build aprovados; 100 E2E aplicáveis e três cenários PWA de produção local aprovados; dry-run Cloudflare concluído. Auditoria posterior à primeira publicação concluída; relatório em docs/audit-2026-09-03.md.
+- Smoke real no browser integrado: clicar Actualizar aplicação, recarregar em 0.8.1 e ver Aplicação actualizada com as dez alterações e Fechar alterações. Registos apresenta 7235 movimentos acessíveis / 7235 registos, sem alertas nessa abertura. HTTP release-notes.json confirma 0.8.1. Revisão local da repartição confirma selector Todos assinalado e opções de pagamento.
+- Supabase confirmado novamente depois da segunda publicação: apenas main, sem recurso temporário de teste a cobrar por hora. Ensaios revertidos; utilizadores de teste anteriores preservados. Nenhuma emissão de nota real nesta sessão.
+- Local e GitHub: 0.8.1, mesma branch; este registo documental fica num commit posterior ao código funcional publicado. Vite original permanece na porta 4194.
+
+
+
+## 0.8.0 publicada; auditoria concluída e 0.8.1 em validação — 03-09-2026
+
+- CONFIRMADO: primeira publicação em 03-09-2026 02:53:44 UTC, commit 5a5cc274a7b2f6223d2dc17bd680954cb9494464, codex/legalteam-distribution, PR #14/CI verde. Produção https://legal-carina.dabranches.workers.dev, deployment 9fffdaab-d01d-4a24-9440-2ef16f4db64c, version 020d9eaa-01a9-456d-a6e4-5a7aed978e05, 100%. HTTP/notas de versão e browser original com 4424 movimentos LEGALTEAM confirmados.
+- Ordem cumprida: publicação inicial, ajustes pedidos aos filtros/selector e correcção do erro nos Registos, depois auditoria. Segunda publicação 0.8.1 autorizada e ainda por efectuar neste ponto. Local 0.8.1; GitHub será actualizado com este lote.
+- Auditoria documentada em docs/audit-2026-09-03.md: 368 verificações de integridade sem violações; ensaios transaccionais de estados/consolidação, provisões (20), despesas (16), preços/descontos (12), avenças e angariação aprovados. Nenhuma nota real emitida, nenhum dado real alterado, nenhum ensaio persistido. Advisors sem ERROR, avisos existentes identificados no relatório.
+- Corrigidas consultas com listas de IDs demasiado grandes; lotes de 80, concorrência três e paginação de despesas. Recuperação de rede limitada a leituras. Registos reais confirmados: 7235, contador e tabela completos, sem Failed to fetch na repetição. Teste com 7235 linhas e falha de rede injectada aprovado.
+- Repartição inclui Não pagos, que condiciona totais, gráficos, todos os pré-filtros, clientes disponíveis e PDF. Selector fechado com Todos assinalado ou primeiro nome/contagem. Avisos de versão apresentam alterações depois de actualizar e persistem até fechar. Cache separada entre utilizadores e Sem preço coerente na tabela/exportação.
+- Validação: 143 unitários; 99 E2E da execução integral mais o novo ensaio de recuperação (100 aplicáveis), três cenários PWA aprovados em preview de produção. Claro/escuro, desktop/tablet/iPhone/zoom, PDF/XLSX e permissões incluídos. A confirmação das alterações foi fechada no estado inicial dos testes de outros fluxos, para não sobrepor as suas acções.
+- Supabase reconfirmado: apenas main, sem branch temporária facturada à hora. Utilizadores de teste autorizados preservados.
+
+
+
+## Preparação da publicação 0.8.0 — 03-09-2026
+
+- Aviso de actualização passa a mostrar a versão em espera e as alterações incluídas, obtidas do próprio service worker. Notas em public/release-notes.json; build recusa versão divergente. Compatibilidade: uma página ainda executando 0.7.1 conserva o aviso antigo até actualizar; a publicação seguinte já apresenta a lista. Corrigido foco das fichas para não roubar a escrita nem fechar fichas sobrepostas ao usar Escape.
+
+- Ordem autorizada: terminar e validar alterações, publicar 0.8.0, auditar intensivamente movimentos/relações/saldos, corrigir e voltar a publicar. A auditoria posterior ainda não foi concluída neste ponto.
+- Fichas de clientes, sociedades e responsáveis abrem editáveis. Guardar e Cancelar ficam inactivos sem alterações; após alteração, Guardar a verde e Cancelar a vermelho. A mesma apresentação aplica-se aos movimentos, condições/prestações de avença e credenciais. Fechar mantém-se disponível. A outra vertente do cliente só aparece por opção Acrescentar vertente e só persiste quando activa, preenchida e guardada; cancelar não grava. Novas vertentes conservam o ID devolvido, impedindo nova inserção na gravação seguinte.
+- Sociedade do cliente na página Geral, independente da sociedade emissora documental. Ao escolher cliente na criação de movimento, assume a sociedade-mãe; permite alteração manual e limpa/redefine a escolha ao mudar cliente. Clientes históricos sem atribuição ficam Por atribuir; não se presumiu uma sociedade a partir do histórico.
+- Angariador Outro cria um cadastro reutilizável por firma, com nome normalizado e sem duplicação por maiúsculas/espaços. A parcela integra a repartição, incluindo acumulação com angariação da tarefa. Não cria conta de autenticação. Cadastro e cliente são guardados atomicamente pelo trigger.
+- Acompanhamento em clientes/sociedades/responsáveis mostra resultados no mesmo menu com deslocação/foco; Visão Geral continua a abrir Registos. Resumos de cada conjunto têm altura uniforme. Cabeçalho aumentado de 104 para 156 px, títulos proporcionais e offsets sticky medidos; nomes duplicados removidos da área de trabalho. Actividade 192 px, Observações 64 px, ambas redimensionáveis.
+- Repartição: páginas de 5000, indicador animado visível e progresso. O volume de 4424 exige um pedido em vez de nove; conjuntos maiores mantêm até três pedidos simultâneos e verificação de completude. Legenda explicita Clientes com movimentos no período seleccionado.
+- Supabase original: migration list revista antes de cada aplicação; ensaios sintéticos em transacção/rollback autorizados, sem staging pago. 20260903033000_expand_allocation_read_page.sql aplicada como 20260903021033; 20260903034500_add_client_referrer_directory.sql aplicada como 20260903022253. Permissões/âmbito preservados, anon recusado, RLS do cadastro confirmado. Zero angariadores criados nos ensaios persistiram. Histórico divergente preservado, sem db push/repair.
+- Validação: 139 testes unitários; 98 E2E aprovados, dois específicos de preview de produção executados separadamente; 29 verificações PostgreSQL locais e ensaios rollback na base original. Segurança de ficheiros, lint, tipos e build aprovados. Dry-run Cloudflare concluído. E2E cobre claro/escuro, desktop, tablet, iPhone/safe areas, perfis, PDF/XLSX, filtros e persistência sintética. Revisão visual no browser integrado confirma fichas e cores.
+- Verificação urgente Supabase em 03-09-2026: apenas branch main, projecto original CARINA LEGAL activo; nenhum projecto/branch temporário de testes activo. A branch cobrada à hora já foi eliminada. Os utilizadores de teste autorizados permanecem.
+- Estado anterior à publicação: local 0.8.0, branch codex/legalteam-distribution; GitHub será actualizado com este lote. Produção reconfirmada 0.7.1, commit aeb647b19f8f45b3b25b5da265ff834b7b9f1c88, deployment 2caa6ea0-b4c2-4e15-87c9-563a993342d3, version 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, URL https://legal-carina.dabranches.workers.dev. Sem alteração de movimentos reais ou emissão de notas neste lote.
+
+
+## Continuidade das fichas e leitura da repartição — 03-09-2026
+
+- Fichas abertas a partir de Avenças, clientes mistos ou pendências LEGALTEAM são sobrepostas ao menu de origem, sem navegação nem alteração do URL. O conteúdo original permanece montado; ao fechar preserva filtros, taxas, selecção e posição. Consulta directa pelo ID evita depender da primeira página de clientes. Guardar o angariador actualiza o mapa ao fechar a ficha; o componente da tabela é preservado durante a recarga.
+- Resumos operacionais/acompanhamento ficam acima da repartição. Incobráveis com contagem zero são ocultados no dashboard de clientes/sociedades/responsáveis e Visão Geral; onde restam quatro cartões, a grelha existente fica 2×2.
+- Âmbito da consulta confirmado directamente na função Supabase instalada: apenas tarefas com billing_entity_id da LEGALTEAM, na firma autorizada. Os clientes disponíveis derivam destas tarefas, não de todos os trabalhos do cliente. Nenhuma migration/escrita remota neste lote.
+- Datas, percentagens e filtros editáveis destacados por fundo e contorno. Pendências com contagem positiva a vermelho: sem angariador de cliente, sem angariador da tarefa, sem executor e sem montante, reunidas no mesmo grupo de pré-filtros.
+- Os 24 movimentos sem montante foram verificados por agregação: 990 minutos, todos sem preço/hora e sem montante efectivo; 21 importados marcados como pagos e três manuais em rascunho. Não foram atribuídos preços nem alterados estados. Aviso esclarece horas incluídas e valor por apurar; pré-filtro permite consultar as fichas. Sem dados pessoais guardados.
+- Carregamento da repartição: primeira página seguida de até três pedidos em paralelo, cancelamento ao sair, validação de total/páginas/IDs antes de mostrar resultados. Agregação de pendências por cliente numa passagem e resultados memorizados reduzem trabalho repetido. Não apresenta somas parciais como completas.
+- PDF: nomes em colunas adaptadas às larguras usuais, nomes longos quebrados, continuação paginada. Ensaio com 138 nomes sintéticos exportado, renderizado e revisto em três páginas.
+- Validação: 12 E2E de repartição/fichas/PDF e um cenário adicional com 1501 registos comprovando até três pedidos simultâneos e ordem dos resumos; preservação do URL/filtros ao fechar e guardar clientes na LEGALTEAM e ao fechar em Avenças. Tipos, lint, segurança e build aprovados.
+- Pré-filtros de pendências e cartões da repartição deslocam imediatamente para o início da tabela no mesmo menu/URL; foco acessível e margem medida do cabeçalho, incluindo móvel. O botão Ver registos de um cliente aplica a mesma deslocação. Testados os quatro tipos e cartões pessoais a 390/1440 px.
+- Exportações das provisões: preparação PDF/XLSX concluía sem erro mas fechava a caixa sem confirmação. Agora permanece uma confirmação do ficheiro preparado, com descarga repetível, alteração da modalidade e ligação Abrir PDF. Download por Blob/âncora, ficheiros apenas em memória até descarga. Não se confirmou a localização das descargas reais no browser integrado; o clique automatizado Abrir PDF foi bloqueado pela política do browser e não foi contornado.
+- Validação final: 22 E2E aprovados, incluindo PDF em ambas as modalidades, XLSX em ambas as modalidades e repetição da descarga, fichas, pré-filtros, layout claro/escuro 320/390/768/1440 px e carregamento de 1501 registos. Confirmação visual no browser integrado com base original; nenhum dado real alterado.
+- Versão 0.8.0 local/GitHub na branch codex/legalteam-distribution, revisão normal em http://127.0.0.1:4194/. Sem publicação: Cloudflare continua 0.7.1, commit aeb647b19f8f45b3b25b5da265ff834b7b9f1c88, deployment 2caa6ea0-b4c2-4e15-87c9-563a993342d3, version 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, https://legal-carina.dabranches.workers.dev, confirmados em 03-09-2026. Base conserva a migration autorizada 20260903011816.
+
+
+## Base original activada e duplo clique — 03-09-2026
+
+- Após bloqueio inicial da revisão automática, o utilizador autorizou expressamente os campos de angariação e três RPCs na base original, aceitando o ensaio com rollback em substituição de staging separado. Migration candidata `20260902235343_add_legalteam_allocation.sql` aplicada isoladamente como `20260903011816_add_legalteam_allocation` no Supabase `vtvvqyebigflgqccbqsw`. Três colunas e três RPCs confirmadas; execução authenticated autorizada e anon recusada. Histórico divergente preservado, sem db push/repair.
+- Preview normal na porta 4194, sem flags de demonstração e com a base original: login, mapa com 4424 movimentos, 138 clientes e período 21-02-2018 a 02-09-2026 confirmados pelo browser. O mapa já apresenta gráficos, taxas, pendências e PDF. Campos históricos sem angariador permanecem por preencher.
+- Duplo clique abre a ficha do registo na lista inferior comum das Sociedades/Responsáveis, na repartição e nos registos de consumo das provisões; mantém o clique simples sem edição de células. Gravações nas listas do painel actualizam a repartição/lista/indicadores, preservando as datas e percentagens da consulta.
+- Clientes sem angariador, mistos e avenças abrem a ficha pelo duplo clique; utilizadores abrem a configuração e documentos abrem a consulta. Clientes/Sociedades/Responsáveis/Registos e Provisões já usavam a ficha comum. Botões e campos dentro das linhas não desencadeiam outra ficha por propagação do duplo clique/Enter.
+- Prestações de avença deixam de gravar por alteração de célula: duplo clique ou «Abrir prestação» apresenta a caixa, só «Guardar prestação» envia os dados; Cancelar preserva a prestação. Fichas de movimentos/prestações são renderizadas fora do formulário do cliente para impedir submissões cruzadas. Tabelas técnicas de auditoria/origem continuam apenas de consulta.
+- Validação deste lote: 25 testes unitários dirigidos, 17 E2E de repartição e fichas/permissões mais um E2E de prestação (só a prestação é gravada), TypeScript, lint, segurança e build aprovados. Cenários responsivos claro/escuro em 320/390/768/1440 px incluídos. Abertura de movimento real confirmada no browser e fechada sem gravar. Testes de escrita só com fixtures sintéticas.
+- Frontend 0.8.0 continua em revisão local/GitHub na branch `codex/legalteam-distribution`; **não publicado**. Produção Cloudflare mantém 0.7.1, commit funcional `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, URL https://legal-carina.dabranches.workers.dev (reconfirmados neste lote antes da alteração da base). Não se criou recurso temporário pago nem se emitiram notas.
+
+
+## Revisão 0.8.0 com base original — 03-09-2026
+
+- O utilizador autorizou expressamente trabalhar na versão local com a base original, criar dados de teste e apagá-los no fim, preservando os utilizadores de teste. Esta indicação substitui neste lote a restrição anterior a previews sintéticos. Frontend ainda **não publicado**.
+- Painel LEGALTEAM: datas compactas com extremos automáticos do período completo, taxas 10/10/50/30 editáveis (soma obrigatória 100%), cálculo imediato, selecção múltipla de clientes e filtro de pagamento independente. Três pré-filtros com contagens exactas: clientes sem angariador, tarefas sem angariador e registos sem executor; incluem trabalho sem preço. Fichas de clientes acessíveis pela lista de pendências.
+- Totais e cartões por pessoa reorganizados, gráficos de composição e exportação do resumo PDF com período, clientes, taxas, horas, parcelas pessoais, escritório e valores por atribuir.
+- Limpeza autorizada concluída na base original: dois clientes sintéticos, 23 movimentos (seis incobráveis), uma factura sintética, duas despesas, os perfis/ajustes associados e um anexo sintético. Transacção auditável, contagens dos restantes clientes/movimentos preservadas; dois utilizadores de teste mantidos. Não foram apagadas auditorias, clientes reais ou provisões reais.
+- Login local: corrigido erro 502/EACCES iniciando Vite com acesso de rede autorizado. Processo actual na porta 4194 usa `.env.local` e a base original; URL sem flags de demonstração: `http://127.0.0.1:4194/?view=billing&society=LEGALTEAM`. Prova sem credenciais reais: o pedido sintético chega à autenticação e recebe a rejeição funcional de utilizador/PIN inválido.
+- Migration candidata revista para preservar as RPCs da versão publicada: obrigatoriedade do angariador nas novas RPCs, sem trigger global que bloquearia o frontend 0.7.1. Consulta completa paginada, identificadores de cliente e limites automáticos. Histórico ligado revisto, divergência histórica preservada.
+- Ensaio expressamente autorizado na base original em BEGIN/ROLLBACK, usando esquema, triggers e permissões reais: preço, criação/edição, recusa de dados inválidos, rollback atómico, compatibilidade com a RPC publicada, paginação e recusa a outra firma/anónimo aprovados. Zero firmas/utilizadores/cliente de ensaio persistidos. Script: `scripts/test-allocation-original.sql`; sem branch temporária paga.
+- Verificações locais: sete testes de repartição, 22 verificações PGlite, nove cenários E2E de repartição (incluindo PDF e 320/390/768/1440 px), tipos, lint e segurança aprovados. PDF sintético renderizado e revisto. Migration persistente ainda por aplicar neste ponto documental.
+- Produção frontend reconfirmada em 0.7.1: commit `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, 100%, https://legal-carina.dabranches.workers.dev. Sem deploy Cloudflare neste lote.
+
+## Versão 0.8.0 — preparada para revisão local, 03-09-2026
+
+- Commit funcional `56be98f70d3eb494053752c7b30837fbe4d8cf8d` confirmado em GitHub e local na branch `codex/legalteam-distribution`. Este apontamento segue em commit documental posterior; produção permanece separada.
+- Branch `codex/legalteam-distribution`, baseada em `5535dde0f3cc15c0daaf53992aa75b9c030d2cb0`. Código e documentação deste lote seguem juntos para GitHub. O utilizador pediu para ver antes de publicar: **sem deploy, migration remota, emissão de notas ou alteração de dados reais**.
+- LEGALTEAM: período inclusivo pela data do trabalho, filtro todos/só pagos, horas por responsável e distribuição dos honorários sem IVA: 10% angariador do cliente, 10% angariador da tarefa, 50% executor e 30% escritório. Despesas excluídas; avenças contribuem apenas horas. Partes históricas sem angariador ficam por atribuir.
+- Campo Angariador do cliente no separador Geral de todos os clientes, opcional para preenchimento retroactivo. Tarefas LEGALTEAM exigem Carina, Hugo ou Outro com nome. Menus apresentam Carina Santos, Hugo Mendonça e Paula Chaves, preservando identidades existentes.
+- Histórico de provisões mostra apenas movimentos válidos: correcções estornadas deixam de aparecer no histórico normal, sem apagar a auditoria. O botão PDF existente e o novo XLSX abrem sempre a escolha entre tempos/valores por registo e apenas tempos com resumo monetário final.
+- Validação: segurança de ficheiros, lint, TypeScript, build sintético e 134 testes unitários aprovados; 20 verificações PostgreSQL/PGlite com dados sintéticos. E2E: 75 cenários aplicáveis aprovados (74 na execução integral e o cenário restante após corrigir um selector que apanhava o menu oculto); dois exclusivos de produção omitidos. XLSX verificado nos dois formatos. Browser integrado revisto em claro/escuro; layouts automatizados em 320/390/768/1440 px.
+- Migration `20260902235343_add_legalteam_allocation.sql` **apenas local/GitHub**. Histórico ligado consultado antes da operação; divergência histórica conhecida preservada. Supabase `vtvvqyebigflgqccbqsw` consultado apenas para confirmar contratos/permissões. Ensaio de staging com esquema real, CI e dry-run continuam gates de publicação; PGlite não substitui staging.
+- Produção **CONFIRMADA** e preservada: 0.7.1, commit funcional `aeb647b19f8f45b3b25b5da265ff834b7b9f1c88`, deployment `2caa6ea0-b4c2-4e15-87c9-563a993342d3`, version `1805f1f4-6f33-4654-bc1c-8f3c67dad1f1`, 100%, https://legal-carina.dabranches.workers.dev, publicação de 02-09-2026 19:50:23 UTC reconfirmada por Wrangler neste lote.
+- Preview sintético em `http://127.0.0.1:4194/`, flags `qa-iphone=1&qa-demo=1&qa-allocation=1&view=billing&society=LEGALTEAM` ou `qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions`. Não foi criado recurso temporário pago; a anterior branch de ensaio já foi eliminada.
+- Critérios e limites: `docs/legalteam-allocation.md`.
+
+## Correcção de saldo inicial e proposta de apresentação — 03-09-2026
+
+- Por indicação expressa do utilizador, uma provisão histórica foi reclassificada como saldo inicial no dia anterior ao primeiro registo, através de estorno e reposição auditáveis no browser autenticado. Montante líquido preservado; data efectiva e recálculo confirmados por SQL e interface. Nenhuma nota emitida. Sem dados pessoais neste documento.
+- Pedido seguinte: apresentar primeiro a provisão e depois os registos por ordem cronológica, com saldo corrente e identificação da parcela não coberta quando o saldo se esgotar. Apenas proposta nesta fase; nenhuma alteração ao formato das notas implementada.
+- Código local e GitHub continuam na versão funcional 0.7.1 (aeb647b19f8f45b3b25b5da265ff834b7b9f1c88), branch codex/client-credit. Produção reconfirmada: deployment 2caa6ea0-b4c2-4e15-87c9-563a993342d3, version 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, 100%, https://legal-carina.dabranches.workers.dev. Este lote altera apenas dados autorizados e documentação; sem deploy, migration ou recurso temporário pago.
+
+## Versão 0.7.1 — saldo por registos, publicada
+
+- Correcção solicitada: a própria linha de Provisões apresenta consumo e saldo pelos serviços desde a data efectiva do primeiro depósito válido, incluindo esse dia. Não emitir notas para actualizar o saldo. A autorização anterior de emissão foi cancelada; zero notas emitidas confirmado.
+- Cálculo apenas de leitura, usando tabelas/RPCs e RLS existentes, sem migration ou nova branch Supabase paga. Soma o valor efectivo dos serviços elegíveis da mesma conta (Cliente/Sociedade/moeda), com IVA da sociedade por compatibilidade com 0.7.0; pergunta sobre o critério de IVA enviada ao utilizador. Exclui trabalho anterior ao depósito, futuro, pago/facturado, avenças, anulado/incobrável e serviços de notas já descontadas. Sinaliza registos sem preço.
+- Saldo visível nas primeiras colunas; histórico discrimina os registos e permite guardar mapa de consumo PDF. Removido o botão de emissão do painel de provisões. Os lançamentos contabilizados permanecem separados do acompanhamento calculado, sem alterar facturação ou emitir documentos de cobrança.
+- Publicada em 02-09-2026 19:50:23 UTC, commit funcional aeb647b19f8f45b3b25b5da265ff834b7b9f1c88, branch codex/client-credit. Deployment ID 2caa6ea0-b4c2-4e15-87c9-563a993342d3, Version ID 1805f1f4-6f33-4654-bc1c-8f3c67dad1f1, activa a 100% em https://legal-carina.dabranches.workers.dev. HTTP 200, bundle index-C59OY9Is.js e cache 0.7.1 verificados directamente.
+- Gates aprovados: segurança, lint, TypeScript, 127 testes unitários, cinco E2E específicos incluindo mapa PDF, CI #50 completo, auditoria e secret scan; build/dry-run aprovados. Browser integrado em desktop, tablet e iPhone, claro/escuro, e PDF renderizado. Consulta real pós-publicação confirmou saldo calculado na linha e zero notas/consumos contabilizados; nenhuma escrita adicional de dados, migration ou recurso pago neste lote.
+
+## Versão 0.7.0 — publicada em 02-09-2026
+
+- Produção confirmada em https://legal-carina.dabranches.workers.dev: commit 473650fa13e4c048e480253fdbdbd0685ae462b4, branch codex/client-credit, Deployment ID 6a768ae1-f1c8-4c3b-87e9-a89cc480bab6, Version ID 532a50bf-ab68-40f7-97b1-ce9c64b2608d, activa a 100% desde 19:28:30 UTC. Tag 0.7.0 e SHA guardados nos metadados Cloudflare; HTTP 200, bundle index-BdH1XRZh.js e cache carina-legal-shell-0.7.0 verificados sem cache. Sessão autenticada, menu Provisões e abertura da ficha por duplo clique confirmados no browser integrado.
+- Migration local 20260902180905_add_client_credit_ledger.sql aplicada isoladamente em produção como 20260902192704_add_client_credit_ledger. Quatro tabelas com RLS, sem SELECT anónimo ou INSERT directo authenticated, verificadas; advisors sem ERROR/críticos. Nenhuma reparação de staging promovida.
+- CI #48 e secret scan verdes no commit publicado; dry-run aprovado. Ensaio de staging: 20/20 pgTAP; PGlite: 24; unitários: 122. Documentação de validação e recuperação em docs/database/provisions-070-validation.md.
+- Branch Supabase temporária provisions-070-validation eliminada no fim do ensaio; confirmação de sucesso e lista apenas com main recebidas. Não permanece recurso temporário com custo horário.
+- Provisão histórica autorizada registada em produção com a data do depósito; nota de consumo preparada, ainda não emitida por bloqueio da revisão automática que exigiu confirmação expressa da emissão. Pedido concreto de confirmação enviado. Não há desconto efectuado neste ponto.
+
+## Versão 0.7.0 — provisões e edição por ficha, em preparação
+
+- Gates de publicação concluídos no commit funcional acc7b2ac671e433add7f24e8d1a2cb392f91cff3: CI/secret scan verdes, ensaio remoto com 20/20 pgTAP e zero findings críticos. Backup físico confirmado. A migration foi aplicada apenas em staging. Evidências e limites em docs/database/provisions-070-validation.md; produção ainda 0.6.5 neste ponto.
+
+- Correcção adicional de QA: a demonstração sintética reconhece também o Supabase local configurado pelo CI; isolamento de produção mantido. Os seis E2E de provisões/isolamento passaram com a configuração exacta do CI, lint e TypeScript aprovados.
+
+- Publicação autorizada em 02-09-2026, em validação no PR #13. Gate identificou jsPDF 3.0.3 vulnerável: actualizado para 4.2.1, lockfile preservado e auditoria sem vulnerabilidades conhecidas. Corrigidos fixtures E2E antigos (universo completo/terminologia de registos) e versionamento do service worker em directórios de build alternativos. 122 unitários, 24 verificações PostgreSQL isoladas e 68 E2E passaram (1 cenário exclusivo do servidor Vite omitido no preview estático). Branch Supabase temporária autorizada para ensaio sem dados reais; não promover enquanto não validar esquema/políticas reais e CI.
+
+- Branch `codex/client-credit`, baseada no checkout limpo `1120068db17b674e3fbc417e74f55543226f82a9`, sincronizado com `origin/codex/reconcile-full-import` após `fetch`. `origin/main` permanece 99 commits atrás dessa base; não foi feito merge ou alteração de produção.
+- Novo separador **Provisões** na ficha do Cliente e submenu **Clientes > Provisões**, depois de Avenças. A lista usa pesquisa/filtros/exportação comuns e inclui todas as contas que já tiveram provisões, mesmo esgotadas; não retira clientes de Particulares/Empresas.
+- Ajuste visual de 02-09-2026: removido o filtro de saldo positivo. Linhas verdes com saldo e vermelhas sem saldo; valores recebidos, descontos, barra/percentagem consumida e saldo visíveis. Botão Histórico e duplo clique abrem a conta da linha, incluindo a sociedade/moeda correcta. Altura de linha configurável na tabela comum, respeitada pela virtualização. Validação deste ajuste: TypeScript, lint, segurança, build sintético, 16 testes da tabela e 5 E2E de provisões aprovados; revisão integrada em claro/escuro e formatos desktop, tablet e iPhone. Versão 0.7.0 continua em preparação, sem deploy ou migration remota.
+- Saldo inicial e reforços por Cliente/Sociedade; a emissão da Nota de Honorários desconta a provisão no total com IVA, permite cobertura parcial e guarda nota/registos/valores. Novo download é idempotente. Extracto por período, cópia discriminativa e estorno auditável disponíveis na ficha. Registos de notas activas ficam fora de novas notas/cobranças; facturação fiscal não é alterada automaticamente.
+- Edição: clique simples selecciona, duplo clique abre a ficha; removida toda a edição de células nos Registos. Clientes/Sociedades/Responsáveis abrem editáveis, com Guardar condicionado a alterações.
+- Migration `20260902180905_add_client_credit_ledger.sql` apenas local/GitHub: **não aplicada ao Supabase**. `supabase migration list --linked` executado/revisto; permanece a divergência histórica conhecida. Projecto `vtvvqyebigflgqccbqsw` confirmado `ACTIVE_HEALTHY` por consulta directa. Ensaio isolado em PostgreSQL/PGlite 0.5.8: 24 verificações, incluindo repetição, dupla emissão, saldo parcial, estorno, RLS e bloqueio de alterações ao serviço. Esquema completo/políticas reais de staging e CI são gates ainda necessários antes de publicar.
+- Browser integrado aberto com demonstração sintética em `http://127.0.0.1:4193/?qa-iphone=1&qa-demo=1&qa-provisions=1&view=provisions`; estado apenas em memória. Servidor estático usado porque Vite na porta 4192 ficou sem responder. Não foram usados dados de clientes reais.
+- Validação visual em claro/escuro, desktop/iPhone e PDFs renderizados; fluxo de provisões aprovado em 320, 390, 768 e 1440 px. E2E: 5 cenários de provisões, 9 de fichas/permissões e 14 iPhone aprovados; o cenário `/iphone-preview` foi omitido por ser exclusivo do servidor Vite.
+- **Produção CONFIRMADA e preservada:** 0.6.5, URL `https://legal-carina.dabranches.workers.dev`, Version ID `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100% em consulta Wrangler de 02-09-2026. Deployment ID documentado `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af`; commit funcional associado `f77e58a` pelo handover/GitHub. Nenhum deploy, migration ou escrita de dados remota neste lote. Publicação requer ordem explícita **publica**.
+- Detalhes e limites: `docs/client-provisions.md`.
+
+- Verificação final: segurança de ficheiros, lint sem avisos, TypeScript, 122/122 testes unitários e build aprovados. Os comandos foram executados pelos entrypoints locais instalados, equivalentes aos scripts pnpm, após o wrapper pnpm ficar preso a tentativas de rede.
+
+- GitHub confirmado após push: commit funcional `7020e845aed3d53f288511ad1ebfea06b16c7999`, branch `codex/client-credit`, HEAD local e remoto coincidentes em 02-09-2026. Este registo documental segue num commit adicional.
+
+## Versão 0.6.5 — carregamento dos Registos publicada
+
+- Corrigido o alerta transitório `TypeError: Failed to fetch` ao entrar em «Registos»: a consulta repete automaticamente apenas falhas de rede transitórias e conserva o estado «A recolher os registos…» durante as tentativas.
+- Erros persistentes e funcionais continuam a apresentar o aviso com «Tentar novamente»; não são ocultados nem repetidos indiscriminadamente.
+- Publicada em 02-09-2026 a partir do commit funcional `f77e58a`, branch `codex/reconcile-full-import`: Deployment ID `7a682a2c-bf6a-4fda-8e0e-d76caa80f6af` e Version ID `ac433c71-5464-4bb1-8894-ec490d41c740`, activa a 100% em `https://legal-carina.dabranches.workers.dev`. Supabase não foi alterado.
+- Verificação sem cache: HTTP 200, bundle `/assets/index-BeVkmjPK.js` e service worker/cache `carina-legal-shell-0.6.5`.
+- Validação: ficheiros sensíveis, lint, TypeScript, 115/115 testes, build e dry-run aprovados. A matriz E2E local foi interrompida após o Chromium abortar a navegação para o servidor local antes de chegar à aplicação (`ERR_ABORTED`), limitação já documentada neste computador; o smoke test online foi aprovado.
+
+## Avenças temporais e tratamento — base ligada em 30-08-2026
+
+- Migração `add_retainer_terms_history` aplicada ao Supabase ligado: condições históricas sem sobreposição, periodicidade mensal/bimestral/trimestral/semestral/anual, horas incluídas por ciclo e resumo de consumo corrente.
+- Novo submenu `Clientes > Avenças` e 3.ª caixa Avenças no dashboard; é uma visualização adicional e não altera as contagens de Particulares/Empresas.
+- `INFANTÁRIO DO POVO`: 139/139 movimentos em avença, 5 160 minutos preservados e zero preços/valores individuais.
+- Movimentos de avença não contam na pendência `Sem preço`; contador autenticado passou de 666 para 527 e Avenças mostra 139.
+- Interface 0.6.1 continua apenas local/GitHub por publicar; produção frontend permanece 0.6.0. `pnpm check`: 114/114 testes e build verde.
+
+## Versão 0.6.1 — contadores e edição imediata em preparação
+
+- Tabelas de Clientes/Sociedades/Responsáveis repetem até duas vezes apenas falhas transitórias de rede (`Failed to fetch`) e ignoram respostas tardias de carregamentos já substituídos, evitando o alerta inicial que permanecia sobre uma tabela entretanto carregada.
+- Login local validado na porta 4190: o proxy de `pin-auth` responde correctamente; a porta 4181 devolvia `502` neste computador e foi abandonada para a sessão local.
+- «Pendências a corrigir» apresenta contadores exactos nos seis botões através da nova RPC agregada `get_work_attention_counts`, sem carregar os movimentos completos apenas para contar.
+- Após uma edição directa, a linha é actualizada imediatamente; a confirmação integral acontece silenciosamente em segundo plano.
+- Migration `20260829125438_add_work_attention_counts.sql` ensaiada com rollback e aplicada isoladamente. Frontend ainda não publicado.
+- Atribuições de sociedades pedidas pelo utilizador concluídas e verificadas em 899 registos: sete clientes em CARINA SANTOS e três em LEGALTEAM; zero divergências finais.
+- Segurança, lint, TypeScript, 114/114 unitários, build e 58/58 E2E aplicáveis aprovados; 2 cenários exclusivos de produção omitidos. Existem testes específicos dos seis contadores e da repetição selectiva de falhas de rede.
+
+## Versão 0.6.0 — avenças, credenciais, logótipos e exportação publicada
+
+- **PRODUÇÃO CONFIRMADA em 2026-08-24:** commit funcional `80a45cbdae4fdd5d316d7011300df7f15d887033`, branch `codex/reconcile-full-import`, URL `https://legal-carina.dabranches.workers.dev`, Deployment ID `cea3b2b4-3ce4-40c5-bdea-3b437dee59f1` e Version ID `ae1b887b-b59d-4342-bc1d-0e5e389ecc54`, activa a 100% do tráfego desde 19:17 UTC.
+- Verificação pós-publicação: HTTP 200, bundle `/assets/index-BMQuYZr1.js`, folha `/assets/index-DZI4m6Z2.css` e service worker/cache `carina-legal-shell-0.6.0` confirmados directamente sem depender do estado local.
+
+- Sociedades: upload JPG/PNG/PDF, enquadramento inicial integral, recorte/zoom e PNG privado usado nas Notas de Honorários e Cobranças. A migration isolada foi aplicada ao Supabase; coluna, bucket privado, quatro políticas e permissões auxiliares foram confirmados. Upload, gravação, reabertura e remoção foram provados no browser com dados sintéticos depois eliminados.
+- Clientes: configuração de avença, mensalidades com estados Por facturar/Facturada/Liquidada/Incobrável, horas cobertas sem preço por movimento, valor/hora efectivo e fila própria «Cobertos por avença». Cada movimento pode ser classificado como coberto ou fora da avença; só os segundos entram em «Por facturar».
+- Credenciais: plataforma, ligação, utilizador e palavra-passe sempre visíveis na ficha; segredos cifrados no Vault, histórico de versões e auditoria. Criação, alteração e histórico real foram provados com segredos sintéticos e limpos do cofre.
+- Edição: fichas abrem editáveis; «Guardar alterações» só activa após mudança, incluindo acções programáticas como adicionar/remover contactos, identificações, contas bancárias e logótipo. Paula/Operadores deixam de ser bloqueados por ausência de justificação, mantendo auditoria e autoria.
+- Tabelas: XLSX, impressão e PDF usam exactamente o universo filtrado, incluindo filtros de atenção. Impressão em A4 horizontal, uma página de largura, com todas as linhas filtradas e sem virtualização/paginação truncada.
+- Supabase: migrations `20260824170000`, `20260824183000` e `20260824184500` ensaiadas com rollback e depois aplicadas isoladamente; nunca foi usado `db push`. A divergência do histórico remoto permanece e deve continuar a ser tratada explicitamente.
+- Prova real: cliente sintético com avença de 1 200 €, mensalidade liquidada, 2 h cobertas (600 €/h efectivo) e 1 h extra. «Por facturar» devolveu só o extra e «Cobertos por avença» só as 2 h. Limpeza final: zero clientes, movimentos, avenças, mensalidades e credenciais sintéticas.
+- Gates: segurança, lint, TypeScript, 112/112 unitários, build e 58/58 E2E aplicáveis; 2 cenários exclusivos de preview/produção omitidos. PDFs reais, matrizes iPhone/Windows/zoom e desempenho também aprovados.
+- Frontend 0.6.0 publicado após ordem explícita `publica`.
+
+## Publicação exclusivamente manual — 2026-08-22
+
+- `CONFIRMADO`: a integração Git da Cloudflare foi desligada e o token
+  `legal-carina build token` foi revogado. PRs, Dependabot e pushes deixaram de
+  ter um caminho automático para o Worker de produção.
+- A branch predefinida do GitHub é agora `codex/reconcile-full-import`, que
+  contém o commit funcional publicado `480135e` e o handover corrente.
+- Produção só pode mudar por deploy manual depois da ordem explícita `publica`.
+  Worker, versões, deployments, Supabase e dados foram preservados.
+- `tmp/` de QA foi enviado para a Reciclagem após confirmação do utilizador.
+
+## Incidente Cloudflare de 2026-08-22 — resolvido
+
+- **CONFIRMADO:** seis PRs Dependabot foram construídos pela integração Git da Cloudflare entre 09:13:33 e 09:14:43 UTC. Como o comando configurado era `npx wrangler deploy`, cada build de branch substituiu o Worker de produção; a última deixou online o frontend 0.2.5. Não existiu `git revert`, force-push ou alteração do Supabase.
+- **CONTENÇÃO CONFIRMADA:** a opção Cloudflare «Compilações para ramificações de não produção» foi desactivada e continuou desactivada após recarregar o painel. A integração conserva `main` como branch de produção, mas PRs e restantes branches deixam de criar deployments neste Worker.
+- **PRODUÇÃO RESTAURADA:** 0.5.7 reconstruída a partir de `480135e`; Version ID activa a 100% `15485d53-a045-4f1f-bbca-8998eba30bd1`, criada em 2026-08-22 às 09:59 UTC. HTTP 200, bundle `/assets/index-B_aNRE0x.js` e cache `carina-legal-shell-0.5.7` confirmados directamente sem cache.
+- Gates: segurança de ficheiros, lint, TypeScript, 107/107 unitários, build e dry-run aprovados. A tentativa E2E desta sessão ficou bloqueada antes da aplicação por `ERR_ABORTED` no `page.goto` ao servidor local; o commit/artefacto reposto é exactamente o que já tinha a matriz E2E integral aprovada.
+
+## Versão 0.5.7 — acessos ao retomar o PWA publicada
+
+- Regista como acesso o retorno do PWA/separador autenticado ao estado visível, mesmo quando React permanece montado e o utilizador não volta a introduzir o PIN. Reentradas em menos de 60 segundos são deduplicadas.
+- A identidade apresentada prefere `auth.users.raw_user_meta_data.display_name`, depois a credencial e finalmente o username.
+- A consulta dos logs Auth de produção confirmou que os acessos omitidos eram reativações por token de sessões PWA, que não actualizam `last_sign_in_at`. Foram recuperadas sete reativações comprovadas de 2026-08-21, entre 12:54:20 e 18:41:56 UTC, incluindo a sessão da Carina às 14:17:11 UTC. Os eventos preservam a hora original e estão identificados por `auth_method=pwa_session_recovered` e `source=supabase_auth_log`; a verificação posterior confirmou sete eventos e uma ocorrência da Carina.
+- A recuperação histórica está limitada à retenção disponível dos logs técnicos Auth (últimas 24 horas); `auth.audit_log_entries` encontra-se vazio, pelo que não se devem inventar sessões anteriores sem prova. A versão 0.5.7 passa a persistir futuras restaurações e reaberturas directamente em `security_events`.
+- Lint, TypeScript e 107/107 testes unitários aprovados. Publicada com Cloudflare Version ID `c5135902-610c-4d70-82d4-064c98fdb7c2`, bundle `index-B_aNRE0x.js`, service worker `0.5.7`, HTTP 200 e `admin-users` v8 activa com JWT obrigatório.
+
+## Versão 0.5.6 — cobertura integral dos acessos publicada
+
+- Corrigida a lacuna dos logs quando o PWA restaura uma sessão já válida: essas entradas passam a ser registadas com `auth_method=session_restore`.
+- A Edge Function dos Utilizadores complementa eventos em falta com o `last_sign_in_at` do Supabase Auth, usando uma janela de um minuto para não duplicar logins já auditados.
+- Nome apresentado: `display_name` da credencial, metadados autenticados e username, por esta ordem, ignorando valores vazios.
+- Publicada a partir do commit `9b8f9aa`. Cloudflare Version ID `d00e6567-9e53-4d79-a211-33e69f236b71`, bundle `index-B6E1XSJM.js`, service worker `0.5.6` e HTTP 200 confirmados. Edge Function `admin-users` v7 activa com JWT obrigatório.
+
+## Versão 0.5.5 — registos de acesso em preparação
+
+- Nova rota e entrada «Registos de acesso» sob Administração, exclusiva do proprietário tanto na navegação como na protecção da rota e na Edge Function.
+- A gestão de Utilizadores fica separada do histórico de entradas. Administradores continuam com Utilizadores, importações e dados-base, sem conseguirem ver ou abrir os logs; Operadores permanecem fora da Administração.
+- Validação local: TypeScript, lint, 107/107 testes unitários, 9/9 fluxos de permissões e desempenho isolado aprovado (72 amostras/4,10 s, desvio 0 px, pesquisa 0,75 s).
+- Ainda não publicada; produção permanece em `0.5.4`, commit `559a3d9`, Version ID Cloudflare `0ff8b0fa-f6ae-4891-b282-7cca6b5f7689`.
+
+## Versão 0.5.4 — correcção definitiva do alinhamento sticky em preparação
+
+- O modo fixo do cabeçalho congela simultaneamente as larguras das células e do `colgroup`, usando a geometria real da tabela para posição e recorte. Isto elimina a divergência que só surgia com larguras guardadas no PWA/produção.
+- Prova geométrica automatizada em zoom 80%, 100%, 125%, 150% e 200%, acrescida da matriz sticky existente: 19/19 cenários aprovados, incluindo seis dimensões de iPhone.
+- Matriz de perfis aprovada: Administrador com Administração, Utilizadores e dados-base integrais; Operador com criação/edição de Clientes, Sociedades e Responsáveis e sem acesso administrativo.
+- Gates: segurança, lint, TypeScript, build, 105/105 testes unitários, 9/9 fluxos de permissões e 7/7 testes de navegação.
+
+## Versão 0.5.3 — validação reforçada em preparação
+
+- Código local na branch `codex/reconcile-full-import`; produção permanece em `0.5.2` (`d6f8417`, Deployment `21efbce5-cd22-4c3c-9550-d4e30a11796d`). Este lote não está publicado.
+- Cliente: Administrador e Operador podem editar e persistir os dados usados nos documentos. Nota de Honorários e Cobrança permitem alterar destinatário e idioma no próprio documento.
+- Despesas: tradução integral PT/EN/FR na tabela informativa da Nota, anexos privados abertos através de URL assinado sem perder o gesto do utilizador e selector reutilizável após upload.
+- Prova autenticada: o movimento sintético do Operador mantém 180,00 € facturáveis, tem 2 despesas/18,00 € e 1 documento no bucket privado; a pré-visualização francesa associa as duas despesas ao movimento sem as incluir nos totais.
+- Base de dados: 34/34 contratos pgTAP aprovados no projecto `vtvvqyebigflgqccbqsw`, em transacção terminada por rollback. Inclui outsider negado, Operador com motivo auditado e Administrador sem motivo obrigatório.
+- Gates: segurança, lint, TypeScript, 105 testes unitários, build e 57 E2E aplicáveis aprovados; 2 omitidos por dependerem de preview/produção. Não publicar sem ordem explícita.
+
+## Versão 0.5.2 — protecção contra edição acidental
+
+- Nas tabelas com edição directa, o primeiro clique numa célula interactiva apenas selecciona a linha; só o segundo clique na linha já activa abre o editor dessa célula.
+- O comportamento é uma opção do componente comum de tabelas e está activo nos Registos; as fichas de Clientes, Sociedades e Responsáveis já mantêm a abertura por duplo clique.
+- Todas as tabelas abrem o universo completo por defeito, sem selector 10/20/50/100 nem paginação. Universos grandes continuam virtualizados para não desenhar milhares de linhas simultaneamente.
+- Todos os títulos de colunas ficam centrados; o conteúdo de Actividade permanece alinhado à esquerda e valores mantêm alinhamento numérico à direita.
+- As Sociedades admitem várias contas bancárias sob pedido através de «Adicionar dados bancários»; a primeira é principal e mantém compatibilidade com os documentos anteriores. Nota de Honorários e Cobrança permitem seleccionar uma ou várias contas a apresentar.
+- O IVA da Nota de Honorários começa no valor predefinido da Sociedade, pode ser alterado no próprio documento e recalcula IVA/total sem alterar movimentos ou facturação.
+- Migration Supabase `20260821124055_add_multiple_billing_entity_bank_accounts` aplicada isoladamente. Ensaio prévio com `ROLLBACK`, zero tipos inválidos/divergências e prova real do Operador com dois blocos bancários sem guardar dados.
+- Validação: segurança de ficheiros, lint, TypeScript, build, 99/99 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos). A tabela real carregou 7 233/7 233 movimentos; 1 000 linhas/72 posições de scroll mantiveram desvio sticky de 0 px.
+- Publicada em 2026-08-21 a partir do commit funcional `d6f8417`. Deployment activo a 100% `21efbce5-cd22-4c3c-9550-d4e30a11796d`, Version ID `dd1d69d0-72cd-4b13-b7a7-d34b113d0b01`. HTTP 200, bundle `/assets/index-CBtzDRk4.js` e actualização PWA para `Versão 0.5.2` confirmados directamente.
+
+## Versão 0.5.1 — alinhamento sticky publicado
+
+- A grelha fixa agora as larguras num `colgroup`, preservando o centro exacto entre cabeçalho e células quando o cabeçalho entra em modo sticky.
+- Medição local real antes/depois do sticky: desvio horizontal de `0 px` nas primeiras 10 colunas. Gates verdes: 96/96 unitários e 55/55 E2E aplicáveis (2 exclusivos de preview omitidos); o cenário de Operador mediu 72 posições de scroll em 1,19 s, desvio `0 px` e pesquisa em 0,79 s.
+
+## Versão 0.5.0 — despesas persistentes publicadas
+
+- Cada movimento pode ter várias despesas informativas, com montante, observações e anexos privados PDF/JPG/PNG/DOCX/XLSX. A criação do movimento e dos metadados das despesas é atómica; falhas de transferência de anexos podem ser repetidas na edição sem duplicar o movimento.
+- Administrador/Proprietário cria, altera e remove despesas sem justificação; Operador tem as mesmas operações, exigindo motivo nas alterações e remoções para auditoria.
+- A coluna `Despesas`, imediatamente depois de `Valor`, apresenta montante agregado, quantidade, primeira nota e legenda completa. O carregamento é feito em lotes e também cobre a exportação integral.
+- As despesas vivem em tabelas próprias e nunca alteram `effective_amount`, IVA, facturação, pagamento ou dashboards. A Nota de Honorários inclui-as numa tabela informativa associada aos movimentos seleccionados; a Cobrança não as inclui.
+- Backend promovido isoladamente: migration remota/local `20260821115454_add_work_entry_expenses.sql` e Edge Function `expense-documents` v1, activa com JWT obrigatório. Não foi usado `db push` nem `migration repair`; a divergência histórica pré-existente foi preservada.
+- Validação: segurança, lint, TypeScript, build, 95/95 unitários, 55/55 E2E aplicáveis (2 exclusivos de preview de produção omitidos) e 30/30 contratos pgTAP no schema persistente. A execução transaccional deixou zero movimentos/despesas sintéticos.
+- Desempenho E2E isolado: 5 000 clientes em 1,0 s e pesquisa em 0,21 s; 1 000 movimentos, 72 posições de scroll em 1,18 s, desvio do cabeçalho 0 px e pesquisa em 0,82–1,09 s.
+
+## Versão 0.4.18 — em preparação local
+
+- Corrigida uma rejeição não tratada na navegação quando uma resposta parcial do Supabase para Sociedades, Responsáveis ou perfis de Cliente não é uma lista. A sidebar passa a degradar de forma segura para menus vazios, sem bloquear a restante aplicação.
+- O modo QA pode ser incluído explicitamente num build de teste através de `VITE_APP_ENV=test`, mantendo-se removido do build normal de produção. A matriz `/iphone-preview`, exclusiva do servidor Vite, é omitida apenas no preview compilado e executada separadamente no desenvolvimento.
+- Gates confirmados: segurança, lint, TypeScript, 88/88 unitários e build. No build final de QA, 56/57 E2E passaram e 1 exclusivo do Vite foi omitido; esse cenário passou separadamente, totalizando 57/57 cenários aplicáveis.
+- Desempenho no build: 5 000 Clientes abriram em 0,56–0,88 s, pesquisa em 0,11–0,22 s e maior tarefa longa em 89–170 ms. Em 1 000 movimentos, 72 amostras de scroll demoraram 1,17–1,18 s, pesquisa 0,51–0,84 s e o cabeçalho teve desvio vertical de 0 px.
+- Provas transaccionais remotas com `ROLLBACK`: edição completa/recálculo 11, operações em massa 12, dados mestres 11 e financeiro/consolidações 30; auditoria posterior confirmou zero resíduos sintéticos.
+- Nota de Honorários e Cobrança reais, ambas com 90 movimentos e 5 páginas, foram renderizadas integralmente e revistas visualmente: datas/tempos centrados, sem Responsável nem valor por linha, cabeçalhos/rodapés repetidos e totais dentro das margens.
+- Divergência preservada: as quatro funções finais de edição/massa/dados mestres existem no schema remoto, mas as migrations locais de 21/08 não aparecem no histórico remoto. Não executar `db push` nem `migration repair` por suposição.
+
+## Versão 0.4.17 — publicada em 2026-08-21
+
+- A 0.4.16 publicou o novo build, mas a verificação de comprimentos HTTP provou que os URLs antigos dos ícones continuavam a devolver os bytes da 0.4.15. A 0.4.17 referencia nomes novos para o favicon e para 192/512 px, forçando a Cloudflare e os browsers a recolher os ficheiros brilhantes.
+- `apple-touch-icon` 180 px também recebe o dourado de contraste reforçado e um URL novo para contornar a cache do iOS.
+- Publicada a partir do commit funcional `2cc1c41`. Deployment activo a 100% `b57716d2-34d4-495e-948e-8af8647776a7`, Version `0b7f4c9d-04ac-40f2-a1c4-f7258b22add8`. HTTP confirmou os novos ficheiros pelos comprimentos exactos: favicon 1 604 bytes, iPhone 29 446, Windows 192 px 39 623 e Windows 512 px 213 653; service worker `0.4.17` activo.
+
+## Versão 0.4.16 — contraste Windows/browser local
+
+- Variante Windows/browser da Justiça Cega com dourado mais luminoso, traço aproximadamente 25% mais espesso e figura ligeiramente ampliada. O ícone iPhone de 180 px permanece inalterado.
+- Actualizados favicon 32 px, manifest 192/512 px e ficheiros antigos equivalentes para compatibilidade. Ainda não publicada; produção permanece `0.4.15`.
+
+## Versão 0.4.15 — publicada em 2026-08-21
+
+- Novo ícone comum: busto da Justiça Cega dourado sobre azul-escuro no favicon, manifest PWA e `apple-touch-icon`. Assets PNG específicos: 32, 180, 192 e 512 px; os URLs versionados por nome evitam depender dos caminhos antigos em cache.
+- Limitação iOS: não existe API web para obrigar um Web Clip já instalado a trocar o ícone. A nova referência pode ser recolhida pelo sistema, mas a substituição garantida continua a exigir remover e adicionar novamente o atalho.
+- Publicada a partir do commit funcional `fd66f66`. Deployment activo a 100% `568e73b9-429d-4137-8827-f0b96b96a3c1`, Version `86727e94-d8d9-4c70-b297-26d4e87e1d74`. Página, service worker `carina-legal-shell-0.4.15`, manifest e os quatro ficheiros de ícone responderam HTTP 200 com os tipos correctos.
+
+## Versão 0.4.14 — publicada em 2026-08-21
+
+- Sidebar de iPhone: busto da Justiça Cega reduzido para 50% da altura e aproximadamente 50% da largura máxima usadas no desktop, com ligeiro deslocamento descendente. A área rolável dos menus recupera 128 px; desktop inalterado.
+- Validação aprovada: captura real do iPhone 13 mini revista, 15/15 cenários móveis em onze modelos, 88/88 unitários, segurança, lint, TypeScript, build e dry-run Cloudflare.
+- Publicada a partir do commit funcional `1d6923a`. Deployment activo a 100% `c5f53186-4cfc-4509-b3f6-686c22ff3a1e`, Version `8e277618-1449-4660-84e6-80c2ab1cb324`. Produção confirmou HTTP 200, service worker `carina-legal-shell-0.4.14` e bundle `/assets/index-lwUZNh0J.js`.
+
+## Versão 0.4.13 — publicada em 2026-08-21
+
+- Substituído o deslocamento vertical contínuo do `thead`, que podia ficar um frame atrás do scroll real e provocar o soluço visível, por estado fixo estável enquanto a tabela atravessa o viewport.
+- O cabeçalho acompanha o scroll horizontal, é recortado à área da tabela e regressa ao fluxo natural nos limites; a barra de ferramentas e os filtros por coluna mantêm-se acessíveis.
+- Validação: captura visual revista, lint sem avisos, TypeScript, 88/88 unitários, build, dry-run Cloudflare e 18/18 E2E focados em scroll, zoom 80–200% e seis dimensões de iPhone.
+- Publicada a partir do commit funcional `9775923`. Deploy manual `76f40895-b74d-47d7-b1b7-c170f015821a` / `ca987268-e904-4cab-8ffb-fb33eeaa0083`; a integração Git do mesmo commit criou depois `6f5a9f4c-ba0b-4cad-bb33-de915d5fbcd2` / `2cbe8222-d0da-4a89-a65c-a4991a8cac1c`. Produção confirmou HTTP 200, service worker `carina-legal-shell-0.4.13` e bundle `/assets/index-BEj8OOMe.js`.
+
+## Versão 0.4.12 — publicada em 2026-08-21
+
+- Publicação confirmada em `https://legal-carina.dabranches.workers.dev` a partir do commit funcional `0d9eb98`, branch `codex/reconcile-full-import`. O deploy manual actual recebe 100% do tráfego: Deployment ID `c6f91020-c3de-49b3-9550-ccf0ceb35f2d`, Version ID `fed44c92-2b2d-4b5f-83dd-424c90817f69`, criado em 2026-08-21 às 08:23 UTC.
+- Estado funcional local: Administrador edita e elimina sem justificação; Operador executa as operações equivalentes nos movimentos com motivo obrigatório mas não bloqueante. Duração, valor/hora, desconto e dimensões de preço recalculam o total; o valor final não altera os restantes critérios ao contrário.
+- Dados mestres: Operador pode consultar, criar e editar Clientes, Sociedades e Responsáveis; Administração de utilizadores e importações continua exclusiva de Proprietário/Administrador.
+- Prova ligada exclusivamente transaccional: edição completa 16 invariantes, massa 12, dados mestres 11 e financeiro/consolidações 30. Todos terminaram em `ROLLBACK`; auditorias de resíduos devolveram zero. Nunca executar estas migrations por `db push` global.
+- A matriz financeira cobre seis estados, mesmo Cliente em duas Sociedades, dois Responsáveis, movimento sem Sociedade, totais globais e por entidade, listas Por facturar/Não pagos/Incobráveis, pagamento sem factura, incobrável facturado sem data, factura→pago e remoção de factura com reposição dependente.
+- PDF real: Nota de Honorários e Cobrança com 90 movimentos/5 páginas, Cliente/data no nome, cabeçalhos de continuação, datas/tempos centrados, sem Responsável/valor por linha e total contido na margem.
+- Desempenho/sticky: 5 000 Clientes abriram em 0,8–2,2 s e filtraram em 0,2–0,6 s; 1 000 movimentos, 72 amostras de scroll em ~1,17 s no contexto do browser, desvio vertical `0 px`; pesquisa 0,99 s isolada/1,55 s sob sete workers.
+- Gates finais: segurança aprovada; lint sem avisos; TypeScript; 88/88 unitários; build; 55 E2E aprovados e 2 exclusivos de produção omitidos. Cobertura visual automatizada de zoom 80–200%, iPhones, Windows, rotação, modo escuro, texto ampliado e safe areas.
+- Backend publicado por aplicação individual e revista das migrations `20260821000808_make_full_work_edit_rls_independent.sql`, `20260821011500_order_same_day_work_entries_by_creation.sql`, `20260821013000_fix_bulk_work_entry_permissions_and_recalculation.sql` e `20260821014500_allow_operator_master_data_management.sql`. Não foi usado `db push` nem `migration repair`. Os testes ligados pós-migration de edição/recálculo, operações em massa, dados mestres e consolidação financeira passaram integralmente com `ROLLBACK`.
+- Verificação pós-publicação: HTTP 200, service worker `carina-legal-shell-0.4.12`, bundle e CSS activos e recurso `lady-justice-bust-a.png` acessível. A integração Git criou antes um deploy automático do mesmo commit, mas o deploy manual acima é o actual e autoritativo.
+
+## Versão 0.4.11 — estabilidade da tabela e documentos financeiros
+
+- Corrigida a oscilação do cabeçalho/filtros dos Registos: o deslocamento passa a ser medido no próprio cabeçalho, sem arredondamento por frame nem atraso de animação.
+- Nota de Honorários e Cobrança deixam de oferecer ou renderizar as colunas Responsável e Valor. As linhas ficam limitadas a período, descrição e tempo; período e tempo são centrados horizontalmente e os montantes aparecem apenas nos totais.
+- Mantém-se a Sociedade seleccionada como emitente e os respectivos dados legais e bancários no documento.
+- Gates aprovados: segurança de ficheiros, lint, TypeScript, 81 testes, build, dry-run Cloudflare e 30 E2E Chromium aplicáveis; 2 cenários exclusivos de produção omitidos. O teste de scroll inclui estabilidade da posição em movimento descendente e ascendente.
+- Publicada em 2026-08-21 a partir do commit funcional `9d98ad9`. Deploy manual: `5f80941d-fcfd-4a7f-93fc-2f5536b4cb7d` / `fec6a83f-3092-4583-83c8-509373b7b39e`. A integração automática do mesmo commit ficou depois activa a 100%: Deployment ID `7e08c564-2f37-4de0-b2a8-cab9e1788a7a`, Version ID `fae41e0b-1bd1-4963-8561-143fd5228a88`. URL pública com HTTP 200 e bundle `0.4.11` confirmados directamente.
+
+## Lote local 0.4.10 — matriz operacional e recálculos em linha
+
+- Registos abrem por defeito do mais recente para o mais antigo, tanto na consulta visível como na exportação correspondente.
+- Todas as edições em linha passam por um RPC auditado; o Operador indica um motivo real e o Administrador não fica condicionado por justificação.
+- Duração e valor/hora recalculam o total; data, Cliente, Responsável e Sociedade voltam a executar o motor de preços. Os RPC antigos deixam de estar executáveis directamente por utilizadores autenticados.
+- Matriz transaccional Administrador/Operador aprovada com rollback: duração, valor/hora, Sociedade, data, actividade, observações, arquivo, facturação, número de factura, pagamento, incobrável, Nota de Honorários e Cobrança.
+- Gates: segurança, lint, TypeScript, 81/81 testes, build e 30/30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de produção omitidos.
+- Publicação automática do frontend confirmada em 2026-08-20, commit funcional `36dbe35`, Cloudflare Deployment ID `9089632c-3a3f-48d9-aba4-0cafab690ae3` e Version ID `aafb55c6-f638-47a9-8082-01764f1baa11`.
+- Backend alinhado após autorização: migrations `audit_and_recalculate_inline_work_entry_edits` e `repair_stale_manual_hourly_amounts` aplicadas. Dois movimentos horários incoerentes foram corrigidos selectivamente; verificação final devolveu zero incoerências.
+- Prevenção confirmada: apenas o novo RPC auditado é executável por `authenticated`; quatro RPC antigos estão revogados. Smoke pós-publicação Administrador/Operador aprovou duração, valor/hora, Sociedade e motivo obrigatório, com rollback.
+
+## Correcção 0.4.9 — recálculo integral dos movimentos
+
+- Alterações de duração, valor/hora e desconto recalculam imediatamente o total na ficha e voltam a ser calculadas no servidor ao guardar.
+- Alterar data, Cliente/vertente, processo, Responsável ou Sociedade volta a executar o motor de preços; a mudança de Sociedade actualiza a regra e todos os totais dependentes.
+- Administradores continuam a editar, mudar Sociedade e eliminar sem justificação. Operadores executam as mesmas operações após fornecerem um motivo auditável.
+- A primeira mudança obrigatória de PIN passa a entregar uma sessão nova, evitando a espera causada pela invalidação da sessão anterior; falhas de telemetria não transformam uma mudança já concluída num falso erro.
+- Teste transaccional intensivo no Supabase de produção correcto validou Administrador e Operador, incluindo duração, valor/hora, desconto, Sociedade, motivo e eliminação; toda a escrita de teste foi revertida.
+- Gates locais: segurança, lint, TypeScript, 81 testes, build e 30 E2E Chromium aplicáveis aprovados; 2 cenários exclusivos de preview de produção omitidos.
+- Publicado em 2026-08-20 a partir do commit funcional `0bbea29`; Cloudflare Deployment ID `551cd5ff-140c-4678-bd23-5a524b2d3e05`, Version ID `bcb82b5a-dcd3-4569-934f-f6214865cdc1`, 100% do tráfego em `https://legal-carina.dabranches.workers.dev`.
+- Pós-publicação: bundle confirmou `0.4.9`, resposta HTTP 200 e smoke transaccional Administrador/Operador aprovado com rollback.
+
+## Correcção 0.4.8 — permissões auditadas dos movimentos
+
+- A Carina, enquanto administradora, pode editar, mudar a Sociedade facturante e apagar movimentos sem indicar uma justificação; a auditoria técnica mantém actor e dados anteriores.
+- O perfil Operador pode igualmente mudar a Sociedade e apagar movimentos, mas tem de indicar um motivo. Depois de preenchido, o motivo não bloqueia a operação.
+- O selector passa a apresentar ao Operador todas as Sociedades activas do escritório sem lhe expor valores financeiros protegidos.
+- Migrations isoladas aplicadas: `fix_role_based_work_entry_audit` e `require_operator_reason_for_all_work_edits`. Teste transaccional real confirmou os fluxos Operador/administrador e foi integralmente revertido.
+- Gates: segurança, lint, TypeScript, 79/79 testes, build, dry-run Cloudflare e 30/30 E2E aplicáveis aprovados; 2 E2E exclusivos de produção omitidos.
+- Publicado em 2026-08-20 a partir do commit `e6b8677`; Cloudflare Version ID `19b81fd5-25aa-4658-b974-4060c8f1f9f3`, URL `https://legal-carina.dabranches.workers.dev`.
+
+## Correcção 0.4.7 — criação e ordenação de movimentos
+
+- O formulário de criação apresenta `Valor/hora` e `Valor total`, calcula imediatamente nos dois sentidos com a duração e envia o valor/hora resultante para a RPC protegida.
+- Novos movimentos passam a guardar o valor/hora e o total calculado; a vista por defeito usa data crescente para que o movimento mais recente apareça no fim.
+- Refresh no browser e no PWA preserva o menu/submenu expresso no URL.
+- Alterações financeiras sem motivo são permitidas a proprietários e administradores; o motivo continua obrigatório para o perfil Operador. A auditoria por campo mantém-se para todos.
+- Migrations isoladas aplicadas ao projecto confirmado `vtvvqyebigflgqccbqsw`: `allow_hourly_rate_on_work_entry_creation` e `require_financial_override_reason_only_for_operators`. Não foi executado `db push` global.
+- Gates: segurança, lint, TypeScript, 79/79 testes, build e dry-run Cloudflare aprovados. E2E focado aprovou refresh browser/PWA e formulário iPhone; mantém-se o encerramento tardio conhecido do runner.
+- O browser integrado não abriu por falha interna de confiança do plugin; não foi substituído por outro browser porque o utilizador pediu explicitamente o integrado.
+- Publicado em 2026-08-19 a partir do commit `f9bad23`; Cloudflare Version ID `5412939b-d0b7-4e2a-9617-8db71510a93c`, URL `https://legal-carina.dabranches.workers.dev`.
+- Correcção de dados posterior autorizada explicitamente: 7 movimentos manuais criados antes da publicação tinham valor/hora mas total nulo. A migration `backfill_today_manual_work_entry_amounts` reconstruiu os totais por `duração × valor/hora ÷ 60`, sem descontos, criou 7 auditorias técnicas e reactivou o trigger financeiro na mesma transacção. Verificação final: 8/8 movimentos manuais do dia com total, zero pendentes, total agregado 930,00 €.
+
+## Lote local 0.4.0 — preparação de Notas de Honorários
+
+- Estado: implementado e validado localmente, sem publicação. Produção continua confirmada em `0.3.3`.
+- Documentos de Cliente: carregamento múltiplo, validação por assinatura real, recusa de macros, mensagens por ficheiro, SHA-256 contra duplicados, validade e remoção lógica recuperável preparados localmente. Não promover a Edge Function nem `20260819020000_prevent_duplicate_client_documents.sql` antes de reconciliar o histórico remoto.
+- Desempenho: `HonorariumNoteModal` passou a carregamento tardio; `MasterDataPage` caiu de aproximadamente 458 kB para 38 kB brutos no build. O utilizador vê `A preparar o documento…` durante o carregamento sob procura.
+- Gates mais recentes: TypeScript, build, 13 ficheiros/69 testes aprovados e `git diff --check` sem erros. Browser integrado sem separador disponível nesta passagem; validação visual deste sublote continua pendente.
+- A ficha de Cliente permite preparar uma Nota de Honorários a partir dos seus movimentos não facturados. A selecção múltipla existe apenas nesta tabela própria e a impressão/PDF inclui Cliente, `mm-aaaa`, descrição, duração e total de tempo.
+- Cliente e Sociedade incluem os campos necessários para evoluir da actual folha de apoio para uma Nota de Honorários completa. A referência à Sociedade emissora é protegida por chave composta no Supabase para não atravessar escritórios.
+- Migrations remotas isoladas: `add_honorarium_note_fields` e `secure_honorarium_default_society_scope`. Migration local de referência: `20260818201935_add_honorarium_note_fields.sql`. Nunca executar `db push` indiscriminadamente devido à divergência histórica.
+- Removido o gráfico anual duplicado no fim dos dashboards de Responsáveis.
+- Gates: segurança de ficheiros, oxlint, TypeScript, 58 testes e build aprovados; dry-run Cloudflare aprovado sobre 31 assets. A matriz E2E percorreu 24 testes locais e omitiu 2 de produção, conservando o hang conhecido após o último resultado.
+- Supabase Advisors: nenhum erro crítico novo. Permanecem avisos de revisão sobre RPCs `SECURITY DEFINER`, protecção de passwords comprometidas, FKs sem índice, índices não usados e políticas permissivas múltiplas; avaliar individualmente, sem correcções automáticas.
+- Permissões do Operador decididas e aplicadas: consulta, criação e actualização de todos os Clientes e respectivas vertentes do próprio escritório, independentemente da Sociedade. Não inclui eliminação nem Definições. A migration isolada `allow_operator_all_client_management` passou um teste RLS transaccional completo e não deixou dados sintéticos; o Operador activo ainda tem de concluir a mudança obrigatória do PIN no primeiro acesso.
+- Nas listas de Clientes, `Emitir Nota de Honorários` abre o mesmo selector de movimentos não facturados da ficha. O botão permanece visível: azul quando há movimentos e neutro/desactivado quando não há. A migration isolada `add_uninvoiced_client_shortcuts` criou a RPC de indicador e a cache PostgREST foi recarregada.
+- Não fazer push desta branch sem nova ordem: historicamente, o push pode activar publicação automática na Cloudflare.
+
+## Hotfix 0.3.3 — gráficos da Visão Geral
+
+- Corrigida a grelha de `Análise e tendências`: `Valor por ano` e `Valor por mês` ocupam agora 50% cada e preenchem 100% da largura disponível.
+- Validado visualmente em claro e escuro; publicação urgente autorizada pelo utilizador.
+- Publicado a partir do commit `e03f6e77411fc00a77b88dfb49c8bba27febe01d`; Cloudflare Version ID `c74b9fb3-5614-4cb8-bdfa-fa74e317295d`. Assets, service worker e fluxo `Actualizar aplicação` confirmados em `0.3.3`.
+
+## Lote local 0.3.2 — correcções pós-publicação
+
+- A versão `0.3.2` foi publicada em 2026-08-18 a partir do commit `25fc7cee980badadb9ece6a2930ae6c1238be345` da branch `codex/reconcile-full-import`.
+- Produção confirmada visualmente em `https://legal-carina.dabranches.workers.dev/`, versão Cloudflare `c34073d9-d160-43c2-8ba1-d40f1e066621`, com `Versão 0.3.2` visível e aviso de actualização PWA apresentado.
+- Registos optimizados no Supabase com controlo de âmbito explícito, índices de paginação/estado/factura e carregamento integral numa única chamada; medição autenticada da primeira página melhorou de cerca de 7 s para 1,7 s.
+- Tabelas usam apenas o scroll vertical da página, oferecem 100 linhas e mantêm a vista `Todas` virtualizada sobre 7 198 movimentos; filtros e ordenações continuam a usar o universo integral em cache de memória, invalidado após qualquer escrita.
+- A coluna técnica `Alteração manual` foi retirada. `N.º factura` passou a ser editável na linha através de endpoint protegido; o nome do Cliente já não repete código nem vertente.
+- Os 24 clientes anteriormente mistos foram resolvidos na base: Juan Cartaya, Fred Schaner e Donovan ficaram Particulares; os restantes 21 ficaram Empresas; zero perfis mistos activos.
+- `Criar movimento` deixa de aceitar silenciosamente uma RPC de opções vazia: recorre às tabelas protegidas por RLS e volta a apresentar clientes/vertentes, responsáveis, Sociedades e processos.
+- Verificação autenticada local: 225 opções de cliente/vertente; formulário habilitado com dados sintéticos e fechado sem gravar.
+- Atalhos internos dos cartões/listas usam navegação SPA comum: validado `Particulares > Por facturar`, preservando a sessão e conciliando o cartão de 559 com `1–559 de 559` na tabela após progresso explícito.
+- Criação/edição de clientes deixa de tentar inserir uma vertente desactivada com código vazio; valida prefixos e códigos repetidos antes da gravação.
+- Auditoria autenticada adicional: Sociedade 243/243, Responsável 39/39, Sem sociedade 127/127 e universo integral 7 198/7 198; filtros usam as 201 opções de cliente e o estado só fica activo quando a selecção diverge de todas.
+- Edição directa da duração confirmada visualmente com Dias/Horas/Minutos dentro do viewport; balões mensal agregado/por Sociedade e anual empilhado confirmados com total e decomposição completa.
+- Gates finais do lote: ficheiros sensíveis, lint, TypeScript, 52/52 testes, build, dry-run Cloudflare e E2E sintético com 24 aprovados/2 exclusivos de produção omitidos; matriz inclui 11 iPhones, 7 resoluções Windows, modo escuro, rotação e safe areas.
+- Último fecho antes da publicação: 56/56 testes unitários e 22/22 cenários locais iPhone/Windows aprovados; testes E2E alinhados com o título movido para a barra superior. O runner mantém a anomalia de não terminar depois do último resultado, tendo sido interrompido apenas depois de todos os cenários passarem.
+- Gráficos foram inspeccionados visualmente no modo escuro em Visão Geral, Clientes, Sociedades e Responsáveis; as séries usam tokens claros próprios do tema escuro. Definições ficaram exclusivas de proprietário/administrador, sem retirar ao Operador a criação operacional de clientes.
+
+## Publicação 0.3.0 — preparada em 2026-08-18
+
+- Branch: `codex/reconcile-full-import`; lote local validado antes do commit e deploy.
+- Navegação reorganizada com dashboards de entrada de Clientes, Sociedades e Responsáveis; nas categorias de cliente, o dashboard abre no próprio item e apenas `Lista` surge como submenu.
+- Tabelas compactas, filtros/ordenação sobre o universo integral, opção `Todas`, zebra, selecção de linha, Cliente sticky, impressão isolada e edição individual de movimentos.
+- Dashboards apresentam estrutura imediatamente e valores em processamento; a RPC de Responsáveis foi optimizada isoladamente no remoto.
+- Ficha de cliente responsiva, com vários correios electrónicos, vários telefones, identificadores e documentos. Criação exige vertente Particular/Empresa e sugere códigos contínuos `02.xxxx`/`01.xxxx`; clientes Mistos recebem as duas vertentes.
+- Validação: segurança de ficheiros, lint, TypeScript, 52/52 testes, build e E2E (24 aprovados, 2 exclusivos de produção omitidos). Dry-run Wrangler 4.123.0 aprovado sobre 30 assets.
+- Histórico Supabase continua divergente; não executar `db push`. As migrations `20260818132714`, `20260818132947` e `20260818133428` foram tratadas isoladamente e exigem reconciliação documental posterior.
+- Commit funcional publicado: `72906a06ead13ae7896c3b7d5ad810fa6a698b45`, enviado para `origin/codex/reconcile-full-import`.
+- Produção confirmada visualmente em `https://legal-carina.dabranches.workers.dev/`: `Versão 0.3.0`.
+- Cloudflare Version ID: `6c8c8099-0169-4a92-a9c5-0777b91cc3fe`, 100% do tráfego, mensagem `Release 0.3.0: plataforma operacional`.
+- `sw.js` público confirmado com cache `carina-legal-shell-0.3.0`; uma instalação PWA antiga mostrou `Actualização disponível`, actualizou e deixou de apresentar o aviso após activar a nova versão.
+
 Data: 17/08/2026
+
+> Estado actual para retoma noutro computador. As secções históricas abaixo deste bloco são apenas memória de lotes anteriores; em caso de conflito prevalece este bloco.
+
+## Retoma actual — 0.2.8
+
+### Hotfix 0.2.8
+
+- O PWA Windows abre e reabre na Visão geral: `start_url` explícito, identidade estável e `launch_handler` que navega a janela existente.
+- Os atalhos de acompanhamento passaram a navegar dentro da SPA, sem recarregar a aplicação nem reinicializar a sessão.
+- Foram repostas no Supabase as permissões de `get_dashboard_overview`, `search_work_entries` e a função ausente `get_my_access_status`; refresh e atalho `Sem sociedade` foram confirmados numa sessão autenticada.
+- Validação local: `pnpm check` verde, 51/51 testes. Dez cenários Windows/smoke percorreram a matriz, incluindo o novo arranque standalone; mantém-se a anomalia conhecida do runner Playwright não encerrar depois do último cenário.
+
+- Branch reconciliada: `codex/reconcile-full-import`; inclui por merge o lote documental 0.2.6 que já estava em produção.
+- Versão preparada para publicação: `0.2.7`.
+- A nova linha de base do ficheiro `20260817 HORAS ESCRITÓRIO.xlsx` está no Supabase: 7 198 movimentos activos e validação idempotente de 7 198 inalterados.
+- Visão geral e dashboards de clientes foram reorganizados com cartões de acompanhamento e atalhos explícitos para as tabelas subjacentes, incluindo `Sem sociedade`.
+- Gráficos usam os 12 meses terminados no movimento mais recente, permitem comparação por sociedade e mostram no hover do período o total e a decomposição por sociedade.
+- Registos de trabalho mostram linhas compactas, número/data de factura, ordenação em todas as colunas e carregam o universo integral autorizado para filtros, pesquisa, ordenação e opção `Todas` — não apenas a página inicial.
+- RPC integral `export_visible_work_entries` foi estendida isoladamente com os mesmos filtros da tabela, incluindo cliente, tipo, sem preço e sem sociedade. Não foi executado `db push`.
+- Validação: `pnpm check` aprovado com 51/51 testes; build e dry-run Cloudflare aprovados. Os 24 cenários Playwright foram iniciados e percorreram a matriz, mas o processo de teste não terminou após o último cenário e foi interrompido; investigar o encerramento do runner/servidor, não uma falha funcional reportada.
+
+- Repositório: `https://github.com/dabranches-collab/legal-carina`
+- Directório obrigatório: `C:\Projetos\legal-carina`, fora do OneDrive.
+- Branch: `codex/client-identifiers-documents-0.2.6`
+- Commit funcional: `1f05f59 feat: activar identificadores e documentos de clientes`
+- Versão local e publicada/Cloudflare: `0.2.6`.
+- A Cloudflare publicou automaticamente o push da branch, apesar de não existir PR nem merge em `main`. O endereço público foi verificado directamente e apresenta `Versão 0.2.6`.
+- O código está na branch de desenvolvimento no GitHub, mas `main` ainda não contém este lote. Prioridade: não deixar produção à frente de `main`; abrir PR, obter CI verde e fundir antes de novos lotes.
+- Supabase `vtvvqyebigflgqccbqsw`: identificadores, documentos, bucket privado e Edge Function `client-documents` já estão activos remotamente.
+
+## O que ficou implementado
+
+- Identificadores: consultar, criar, editar e eliminar CC/BI, passaporte, título de residência, registo comercial, fiscal ou outro.
+- Documentos: carregar, consultar, arquivar, reactivar e eliminar.
+- Bucket `client-documents` privado, limite 20 MB, PDF/JPG/PNG/DOCX/XLSX e ligações assinadas de 60 segundos.
+- Upload e mutações passam pela Edge Function autenticada; a service role não entra no frontend.
+- RLS activa e privilégios directos reduzidos ao mínimo.
+- Migrations remotas isoladas: `20260817095147`, `20260817095157`, `20260817095206` e `20260817095316`. Não foi executado `db push`.
+- Edge Function `client-documents` versão 1 activa com `verify_jwt=true`.
+
+## Validação deste lote
+
+- `pnpm security:files`, lint, typecheck e build aprovados.
+- 49/49 testes aprovados.
+- Browser integrado confirmado na versão local 0.2.6, mas a sessão autenticada expirou. Falta validar visualmente a ficha depois de iniciar sessão; não pedir, inventar ou expor PINs.
+- Produção verificada em `https://legal-carina.dabranches.workers.dev/`: versão 0.2.6. O PWA apresentou a actualização correspondente.
+- O erro transitório `permission denied for table clients` foi investigado: `authenticated` mantém os privilégios e políticas RLS da tabela, e a lista voltou a carregar na sessão local sem alteração correctiva à base.
+- Servidor local: `pnpm dev --host 127.0.0.1 --port 5173`.
+
+## Importação e base de dados
+
+- A base não foi limpa nem reiniciada.
+- O ficheiro documentado `20260407 HORAS ESCRITÓRIO.xlsx` é antigo e não deve ser assumido como o mais recente.
+- Antes de limpar: localizar o ficheiro mais recente, confirmar data/tamanho/SHA-256/linhas, comparar alterações e duplicados, verificar backup/PITR e simular a importação.
+- A limpeza é destrutiva e exige autorização específica depois dessa verificação.
+- Depois da importação inicial validada, o fluxo normal deverá ser incremental por hash e detecção de duplicados.
+- Nunca usar dados reais em testes ou preview.
+
+## Próximo trabalho recomendado
+
+1. Iniciar sessão localmente e testar identificadores e documentos com ficheiros sintéticos.
+2. Validar desktop, tablet, iPhone/PWA, claro/escuro, contraste e safe areas.
+3. Localizar e analisar o ficheiro mais recente e preparar backup, limpeza e importação.
+4. Executar pgTAP das políticas de RLS, Storage e importação num ambiente autorizado.
+5. Reconciliar as migrations locais antigas `20260816180000` a `20260816198000`; nunca executar `supabase db push` indiscriminadamente.
+6. Rever os avisos antigos do Supabase e testar passkeys/Windows Hello/Face ID em equipamento real.
+7. Abrir PR deste lote com prioridade, executar CI e fundir em `main`, porque a Cloudflare já publicou automaticamente a branch. Não iniciar nova publicação sem pedido explícito “publica”.
+
+## Comandos para retomar
+
+1. Confirmar o repositório e executar os comandos de diagnóstico exigidos em `AGENTS.md`.
+2. Se estiver limpo: `git pull --ff-only`.
+3. `git switch codex/client-identifiers-documents-0.2.6`.
+4. Criar `.env.local` apenas com URL e chave publicável do Supabase; não transportar segredos nem `node_modules`.
+5. `pnpm install --frozen-lockfile`.
+6. `pnpm dev --host 127.0.0.1 --port 5173`.
+7. Abrir `http://127.0.0.1:5173/` e confirmar a versão 0.2.6.
+
+---
+
+## Histórico anterior
 
 ## Estado confirmado
 
@@ -38,6 +612,15 @@ Data: 17/08/2026
 - Foi preparada localmente a migração `20260817081315_add_client_identifiers.sql` para vários identificadores por cliente (CC/BI, passaporte, título de residência, registo comercial, fiscal ou outro). Não foi aplicada ao Supabase remoto devido à divergência conhecida no histórico de migrações.
 - Este lote `0.2.5` não deve ser enviado ao GitHub enquanto o deployment automático não estiver controlado.
 
+## Correcção 0.2.6 em preparação
+
+- Branch local: `codex/reconcile-full-import`.
+- A importação compara todas as linhas efectivas com o último lote concluído e classifica-as como novas, inalteradas, alteradas ou em conflito.
+- Movimentos existentes mantêm o mesmo `id`; linhas alteradas actualizam o movimento e ficam auditadas. Linhas ausentes são apenas sinalizadas e nunca eliminadas automaticamente.
+- Alterações manuais protegidas bloqueiam a importação para revisão.
+- As funções `analyze_import_candidates`, `commit_validated_import` e o comparador privado foram aplicados isoladamente ao Supabase remoto em 2026-08-17, sem `db push` das restantes migrations e sem publicação Cloudflare. Após um timeout com o ficheiro real, `analyze_import_candidates` foi substituída pela versão em bloco de `20260817162500_optimize_import_candidate_analysis.sql`; o catálogo remoto confirma essa definição. O histórico remoto ainda não contém os carimbos locais `20260816181000`, `20260817143340` e `20260817162500`.
+- O ficheiro `20260817 HORAS ESCRITÓRIO.xlsx` foi reconciliado como nova linha de base: hash `f829e86f...ae44`, 7 204 linhas analisadas, 7 198 movimentos activos e 6 linhas inválidas mantidas apenas para revisão. A comparação canónica posterior devolve 7 198 inalteradas e 0 alteradas. As migrations locais `20260817152746`, `20260817153057`, `20260817153246`, `20260817154129` e `20260817154256` documentam as correções aplicadas isoladamente ao remoto e também não constam do histórico remoto.
+
 ## Correcções incluídas em 0.2.3
 
 - Registos de trabalho deixam de executar a exportação completa no carregamento; usam a pesquisa paginada e mostram até 100 movimentos na vista inicial.
@@ -71,3 +654,143 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Implementar exportação XLSX integral sob pedido sem bloquear a abertura dos Registos de trabalho.
 - Continuar validação visual das tabelas e dashboards nas matrizes Windows/iPhone.
 - Manter o incremento SemVer visível na versão local antes de cada lote e publicar apenas quando solicitado.
+
+## Validação local 0.4.0 — 2026-08-19
+
+- A versão `0.4.0` foi publicada a partir do commit funcional `ec0541a` da branch `codex/reconcile-full-import`; URL `https://legal-carina.dabranches.workers.dev`, Version ID Cloudflare `7a560053-0951-421f-989d-519d3ef9d2c4`.
+- Os Registos paginam identificadores antes de hidratar as linhas, reduzindo o trabalho da consulta. O pré-filtro histórico deixou de incluir avisos genéricos de importação e considera apenas facturados sem data ou excepções históricas reais. As migrations correspondentes permanecem apenas locais.
+- Formulários de criar/editar movimento usam rodapé móvel fixo e scroll interno; a matriz visual confirmou os botões dentro do ecrã em iPhone.
+- A grelha final da Visão Geral passou a admitir encolhimento dos filhos. Corrigido overflow horizontal de 172 px num iPhone 430×932; após a correcção `scrollWidth <= innerWidth` em claro e escuro.
+- Browser integrado validado em 1920×1080 a 100%, equivalentes a 125% e 150%, tablet 1024×768, iPhone 375×667 e 430×932. Sticky, scroll horizontal e contraste ficaram estáveis.
+- Validação automática final: segurança de ficheiros, lint, TypeScript, 75/75 testes unitários, build, dry-run Cloudflare e E2E completo com 29 aprovados e 2 cenários exclusivos de preview/produção omitidos. O subconjunto responsivo aprovou 19/19.
+- `supabase db lint --linked --schema public` devolveu `No schema errors found`. A listagem ligada confirma as cinco migrations remotas documentais recentes alinhadas; a divergência histórica local/remoto mantém o bloqueio a `supabase db push` global.
+- Sessão autenticada de PAULA CHAVES (`Operador`) revalidada: Administração/Definições/Importações/Auditoria não são navegáveis pelo perfil; criação e edição individual de movimentos funcionam e produzem confirmação de auditoria.
+- Sociedades e Responsáveis foram percorridos no browser integrado com totais e séries diferentes. Os atalhos Por facturar/Facturados não pagos/Sem preço coincidem com as contagens das respectivas tabelas. O dashboard de CARINA mantém latência repetível próxima de 6 segundos; não introduzir cache potencialmente obsoleta sem obter primeiro um plano SQL autenticado.
+- O selector de Nota de Honorários do cliente `TESTE PARTICULAR` foi confirmado em iPhone 390×844 e modo escuro: largura contida, rodapé visível, três idiomas, selecção por Sociedade, escolha/ordenação de colunas, totais e despesas. O movimento QA temporário foi eliminado com motivo de auditoria; o universo regressou a 7 220.
+- Registos frios medidos em cerca de 1,29 s para obter o universo de 7 221 movimentos. A selecção `Todas` conserva 1–7 221 no rodapé e virtualiza a tabela em janelas de 40 linhas; foi acrescentado teste automático com 7 200 resultados.
+- A preparação documental pagina movimentos para além das primeiras 10 000 linhas por Cliente e verifica a completude antes de permitir o PDF; o teste simula duas páginas e confirma os três movimentos.
+- O painel documental deixou de criar HTML inválido com um `<form>` dentro do formulário da ficha. O upload tem botão explícito e o browser integrado confirmou o editor estável, sem submissão automática, após 3,2 segundos.
+- O Chrome isolado revelou que o clique em `Editar` ainda podia submeter a ficha porque o mesmo nó era reconciliado como botão de guardar durante a activação. Foi acrescentado `preventDefault()` à transição e `type="submit"` explícito ao botão final; revalidação visual em 1920×1200, claro/escuro, manteve o editor e o selector de ficheiros abertos após 4 segundos.
+- O cliente sintético confirmou separação funcional: Nota de Honorários = 1 movimento não facturado/15 min; Cobrança = 1 movimento facturado não pago/1 h. O Chrome aceitou o PDF sintético depois de activar `Allow access to file URLs`.
+- No projecto correcto `vtvvqyebigflgqccbqsw`, todas as migrations aditivas 0.4.0 foram aplicadas isoladamente e a Edge Function `client-documents` versão 2 está activa com `verify_jwt=true`. O projecto está saudável e não foi usado `db push` global.
+- Página, manifesto e service worker publicados respondem por HTTPS 200. O manifesto arranca em `/?view=overview`, o cache é `carina-legal-shell-0.4.0` e os 2 testes específicos de produção/preview passaram.
+
+## Correcção 0.3.2 em preparação — dimensões dos dashboards
+
+- Corrigida a inversão conceptual: Sociedade seleccionada é analisada por Responsável; Responsável seleccionado é analisado por Sociedade. Visão geral continua por Sociedade e Clientes não recebe uma dimensão artificial.
+- `20260818190000_correct_entity_dashboard_breakdowns.sql` foi aplicado isoladamente ao Supabase remoto depois de rever a lista de migrations. A divergência histórica permanece; não usar `supabase db push`.
+- Atalhos e tabelas já não recuperam filtros, pesquisa, ordenação ou página antigos. Preferências puramente visuais de colunas continuam persistentes por utilizador.
+- Contagem e paginação foram corrigidas para o universo remoto. Verificação autenticada: Sem sociedade mostra 127/127, depois 1–100 e 101–127.
+- Alertas com zero ocorrências são ocultados. A abertura de dashboards por nome evita a consulta integral preliminar e faz apenas uma resolução leve do identificador.
+- Verificação visual autenticada: MASSIVE SEARCH apresenta CARINA/PAULA e botões Por responsável; PAULA apresenta as três Sociedades e botões Por sociedade; Visão geral mantém Por sociedade; Particulares não mostra comparação indevida.
+- Validação: `pnpm lint`, `pnpm typecheck`, 55/55 testes e `pnpm build` aprovados. Não publicado por instrução expressa do utilizador.
+- Após detectar que a navegação entre submenus conservava o `selectedId` anterior, `App.tsx` passou a identificar cada dashboard pela Sociedade/Responsável seleccionado. Teste visual por cliques sucessivos confirmou totais distintos: CARINA SANTOS 149 227,50 €, LEGAL TEAM 417 509,50 € e MASSIVE SEARCH 127 337,50 €; widgets e séries mudam em conjunto.
+# Publicação 0.2.9
+
+- Branch de origem: `codex/reconcile-full-import`.
+- Perfil Operador acrescentado ao frontend, função administrativa e modelo de autorização por Sociedade.
+- Dashboards: mini-barras anuais verticais por Sociedade, linha Total anual, detalhe mensal por Sociedade e widgets agrupados com subtotais.
+- Ajustes finais confirmados visualmente: alertas de Acompanhamento vermelhos; Evolução anual larga à esquerda e os dois gráficos curtos empilhados à direita; células não monetárias centradas e monetárias à direita.
+- O scroll horizontal dos Registos de trabalho fixa apenas Cliente; Data e selecção deixam de ficar presas à margem.
+- A coluna Cliente fixa tem fundo opaco, validado visualmente depois de deslocar a tabela até às últimas colunas.
+- Print/PDF oculta o resto da página e ajusta apenas a tabela a uma página de largura em landscape.
+- As caixas e acções de edição em massa foram removidas; a edição dos movimentos é exclusivamente individual.
+- Os Registos de trabalho apresentam pré-filtros vermelhos de pendências por cima dos filtros normais; o teste autenticado de “Sem sociedade” devolveu as 127 linhas do universo completo.
+- A sessão local mostra `Versão 0.2.9`; o Vite observa agora o `package.json` e reinicia quando a versão é alterada.
+- Validação anterior à publicação: segurança de ficheiros, lint, TypeScript, 51 testes unitários, build e E2E (24 aprovados, 2 opcionais omitidos).
+- Aplicar remotamente apenas `20260818105352_add_operator_role.sql` e `20260818111659_add_dashboard_metric_breakdowns.sql`; publicar a Edge Function `admin-users` e o Worker. Não usar `supabase db push`.
+- Versão `0.2.9` publicada em 2026-08-18 a partir do commit funcional `4d6729bc455aabdb7da745613b784679da01dbe7`.
+- Cloudflare Worker confirmado em `https://legal-carina.dabranches.workers.dev`, Version ID `e6931985-c3b5-4c6b-86bf-a5daf4507fc4`, resposta HTTPS `200 OK`.
+
+## Correcção 0.4.1 em preparação — dashboards de Clientes
+
+- `get_client_category_dashboard` devolve agora os 12 meses contínuos terminados no último movimento acessível para Particulares e Empresas. A migration isolada `make_client_dashboards_rolling_12_months` está aplicada no Supabase correcto.
+- Prova visual autenticada como Operador: ambos os dashboards mostram 09/25–08/26, em claro e escuro, sem meses futuros vazios e sem erros de consola.
+- `align_client_dashboard_attention_counts` alinha os contadores de pendências com os respectivos atalhos, sem contar incobráveis como pendências normais. Prova autenticada: Particulares 484 não facturados e 294 facturados não pagos; Empresas 281 e 193, sempre com correspondência exacta entre caixa e tabela.
+- Gates aprovados: segurança, lint, TypeScript, 75/75 testes, build e 29 E2E aprovados/2 omitidos. Código local em `0.4.1`; produção Cloudflare ainda em `0.4.0` até ordem explícita.
+
+## Lote 0.4.2 — incobráveis nos dashboards
+
+- Clientes, Sociedades e Responsáveis apresentam Incobráveis como alerta autónomo com atalho filtrado.
+- A métrica `Por receber` dos Clientes exclui agora `uncollectible_invoiced`, sem retirar esse movimento do total histórico facturado.
+- Prova autenticada contador/tabela: Particulares 2/2, Empresas 4/4, CARINA SANTOS 3/3 e CARINA 4/4; claro e escuro revistos visualmente.
+- Publicado em 2026-08-19: commit funcional `537bc4a`, URL `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `57434d1c-d171-46c6-8183-8127d95e4a95`. HTTPS, manifesto, versão visível e cache PWA `carina-legal-shell-0.4.2` confirmados depois do deploy.
+- Hotfix Supabase de segurança após o deploy: `secure_and_optimize_entity_dashboard` elimina a reutilização de métricas e movimentos recentes não mascarados da função antiga. A prova como Operador manteve horas/clientes, mas reduziu os valores ao âmbito financeiro autorizado. CARINA passou de 6,4 s para 8,1 s; optimizar a lista interna de opções sem remover o mascaramento é o próximo trabalho prioritário.
+
+## Lote 0.4.3 — optimização segura dos dashboards
+
+- Projecto Supabase confirmado por `.env.local`, documentação e histórico remoto: `vtvvqyebigflgqccbqsw`. A migration isolada `optimize_secure_entity_dashboard` está aplicada; nunca usar o identificador antigo referido num relato intermédio.
+- A função segura deixou de repetir milhares de verificações de perfil/âmbito para perfis globais. O caminho restritivo permanece para utilizadores limitados e os valores do Operador continuam filtrados pelas permissões financeiras por Sociedade.
+- CARINA: três carregamentos completos em 1,295 s, 1,277 s e 1,274 s, mantendo exactamente 660 818,25 € trabalhados, 602 835,00 € facturados e 553 103,75 € recebidos.
+- Validação visual autenticada em claro/escuro: Sociedade e Responsável sem erros, com gráficos e alertas; sessão local recuperada após reconstrução de dependências e versão 0.4.3 visível.
+- Gates aprovados: ficheiros sensíveis, lint, TypeScript, 75/75 testes, build e 31 cenários E2E apresentados como concluídos. O runner E2E conserva o bloqueio conhecido no encerramento após o último resultado.
+- Advisors Supabase: 0 `ERROR` de segurança e 0 `ERROR` de desempenho. Permanecem avisos existentes de RPCs `SECURITY DEFINER` intencionais, protecção Auth de passwords vazadas e três grupos de políticas permissivas duplicadas.
+- Publicado a partir do commit funcional `cd06d3d`: `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `b95932a2-0a46-466b-9cd8-2de5936e28ea`.
+- Pós-publicação confirmado: página pública sem ecrã branco e com versão 0.4.3; manifesto HTTPS 200 com arranque na Visão Geral; service worker/cache `carina-legal-shell-0.4.3`.
+
+## Lote 0.4.4 — estabilidade do arranque PWA
+
+- Eliminada a recarga automática provocada pela primeira activação do service worker, possível origem de flashes/ecrãs brancos e contextos destruídos.
+- O botão «Actualizar aplicação» continua a activar a versão em espera e só então recarrega a página.
+- Testado em claro/escuro e na matriz automatizada de Windows/iPhone; 75/75 unitários, 29 E2E de interface e 2/2 E2E PWA aprovados; dry-run Cloudflare aprovado.
+- Publicação confirmada em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `7c577650-c8eb-44c3-ac1f-c5b843a0bd84`; Chrome actualizado para 0.4.4 sem ecrã branco nem ciclo de reload.
+
+## Lote 0.4.5 — consistência entre Nota de Honorários e Cobrança
+
+- O gerador documental foi revisto na produção 0.4.4: Nota e Cobrança abrem a partir da lista de cliente, filtram respectivamente não facturados e facturados não pagos, separam por Sociedade e alternam correctamente entre PT/EN/FR.
+- Corrigida localmente a ausência, na Cobrança, do aviso sobre dados legais/bancários incompletos da Sociedade emissora. Foi acrescentado teste de regressão específico.
+- Gates aprovados antes da publicação: ficheiros sensíveis, lint, TypeScript, 76/76 unitários, build, 29 E2E de interface/2 omitidos e dry-run Cloudflare.
+- Publicação final feita a partir do commit `e359402`: `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `49fdc0e8-6d2b-430b-9360-528998edf161`.
+- A expectativa da cache PWA passou a usar dinamicamente a versão de `package.json`; 2/2 testes de preview de produção confirmaram o manifesto, o service worker e `carina-legal-shell-0.4.5`.
+- Pós-publicação autenticado: versão 0.4.5 sem ecrã branco; Nota e Cobrança devolvem os universos esperados e ambas avisam quando a Sociedade emissora tem dados legais/bancários incompletos.
+
+## Lote 0.4.6 — ensaio do Operador em curso
+
+- Testes de Nota/Cobrança cobrem agora despesas, IVA, totais e a ausência intencional de despesas nas Cobranças.
+- Novo E2E distingue correctamente PWA (arranque na Visão Geral) de browser normal (refresh preserva o submenu profundo).
+- Produção 0.4.5: Registos completos em cerca de 3,2 s; pesquisa global em cerca de 1,2 s; `Todas` usa virtualização e não coloca 7 220 linhas simultaneamente no DOM.
+- `client-documents` está activa e protegida por JWT no projecto `vtvvqyebigflgqccbqsw`. Matriz RLS documentada com o papel Operador.
+- A ficha completa do movimento inclui agora os dois estados Incobrável e sincroniza-os com Facturado/Pago. A sessão real de PAULA CHAVES (`Operador`) confirmou 7 220/7 220 movimentos, edição completa em claro/escuro, menus administrativos ausentes e Nota de Honorários/Cobrança com universos correctos no cliente sintético.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 78/78 testes unitários, build, dry-run Cloudflare e 30 E2E aprovados; 2 cenários exclusivos de preview/produção omitidos como previsto.
+- Código funcional publicado a partir do commit `d0f0f77`: versão 0.4.6 em `https://legal-carina.dabranches.workers.dev`, Cloudflare Version ID `e02609ff-527d-4e84-97d7-7de3df1b612e`. Confirmação visual pública: login íntegro, versão correcta e nenhum erro de consola.
+
+## Lote 0.6.1 local — avenças e fichas compactas
+
+- Movimentos cobertos por avença foram excluídos de «Sem preço», por facturar, não pagos e estados históricos, tanto nos contadores como nos detalhes. COCKTAIL TEAM confirma 0 sem preço e 91 cobertos.
+- Fichas de dados base abrem em consulta compacta; «Editar» expande os campos, «Guardar alterações» só activa com mudanças e «Cancelar alterações» repõe os dados sem gravar.
+- Facturação da avença controla período, número/data de factura, vencimento e data de liquidação. O dashboard identifica as 172 h como histórico global de COCKTAIL TEAM e INFANTÁRIO DO POVO.
+- EBO: condição activa inicia em 2021-01-01. A auditoria recuperou 4 movimentos de 2026 com preço explícito de 120 €/h e 150 € no total; foram preservados como trabalho à peça. Permanecem 48 movimentos de avença (36 h), sem estados financeiros inválidos.
+- Supabase remoto recebeu `exclude_retainers_from_financial_attention` e `add_retainer_charge_due_date`. Frontend continua apenas local; produção permanece 0.6.0.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 114/114 testes e build.
+- A tabela de avenças distingue horas utilizadas no período actual, horas contratadas e horas utilizadas no histórico total. O valor/hora efectivo passou a usar valor contratual acumulado / horas utilizadas, em vez de facturas já registadas.
+- Valores reconciliados: COCKTAIL TEAM 221,40 €/h; EBO 528,89 €/h; INFANTÁRIO DO POVO 182,33 €/h. O bloco «Facturação da avença — estado e datas» fica visível na ficha; nenhuma mensalidade retroactiva foi criada por suposição.
+- A ficha do cliente foi dividida em páginas visíveis: Geral, Contactos, Facturação, Avença, Credenciais e Documentos. Geral reúne nome, denominação, NIF, tipo e códigos; em consulta oculta vertentes não atribuídas e o campo redundante «Entidade activa».
+- A criação de movimentos apresenta estados cumulativos Facturável → Facturado → Pago e a alternativa exclusiva Avença. Avença só activa com contrato vigente, elimina preço/valor individual e contabiliza a duração nos mapas e no consumo do período. A função nova `create_work_entry_with_treatment` foi aplicada sem substituir o circuito anterior.
+- Validação actualizada: 115/115 testes unitários; 26/26 E2E focados nas fichas e criação móvel, incluindo ausência de overflow horizontal em seis larguras iPhone e acções acessíveis por scroll vertical.
+- Notas de trabalho acrescentadas imediatamente depois de Registos: texto, imagens, áudio/gravação de voz, listas com conclusão e urgência visual. Cada utilizador vê as suas notas e as que lhe forem partilhadas; o Dono vê todas. A partilha distingue Consulta e Edição por utilizador e é protegida por RLS no Supabase.
+- As notas usam cartões de altura variável numa grelha tipo mosaico; no iPhone passam para uma coluna sem overflow horizontal. Os 2 E2E específicos de notas passaram. O gate global aprovou segurança, lint, TypeScript, 115/115 unitários e build; numa execução limpa do E2E passaram 59 cenários, 2 foram omitidos por condição e o caso iPhone 13 mini sofreu uma anomalia de arranque do Chromium depois de os outros dez modelos passarem.
+- Versão 0.6.1 publicada em 2026-08-30 a partir do commit funcional `9880081`, branch `codex/reconcile-full-import`, em `https://legal-carina.dabranches.workers.dev`. Cloudflare Version ID `e243f1e8-7017-4e7d-8772-e728b306a928`; HTTPS 200, bundle `index-CzuQpdVx.js` e cache `carina-legal-shell-0.6.1` confirmados após o deploy.
+
+## Versão 0.6.2 — notas e protótipo isolado
+
+- Notas têm cartões de altura variável, texto, listas, imagem/áudio, urgência e partilha por Consulta/Edição. O título repetido foi removido e «+ Nova nota» passou a acção principal visível em desktop e iPhone.
+- `qa-demo` está isolado do Supabase real em todos os menus. A marca `TESTE` fica exclusivamente nos quatro títulos das notas demonstrativas; as avenças mantêm os nomes reais sem sufixos artificiais.
+- Gates: segurança, lint, TypeScript, 115/115 unitários e build aprovados. E2E completo: 61 aprovados, 2 omitidos e uma sobreposição detectada no iPhone 13 mini; após a correcção, toda a matriz iPhone passou 15/15.
+- Publicada em 2026-08-30 a partir do commit funcional `daa6cdd2f67dde5974e71260e70e9ba9cb0d5a16`, branch `codex/reconcile-full-import`, em `https://legal-carina.dabranches.workers.dev`. Cloudflare Version ID `3f2dc508-7df5-4d60-b9aa-50b571a9a767`; HTTPS 200, bundle `index-D-GNWpSl.js` e cache PWA `carina-legal-shell-0.6.2` confirmados directamente.
+- Verificação visual pós-publicação no browser integrado confirmou «Versão 0.6.2», o menu Notas depois de Registos e a acção destacada «+ Nova nota» correctamente renderizados.
+
+## Versão 0.6.3 — exemplos de notas em produção
+
+- Os quatro exemplos solicitados foram criados na base real como notas de CARINA SANTOS e partilhados com `dabranches`: Lembrete e Documento para Consulta; Preparar reunião e Mensagem de voz para Edição.
+- A lista contém três itens; as notas Documento e Mensagem incluem, respectivamente, um recurso demonstrativo de imagem e áudio servido pelo frontend. A inserção é idempotente e a auditoria confirmou 4 notas, 3 itens, 2 recursos e 4 partilhas, sem alterar avenças.
+- Segurança de ficheiros, lint, TypeScript, 115/115 testes unitários e build aprovados para a versão 0.6.3.
+- Publicada em 2026-08-30 a partir do commit funcional `4a94ff6`, Cloudflare Version ID `91d12e25-f890-43e9-a8ca-179f78994685`. Produção confirmou HTTP 200, bundle `index-Dp9eifQ2.js`, cache `carina-legal-shell-0.6.3`, imagem com 1 338 479 bytes, áudio com 44 bytes e versão 0.6.3 visível no browser integrado.
+
+## Versão 0.6.4 — edição do nome do Proprietário
+
+- Corrigido localmente o bloqueio que devolvia 403 ao Administrador ao corrigir o nome visível do Proprietário. O login do Proprietário continua protegido e só pode ser alterado pelo próprio.
+- A ficha desactiva explicitamente o campo de login neste caso e explica a restrição. Erros não-2xx das Edge Functions passam a apresentar a mensagem funcional devolvida pelo backend em vez de «Edge Function returned a non-2xx status code».
+- Segurança, lint, TypeScript, 115/115 testes unitários e build aprovados. Frontend e `admin-users` ainda não publicados; produção permanece 0.6.3 até nova ordem explícita `publica`.
+- Diagnóstico adicional: a Administração mostrava `DIOGO ABRANCHES` a partir dos metadados da sessão, mas o selector de partilhas lia `dabranches` de `user_login_credentials`. O registo interno foi sincronizado com o perfil real e a verificação visual em produção confirmou «DIOGO ABRANCHES» nas partilhas, sem a etiqueta antiga.
+- Publicada em 2026-08-30 a partir do commit funcional `6fea593`: frontend Cloudflare Version ID `9988876c-ef87-4ae5-9a69-ac2f6609aa71`, bundle `index-CchSpcbr.js`, cache `carina-legal-shell-0.6.4`; Edge Function `admin-users` v9 activa com JWT obrigatório.
+- Teste funcional pós-publicação na sessão Administrador abriu `DIOGO ABRANCHES`, manteve o login `dabranches` desactivado e guardou o nome sem erro; a confirmação «Acesso de DIOGO ABRANCHES actualizado.» apareceu e o diálogo fechou.

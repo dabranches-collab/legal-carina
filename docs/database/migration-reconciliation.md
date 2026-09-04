@@ -36,3 +36,5 @@ Na publicação:
 - repetir `migration list`, testes RLS e verificações funcionais após a aplicação.
 
 O dump de esquema pela CLI não pôde ser produzido porque o Docker Desktop não está disponível; foi criado um ficheiro vazio, imediatamente identificado pelo hash SHA-256 padrão de vazio e removido. Não foi criada qualquer cópia de dados pessoais.
+
+- 03-09-2026: add_client_default_hourly_rate local 20260903134329 / remoto 20260903134646; coluna opcional de predefinição, ensaio rollback aprovado antes/depois. Histórico anterior preservado, sem repair/db push.

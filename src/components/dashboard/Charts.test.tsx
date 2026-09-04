@@ -19,12 +19,15 @@ describe('DonutChart',()=>{
     render(<MonthlyValueChart data={data} allowSocietyComparison/>)
     expect(screen.getByText('Últimos 12 meses agregados')).toBeInTheDocument()
     expect(screen.getAllByText(/25|26/)).toHaveLength(12)
+    expect(screen.getAllByRole('button',{name:/Detalhe de/})).toHaveLength(12)
+    expect(screen.getAllByText('Carina Santos').length).toBeGreaterThanOrEqual(12)
+    expect(screen.getAllByTitle(/Total:/)[0]).toHaveAttribute('title',expect.stringContaining('Carina Santos:'))
     fireEvent.click(screen.getByRole('button',{name:'Por sociedade'}))
     expect(screen.getByText('Últimos 12 meses por sociedade')).toBeInTheDocument()
     expect(screen.getByRole('img',{name:'Valor mensal por sociedade'}).querySelectorAll('path[stroke]')).toHaveLength(3)
-    expect(screen.getByText('Carina Santos')).toBeInTheDocument()
-    expect(screen.getByText('Legal Team')).toBeInTheDocument()
-    expect(screen.getByText('Massive Search')).toBeInTheDocument()
+    expect(screen.getAllByText('Carina Santos').length).toBeGreaterThan(1)
+    expect(screen.getAllByText('Legal Team').length).toBeGreaterThan(1)
+    expect(screen.getAllByText('Massive Search').length).toBeGreaterThan(1)
   })
 
   it('não mostra o selector fora da Visão geral, mesmo que receba várias sociedades',()=>{
@@ -39,5 +42,15 @@ describe('DonutChart',()=>{
     expect(screen.queryByRole('button',{name:'Por sociedade'})).not.toBeInTheDocument()
     rerender(<AnnualValueChart data={data} allowSocietyComparison/>)
     expect(screen.getByRole('button',{name:'Por sociedade'})).toBeInTheDocument()
+  })
+
+  it('permite que um dashboard de sociedade seja desagregado por responsável',()=>{
+    const data=[{label:2026,value:30,societies:{CARINA:20,PAULA:10}}]
+    render(<AnnualValueChart data={data} allowSocietyComparison comparisonLabel="responsável" comparisonPlural="responsáveis"/>)
+    expect(screen.getByText('Todos os responsáveis agregados')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button',{name:'Por responsável'}))
+    expect(screen.getByText('Responsáveis representados individualmente')).toBeInTheDocument()
+    expect(screen.getAllByText('CARINA').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('PAULA').length).toBeGreaterThan(0)
   })
 })
