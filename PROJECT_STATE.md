@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## Correcção 0.10.4 em preparação
+
+- Aviso vazio reproduzido quando o HTML e o service worker em espera têm a mesma versão. Mostra agora as novidades dessa versão e conserva a origem anterior, sem comparar 0.10.3 consigo própria.
+- Teste de regressão aprovado; gates finais em curso para concluir a publicação autorizada. Produção permanece 0.10.3, sem alterações de base de dados.
+
 ## Produção 0.10.3 — confirmada em 07-09-2026
 
 - Publicada após «PUBLICA», às 22:35:45 UTC, 100%: https://legal-carina.dabranches.workers.dev; Worker `legal-carina`; deployment `773f8082-0303-489c-b68c-91a0211590d9`; version `004468de-7459-4d63-acf3-d59e0efebde8`.

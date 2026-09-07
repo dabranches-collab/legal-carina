@@ -30,9 +30,9 @@ test('selecciona apenas as alterações posteriores à versão instalada',()=>{
 test('o aviso identifica a versão em espera e as suas alterações antes de actualizar',async()=>{
  const service=new EventTarget(),waiting={postMessage:vi.fn((message:{type:string})=>{
   if(message.type==='GET_RELEASE_NOTES')queueMicrotask(()=>{
-   const event=new MessageEvent('message',{data:{type:'RELEASE_NOTES',release:{version:'0.10.4',changes:['Correcção sintética dos saldos','Melhoria sintética da navegação'],releases:[
+   const event=new MessageEvent('message',{data:{type:'RELEASE_NOTES',release:{version:'0.10.5',changes:['Correcção sintética dos saldos','Melhoria sintética da navegação'],releases:[
     {version:installedNotes.version,changes:installedNotes.changes},
-    {version:'0.10.4',changes:['Correcção sintética dos saldos','Melhoria sintética da navegação']},
+    {version:'0.10.5',changes:['Correcção sintética dos saldos','Melhoria sintética da navegação']},
    ]}}})
    Object.defineProperty(event,'source',{value:waiting});service.dispatchEvent(event)
   })
@@ -40,11 +40,32 @@ test('o aviso identifica a versão em espera e as suas alterações antes de act
  const registration=Object.assign(new EventTarget(),{waiting,update:vi.fn().mockResolvedValue(undefined)})
  Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:Object.assign(service,{ready:Promise.resolve(registration)})})
  render(<PwaUpdateNotice/>);
- expect(await screen.findByText('Actualização disponível · 0.10.4')).toBeInTheDocument()
+ expect(await screen.findByText('Actualização disponível · 0.10.5')).toBeInTheDocument()
  expect(screen.getByText('Correcção sintética dos saldos')).toBeInTheDocument()
  expect(screen.getByText('Melhoria sintética da navegação')).toBeInTheDocument()
  expect(waiting.postMessage).not.toHaveBeenCalledWith({type:'SKIP_WAITING'})
  await userEvent.click(screen.getByRole('button',{name:'Actualizar aplicação'}))
  expect(localStorage.getItem('carina-release-notes-from')).toBe(installedNotes.version)
+ expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})
+})
+
+test('mostra novidades quando o HTML já tem a versão do worker em espera e preserva a origem',async()=>{
+ localStorage.setItem('carina-release-notes-seen','0.10.2')
+ localStorage.setItem('carina-release-notes-from','0.10.2')
+ const service=new EventTarget(),waiting={postMessage:vi.fn((message:{type:string})=>{
+  if(message.type==='GET_RELEASE_NOTES')queueMicrotask(()=>{
+   const event=new MessageEvent('message',{data:{type:'RELEASE_NOTES',release:installedNotes}})
+   Object.defineProperty(event,'source',{value:waiting});service.dispatchEvent(event)
+  })
+ })}
+ const registration=Object.assign(new EventTarget(),{waiting,update:vi.fn().mockResolvedValue(undefined)})
+ Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:Object.assign(service,{ready:Promise.resolve(registration)})})
+ render(<PwaUpdateNotice/>);
+ expect(await screen.findByText(`Actualização disponível · ${installedNotes.version}`)).toBeInTheDocument()
+ expect(screen.getByText('O que muda nesta versão:')).toBeInTheDocument()
+ for(const change of installedNotes.changes)expect(screen.getByText(change)).toBeInTheDocument()
+ expect(screen.queryByText(`O que muda desde ${installedNotes.version}:`)).not.toBeInTheDocument()
+ await userEvent.click(screen.getByRole('button',{name:'Actualizar aplicação'}))
+ expect(localStorage.getItem('carina-release-notes-from')).toBe('0.10.2')
  expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})
 })

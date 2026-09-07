@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Correcção do aviso de actualização — 0.10.4 em preparação
+
+- Após a publicação autorizada, o utilizador identificou um aviso 0.10.3 a comparar-se com 0.10.3, sem novidades. A página já carregava o HTML novo enquanto o service worker da mesma versão aguardava activação.
+- Correcção: apresentar as novidades da versão em espera neste caso, com «O que muda nesta versão», e preservar a versão de origem anterior. As comparações entre versões diferentes continuam incrementais. Teste de regressão reproduz o caso e verifica o texto e a origem guardada.
+- A versão correctiva 0.10.4 prossegue a publicação autorizada. Produção ainda 0.10.3 no deployment documentado abaixo; sem alterações de base ou de credenciais.
+
 ## Publicação 0.10.3 confirmada — 07-09-2026
 
 - Autorização explícita «PUBLICA» recebida. CONFIRMADO: produção `legal-carina`, https://legal-carina.dabranches.workers.dev, activa a 100% desde 07-09-2026 22:35:45 UTC; deployment `773f8082-0303-489c-b68c-91a0211590d9`, version `004468de-7459-4d63-acf3-d59e0efebde8`, tag `0.10.3`.

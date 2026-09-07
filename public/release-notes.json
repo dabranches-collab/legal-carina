@@ -1,9 +1,10 @@
 {
-  "version": "0.10.3",
+  "version": "0.10.4",
   "changes": [
-    "Notas de Honorários e Cobranças traduzem também as descrições dos registos e as observações das despesas para inglês ou francês, preservando os originais.",
-    "As traduções ficam guardadas na versão da nota; falhas de tradução impedem a emissão de documentos incompletos.",
-    "Logótipos das sociedades com recorte quadrado e confirmação da imagem guardada."
+    "Notas de Honorários e Cobranças traduzem todos os registos e despesas para inglês e francês, preservando os originais.",
+    "As notas incluem a cidade antes da data, com a data escrita no formato do idioma escolhido.",
+    "Logótipos das sociedades com recorte quadrado e confirmação da imagem guardada.",
+    "O aviso de actualização apresenta as novidades mesmo quando a página já carregou a nova versão."
   ],
   "releases": [
     {
@@ -42,6 +43,12 @@
         "Notas de Honorários e Cobranças traduzem integralmente os registos e as despesas para inglês e francês.",
         "Cidade antes da data e datas adaptadas ao idioma da nota.",
         "Logótipos das sociedades com recorte quadrado e confirmação da imagem guardada."
+      ]
+    },
+    {
+      "version": "0.10.4",
+      "changes": [
+        "O aviso de actualização deixa de mostrar uma lista vazia quando a página já carregou a versão em espera e conserva a versão de origem para o resumo das novidades."
       ]
     }
   ]
