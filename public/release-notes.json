@@ -39,7 +39,9 @@
     {
       "version": "0.10.3",
       "changes": [
-        "Preparação local da próxima versão, posterior à publicação 0.10.2."
+        "Notas de Honorários e Cobranças traduzem integralmente os registos e as despesas para inglês e francês.",
+        "Cidade antes da data e datas adaptadas ao idioma da nota.",
+        "Logótipos das sociedades com recorte quadrado e confirmação da imagem guardada."
       ]
     }
   ]
