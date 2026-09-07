@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Produção 0.10.3 — confirmada em 07-09-2026
+
+- Publicada após «PUBLICA», às 22:35:45 UTC, 100%: https://legal-carina.dabranches.workers.dev; Worker `legal-carina`; deployment `773f8082-0303-489c-b68c-91a0211590d9`; version `004468de-7459-4d63-acf3-d59e0efebde8`.
+- Código publicado e preservado no GitHub: `acd574ceef739c227a5ac9a31d0074e71ee9ea8f`, branch `codex/legalteam-distribution`, PR #14. CI `34166920047` e secret scan `34166920048` verdes. O commit documental seguinte não altera o artefacto publicado.
+- Azure Translator Free F0 configurado no Worker com chave/região secretas. Notas traduzem os registos e despesas em inglês/francês; português original; cidade antes da data e convenções locais de data. Novidades finais da versão actualizadas.
+- 177 testes unitários e 106 E2E aprovados; três cenários exclusivos de produção omitidos localmente. Segurança, lint, TypeScript, build e dry-run aprovados. Primeiros atrasos de testes resolvidos por execução isolada. HTTP, assets, versão visível autenticada e protecções do endpoint confirmados depois do deploy; sem notas reais emitidas para teste.
+- Supabase original `ACTIVE_HEALTHY`, sem migrations nem gravações reais. Medição sintética Azure: 652 ms EN, 385 ms FR por um texto, a partir do computador local; não representa o tempo total de emissão em produção. Mais pormenores em `HANDOVER.md`.
+
 ## Azure Translator ligado — 0.10.3 em preparação, 07-09-2026
 
 - Recurso `carina-legal-translator` activo no Azure, North Europe, Free F0 (2 milhões de caracteres/mês), grupo `rg-carina-legal`, implementação `CognitiveServicesTextTranslation-20260907225558`. Chave/região apenas no `.env.local`, sem segredos remotos.

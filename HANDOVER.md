@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Publicação 0.10.3 confirmada — 07-09-2026
+
+- Autorização explícita «PUBLICA» recebida. CONFIRMADO: produção `legal-carina`, https://legal-carina.dabranches.workers.dev, activa a 100% desde 07-09-2026 22:35:45 UTC; deployment `773f8082-0303-489c-b68c-91a0211590d9`, version `004468de-7459-4d63-acf3-d59e0efebde8`, tag `0.10.3`.
+- Commit publicado `acd574ceef739c227a5ac9a31d0074e71ee9ea8f`, branch `codex/legalteam-distribution`, preservado no GitHub antes de publicar. PR #14; CI `34166920047` (validação e auditoria) e secret scan `34166920048` verdes. O commit documental posterior regista esta publicação, sem alterar o código publicado.
+- Chave e região Azure instaladas como segredos do Worker através de stdin, sem exposição em comandos, logs ou ficheiros versionados. Free F0 mantido; português conserva originais e inglês/francês traduzem registos e despesas. Cidade e data adaptadas ao idioma.
+- Gates finais: segurança de ficheiros, lint, typecheck, 177 testes unitários, build e dry-run aprovados; 106 E2E aprovados e três cenários exclusivos de produção omitidos na execução local. Um timeout unitário por concorrência e atrasos no primeiro arranque E2E foram resolvidos na repetição isolada, sem alterar testes. Configuração pública Supabase presente e segredos ausentes do bundle.
+- CONFIRMADO após publicação: HTTP 200 e release-notes 0.10.3; asset com Supabase correcto; endpoint de tradução devolve 405 para método inválido, 403 para origem inválida, 401 sem sessão e 400 para corpo sintético inválido com configuração presente. Browser integrado mostra 0.10.3 e sessão autenticada. Não foi emitida nenhuma nota real para testar.
+- Tradução real Azure validada com dados sintéticos; medição adicional de um texto: inglês 652 ms, francês 385 ms. Estes valores medem apenas o fornecedor a partir do computador local, não a emissão integral em produção.
+- Supabase `vtvvqyebigflgqccbqsw` / CARINA LEGAL confirmado `ACTIVE_HEALTHY`; nenhuma migration ou gravação de dados reais neste lote. `origin/main` permanece `108f1e76`; a branch funcional no GitHub contém todo o código publicado.
+
 ## Azure Translator ligado — 0.10.3 em preparação, 07-09-2026
 
 - CONFIRMADO: checkout limpo antes deste lote, branch `codex/legalteam-distribution`, HEAD local/remoto inicial `473b01e871092e4e26fc654fe4c40703cf3239f1`; `fetch --all --prune` sem divergência, `origin/main` em `108f1e76`. Trabalho anterior preservado.
