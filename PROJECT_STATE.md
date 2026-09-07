@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Produção 0.10.4 — confirmada em 07-09-2026
+
+- Correcção do aviso vazio publicada a 100% às 22:45:24 UTC em https://legal-carina.dabranches.workers.dev; Worker `legal-carina`; deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`; version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`.
+- Commit funcional `f80d539faf4fa0c8f224b8d39a4768b1c17f34ec`, branch `codex/legalteam-distribution`, no GitHub antes de publicar. CI `34167473652` e secret scan `34167473654` verdes; commit documental seguinte sem alterações funcionais.
+- Aviso real de produção confirmado no browser: «O que muda nesta versão» e quatro novidades completas. Não compara a versão consigo própria. Mantém a origem anterior para os resumos incrementais.
+- 178 testes unitários, três E2E PWA do preview, suite completa na CI, segurança, lint, TypeScript, build e dry-run aprovados; validação visual 390/768/1440 px claro/escuro. HTTP, código e configuração pública confirmados após deploy. Azure e Supabase inalterados desde a publicação anterior.
+
 ## Correcção 0.10.4 em preparação
 
 - Aviso vazio reproduzido quando o HTML e o service worker em espera têm a mesma versão. Mostra agora as novidades dessa versão e conserva a origem anterior, sem comparar 0.10.3 consigo própria.

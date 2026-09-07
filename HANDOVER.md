@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Publicação correctiva 0.10.4 confirmada — 07-09-2026
+
+- CONFIRMADO: produção `legal-carina`, https://legal-carina.dabranches.workers.dev, activa a 100% desde 22:45:24 UTC; deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`; version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`; tag `0.10.4`.
+- Commit publicado `f80d539faf4fa0c8f224b8d39a4768b1c17f34ec`, branch `codex/legalteam-distribution`, preservado no GitHub antes de publicar. CI `34167473652`, auditoria e secret scan `34167473654` verdes. Correcção decorrente da publicação autorizada e da falha comunicada pelo utilizador.
+- CONFIRMADO no browser integrado de produção: versão 0.10.4 e aviso «O que muda nesta versão» com quatro novidades completas (tradução integral, cidade/data, logótipos e correcção do aviso). HTTP 200, release-notes com quatro entradas e asset corrigido com configuração Supabase confirmados.
+- Gates: 178 testes unitários aprovados; segurança, lint, TypeScript, build e dry-run aprovados; três E2E específicos do PWA no preview de produção aprovados e suite completa na CI verde. Aviso sintético verificado em 390/768/1440 px, claro/escuro, incluindo imagens revistas no browser integrado. O primeiro simulador não implementava getRegistrations e foi completado; sem alteração adicional do produto.
+- Sem mudanças de credenciais ou base de dados. Azure instalado na 0.10.3 mantém-se. O commit documental seguinte apenas regista a publicação, sem mudar o artefacto.
+
 ## Correcção do aviso de actualização — 0.10.4 em preparação
 
 - Após a publicação autorizada, o utilizador identificou um aviso 0.10.3 a comparar-se com 0.10.3, sem novidades. A página já carregava o HTML novo enquanto o service worker da mesma versão aguardava activação.
