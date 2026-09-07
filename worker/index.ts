@@ -1,4 +1,4 @@
-interface Env { ASSETS: Fetcher }
+import { handleDocumentTranslation } from './documentTranslation'
 
 const securityHeaders:Record<string,string>={
   'Content-Security-Policy':"default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://vtvvqyebigflgqccbqsw.supabase.co wss://vtvvqyebigflgqccbqsw.supabase.co; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests",
@@ -13,6 +13,7 @@ const securityHeaders:Record<string,string>={
 
 export default {
   async fetch(request:Request,env:Env):Promise<Response>{
+    if(new URL(request.url).pathname==='/api/document-translation')return handleDocumentTranslation(request,env)
     if(!['GET','HEAD'].includes(request.method))return new Response('Method Not Allowed',{status:405,headers:{Allow:'GET, HEAD'}})
     const asset=await env.ASSETS.fetch(request),response=new Response(asset.body,asset)
     for(const [name,value]of Object.entries(securityHeaders))response.headers.set(name,value)

@@ -51,13 +51,22 @@ export function saveCreditPdf(account:CreditAccount,movements:CreditMovement[],f
 
 export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){
  const doc=new jsPDF();let y=20
+ const language=note.document_options?.language==='en'?'en':note.document_options?.language==='fr'?'fr':'pt'
+ const copy={pt:['Nota de Honorários','ESTORNADA — cópia histórica','Emissão','Honorários','IVA','Total','Provisão descontada','Valor a pagar','Saldo de provisão após esta nota','Despesas informativas — não incluídas nos totais'],en:['Fee Note','VOIDED — historical copy','Issued','Fees','VAT','Total','Advance deducted','Amount due','Advance balance after this note','Informational expenses — not included in totals'],fr:["Note d’honoraires",'ANNULÉE — copie historique','Émission','Honoraires','TVA','Total','Provision déduite','Montant à payer','Solde de provision après cette note','Frais informatifs — non inclus dans les totaux']}[language]
+ const money=(value:number,currency=account.currency)=>new Intl.NumberFormat(language==='en'?'en-GB':language==='fr'?'fr-FR':'pt-PT',{style:'currency',currency}).format(value)
+ const translations=note.document_options?.translation
+ const description=(id:string,original:string)=>language==='pt'?original:translations?.language===language?translations.items.find(item=>item.kind==='work'&&item.id===id)?.text??original:original
+ // Notas antigas conservam a cópia original; só as novas contêm a tradução guardada.
+ const legacy=language!=='pt'&&(!translations||translations.language!==language)
  function line(text:string,bold=false){doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(10);for(const row of doc.splitTextToSize(text,180) as string[]){if(y>275){doc.addPage();y=20}doc.text(row,15,y);y+=5}y+=2}
- line(`Nota de Honorários · ${note.number}${note.revision?` · v${note.revision}`:''}`,true);if(reversed)line('ESTORNADA — cópia histórica',true)
- line(note.document_options?.society_name??account.society_name,true);line(note.document_options?.client_name??account.client_name);line(`Emissão: ${creditDate(note.issued_at)}`)
- for(const item of note.items){line(`${creditDate(item.work_date)} · ${item.duration_minutes} min · ${creditMoney(item.effective_amount,account.currency)}`,true);line(item.activity_description)}
- line(`Honorários: ${creditMoney(note.subtotal,account.currency)}`);line(`IVA (${note.vat_rate}%): ${creditMoney(note.vat,account.currency)}`)
- line(`Total: ${creditMoney(note.total,account.currency)}`,true);line(`Provisão descontada: ${creditMoney(note.deducted,account.currency)}`,true)
- line(`Valor a pagar: ${creditMoney(note.remaining,account.currency)}`,true);line(`Saldo de provisão após esta nota: ${creditMoney(note.balance_after,account.currency)}`)
+ line(`${copy[0]} · ${note.number}${note.revision?` · v${note.revision}`:''}`,true);if(reversed)line(copy[1],true)
+ if(legacy)line(language==='en'?'Historical original: work descriptions were not translated. Reissue the note to obtain a complete translation.':'Original historique : les descriptions des prestations n’ont pas été traduites. Réémettez la note pour obtenir une traduction intégrale.')
+ line(note.document_options?.society_name??account.society_name,true);line(note.document_options?.client_name??account.client_name);line(`${copy[2]}: ${creditDate(note.issued_at)}`)
+ for(const item of note.items){line(`${creditDate(item.work_date)} · ${item.duration_minutes} min · ${money(item.effective_amount)}`,true);line(description(item.id,item.activity_description))}
+ line(`${copy[3]}: ${money(note.subtotal)}`);line(`${copy[4]} (${note.vat_rate}%): ${money(note.vat)}`)
+ line(`${copy[5]}: ${money(note.total)}`,true);line(`${copy[6]}: ${money(note.deducted)}`,true)
+ line(`${copy[7]}: ${money(note.remaining)}`,true);line(`${copy[8]}: ${money(note.balance_after)}`)
+ if(note.document_options?.expenses?.length){line(copy[9],true);for(const expense of note.document_options.expenses){const item=note.items.find(row=>row.id===expense.work_entry_id);if(item)line(description(item.id,item.activity_description));line(money(expense.amount,expense.currency));if(expense.observations)line(expense.observations)}}
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${note.number} · ${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}
  return doc
 }

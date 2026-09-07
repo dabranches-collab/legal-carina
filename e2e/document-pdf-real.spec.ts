@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import path from 'node:path'
+import {readFile} from 'node:fs/promises'
 
 const rows=Array.from({length:90},(_,index)=>({
   id:`qa-document-${index+1}`,
@@ -47,6 +48,36 @@ test.beforeEach(async({page})=>{
     }
     await route.fulfill({contentType:'application/json',body:'[]'})
   })
+})
+
+for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: registos, despesas e totais`,async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('legal-carina-auth',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:4102444800,token_type:'bearer',user:{id:'synthetic-user'}})))
+  const translated=language==='en'?'Document review and preparation of the application':'Analyse documentaire et préparation de la requête'
+  const expense=language==='en'?'Registered post':'Courrier recommandé'
+  await page.route('**/api/document-translation',async route=>{const input=route.request().postDataJSON();await route.fulfill({json:{items:input.items.map((item:{id:string;kind:string})=>({...item,text:item.kind==='work'?`${translated} ${item.id}`:expense}))}})})
+  await page.route('**/rest/v1/work_entry_expenses?*',route=>{const ids=new URL(route.request().url()).searchParams.get('work_entry_id')?.split(/[(),]/)??[];return route.fulfill({json:ids.includes(rows[0].id)?[{id:'expense-qa',work_entry_id:rows[0].id,amount:5,currency:'EUR',observations:'Correio registado'}]:[]})})
+  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
+  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
+  await page.getByLabel(`Seleccionar todos os ${rows.length} movimentos`).check()
+  await page.getByLabel('Idioma do documento').selectOption(language)
+  for(const width of [1440,768,390,320])for(const theme of ['light','dark']){
+    await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme)
+    await expect(page.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeVisible()
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+    if(width===390)await page.screenshot({path:`.tmp/translation-${language}-${theme}-iphone.png`})
+  }
+  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click();const download=await pending
+  const file=path.resolve(`.tmp/translation-${language}.pdf`);await download.saveAs(file)
+  const bytes=Array.from(await readFile(file))
+  const text=await page.evaluate(async data=>{
+    const modulePath='/node_modules/pdfjs-dist/build/pdf.mjs'
+    const pdfjs=await import(/* @vite-ignore */modulePath);pdfjs.GlobalWorkerOptions.workerSrc='/node_modules/pdfjs-dist/build/pdf.worker.mjs'
+    const pdf=await pdfjs.getDocument({data:new Uint8Array(data)}).promise
+    const result=[];for(let number=1;number<=pdf.numPages;number++){const page=await pdf.getPage(number);result.push((await page.getTextContent()).items.map((item:{str?:string})=>item.str??'').join(' '))}return result.join(' ')
+  },bytes)
+  expect(text).toContain(translated);expect(text).toContain(expense);expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
+  for(const row of rows)expect(text).toContain(row.id)
+  expect(text).toContain(language==='en'?'VAT':'TVA')
 })
 
 for(const document of [

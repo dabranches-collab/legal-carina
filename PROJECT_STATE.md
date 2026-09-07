@@ -1,5 +1,16 @@
 # Estado do projecto
 
+## Tradução integral — 0.10.3 em preparação, 07-09-2026
+
+- Local: branch `codex/legalteam-distribution`, versão 0.10.3, sobre o commit anterior `bd473dd`. O checkout inicial não continha diferenças de conteúdo; a indicação pendente correspondia à normalização dos finais de linha. `fetch --all --prune` confirmou `origin/main` em `108f1e76` e a branch remota em `67da222`; o trabalho local anterior foi preservado.
+- Descrições dos registos e observações das despesas traduzidas para inglês/francês antes de emitir a nota; originais preservados. Tradução e despesas guardadas nas opções de cada versão para reutilização nas cópias históricas. Notas antigas sem tradução conservam a cópia original identificada; reemitir para traduzir integralmente.
+- Worker autenticado, consultas com RLS ao Supabase original, limites de pedidos/tamanho/tempo, respostas completas por identificador e bloqueio antes de gravar/descontar provisão em caso de falha. Rótulos fiscais traduzidos e linhas longas divididas entre páginas.
+- CONFIRMADO: chave OpenAI criada e guardada apenas em `.env.local`, com confirmação do utilizador; teste exclusivamente sintético devolveu HTTP 429 / `insufficient_quota`. Não foi instalado qualquer segredo remoto. Falta regularizar créditos/limites e validar a tradução real antes de publicar; ver `docs/document-translation.md`.
+- Validação: 169 testes unitários na passagem integral, mais dois testes de cópias históricas aprovados; 23 testes do modal repetidos após o ajuste final. TypeScript (incluindo Worker), lint, segurança de ficheiros, build e dry-run Cloudflare aprovados. Cinco E2E focados aprovados entre execuções: PDFs integrais EN/FR com 90 registos e despesa, dois PDF portugueses multipágina, histórico/revisões/estorno. Claro/escuro em 320/390/768/1440 px sem overflow; PDF inglês revisto no browser integrado. A primeira execução sofreu bloqueio do arranque Vite; o ensaio isolado resolveu-o. A fixture de despesas foi corrigida para respeitar os lotes de IDs.
+- CONFIRMADO em 07-09-2026: Supabase `vtvvqyebigflgqccbqsw`, CARINA LEGAL, `ACTIVE_HEALTHY`. Nenhuma migration nem gravação de dados reais neste lote.
+- CONFIRMADO em 07-09-2026: produção Cloudflare `legal-carina`, https://legal-carina.dabranches.workers.dev, versão 0.10.2, commit `d3393726d1768707fd9d9c10db59c994e96565c6`, deployment `4d204505-c630-4e55-b6f3-1d00e6a2e17a`, version `fd2f5c88-d327-4497-8588-b16b87ffc33b`, 100% desde 04-09-2026 12:37:50 UTC. Metadados Cloudflare e HTTP confirmados directamente. Produção não alterada.
+- GitHub: este lote será centralizado na mesma branch e PR #14 aberto. A publicação continua dependente de «publica», configuração segura do segredo no Worker, quota da API, ensaio real e gates finais/CI verde. Não confundir os testes com fornecedor simulado com validação real da tradução.
+
 ## Versão 0.10.3 em preparação — 04-09-2026
 
 - Local confirmado no browser integrado em `0.10.3`, sobre a branch `codex/legalteam-distribution`; produção permanece em `0.10.2` e não foi alterada.

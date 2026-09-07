@@ -19,6 +19,7 @@ dist-ssr
 .wrangler/
 .tmp/
 coverage/
+tsconfig.worker.tsbuildinfo
 test-results/
 playwright-report/
 

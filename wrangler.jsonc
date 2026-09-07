@@ -3,6 +3,7 @@
   "name": "legal-carina",
   "main": "./worker/index.ts",
   "compatibility_date": "2026-08-16",
+  "ratelimits": [{ "name": "TRANSLATION_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } }],
   "build": {
     "command": "node ./node_modules/typescript/bin/tsc -b && node ./node_modules/vite/bin/vite.js build"
   },

@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { readFileSync, writeFileSync } from 'node:fs'
 import packageJson from './package.json' with { type: 'json' }
 import { resolve } from 'node:path'
+import { localTranslation } from './worker/localTranslation.ts'
 
 // A importação torna package.json uma dependência observada pelo Vite: ao subir a
 // versão durante o desenvolvimento, o servidor reinicia e actualiza a indicação local.
@@ -14,6 +15,7 @@ let buildDirectory = resolve('dist')
 export default defineConfig({
   define: { __APP_VERSION__: JSON.stringify(packageVersion) },
   plugins: [
+    localTranslation(),
     react(),
     tailwindcss(),
     {
