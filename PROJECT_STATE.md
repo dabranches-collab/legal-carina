@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Produção 0.10.5 — confirmada em 08-09-2026 (hora local)
+
+- Novo cliente publicado após aprovação, à direita de Novo registo, no Worker `legal-carina`, https://legal-carina.dabranches.workers.dev. Activação a 100% às 23:04:47 UTC de 07-09-2026 (00:04:47 local de 08-09-2026).
+- Deployment `225a412b-a3a2-4258-a2a1-ba80338ee4fa`; version `e370efd1-8ed1-49a5-b5fd-edfd0d33e7cf`; commit funcional `f54bb8aa88a3e13ef3a5fa7b6aada94f71ea02fb`, branch `codex/legalteam-distribution`, preservado no GitHub antes do deploy. CI `34168379411` e secret scan `34168379502` verdes.
+- Gates locais e CI aprovados; versão, botão, descrição da actualização e sessão autenticada confirmados no browser e HTTP. Supabase `ACTIVE_HEALTHY`; sem migrations nem segredos alterados. Localhost/iPhone mantido aberto para o utilizador.
+- Pendências anteriores do aviso acumulado e da auditoria das fichas não incluídas. Commit documental seguinte apenas centraliza esta confirmação.
+
 ## Local 0.10.5 — Novo cliente na barra superior
 
 - Novo cliente à direita de Novo registo, ambos com o mesmo aspecto e 80 × 80 px. Abre directamente o formulário existente de criação e actualiza a página após guardar; mantém a navegação de origem. Barra adaptada para tablet e telemóvel.

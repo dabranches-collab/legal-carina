@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Publicação 0.10.5 confirmada — 08-09-2026 (hora local)
+
+- Nova autorização «podes publicar» recebida após revisão local. CONFIRMADO: Worker `legal-carina`, https://legal-carina.dabranches.workers.dev, activo a 100% desde 07-09-2026 23:04:47 UTC (08-09-2026 00:04:47 local); deployment `225a412b-a3a2-4258-a2a1-ba80338ee4fa`; version `e370efd1-8ed1-49a5-b5fd-edfd0d33e7cf`; tag `0.10.5`.
+- Commit funcional publicado `f54bb8aa88a3e13ef3a5fa7b6aada94f71ea02fb`, branch `codex/legalteam-distribution`, preservado no GitHub antes de publicar. CI `34168379411` (testes completos, E2E e auditoria) e secret scan `34168379502` verdes. Checkout limpo e sem divergência no fetch; `origin/main` continua `108f1e76`.
+- Segurança, lint, TypeScript, build e dry-run finais aprovados; 178 testes unitários e E2E focado previamente aprovados neste código, suite completa na CI verde. Artefacto confirma Supabase público, novo botão e ausência de segredos. Sem migrations ou configuração remota adicional; Supabase original confirmado `ACTIVE_HEALTHY`.
+- CONFIRMADO por HTTP e browser integrado autenticado: versão 0.10.5, «Novo registo» à esquerda de «Novo cliente» e novidades da actualização com a descrição do atalho. Pré-visualização local de iPhone mantida aberta.
+- O commit documental posterior regista a publicação sem alterar o código funcional. Mantêm-se as pendências anteriores de histórico acumulado do aviso e falta de auditoria de autoria das fichas de cliente; não foram incluídas nesta publicação.
+
 ## Atalho global Novo cliente — 0.10.5 em preparação
 
 - Pedido: botão «+ Novo cliente» semelhante a «+ Novo registo», imediatamente à direita. Implementados dois botões de 80 × 80 px no mesmo grupo; o registo desloca-se à esquerda. Em tablet o título tem uma linha própria para não ficar apertado.
