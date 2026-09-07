@@ -180,11 +180,13 @@ export function MasterDataPage({
   initialSection = "clients",
   clientTypeFilter = null,
   focusedRecordId,
+  createOnMount = false,
   onDismiss,
   onRecordSaved,
 }: {
   initialSection?: Section;
   focusedRecordId?: string;
+  createOnMount?: boolean;
   onDismiss?:()=>void;
   onRecordSaved?:()=>void;
   clientTypeFilter?: "individual" | "company" | "mixed" | null;
@@ -235,6 +237,7 @@ export function MasterDataPage({
     new Set(),
   );
   const loadSequenceRef = useRef(0);
+  const creatorOpenedRef = useRef(false);
   const openedRecordRef = useRef<string | null>(null);
   useEffect(() => setSection(initialSection), [initialSection]);
   const load = useCallback(async () => {
@@ -515,7 +518,7 @@ export function MasterDataPage({
     );
   }
   useEffect(() => {
-    if (loading) return;
+    if (loading || createOnMount) return;
     const recordId = focusedRecordId ?? new URLSearchParams(window.location.search).get("record");
     if (!recordId || openedRecordRef.current === recordId) return;
     const row = rows.find((item) => item.id === recordId);
@@ -524,7 +527,14 @@ export function MasterDataPage({
     void openEditor(row);
     // A abertura é intencionalmente accionada apenas quando a lista/ID pedido muda.
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, rows, section,focusedRecordId]);
+  }, [loading, rows, section,focusedRecordId,createOnMount]);
+  useEffect(() => {
+    if (!createOnMount || loading || !firmId || creatorOpenedRef.current) return;
+    creatorOpenedRef.current = true;
+    void openCreator();
+    // A criação global abre uma vez, após carregar a firma e os códigos disponíveis.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [createOnMount, loading, firmId]);
   async function openCreator() {
     setClientDetailsReady(true);
     if(supabase){const result=await supabase.from("client_referrers").select("id,name").order("name");setReferrerOptions(result.data??[]);}
@@ -1123,7 +1133,7 @@ export function MasterDataPage({
       : rows;
   return (
     <div className="space-y-5">
-      {!focusedRecordId && notice && (
+      {!focusedRecordId && !createOnMount && notice && (
         <p
           role="status"
           className="rounded-lg bg-success-soft p-3 text-sm text-success"
@@ -1131,7 +1141,7 @@ export function MasterDataPage({
           {notice}
         </p>
       )}
-      {!focusedRecordId && <section className="card p-4">
+      {!focusedRecordId && !createOnMount && <section className="card p-4">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="sr-only">
@@ -1172,7 +1182,7 @@ export function MasterDataPage({
           defaultPageSize={20}
         />
       </section>}
-      {focusedRecordId&&!editorOpen&&<div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-4"><section role="dialog" aria-modal="true" aria-label="Abrir ficha" className="card max-w-lg p-6"><p role={loading?'status':'alert'}>{loading?'A abrir ficha…':error||'A ficha não foi encontrada ou não está acessível.'}</p><button type="button" data-close-record disabled={saving} onClick={closeEditor} className="control mt-4 px-4">Fechar</button></section></div>}
+      {(focusedRecordId||createOnMount)&&!editorOpen&&<div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-4"><section role="dialog" aria-modal="true" aria-label="Abrir ficha" className="card max-w-lg p-6"><p role={loading?'status':'alert'}>{loading||createOnMount&&firmId?'A abrir ficha…':error||'A ficha não foi encontrada ou não está acessível.'}</p><button type="button" data-close-record disabled={saving} onClick={closeEditor} className="control mt-4 px-4">Fechar</button></section></div>}
       {editorOpen && (
         <div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-0 sm:p-4">
           <form
@@ -1196,7 +1206,7 @@ export function MasterDataPage({
                   id="entity-edit-title"
                   className="mt-1 truncate font-display text-xl font-semibold sm:text-2xl"
                 >
-                  {creating ? "Criar entidade" : editName}
+                  {creating ? (section === "clients" ? "Criar cliente" : "Criar entidade") : editName}
                 </h2>
               </div>
               <button

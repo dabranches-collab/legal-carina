@@ -1,10 +1,7 @@
 {
-  "version": "0.10.4",
+  "version": "0.10.5",
   "changes": [
-    "Notas de Honorários e Cobranças traduzem todos os registos e despesas para inglês e francês, preservando os originais.",
-    "As notas incluem a cidade antes da data, com a data escrita no formato do idioma escolhido.",
-    "Logótipos das sociedades com recorte quadrado e confirmação da imagem guardada.",
-    "O aviso de actualização apresenta as novidades mesmo quando a página já carregou a nova versão."
+    "Novo atalho «Novo cliente» na barra superior, à direita de «Novo registo», para abrir directamente a ficha de criação."
   ],
   "releases": [
     {
@@ -49,6 +46,12 @@
       "version": "0.10.4",
       "changes": [
         "O aviso de actualização deixa de mostrar uma lista vazia quando a página já carregou a versão em espera e conserva a versão de origem para o resumo das novidades."
+      ]
+    },
+    {
+      "version": "0.10.5",
+      "changes": [
+        "Novo atalho «Novo cliente» na barra superior, à direita de «Novo registo», para abrir directamente a ficha de criação."
       ]
     }
   ]

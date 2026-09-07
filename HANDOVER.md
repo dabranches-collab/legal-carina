@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Atalho global Novo cliente — 0.10.5 em preparação
+
+- Pedido: botão «+ Novo cliente» semelhante a «+ Novo registo», imediatamente à direita. Implementados dois botões de 80 × 80 px no mesmo grupo; o registo desloca-se à esquerda. Em tablet o título tem uma linha própria para não ficar apertado.
+- Novo atalho abre a ficha de criação existente num modal, sem navegar nem perder a página actual. Espera pela firma e pelos códigos disponíveis; fechar desmonta a ficha, guardar conserva o fluxo existente e actualiza o conteúdo. A criação global ignora um eventual `record` da página de origem.
+- CONFIRMADO antes do lote: checkout limpo, branch `codex/legalteam-distribution`, local/remoto `18bde88`; fetch sem divergência; `origin/main=108f1e76`; Supabase original `ACTIVE_HEALTHY`.
+- Validação: segurança, lint, TypeScript, 178 testes unitários e build aprovados; E2E específico verifica ordem/tamanho, ausência de overflow, criação Particular com código sugerido, fecho, atalho de registo e abertura noutra página, em 320/390/768/1440 px claro/escuro. Revisão no browser integrado com dados fictícios. Sem gravações reais.
+- Localhost aberto e mantido para revisão, http://127.0.0.1:5198, versão 0.10.5. Utilizador pediu expressamente para ver antes de publicar; NÃO publicar este lote sem nova ordem. Produção CONFIRMADA por Cloudflare e HTTP: 0.10.4, git `f80d539faf4fa0c8f224b8d39a4768b1c17f34ec`, Worker `legal-carina`, https://legal-carina.dabranches.workers.dev, deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`, version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`, 100% desde 07-09-2026 22:45:24 UTC. Sem migrations ou configuração remota.
+- Pendência anterior, não alterada neste lote: o aviso de versões acumuladas pode resumir apenas as novidades recentes se a página recarregar antes de activar o worker. A origem anterior deve ser usada também nesse percurso numa correcção própria.
+
 ## Publicação correctiva 0.10.4 confirmada — 07-09-2026
 
 - CONFIRMADO: produção `legal-carina`, https://legal-carina.dabranches.workers.dev, activa a 100% desde 22:45:24 UTC; deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`; version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`; tag `0.10.4`.

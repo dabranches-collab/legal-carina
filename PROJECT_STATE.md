@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Local 0.10.5 — Novo cliente na barra superior
+
+- Novo cliente à direita de Novo registo, ambos com o mesmo aspecto e 80 × 80 px. Abre directamente o formulário existente de criação e actualiza a página após guardar; mantém a navegação de origem. Barra adaptada para tablet e telemóvel.
+- 178 testes unitários, segurança, lint, TypeScript e build aprovados; E2E focado em 320/390/768/1440 px, claro/escuro, confirma os dois atalhos e a ficha. Browser integrado mantém localhost aberto para revisão com dados sintéticos.
+- Não publicado, por instrução expressa do utilizador para rever primeiro. Produção permanece 0.10.4, commit `f80d539faf4fa0c8f224b8d39a4768b1c17f34ec`, deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`, version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`, Worker `legal-carina`, https://legal-carina.dabranches.workers.dev, confirmado 07-09-2026. Supabase `ACTIVE_HEALTHY`, sem alterações remotas.
+- Código centralizado na branch `codex/legalteam-distribution` / PR #14; o SHA do lote é o commit desta secção. Pendência anterior do histórico acumulado do aviso registada no handover, sem alteração neste lote.
+
 ## Produção 0.10.4 — confirmada em 07-09-2026
 
 - Correcção do aviso vazio publicada a 100% às 22:45:24 UTC em https://legal-carina.dabranches.workers.dev; Worker `legal-carina`; deployment `b1cfb672-0d6a-4bc6-a636-f1fbbb47942b`; version `88ef8c7b-0a6b-42c6-80d6-8b501b8a0d17`.
