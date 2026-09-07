@@ -1,11 +1,15 @@
 import { expect, test } from '@playwright/test'
 import path from 'node:path'
 import {readFile} from 'node:fs/promises'
+import {parseEnv} from 'node:util'
+import {translateTexts} from '../worker/documentTranslation'
+
+const liveAzure=process.env.AZURE_TRANSLATION_LIVE_QA==='1'
 
 const rows=Array.from({length:90},(_,index)=>({
   id:`qa-document-${index+1}`,
   work_date:`2026-${String(index%12+1).padStart(2,'0')}-15`,
-  activity_description:`tcodexadministrador intervenção documental ${String(index+1).padStart(3,'0')} com descrição longa para validar paginação e continuidade da tabela`,
+  activity_description:`${liveAzure?`qa-document-${index+1} `:''}tcodexadministrador intervenção documental ${String(index+1).padStart(3,'0')} com descrição longa para validar paginação e continuidade da tabela`,
   duration_minutes:15+(index%8)*15,
   professional_name:'tcodexadministrador',
   billing_entity_name:'LEGALTEAM',
@@ -54,7 +58,16 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   await page.addInitScript(()=>localStorage.setItem('legal-carina-auth',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:4102444800,token_type:'bearer',user:{id:'synthetic-user'}})))
   const translated=language==='en'?'Document review and preparation of the application':'Analyse documentaire et préparation de la requête'
   const expense=language==='en'?'Registered post':'Courrier recommandé'
-  await page.route('**/api/document-translation',async route=>{const input=route.request().postDataJSON();await route.fulfill({json:{items:input.items.map((item:{id:string;kind:string})=>({...item,text:item.kind==='work'?`${translated} ${item.id}`:expense}))}})})
+  const actualTranslations:string[]=[]
+  await page.route('**/api/document-translation',async route=>{
+    const input=route.request().postDataJSON()
+    if(liveAzure){
+      const env=parseEnv(await readFile('.env.local','utf8'))
+      if(!env.AZURE_TRANSLATOR_KEY||!env.AZURE_TRANSLATOR_REGION)throw new Error('Azure QA não configurado')
+      const result=await translateTexts(language,input.items,env.AZURE_TRANSLATOR_KEY,env.AZURE_TRANSLATOR_REGION)
+      actualTranslations.push(...result.map(item=>item.text));await route.fulfill({json:{items:result}})
+    }else await route.fulfill({json:{items:input.items.map((item:{id:string;kind:string})=>({...item,text:item.kind==='work'?`${translated} ${item.id}`:expense}))}})
+  })
   await page.route('**/rest/v1/work_entry_expenses?*',route=>{const ids=new URL(route.request().url()).searchParams.get('work_entry_id')?.split(/[(),]/)??[];return route.fulfill({json:ids.includes(rows[0].id)?[{id:'expense-qa',work_entry_id:rows[0].id,amount:5,currency:'EUR',observations:'Correio registado'}]:[]})})
   await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
   await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
@@ -69,15 +82,23 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click();const download=await pending
   const file=path.resolve(`.tmp/translation-${language}.pdf`);await download.saveAs(file)
   const bytes=Array.from(await readFile(file))
-  const text=await page.evaluate(async data=>{
+  const {text,descriptions}=await page.evaluate(async data=>{
     const modulePath='/node_modules/pdfjs-dist/build/pdf.mjs'
     const pdfjs=await import(/* @vite-ignore */modulePath);pdfjs.GlobalWorkerOptions.workerSrc='/node_modules/pdfjs-dist/build/pdf.worker.mjs'
     const pdf=await pdfjs.getDocument({data:new Uint8Array(data)}).promise
-    const result=[];for(let number=1;number<=pdf.numPages;number++){const page=await pdf.getPage(number);result.push((await page.getTextContent()).items.map((item:{str?:string})=>item.str??'').join(' '))}return result.join(' ')
+    const result=[],descriptionLines=[];for(let number=1;number<=pdf.numPages;number++){
+      const page=await pdf.getPage(number),items=(await page.getTextContent()).items as Array<{str?:string;transform?:number[]}>
+      result.push(items.map(item=>item.str??'').join(' '))
+      // A coluna de descrição começa em 42 mm; excluir cabeçalhos e rodapés.
+      descriptionLines.push(...items.filter(item=>item.transform&&Math.abs(item.transform[4]-42*72/25.4)<1&&item.transform[5]>54&&!['Work description','Description des prestations'].includes(item.str??'')).map(item=>item.str??''))
+    }return {text:result.join(' '),descriptions:descriptionLines.join(' ')}
   },bytes)
-  expect(text).toContain(translated);expect(text).toContain(expense);expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
+  if(liveAzure){expect(actualTranslations).toHaveLength(rows.length+1);for(const translatedText of actualTranslations.slice(0,rows.length))expect(descriptions.replace(/\s/g,'')).toContain(translatedText.replace(/\s/g,''));expect(text).toContain(actualTranslations.at(-1))}
+  else {expect(text).toContain(translated);expect(text).toContain(expense)}
+  expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
   for(const row of rows)expect(text).toContain(row.id)
   expect(text).toContain(language==='en'?'VAT':'TVA')
+  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, le 4 septembre 2026')
 })
 
 for(const document of [

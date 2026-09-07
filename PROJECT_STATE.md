@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Azure Translator ligado — 0.10.3 em preparação, 07-09-2026
+
+- Recurso `carina-legal-translator` activo no Azure, North Europe, Free F0 (2 milhões de caracteres/mês), grupo `rg-carina-legal`, implementação `CognitiveServicesTextTranslation-20260907225558`. Chave/região apenas no `.env.local`, sem segredos remotos.
+- OpenAI substituída por Azure Translator v3.0. Português, inglês e francês confirmados como os idiomas previstos na plataforma. Registos e observações traduzidos integralmente; referências/datas protegidas, números verificados, originais preservados. «Alfragide,» precede a data também em inglês/francês.
+- Testes reais Azure e PDFs com 90 registos/uma despesa fictícios aprovados em inglês/francês; PDFs portugueses igualmente aprovados. 177 testes unitários, lint, typecheck, build, segurança e dry-run aprovados. Segredos ausentes do bundle. O E2E real é opt-in; autenticação e gravação continuam simuladas.
+- Checkout inicial e GitHub confirmados em `473b01e`, branch `codex/legalteam-distribution`, `origin/main=108f1e76`. Lote centralizado na branch/PR #14; consultar o commit desta secção para o SHA final.
+- Produção Cloudflare confirmada sem alteração: https://legal-carina.dabranches.workers.dev, 0.10.2, git `d3393726d1768707fd9d9c10db59c994e96565c6`, deployment `4d204505-c630-4e55-b6f3-1d00e6a2e17a`, version `fd2f5c88-d327-4497-8588-b16b87ffc33b`, 100% desde 04-09-2026 12:37:50 UTC. Supabase `vtvvqyebigflgqccbqsw` `ACTIVE_HEALTHY`, sem migrations nem dados reais escritos.
+- Publicação depende de «publica», instalação segura da configuração Azure no Worker e gates finais/CI verde. A quota OpenAI já não bloqueia a tradução. Ver `docs/document-translation.md` e a nova secção do handover.
+
 ## Tradução integral — 0.10.3 em preparação, 07-09-2026
 
 - Local: branch `codex/legalteam-distribution`, versão 0.10.3, sobre o commit anterior `bd473dd`. O checkout inicial não continha diferenças de conteúdo; a indicação pendente correspondia à normalização dos finais de linha. `fetch --all --prune` confirmou `origin/main` em `108f1e76` e a branch remota em `67da222`; o trabalho local anterior foi preservado.

@@ -1,5 +1,19 @@
 # Legal Carina — handover
 
+## Azure Translator ligado — 0.10.3 em preparação, 07-09-2026
+
+- CONFIRMADO: checkout limpo antes deste lote, branch `codex/legalteam-distribution`, HEAD local/remoto inicial `473b01e871092e4e26fc654fe4c40703cf3239f1`; `fetch --all --prune` sem divergência, `origin/main` em `108f1e76`. Trabalho anterior preservado.
+- CONFIRMADO: recurso Azure `carina-legal-translator` activo, grupo `rg-carina-legal`, North Europe, escalão Free F0 (2 milhões de caracteres/mês), implementação `CognitiveServicesTextTranslation-20260907225558` concluída. West Europe recusou novas contas; validação e criação em North Europe aprovadas.
+- Integração OpenAI substituída por Azure Translator v3.0. `AZURE_TRANSLATOR_KEY` e `AZURE_TRANSLATOR_REGION` guardadas apenas em `.env.local`; nenhum segredo remoto instalado. A chave OpenAI anterior está inactiva nesta funcionalidade. As línguas previstas são português, inglês e francês; português conserva os originais sem chamada externa.
+- Referências alfanuméricas e datas protegidas, números verificados e quebras de linha preservadas. O teste real inicial revelou tradução indevida de `TESTE-123`; a protecção corrigiu-a. Autenticação, RLS, correspondência dos registos, limites e bloqueio antes de emitir em caso de erro mantidos.
+- CONFIRMADO: testes reais Azure inglês/francês aprovados; PDFs com 90 registos e uma despesa fictícios verificados integralmente, incluindo continuação entre páginas. Dois E2E portugueses também aprovados. Claro/escuro em 320/390/768/1440 px sem overflow. PDF inglês revisto no browser integrado. A primeira asserção inglesa foi corrigida para extrair a coluna de descrição sem intercalar rodapés; não havia perda de conteúdo no PDF.
+- CONFIRMADO: 177 testes unitários, lint, typecheck, build e segurança de ficheiros aprovados; segredos ausentes do bundle. E2E de fornecedor real é opt-in com `AZURE_TRANSLATION_LIVE_QA=1`; as gravações e autenticação de teste são simuladas, sem dados reais de clientes.
+- CONFIRMADO novamente em 07-09-2026: Supabase `vtvvqyebigflgqccbqsw` / CARINA LEGAL `ACTIVE_HEALTHY`. Nenhuma migration ou gravação de dados reais.
+- CONFIRMADO novamente via Cloudflare e HTTP: produção `legal-carina`, https://legal-carina.dabranches.workers.dev, versão 0.10.2, git `d3393726d1768707fd9d9c10db59c994e96565c6`, deployment `4d204505-c630-4e55-b6f3-1d00e6a2e17a`, version `fd2f5c88-d327-4497-8588-b16b87ffc33b`, 100% desde 04-09-2026 12:37:50 UTC. Produção inalterada; 0.10.3 continua em preparação. Publicar exige «publica», instalar a chave Azure/região no Worker e concluir os gates finais/CI verde. A quota OpenAI deixou de ser bloqueio.
+- Este lote é centralizado na branch existente/PR #14; o SHA final é o commit que contém esta secção. Ver `docs/document-translation.md` para configuração e limites.
+- A cidade «Alfragide,» foi reposta antes da data nas notas inglesas e francesas, tal como em português. Dry-run Cloudflare aprovado sem publicar (9.59 KiB, gzip 3.65 KiB antes deste ajuste textual).
+- Convenções de data confirmadas nos guias GOV.UK e de redacção francesa: inglês britânico `Alfragide, 4 September 2026`; francês `Alfragide, le 4 septembre 2026`, com `1er` no primeiro dia. Sem zero inicial nestes dois idiomas; minuta portuguesa preservada. Asserções nos PDFs verificam a apresentação final.
+
 ## Tradução integral — 0.10.3 em preparação, 07-09-2026
 
 - Local: branch `codex/legalteam-distribution`, versão 0.10.3, sobre o commit anterior `bd473dd`. O checkout inicial não continha diferenças de conteúdo; a indicação pendente correspondia à normalização dos finais de linha. `fetch --all --prune` confirmou `origin/main` em `108f1e76` e a branch remota em `67da222`; o trabalho local anterior foi preservado.

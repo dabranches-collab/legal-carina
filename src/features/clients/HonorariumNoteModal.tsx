@@ -33,7 +33,11 @@ const monthYear=(date:string)=>{const [year,month]=date.split('-');return `${mon
 const duration=(minutes:number)=>`${Math.floor(minutes/60)}:${String(minutes%60).padStart(2,'0')}:00`
 const filePart=(value:string)=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'').toLowerCase()||'cliente'
 const fileDate=(value:Date)=>`${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`
-const formalDate=(value:Date,language:DocumentLanguage)=>language==='pt'?`Alfragide, ${String(value.getDate()).padStart(2,'0')} de ${value.toLocaleDateString('pt-PT',{month:'long'}).replace(/^./,letter=>letter.toLocaleUpperCase('pt-PT'))} de ${value.getFullYear()}`:value.toLocaleDateString(language==='fr'?'fr-FR':'en-GB',{day:'2-digit',month:'long',year:'numeric'})
+const formalDate=(value:Date,language:DocumentLanguage)=>{
+ if(language==='pt')return `Alfragide, ${String(value.getDate()).padStart(2,'0')} de ${value.toLocaleDateString('pt-PT',{month:'long'}).replace(/^./,letter=>letter.toLocaleUpperCase('pt-PT'))} de ${value.getFullYear()}`
+ const date=value.toLocaleDateString(language==='fr'?'fr-FR':'en-GB',{day:'numeric',month:'long',year:'numeric'})
+ return language==='fr'?`Alfragide, le ${date.replace(/^1 /,'1er ')}`:`Alfragide, ${date}`
+}
 const downloadPdf=(doc:jsPDF,fileName:string)=>{const url=URL.createObjectURL(doc.output('blob')),link=document.createElement('a');link.href=url;link.download=fileName;link.style.display='none';document.body.appendChild(link);link.click();link.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)}
 const blobData=async(blob:Blob)=>await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob)})
 const readLogo=async(url:string)=>{const response=await fetch(url);return response.ok?blobData(await response.blob()):null}
