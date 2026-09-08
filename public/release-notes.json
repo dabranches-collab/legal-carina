@@ -1,8 +1,7 @@
 {
-  "version": "0.10.7",
+  "version": "0.10.8",
   "changes": [
-    "Correcção da tradução de notas com montantes, horas e referências numéricas, que podia impedir a emissão do PDF.",
-    "Mensagens de tradução distinguem respostas inválidas, limites de pedidos e indisponibilidade do serviço."
+    "Correcção da ligação ao tradutor que impedia gerar notas de honorários em inglês e francês na aplicação publicada."
   ],
   "releases": [
     {
@@ -67,6 +66,12 @@
       "changes": [
         "Correcção da tradução de notas com montantes, horas e referências numéricas, que podia impedir a emissão do PDF.",
         "Mensagens de tradução distinguem respostas inválidas, limites de pedidos e indisponibilidade do serviço."
+      ]
+    },
+    {
+      "version": "0.10.8",
+      "changes": [
+        "Correcção da ligação ao tradutor que impedia gerar notas de honorários em inglês e francês na aplicação publicada."
       ]
     }
   ]

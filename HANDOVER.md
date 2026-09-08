@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Correcção do runtime de tradução — 0.10.8 em preparação, 08-09-2026
+
+- CONFIRMADO: o workerd rejeita fetch com redirect:error antes de contactar o Azure. Reproduzido com texto sintético no runtime Cloudflare e no handler completo: HTTP 502 e a mensagem exacta do incidente. Os testes Node anteriores não detectavam esta incompatibilidade.
+- Correcção: redirect:manual; respostas 3xx continuam recusadas sem reenviar textos ou credenciais. Sem mudanças nas permissões, no fornecedor ou nos idiomas EN/FR.
+- Regressão no workerd adicionada à CI: handler completo com autenticação/registos sintéticos e serviços simulados, inglês/francês, despesas e redireccionamento recusado. Falhou antes da correcção e passou depois. Tradução Azure real com texto fictício também passou no workerd. Gates restantes em curso; publicação ainda não efectuada.
+- Base limpa/sincronizada b2ae2d7, branch codex/legalteam-distribution; origin/main 108f1e76. Produção confirmada 0.10.7, deployment da62bd22-6b5b-4d1e-95b6-1caa1e535e60, version 26fbc83d-87d8-4739-a784-e6cf65554286. Supabase ACTIVE_HEALTHY. Sem migrations, dados reais testados ou credenciais alteradas.
+
 ## Publicação correctiva 0.10.7 confirmada — 08-09-2026
 
 - CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 09:07:32 UTC (10:07:32 local). Deployment da62bd22-6b5b-4d1e-95b6-1caa1e535e60; version 26fbc83d-87d8-4739-a784-e6cf65554286; tag 0.10.7. Continuidade da autorização de corrigir e publicar o fluxo de documentos.

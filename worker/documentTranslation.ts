@@ -81,7 +81,8 @@ export async function translateTexts(language:'en'|'fr',items:Item[],key:string,
   const prepared=items.map(item=>protectedText(item.text))
   const query=new URLSearchParams({'api-version':'3.0',to:language,textType:'html',from:'pt'})
   const response=await fetch(`https://api.cognitive.microsofttranslator.com/translate?${query}`,{
-    method:'POST',redirect:'error',signal:AbortSignal.timeout(60000),
+    // workerd suporta manual/follow. Recusar 3xx abaixo sem reenviar textos ou chaves.
+    method:'POST',redirect:'manual',signal:AbortSignal.timeout(60000),
     headers:{'Ocp-Apim-Subscription-Key':key,'Ocp-Apim-Subscription-Region':region,'Content-Type':'application/json; charset=UTF-8'},
     // A API mantém a ordem do lote. Identificadores e tipos ficam neste servidor.
     body:JSON.stringify(prepared.map(item=>({Text:item.html}))),

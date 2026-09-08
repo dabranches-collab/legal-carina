@@ -36,7 +36,7 @@ describe('document translation endpoint',()=>{
   expect(result.status).toBe(200);expect(await result.json()).toEqual({items:translated});expect(result.headers.get('Cache-Control')).toBe('no-store')
   expect(String(fetcher.mock.calls[1][0])).toContain(`client_id=eq.${clientId}`)
   const call=fetcher.mock.calls[2],body=JSON.parse(call[1].body);expect(body).toEqual([{Text:'<div>Análise documental e reunião de <span class="notranslate">30</span> minutos.</div>'}]);expect(call[1].body).not.toContain(clientId)
-  expect(new URL(call[0]).searchParams.get('to')).toBe(language);expect(call[1].headers['Ocp-Apim-Subscription-Region']).toBe('northeurope');expect(call[1].redirect).toBe('error')
+  expect(new URL(call[0]).searchParams.get('to')).toBe(language);expect(call[1].headers['Ocp-Apim-Subscription-Region']).toBe('northeurope');expect(call[1].redirect).toBe('manual')
  })
  it('recusa registos inacessíveis ou alterados sem chamar o fornecedor',async()=>{
   const fetcher=vi.fn().mockResolvedValueOnce(Response.json({id:'user'})).mockResolvedValueOnce(Response.json([]));vi.stubGlobal('fetch',fetcher)
