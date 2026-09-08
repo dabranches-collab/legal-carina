@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Publicação correctiva 0.10.7 confirmada — 08-09-2026
+
+- CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 09:07:32 UTC (10:07:32 local). Deployment da62bd22-6b5b-4d1e-95b6-1caa1e535e60; version 26fbc83d-87d8-4739-a784-e6cf65554286; tag 0.10.7. Continuidade da autorização de corrigir e publicar o fluxo de documentos.
+- Commit funcional 75ec7f0a3571c03b664fea57ddd6846d268dc3d9, branch codex/legalteam-distribution, no GitHub antes do deploy. CI 34207824322 (incluindo E2E), auditoria e secret scan 34207824154 verdes. 181 testes unitários, segurança, lint, TypeScript, build e dry-run aprovados.
+- Azure real: exemplos que antes falhavam passaram em EN/FR. PDFs completos com 90 registos fictícios passaram em EN e FR, incluindo reimpressão. Primeiro servidor E2E sofreu timeout de navegação; ensaio isolado no localhost resolveu. O lote francês recebeu HTTP 429 após ensaios consecutivos; repetição isolada após espera passou. Não é prova de quota mensal esgotada nem da causa exacta do incidente da utilizadora.
+- HTTP/release-notes 0.10.7 e correspondência dos assets com o build confirmados; browser limpo abre login sem erros. Sem migrations, mudanças de credenciais, textos reais consultados ou documentos reais emitidos/anulados. Falta apenas a confirmação da utilizadora no documento que reportou; não presumir esse resultado.
+
 ## Correcção de tradução — 0.10.7 em preparação, 08-09-2026
 
 - Incidente comunicado: erro genérico de tradução impede gerar PDF. CONFIRMADO com dados sintéticos no Azure real: montante 1.250,50 e hora 14h30 causavam erro invalid. INFERIDO, não comprovado, que seja a causa exacta do documento reportado; nenhum texto real de cliente foi consultado, copiado ou reenviado.
