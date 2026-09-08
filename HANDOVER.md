@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Publicação 0.10.9 confirmada — 08-09-2026
+
+- CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 17:08:46 UTC (18:08:46 local). Deployment 258a0595-43d7-4dfe-b407-c26c19faba3e; version 3881b267-a9aa-48b7-8aff-acf0a8e0c69e; tag 0.10.9. Autorização expressa «Corrige e publica a correção».
+- Commit funcional ed345bf6e2f274b9bb26ff9aa42de8abb70d7a3d, branch codex/legalteam-distribution, no GitHub antes de publicar. CI 34254811213 verde: 181 testes unitários, 115 E2E aprovados e três testes condicionais ignorados; secret scan 34254811277 e auditoria verdes. Segurança, lint, tipos, build e dry-run aprovados.
+- Reproduzido visualmente o selector com 30 seleccionado mas cortado a 48 px. Corrigidas as colunas implícitas causadas pelo editor de despesas e largura útil dos selectores. Verificação visual em claro/escuro, desktop/tablet/iPhone e safe areas; oito novos E2E cobrem legibilidade e cálculo. Edição verificada a 320/1280 px; ensaio inicial bloqueado pelo aviso de novidades, repetição após fechar o aviso passou.
+- Browser integrado confirma 30 visível; preview sintético mantido no localhost:5198. HTTP/release-notes 0.10.9 e assets dos formulários idênticos ao build confirmados; browser limpo de produção abre login sem erros. Supabase ACTIVE_HEALTHY; sem migrations, credenciais alteradas ou dados reais usados nos testes.
+
 ## Duração legível — 0.10.9 em preparação, 08-09-2026
 
 - Pedido e autorização: «Corrige e publica a correção». CONFIRMADO no browser: 30 minutos seleccionados mas selector com 48 px e padding de 24 px escondia o número. Secção de despesas com lg:col-span-3 criava terceira coluna implícita num formulário de duas colunas.
