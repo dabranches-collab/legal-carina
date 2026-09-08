@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Publicação correctiva 0.10.8 confirmada — 08-09-2026
+
+- CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 09:32:11 UTC (10:32:11 local). Deployment 347c3410-eb91-4cf6-9625-84b60f16ce79; version b932a69d-9556-42b9-a9fc-818749da90f3; tag 0.10.8. Continuidade da autorização expressa de corrigir e publicar.
+- Commit funcional 31ac661ad775b95a179fe6fcfb82e753df4d0fa5, branch codex/legalteam-distribution, no GitHub antes da publicação. CI 34210172351 completa verde, incluindo novo teste workerd, E2E e auditoria; secret scan 34210172216 verde. Segurança, lint, tipos, 181 testes unitários, build e dry-run aprovados.
+- Regressão comprovada antes/depois: redirect:error provoca TypeError no workerd antes de contactar o Azure e o handler devolve a mensagem exacta do incidente. redirect:manual permite a chamada e recusa 3xx sem seguir o destino. Teste permanente no runtime com serviços simulados e tradução Azure real sintética EN/FR aprovados. Nenhum documento real emitido para validar; não afirmar emissão confirmada da utilizadora.
+- E2E local focado: quatro testes PDF EN/FR, geração e reimpressão aprovados; teste dos atalhos claro/escuro e larguras móveis/desktop aprovado isoladamente. Primeira execução conjunta sofreu timeouts; suite local completa interrompida depois de deixar de produzir resultados, não classificada como aprovada. Suite completa da CI passou. Teste do aviso de actualização usa agora próxima versão calculada, eliminando colisão da fixture fixa com 0.10.8.
+- HTTP/release-notes 0.10.8, assets idênticos ao build e browser limpo sem erros confirmados. Supabase ACTIVE_HEALTHY; sem migrations, alterações de credenciais ou testes com dados reais. Esta falha específica não contactava o Azure; é independente de crédito/limites de pedidos.
+
 ## Correcção do runtime de tradução — 0.10.8 em preparação, 08-09-2026
 
 - CONFIRMADO: o workerd rejeita fetch com redirect:error antes de contactar o Azure. Reproduzido com texto sintético no runtime Cloudflare e no handler completo: HTTP 502 e a mensagem exacta do incidente. Os testes Node anteriores não detectavam esta incompatibilidade.
