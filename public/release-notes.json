@@ -1,7 +1,7 @@
 {
-  "version": "0.10.8",
+  "version": "0.10.9",
   "changes": [
-    "Correcção da ligação ao tradutor que impedia gerar notas de honorários em inglês e francês na aplicação publicada."
+    "Correcção dos campos de duração: dias, horas e minutos seleccionados ficam legíveis ao criar e editar movimentos, incluindo em ecrãs pequenos."
   ],
   "releases": [
     {
@@ -72,6 +72,12 @@
       "version": "0.10.8",
       "changes": [
         "Correcção da ligação ao tradutor que impedia gerar notas de honorários em inglês e francês na aplicação publicada."
+      ]
+    },
+    {
+      "version": "0.10.9",
+      "changes": [
+        "Correcção dos campos de duração: dias, horas e minutos seleccionados ficam legíveis ao criar e editar movimentos, incluindo em ecrãs pequenos."
       ]
     }
   ]

@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Duração legível — 0.10.9 em preparação, 08-09-2026
+
+- Pedido e autorização: «Corrige e publica a correção». CONFIRMADO no browser: 30 minutos seleccionados mas selector com 48 px e padding de 24 px escondia o número. Secção de despesas com lg:col-span-3 criava terceira coluna implícita num formulário de duas colunas.
+- Despesas passam a ocupar as colunas existentes (col-span-full); duração normal reserva 64 px por selector e reduz padding. Componente partilhado na criação e edição; valores e cálculos mantidos.
+- E2E cobre selecção de 30 minutos, cálculo 75 EUR a 150 EUR/h, largura útil e overflow em 320/390/768/1280 px, claro/escuro. Gates em curso.
+- Checkout inicial limpo 095a5f5 e upstream sincronizado, branch codex/legalteam-distribution; origin/main 108f1e76. Produção confirmada 0.10.8, deployment 347c3410-eb91-4cf6-9625-84b60f16ce79, version b932a69d-9556-42b9-a9fc-818749da90f3. Supabase ACTIVE_HEALTHY; sem migrations ou dados reais nos testes.
+
 ## Publicação correctiva 0.10.8 confirmada — 08-09-2026
 
 - CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 09:32:11 UTC (10:32:11 local). Deployment 347c3410-eb91-4cf6-9625-84b60f16ce79; version b932a69d-9556-42b9-a9fc-818749da90f3; tag 0.10.8. Continuidade da autorização expressa de corrigir e publicar.
