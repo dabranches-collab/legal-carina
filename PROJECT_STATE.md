@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Publicação 0.10.6 confirmada — 08-09-2026
+
+- CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 08-09-2026 00:51:04 UTC (01:51:04 local). Deployment e06ed971-8c56-4a9a-a972-bf5a74812e81; version 2d17bc47-a05f-477e-8e63-3f7a411684af; tag 0.10.6.
+- Commit funcional 5fe1e237c9840862b029fea96fb69f4cfd7765b6, branch codex/legalteam-distribution, preservado no GitHub antes de publicar. CI completa 34174388786, auditoria e secret scan 34174388785 verdes; dry-run aprovado. Sem migrations ou segredos alterados.
+- HTTP 200 e release-notes 0.10.6 confirmados; index.html, service worker e assets de reimpressão comparados byte a byte com o artefacto local. Supabase público presente, padrões secretos ausentes. Browser limpo em produção abre o login sem erros JavaScript; nenhuma nota real emitida nos testes.
+- Localhost permanece aberto em desktop com dados sintéticos. Verificação visual local e de PDFs registada abaixo. Reimpressão fiel para novas notas; notas antigas recuperam a apresentação em falta das fichas actuais, com identificação da reconstituição. Este commit documental posterior não muda o artefacto publicado.
+
 ## Reimpressão fiel — 0.10.6 em preparação, 08-09-2026
 
 - Pedido e autorização: «corrige e publica qdo estiver bem». Renderer formal partilhado entre emissão e reimpressão; botões Reimprimir no histórico e nas provisões. Repete a versão guardada sem RPC de emissão, tradução ou novo desconto, mesmo durante a preparação de uma revisão.
