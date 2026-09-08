@@ -47,16 +47,22 @@ export async function handleDocumentTranslation(request:Request,env:Settings):Pr
     }
     const items=await translateTexts(input.language,input.items,env.AZURE_TRANSLATOR_KEY,env.AZURE_TRANSLATOR_REGION)
     return json({items})
-  }catch{return json({error:'Não foi possível concluir a tradução integral. Nenhuma nota foi emitida; tente novamente.'},502)}
+  }catch(cause){
+    const reason=cause instanceof Error?cause.message:''
+    if(reason==='Azure Translator HTTP 429')return json({code:'translator_busy',error:'O tradutor atingiu temporariamente o limite de pedidos. Aguarde um minuto e tente novamente. Nenhuma nota foi emitida.'},429)
+    if(/^Azure Translator HTTP (401|403)$/.test(reason))return json({code:'translator_unavailable',error:'O serviço de tradução está indisponível por configuração ou quota. Contacte o administrador. Nenhuma nota foi emitida.'},503)
+    if(reason==='invalid'||reason==='incomplete')return json({code:'translation_validation',error:'A tradução recebida não preservou todos os textos ou referências. Nenhuma nota foi emitida; tente novamente ou comunique este erro ao administrador.'},502)
+    return json({code:'translation_failed',error:'Não foi possível concluir a ligação ao serviço de tradução. Nenhuma nota foi emitida; tente novamente.'},502)
+  }
 }
 
 const escapeHtml=(text:string)=>text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 function protectedText(text:string):{html:string;references:string[]}{
   const references:string[]=[]
-  const parts=text.split(/(https?:\/\/[^\s<>]+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|[\p{L}\p{N}]+(?:[-/.][\p{L}\p{N}]+)+|\d+(?:[.,]\d+)*)/gu)
+  const parts=text.split(/(https?:\/\/[^\s<>]+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|[\p{L}\p{N}]+(?:[-/.,][\p{L}\p{N}]+)*)/gu)
   const html=parts.map((part,index)=>{
     const escaped=escapeHtml(part).replace(/\r\n|\n|\r/g,'<br>')
-    if(index%2&&(/\d|@|^https?:/.test(part))){references.push(part);if(/[\p{L}@/]|\d-\d/u.test(part))return `<span class="notranslate">${escaped}</span>`}
+    if(index%2&&(/\d|@|^https?:/.test(part))){references.push(part);return `<span class="notranslate">${escaped}</span>`}
     return escaped
   }).join('')
   return {html:`<div>${html}</div>`,references}

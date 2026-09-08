@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## Correcção de tradução — 0.10.7 em preparação, 08-09-2026
+
+- Incidente comunicado: erro genérico de tradução impede gerar PDF. CONFIRMADO com dados sintéticos no Azure real: montante 1.250,50 e hora 14h30 causavam erro invalid. INFERIDO, não comprovado, que seja a causa exacta do documento reportado; nenhum texto real de cliente foi consultado, copiado ou reenviado.
+- Números simples, montantes completos, horas alfanuméricas e ordinais passam a ser protegidos integralmente por notranslate. Antes eram verificados mas podiam ser alterados pelo tradutor. Validação de integridade mantém-se; emissão continua bloqueada em falha.
+- Erros seguros distinguem resposta inválida, HTTP 429 e configuração/quota (401/403), sem devolver conteúdo do fornecedor ou credenciais.
+- CONFIRMADO: testes Azure reais EN/FR com montantes/horas/referências antes falhavam e agora passam; 181 testes unitários, segurança, lint, TypeScript, build e dry-run aprovados. E2E real em curso: primeiro arranque do browser interrompido por timeout de navegação, antes da tradução; repetição isolada no localhost existente.
+- Checkout inicial limpo/sincronizado c38cbd2, branch codex/legalteam-distribution; origin/main 108f1e76; produção confirmada 0.10.6, deployment e06ed971-8c56-4a9a-a972-bf5a74812e81, version 2d17bc47-a05f-477e-8e63-3f7a411684af, Worker legal-carina, https://legal-carina.dabranches.workers.dev. Supabase ACTIVE_HEALTHY. Sem migrations, segredos alterados ou notas reais emitidas.
+
 ## Publicação 0.10.6 confirmada — 08-09-2026
 
 - CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 08-09-2026 00:51:04 UTC (01:51:04 local). Deployment e06ed971-8c56-4a9a-a972-bf5a74812e81; version 2d17bc47-a05f-477e-8e63-3f7a411684af; tag 0.10.6.

@@ -17,6 +17,15 @@ describe('document translation endpoint',()=>{
   expect(result[0].text).toBe('Review TESTE-123 on 07/09/2026.\nValue < 30 & document.')
   expect(JSON.parse(fetcher.mock.calls[0][1].body)[0].Text).toContain('<span class="notranslate">TESTE-123</span>')
  })
+ it.each(['en','fr'] as const)('protege montantes, horas e ordinais integralmente em %s',async language=>{
+  const values=['1.250,50','14h30','10.º','08/09/2026','123-AB'],text=values.join(' · ')
+  const fetcher=vi.fn(async(_url,options)=>{const sent=JSON.parse(options.body)[0].Text;for(const value of values)expect(sent).toContain(`<span class="notranslate">${value}</span>`);return Response.json([{translations:[{to:language,text:sent}]}])});vi.stubGlobal('fetch',fetcher)
+  expect((await translateTexts(language,[{...items[0],text}],'synthetic-key','northeurope'))[0].text).toBe(text)
+ })
+ it('identifica o limite do fornecedor sem expor a resposta privada',async()=>{
+  vi.stubGlobal('fetch',vi.fn().mockResolvedValueOnce(Response.json({id:'user'})).mockResolvedValueOnce(Response.json([{id,activity_description:items[0].text}])).mockResolvedValueOnce(Response.json({error:'private-provider-details'},{status:429})))
+  const response=await handleDocumentTranslation(request(),env);expect(response.status).toBe(429);expect(await response.json()).toMatchObject({code:'translator_busy'})
+ })
  it('recusa referências omitidas pelo fornecedor',async()=>{
   vi.stubGlobal('fetch',vi.fn().mockResolvedValue(provider()))
   await expect(translateTexts('en',[{...items[0],text:'Processo TESTE-123'}],'synthetic-key','northeurope')).rejects.toThrow('invalid')
@@ -26,7 +35,7 @@ describe('document translation endpoint',()=>{
   const result=await handleDocumentTranslation(request({clientId,language,items}),env)
   expect(result.status).toBe(200);expect(await result.json()).toEqual({items:translated});expect(result.headers.get('Cache-Control')).toBe('no-store')
   expect(String(fetcher.mock.calls[1][0])).toContain(`client_id=eq.${clientId}`)
-  const call=fetcher.mock.calls[2],body=JSON.parse(call[1].body);expect(body).toEqual(items.map(item=>({Text:`<div>${item.text}</div>`})));expect(call[1].body).not.toContain(clientId)
+  const call=fetcher.mock.calls[2],body=JSON.parse(call[1].body);expect(body).toEqual([{Text:'<div>Análise documental e reunião de <span class="notranslate">30</span> minutos.</div>'}]);expect(call[1].body).not.toContain(clientId)
   expect(new URL(call[0]).searchParams.get('to')).toBe(language);expect(call[1].headers['Ocp-Apim-Subscription-Region']).toBe('northeurope');expect(call[1].redirect).toBe('error')
  })
  it('recusa registos inacessíveis ou alterados sem chamar o fornecedor',async()=>{
@@ -55,7 +64,7 @@ describe('document translation endpoint',()=>{
  })
  it('não devolve detalhes nem segredos do fornecedor quando a quota acaba',async()=>{
   const fetcher=vi.fn().mockResolvedValueOnce(Response.json({id:'user'})).mockResolvedValueOnce(Response.json([{id,activity_description:items[0].text}])).mockResolvedValueOnce(Response.json({error:{message:'synthetic-provider-detail'}},{status:403}));vi.stubGlobal('fetch',fetcher)
-  const result=await handleDocumentTranslation(request(),env);expect(result.status).toBe(502);expect(await result.text()).not.toContain('synthetic-provider-detail')
+  const result=await handleDocumentTranslation(request(),env);expect(result.status).toBe(503);expect(await result.text()).not.toContain('synthetic-provider-detail')
  })
  it('recusa configuração incompleta sem enviar textos',async()=>{
   const fetcher=vi.fn();vi.stubGlobal('fetch',fetcher)

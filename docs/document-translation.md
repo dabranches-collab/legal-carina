@@ -1,4 +1,4 @@
-# Tradução integral dos documentos — 0.10.3 em preparação
+# Tradução integral dos documentos
 
 Ao escolher inglês ou francês, a geração traduz as descrições dos movimentos e as observações das despesas antes de emitir a nota. A minuta, os títulos, os totais e os rótulos fiscais acompanham o idioma. Nomes próprios, moradas postais, identificadores, datas e valores são preservados.
 
@@ -28,3 +28,7 @@ O E2E `e2e/document-pdf-real.spec.ts` usa respostas simuladas por omissão. Com 
 Produção só muda após a ordem «publica». Nessa altura, configurar o segredo `AZURE_TRANSLATOR_KEY` e a região `AZURE_TRANSLATOR_REGION=northeurope` no Worker por via segura, sem incluir o segredo em comandos visíveis, ficheiros versionados ou bundles; repetir os gates de publicação. A chave está guardada apenas localmente; não foi instalada remotamente. A criação do recurso Azure não publicou a Carina.
 
 Referências: [Azure Translate v3](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate), [No Trace](https://www.microsoft.com/en-us/translator/business/notrace/), [preços F0](https://azure.microsoft.com/en-us/pricing/details/translator/), [rate limiting Cloudflare](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/).
+
+## Correcção 0.10.7
+
+Montantes com separadores, horas alfanuméricas, ordinais e números simples são protegidos integralmente antes do envio. Exemplos sintéticos 1.250,50, 14h30 e 10.º reproduziram a falha anterior e passaram após a correcção no Azure real em EN/FR. Respostas inválidas, limites temporários e configuração/quota recebem mensagens distintas; nunca é emitida uma nota quando a tradução falha.

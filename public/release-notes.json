@@ -1,8 +1,8 @@
 {
-  "version": "0.10.6",
+  "version": "0.10.7",
   "changes": [
-    "Reimpressão das notas de honorários com a mesma minuta, cidade, data, logótipo, registos e traduções guardadas, sem nova emissão nem desconto de provisão.",
-    "Novas notas conservam os dados de apresentação; notas antigas são reconstituídas e identificadas quando dependem das fichas actuais."
+    "Correcção da tradução de notas com montantes, horas e referências numéricas, que podia impedir a emissão do PDF.",
+    "Mensagens de tradução distinguem respostas inválidas, limites de pedidos e indisponibilidade do serviço."
   ],
   "releases": [
     {
@@ -60,6 +60,13 @@
       "changes": [
         "Reimpressão das notas de honorários com a mesma minuta, cidade, data, logótipo, registos e traduções guardadas, sem nova emissão nem desconto de provisão.",
         "Novas notas conservam os dados de apresentação; notas antigas são reconstituídas e identificadas quando dependem das fichas actuais."
+      ]
+    },
+    {
+      "version": "0.10.7",
+      "changes": [
+        "Correcção da tradução de notas com montantes, horas e referências numéricas, que podia impedir a emissão do PDF.",
+        "Mensagens de tradução distinguem respostas inválidas, limites de pedidos e indisponibilidade do serviço."
       ]
     }
   ]
