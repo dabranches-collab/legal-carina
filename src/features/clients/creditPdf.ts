@@ -1,3 +1,5 @@
+import {supabase} from '../../lib/supabase'
+import {createFormalDocumentPdf, downloadPdf, type FormalSnapshot, type ClientDocumentData, type IssuerData} from './formalDocumentPdf'
 import { jsPDF } from 'jspdf'
 import { creditDate, creditKind, creditMoney, creditStatement, type CreditAccount, type ProvisionNote, type CreditMovement } from './credit'
 import type { CreditUsage } from './creditUsage'
@@ -50,6 +52,7 @@ export function saveCreditPdf(account:CreditAccount,movements:CreditMovement[],f
 }
 
 export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){
+ if(note.document_options?.presentation)return formalCopyPdf(note,note.document_options.presentation,reversed)
  const doc=new jsPDF();let y=20
  const language=note.document_options?.language==='en'?'en':note.document_options?.language==='fr'?'fr':'pt'
  const copy={pt:['Nota de Honorários','ESTORNADA — cópia histórica','Emissão','Honorários','IVA','Total','Provisão descontada','Valor a pagar','Saldo de provisão após esta nota','Despesas informativas — não incluídas nos totais'],en:['Fee Note','VOIDED — historical copy','Issued','Fees','VAT','Total','Advance deducted','Amount due','Advance balance after this note','Informational expenses — not included in totals'],fr:["Note d’honoraires",'ANNULÉE — copie historique','Émission','Honoraires','TVA','Total','Provision déduite','Montant à payer','Solde de provision après cette note','Frais informatifs — non inclus dans les totaux']}[language]
@@ -70,4 +73,26 @@ export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${note.number} · ${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}
  return doc
 }
-export function saveProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){createProvisionNotePdf(account,note,reversed).save(`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`)}
+function formalCopyPdf(note:ProvisionNote,snapshot:FormalSnapshot,reversed:boolean,legacy=false){
+ const language=snapshot.language,translation=note.document_options?.translation
+ const rows=note.items.map(row=>({...row,professional_name:'',billing_entity_name:snapshot.issuer?.name??null,activity_description:language==='pt'?row.activity_description:translation?.language===language?translation.items.find(t=>t.kind==='work'&&t.id===row.id)?.text??row.activity_description:row.activity_description}))
+ const doc=createFormalDocumentPdf(snapshot,rows,note.document_options?.expenses??[],note)
+ if(reversed||legacy)for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(reversed?{pt:'ESTORNADA — cópia histórica',en:'VOIDED — historical copy',fr:'ANNULÉE — copie historique'}[language]:{pt:'Cópia reconstituída: apresentação recuperada das fichas actuais.',en:'Reconstructed copy: presentation recovered from current records.',fr:'Copie reconstituée : présentation issue des fiches actuelles.'}[language],105,295,{align:'center'})}
+ return doc
+}
+export async function saveProvisionNotePdf(account:CreditAccount,note:ProvisionNote,reversed=false){
+ let snapshot=note.document_options?.presentation
+ const legacy=!snapshot
+ if(!snapshot){
+  if(!supabase)throw new Error('Ligação indisponível para recuperar a apresentação da nota antiga.')
+  const [client,entity]=await Promise.all([supabase.from('clients').select('legal_name,address,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id').eq('id',account.client_id).maybeSingle(),supabase.from('billing_entities').select('id,name,legal_name,tax_number,address,phone,bank_account_holder,bank_name,bank_account_number,iban,bic_swift,bank_accounts,default_vat_rate,default_currency,logo_path').eq('id',account.billing_entity_id).maybeSingle()])
+  if(client.error||entity.error)throw new Error('Não foi possível recuperar a apresentação da nota antiga.')
+  const opts=(note.document_options??{}) as Record<string,unknown>,issuer=entity.data as IssuerData|null,clientDocument=client.data as ClientDocumentData|null
+  let issuerLogo:string|null=null
+  const logoPath=issuer?.logo_path||(issuer?.name?.toUpperCase().includes('LEGALTEAM')?'/brand/legalteam-logo.jpg':null)
+  if(logoPath){const blob=logoPath.startsWith('/')?await fetch(logoPath).then(r=>{if(!r.ok)throw new Error('Não foi possível recuperar o logótipo.');return r.blob()}):await supabase.storage.from('billing-entity-logos').download(logoPath).then(r=>{if(r.error)throw r.error;return r.data});issuerLogo=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob)})}
+  const bankAccounts=Array.isArray(opts.bankAccounts)?opts.bankAccounts as FormalSnapshot['bankAccounts']:issuer?.bank_accounts?.length?issuer.bank_accounts:issuer?.iban?[{account_holder:issuer.bank_account_holder??'',bank_name:issuer.bank_name??'',account_number:issuer.bank_account_number??'',iban:issuer.iban,bic_swift:issuer.bic_swift??'',currency:account.currency}]:[]
+  snapshot={version:1,clientName:note.document_options?.client_name??account.client_name,clientDocument:clientDocument?{...clientDocument,honorarium_recipient_name:typeof opts.recipient==='string'?opts.recipient:clientDocument.honorarium_recipient_name}:null,issuer:issuer?{...issuer,default_currency:account.currency}:null,issuerLogo,language:opts.language==='en'?'en':opts.language==='fr'?'fr':'pt',columns:Array.isArray(opts.columns)&&opts.columns.length?opts.columns.filter(c=>['period','description','duration'].includes(String(c))) as FormalSnapshot['columns']:['period','description','duration'],showTimeTotal:opts.showTimeTotal!==false,showAmountTotal:opts.showAmountTotal===true,bankAccounts}
+ }
+ downloadPdf(formalCopyPdf(note,snapshot,reversed,legacy),`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`)
+}

@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Reimpressão fiel — 0.10.6 em preparação, 08-09-2026
+
+- Pedido e autorização: «corrige e publica qdo estiver bem». Renderer formal partilhado entre emissão e reimpressão; botões Reimprimir no histórico e nas provisões. Repete a versão guardada sem RPC de emissão, tradução ou novo desconto, mesmo durante a preparação de uma revisão.
+- Novas notas guardam apresentação v1 (cliente, destinatário, morada, emissor, logótipo JPEG compacto, idioma, colunas e contas bancárias) nas opções existentes, respeitando o limite de tamanho. A emissão usa os registos/valores devolvidos pelo servidor, tal como a cópia. Sem migrations.
+- Notas anteriores sem snapshot são reconstituídas pela mesma minuta, com data, registos, valores e traduções guardadas; elementos em falta vêm das fichas actuais e a cópia é identificada. Notas anuladas mantêm identificação de estorno. Não é possível recuperar retroactivamente dados de apresentação que nunca foram guardados.
+- CONFIRMADO inicial: checkout limpo e sincronizado em e205ede, branch codex/legalteam-distribution; origin/main 108f1e76; produção 0.10.5, git f54bb8a, deployment 225a412b-a3a2-4258-a2a1-ba80338ee4fa, version e370efd1-8ed1-49a5-b5fd-edfd0d33e7cf, Worker legal-carina, https://legal-carina.dabranches.workers.dev. Supabase original ACTIVE_HEALTHY. Sem alterações remotas neste lote até ao deploy.
+- Validação local: 178 testes unitários, lint, TypeScript, segurança e build aprovados. E2E compara PDFs originais/reimpressos integralmente (excluindo ID/data internos) em PT/EN/FR, inclui histórico durante revisão, nenhuma mutação remota na cópia, notas antigas e estornos; PDFs EN/FR com 90 registos e despesa. Visual claro/escuro em 320/390/768/1440 px; PDFs renderizados e revistos; browser integrado desktop com dados sintéticos. Os primeiros testes foram ajustados às fixtures de resposta completa e ao bloqueio já existente dos campos após emissão.
+- Código será preservado no GitHub antes da publicação; CI completa e dry-run exigidos. Produção permanece 0.10.5 até confirmação posterior.
+
 ## Produção 0.10.5 — confirmada em 08-09-2026 (hora local)
 
 - Novo cliente publicado após aprovação, à direita de Novo registo, no Worker `legal-carina`, https://legal-carina.dabranches.workers.dev. Activação a 100% às 23:04:47 UTC de 07-09-2026 (00:04:47 local de 08-09-2026).

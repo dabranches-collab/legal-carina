@@ -18,17 +18,19 @@ const rows=Array.from({length:90},(_,index)=>({
 }))
 
 test.beforeEach(async({page})=>{
+ let saved:Record<string,unknown>|null=null
   await page.route('**/rest/v1/**',async route=>{
     const request=route.request(),url=new URL(request.url()),pathname=url.pathname
     if(pathname.endsWith('/rpc/get_client_document_action_flags')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify([{client_id:'client-pdf-qa',has_uninvoiced:true,has_unpaid:true}])});return
     }
+    if(pathname.endsWith('/rpc/get_client_honorarium_documents')){await route.fulfill({contentType:'application/json',body:JSON.stringify(saved?[saved]:[])});return}
     if(pathname.endsWith('/rpc/search_work_entries')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify({items:rows,total:rows.length,pageSize:10000})});return
     }
     if(pathname.endsWith('/rpc/save_honorarium_document')){
       const args=request.postDataJSON(),items=rows.filter(row=>args.p_work_entry_ids.includes(row.id)),subtotal=items.reduce((sum,row)=>sum+row.effective_amount,0),vat=Math.round(subtotal*args.p_vat_rate)/100
-      await route.fulfill({contentType:'application/json',body:JSON.stringify({id:'note-qa',document_id:'note-qa',revision:1,number:'NH-QA-1',issued_at:'2026-09-04T12:00:00Z',subtotal,vat,total:subtotal+vat,deducted:0,remaining:subtotal+vat,balance_after:0,items})});return
+      saved={id:'note-qa',document_id:'note-qa',revision:1,number:'NH-QA-1',issued_at:'2026-09-04T12:00:00Z',subtotal,vat,vat_rate:args.p_vat_rate,total:subtotal+vat,deducted:0,remaining:subtotal+vat,balance_after:0,items,document_options:args.p_document_options,is_current:true,billing_entity_id:'society-pdf-qa',society_name:'LEGALTEAM',currency:'EUR'};await route.fulfill({contentType:'application/json',body:JSON.stringify(saved)});return
     }
     if(pathname.endsWith('/firm_members')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'firm-pdf-qa'})});return
@@ -99,6 +101,18 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   for(const row of rows)expect(text).toContain(row.id)
   expect(text).toContain(language==='en'?'VAT':'TVA')
   expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, le 4 septembre 2026')
+  const mutations:string[]=[];page.on('request',request=>{if(request.url().includes('/rest/v1/')&&request.method()==='POST'&&!/get_|search_/.test(request.url()))mutations.push(request.url())})
+  await expect(page.getByLabel('Idioma do documento')).toBeDisabled()
+  const repeat=page.waitForEvent('download');await page.getByRole('button',{name:'Guardar novamente a nota'}).click();await (await repeat).saveAs(path.resolve(`.tmp/reprint-${language}-repeat.pdf`))
+  await page.getByRole('button',{name:'Rever esta nota'}).click()
+  await page.getByLabel('Idioma do documento').selectOption('pt')
+  await page.getByLabel('Destinatário do documento').fill('Destinatário alterado após emissão')
+  await page.getByRole('button',{name:/Histórico de notas/}).click()
+  const historic=page.waitForEvent('download');await page.getByRole('button',{name:'Reimprimir v1'}).click();await (await historic).saveAs(path.resolve(`.tmp/reprint-${language}-history.pdf`))
+  const stable=(bytes:Buffer)=>bytes.toString('latin1').replace(/\/CreationDate \(D:[^)]*\)/g,'').replace(/\/ID \[[^\]]*\]/g,'')
+  expect(stable(await readFile(`.tmp/reprint-${language}-repeat.pdf`))).toBe(stable(await readFile(file)))
+  expect(stable(await readFile(`.tmp/reprint-${language}-history.pdf`))).toBe(stable(await readFile(file)))
+  expect(mutations).toEqual([])
 })
 
 for(const document of [

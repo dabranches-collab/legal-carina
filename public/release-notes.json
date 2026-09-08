@@ -1,7 +1,8 @@
 {
-  "version": "0.10.5",
+  "version": "0.10.6",
   "changes": [
-    "Novo atalho «Novo cliente» na barra superior, à direita de «Novo registo», para abrir directamente a ficha de criação."
+    "Reimpressão das notas de honorários com a mesma minuta, cidade, data, logótipo, registos e traduções guardadas, sem nova emissão nem desconto de provisão.",
+    "Novas notas conservam os dados de apresentação; notas antigas são reconstituídas e identificadas quando dependem das fichas actuais."
   ],
   "releases": [
     {
@@ -52,6 +53,13 @@
       "version": "0.10.5",
       "changes": [
         "Novo atalho «Novo cliente» na barra superior, à direita de «Novo registo», para abrir directamente a ficha de criação."
+      ]
+    },
+    {
+      "version": "0.10.6",
+      "changes": [
+        "Reimpressão das notas de honorários com a mesma minuta, cidade, data, logótipo, registos e traduções guardadas, sem nova emissão nem desconto de provisão.",
+        "Novas notas conservam os dados de apresentação; notas antigas são reconstituídas e identificadas quando dependem das fichas actuais."
       ]
     }
   ]

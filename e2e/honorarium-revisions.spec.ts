@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test'
+import {readFile} from 'node:fs/promises'
 import {createQaProvisionData} from '../src/lib/qaProvisionData'
 
 test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})=>{
@@ -22,6 +23,8 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await dialog.getByLabel('Filtrar registos por nota').selectOption('without')
  await expect(dialog.getByText('Preparação de requerimento e análise documental',{exact:true})).toBeVisible()
  await dialog.getByRole('button',{name:/Histórico de notas/}).click()
+ const oldCopy=page.waitForEvent('download');await dialog.getByRole('button',{name:'Reimprimir v1'}).click();await (await oldCopy).saveAs('.tmp/reprint-legacy.pdf')
+ expect((await readFile('.tmp/reprint-legacy.pdf')).toString('latin1')).toContain('Cópia reconstituída')
  await dialog.getByRole('button',{name:'Anular nota / estornar provisão'}).click()
  await dialog.getByRole('button',{name:'Confirmar anulação'}).click()
  await expect(dialog.getByText(/Saldo disponível antes desta nota/)).toContainText('1000,00')
@@ -32,7 +35,10 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await dialog.getByLabel('Seleccionar todos os 2 movimentos').check()
  const download=page.waitForEvent('download')
  await dialog.getByRole('button',{name:'Guardar revisão e PDF'}).click()
- expect((await download).suggestedFilename()).toMatch(/nota-honorarios/)
+ const original=await download;expect(original.suggestedFilename()).toMatch(/nota-honorarios/);await original.saveAs('.tmp/reprint-pt-original.pdf')
+ const copy=page.waitForEvent('download');await dialog.getByRole('button',{name:'Guardar novamente a nota'}).click();await (await copy).saveAs('.tmp/reprint-pt-copy.pdf')
+ const stable=(b:Buffer)=>b.toString('latin1').replace(/\/CreationDate \(D:[^)]*\)/g,'').replace(/\/ID \[[^\]]*\]/g,'')
+ expect(stable(await readFile('.tmp/reprint-pt-copy.pdf'))).toBe(stable(await readFile('.tmp/reprint-pt-original.pdf')))
  await expect(dialog.getByRole('button',{name:'Guardar novamente a nota'})).toBeEnabled()
  await dialog.getByRole('button',{name:'Rever esta nota'}).click()
  await expect(dialog.getByRole('button',{name:'Guardar revisão e PDF'})).toBeEnabled()
