@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Auditoria do tooling Cloudflare corrigida — 10-09-2026
+
+- CONFIRMADO: a CI do commit `e36fb8f` falhou apenas em `pnpm audit --audit-level high`; validação funcional, 181 testes, runtime do Worker, build e E2E tinham passado. A causa era `sharp 0.35.2`, dependência transitiva de `wrangler → miniflare`, abrangida pelo aviso de segurança `GHSA-rgj7-g3m4-5g8c`.
+- Correcção local: override dirigido `miniflare>sharp: 0.35.4` em `pnpm-workspace.yaml` e lockfile regenerado. A árvore instalada confirma `sharp 0.35.4`; a auditoria de nível alto passa, restando duas ocorrências moderadas que não bloqueiam o gate.
+- CONFIRMADO localmente: ficheiros sensíveis, lint, TypeScript, 33 ficheiros/181 testes unitários, build, runtime de tradução EN/FR e recusa de redireccionamentos, e dry-run Cloudflare aprovados. E2E: 114 aprovados, três condicionais ignorados e um aborto de navegação no primeiro arranque a frio; repetição isolada desse único caso passou.
+- Alteração limitada ao tooling de desenvolvimento e CI. Sem mudanças no código funcional, segredos, Azure, Supabase, Worker publicado ou versão 0.10.9 em produção. A branch `codex/legalteam-distribution` será enviada e a nova CI acompanhada antes do fecho.
+
+
 ## Continuidade do Azure Translator confirmada — 10-09-2026
 
 - Subscrição Azure convertida com sucesso para `Plano do Azure` (pay as you go), estado `Activo`; crédito de avaliação preservado até 07-10-2026 e facturação acumulada confirmada em 0,00 EUR.
