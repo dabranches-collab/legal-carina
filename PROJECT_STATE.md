@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Continuidade do Azure Translator confirmada — 10-09-2026
+
+- Subscrição Azure convertida com sucesso para `Plano do Azure` (pay as you go), estado `Activo`; crédito de avaliação preservado até 07-10-2026 e facturação acumulada confirmada em 0,00 EUR.
+- `carina-legal-translator` continua `Activo`, North Europe, `TextTranslation`, escalão `Gratuito` F0. Métrica dos últimos 30 dias: 180,94 mil caracteres traduzidos, cerca de 9% dos 2 milhões/mês, e 0 erros totais.
+- Teste real com texto exclusivamente sintético passou em inglês e francês. Os segredos `AZURE_TRANSLATOR_KEY` e `AZURE_TRANSLATOR_REGION` permanecem configurados no Worker `legal-carina`, sem leitura ou exposição dos valores.
+- A aplicação já não está programada para ser suspensa pelo fim da avaliação Azure em 07-10-2026. Manter o Translator em F0 e vigiar a quota mensal para evitar cobrança por utilização fora do gratuito. Nenhum código, segredo, deployment ou recurso foi alterado.
+
 ## Publicação 0.10.9 confirmada — 08-09-2026
 
 - CONFIRMADO: Worker legal-carina, https://legal-carina.dabranches.workers.dev, activo a 100% desde 17:08:46 UTC (18:08:46 local). Deployment 258a0595-43d7-4dfe-b407-c26c19faba3e; version 3881b267-a9aa-48b7-8aff-acf0a8e0c69e; tag 0.10.9. Autorização expressa «Corrige e publica a correção».
