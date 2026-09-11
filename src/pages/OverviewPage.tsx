@@ -272,6 +272,7 @@ export function OverviewPage() {
     "Sem sociedade": "missingBilling",
   };
   const metricSubtotals = (label: string) => {
+    if (label === "Sem sociedade") return [];
     const key = subtotalKey[label];
     return key
       ? breakdowns.map((row) => {

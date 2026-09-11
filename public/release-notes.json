@@ -1,10 +1,16 @@
 {
-  "version": "0.10.10",
+  "version": "0.10.11",
   "changes": [
-    "O subtotal Por receber apresenta 0 € quando uma sociedade não tem movimentos facturados por pagar.",
-    "O menu Registos abre a listagem completa sem conservar pré-filtros de uma consulta anterior."
+    "O indicador Sem sociedade apresenta apenas o total de registos sem sociedade associada, sem uma repartição por sociedades."
   ],
   "releases": [
+    {
+      "version": "0.10.10",
+      "changes": [
+        "O subtotal Por receber apresenta 0 € quando uma sociedade não tem movimentos facturados por pagar.",
+        "O menu Registos abre a listagem completa sem conservar pré-filtros de uma consulta anterior."
+      ]
+    },
     {
       "version": "0.10.0",
       "changes": [

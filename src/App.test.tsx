@@ -44,6 +44,9 @@ describe('interface principal', () => {
     expect(await screen.findByText('Valor trabalhado')).toBeInTheDocument()
     const receivableCard=screen.getAllByText('Por receber').map(element=>element.closest('article')).find(Boolean)!
     expect(within(receivableCard).getByText('Sem sociedade').nextElementSibling).toHaveTextContent('0 €')
+    const missingSocietyCard=screen.getAllByText('Sem sociedade').map(element=>element.closest('article')).find(article=>article?.textContent?.includes('Movimentos sem sociedade associada'))!
+    expect(within(missingSocietyCard).queryByText('Carina Santos')).not.toBeInTheDocument()
+    expect(within(missingSocietyCard).queryByRole('definition')).not.toBeInTheDocument()
   })
 
   it('navega para os registos sem edição em massa e mostra pendências', async () => {

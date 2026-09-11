@@ -72,6 +72,14 @@ test('Por receber mostra zero quando não existem facturados por pagar',async({p
  await expect(card).toContainText('0 €')
 })
 
+test('Sem sociedade apresenta apenas o total de registos sem sociedade',async({page})=>{
+ await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview')
+ const card=page.locator('article').filter({has:page.getByText('Movimentos sem sociedade associada')})
+ await expect(card).toContainText('1')
+ await expect(card.getByText('Sociedade Sintética')).toHaveCount(0)
+ await expect(card.locator('dl')).toHaveCount(0)
+})
+
 for(const width of [320,390,768,1440])test(`barra, resumos e caixas de escrita ${width}px`,async({page})=>{
  await page.setViewportSize({width,height:900});await mock(page)
  await page.goto('/?qa-iphone=1&qa-role=admin&view=billing&society=LEGALTEAM')

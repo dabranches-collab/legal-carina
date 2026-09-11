@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Versão 0.10.11 em preparação — indicador Sem sociedade
+
+- Pedido: o cartão «Sem sociedade» da Visão Geral deve conter apenas o total de movimentos sem sociedade associada. A geração genérica de subtotais por sociedade foi desactivada apenas neste cartão; o total e o botão «Ver movimentos» permanecem.
+- Regressões unitária e E2E acrescentadas. Segurança, lint, TypeScript, build, runtime de tradução e 182/182 testes unitários aprovados. O E2E local dirigido ficou bloqueado no carregamento do servidor Vite por contenção do Chromium e será confirmado na CI limpa antes de publicar.
+- Versão local 0.10.11 na branch `codex/legalteam-distribution`. Produção continua 0.10.10 (`e36f5d19-df01-4ef4-ad22-e0380a2f0afc` / `fa63aacc-022e-4f6e-b1cd-301dd9c15f56`) até GitHub e CI estarem verdes. Sem alterações de base de dados, Azure Translator ou segredos.
+
 ## Publicação 0.10.10 confirmada — 11-09-2026
 
 - Pedido e autorização: corrigir o subtotal «Sem sociedade» em «Por receber», abrir o menu Registos sem pré-filtros e publicar quando estivesse pronto.
