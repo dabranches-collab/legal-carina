@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { resilientReadFetch } from './resilientReadFetch'
 
 const url = import.meta.env.VITE_SUPABASE_URL?.trim()
 const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()
@@ -7,6 +8,7 @@ export const hasSupabaseConfiguration = Boolean(url && publishableKey)
 
 export const supabase = hasSupabaseConfiguration
   ? createClient(url, publishableKey, {
+      global: { fetch: resilientReadFetch },
       auth: {
         flowType: 'pkce',
         persistSession: true,

@@ -1,6 +1,13 @@
+import { createPortal } from 'react-dom';
+import { TaskReferrerFields } from './TaskReferrerFields'
+import { isLegalteam, professionalName } from '../../lib/professionalNames'
 import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "../../lib/supabase";
 import { useModalLifecycle } from "../../hooks/useModalLifecycle";
+import { DurationSelect } from "./DurationSelect";
+import { CalendarDateInput } from "../../components/CalendarDateInput";
+import { WorkEntryExpensesEditor } from "./WorkEntryExpensesEditor";
+import type { ExpenseDraft } from "./workEntryExpenses";
 import {
   deleteWorkEntry,
   getWorkEntryForEdit,
@@ -18,6 +25,8 @@ const statuses = [
   ["approved", "Aprovado"],
   ["invoiced", "Facturado"],
   ["paid", "Pago"],
+  ["uncollectible_uninvoiced", "Incobrável — não facturado"],
+  ["uncollectible_invoiced", "Incobrável — facturado e não pago"],
   ["non_billable", "Não facturável"],
   ["cancelled", "Cancelado"],
 ];
@@ -43,21 +52,47 @@ const charges = [
 ];
 const numeric = (value: string) => (value === "" ? null : Number(value));
 
+const recalculateAmount = (
+  durationMinutes: number,
+  hourlyRate: number | null,
+  discountAmount: number | null,
+) => hourlyRate === null
+  ? null
+  : Math.max(0, Math.round((hourlyRate * durationMinutes / 60 - (discountAmount ?? 0)) * 100) / 100);
+
+function withStatus(entry: Editable, status: string): Editable {
+  if (status === "paid") return { ...entry, status, is_invoiced: true, is_paid: true };
+  if (status === "invoiced" || status === "uncollectible_invoiced") {
+    return { ...entry, status, is_invoiced: true, is_paid: false };
+  }
+  if (status === "uncollectible_uninvoiced") {
+    return { ...entry, status, is_invoiced: false, is_paid: false, invoice_date: null };
+  }
+  return { ...entry, status, is_invoiced: false, is_paid: false, invoice_date: null };
+}
+
 export function EditWorkEntryModal({
   entryId,
   onClose,
   onSaved,
+  canDelete=true,
+  requiresReason,
 }: {
   entryId: string;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (action?: "updated" | "deleted") => void;
+  canDelete?: boolean;
+  requiresReason?: boolean;
 }) {
   const [options, setOptions] = useState<OptionData | null>(null),
     [entry, setEntry] = useState<Editable | null>(null),
+    [originalEntry,setOriginalEntry]=useState(''),
+    [originalBillingScope,setOriginalBillingScope]=useState<'standard'|'retainer'>('standard'),
     [error, setError] = useState(""),
     [saving, setSaving] = useState(false);
   const [reason, setReason] = useState(""),
     [deleteMode, setDeleteMode] = useState(false);
+  const [expenseDrafts,setExpenseDrafts]=useState<ExpenseDraft[]>([]);
   useModalLifecycle(onClose, saving);
   useEffect(() => {
     let active = true;
@@ -84,22 +119,20 @@ export function EditWorkEntryModal({
         return;
       }
       setOptions(form.data);
-      setEntry(item.data);
+      const loaded={...item.data,billing_scope:item.data.billing_scope??'standard'} as Editable;
+      setEntry(loaded);setOriginalEntry(JSON.stringify(loaded));
+      setOriginalBillingScope(item.data.billing_scope??'standard');
     })();
     return () => {
       active = false;
     };
   }, [entryId]);
-  const profile = options?.clientProfiles.find(
-    (item) => item.id === entry?.client_profile_id,
-  );
-  const processes =
-    options?.processes.filter(
-      (item) => item.client_id === profile?.client_id,
-    ) ?? [];
+  const dirty=Boolean(entry&&(JSON.stringify(entry)!==originalEntry||expenseDrafts.length));
   async function submit(event: FormEvent) {
     event.preventDefault();
+    event.stopPropagation();
     if (!supabase || !entry) return;
+    if(isLegalteam(options?.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&(!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim()))){setError('Indique o angariador da tarefa.');return}
     if (entry.is_paid && !entry.is_invoiced) {
       setError("Um movimento pago tem de estar facturado.");
       return;
@@ -108,29 +141,45 @@ export function EditWorkEntryModal({
       setError("Indique a data da factura.");
       return;
     }
+    if (requiresReason === true && !reason.trim()) {
+      setError("Indique o motivo da alteração para o registo de auditoria.");
+      return;
+    }
     setSaving(true);
     setError("");
+    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='standard'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'standard',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     const result = await updateWorkEntry(entry, reason);
     if (result.error) {
-      setError(result.error.message);
+      const messages:Record<string,string>={
+        "is_invoiced requires a matching manual override":"Não foi possível registar a facturação na auditoria. Tente novamente.",
+        "is_paid requires a matching manual override":"Não foi possível registar o pagamento na auditoria. Tente novamente.",
+        "override reason required":"Indique o motivo da alteração manual dos valores financeiros.",
+        "not authorized":"Não tem autorização para editar este movimento.",
+      };
+      setError(messages[result.error.message]??result.error.message);
       setSaving(false);
       return;
     }
-    onSaved();
+    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'retainer',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
+    onSaved("updated");
   }
   async function remove() {
     if (!entry) return;
+    if (requiresReason !== false && !reason.trim()) {
+      setError("Indique o motivo da eliminação para o registo de auditoria.");
+      return;
+    }
     setSaving(true);
     setError("");
-    const result = await deleteWorkEntry(entry.id, "");
+    const result = await deleteWorkEntry(entry.id, reason.trim());
     if (result.error) {
       setError(result.error.message);
       setSaving(false);
       return;
     }
-    onSaved();
+    onSaved("deleted");
   }
-  return (
+  return createPortal(
     <div
       className="app-safe-fixed fixed z-[85] grid place-items-center overflow-y-auto bg-navigation/60 p-4"
       role="dialog"
@@ -139,7 +188,7 @@ export function EditWorkEntryModal({
     >
       <form
         onSubmit={submit}
-        className="card my-auto max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto p-6"
+        className="card my-auto max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto p-6 pb-0"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -164,7 +213,7 @@ export function EditWorkEntryModal({
             ×
           </button>
         </div>
-        {error && (
+        {error && !deleteMode && (
           <p
             role="alert"
             className="mt-4 rounded-lg bg-danger-soft p-3 text-sm text-danger"
@@ -178,15 +227,7 @@ export function EditWorkEntryModal({
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <label className="text-sm">
               Data
-              <input
-                required
-                type="date"
-                value={entry.work_date}
-                onChange={(e) =>
-                  setEntry({ ...entry, work_date: e.target.value })
-                }
-                className="control mt-1 w-full px-3"
-              />
+              <CalendarDateInput required value={entry.work_date} onChange={(value)=>setEntry({...entry,work_date:value})} className="mt-1 w-full px-3"/>
             </label>
             <label className="text-sm">
               Responsável
@@ -200,7 +241,7 @@ export function EditWorkEntryModal({
               >
                 {options.responsibles.map((item) => (
                   <option key={item.id} value={item.id}>
-                    {item.display_name}
+                    {professionalName(item.display_name)}
                   </option>
                 ))}
               </select>
@@ -250,23 +291,8 @@ export function EditWorkEntryModal({
                 ))}
               </select>
             </label>
-            <label className="text-sm sm:col-span-2 lg:col-span-3">
-              Processo
-              <select
-                value={entry.matter_id ?? ""}
-                onChange={(e) =>
-                  setEntry({ ...entry, matter_id: e.target.value || null })
-                }
-                className="control mt-1 w-full px-3"
-              >
-                <option value="">Sem processo</option>
-                {processes.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.matter_code} · {item.title}
-                  </option>
-                ))}
-              </select>
-            </label>
+            {isLegalteam(options.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&<TaskReferrerFields value={entry.task_referrer??''} other={entry.task_referrer_other??''} onChange={(task_referrer,task_referrer_other)=>setEntry({...entry,task_referrer,task_referrer_other})}/>}
+            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer';setEntry({...entry,billing_scope,...(billing_scope==='retainer'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:'retainer',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Fora da avença · facturação normal</option><option value="retainer">Coberto pela avença · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao escolher avença, o movimento perde preço e valor individual.</span></label>
             <label className="text-sm sm:col-span-2 lg:col-span-3">
               Actividade
               <textarea
@@ -275,7 +301,7 @@ export function EditWorkEntryModal({
                 onChange={(e) =>
                   setEntry({ ...entry, activity_description: e.target.value })
                 }
-                className="control mt-1 min-h-24 w-full p-3"
+                className="control mt-1 h-48 w-full resize-y p-3"
               />
             </label>
             <label className="text-sm sm:col-span-2 lg:col-span-3">
@@ -285,36 +311,47 @@ export function EditWorkEntryModal({
                 onChange={(e) =>
                   setEntry({ ...entry, observations: e.target.value })
                 }
-                className="control mt-1 min-h-20 w-full p-3"
+                className="control mt-1 h-16 w-full resize-y p-3"
               />
             </label>
             <label className="text-sm">
-              Duração (minutos)
-              <input
-                required
-                type="number"
-                min="0"
+              Duração
+              <DurationSelect
                 value={entry.duration_minutes}
-                onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    duration_minutes: Number(e.target.value),
-                  })
-                }
-                className="control mt-1 w-full px-3"
+                onChange={(duration_minutes)=>setEntry({
+                  ...entry,
+                  duration_minutes,
+                  effective_amount: recalculateAmount(
+                    duration_minutes,
+                    entry.effective_hourly_rate,
+                    entry.effective_discount_amount,
+                  ),
+                })}
               />
             </label>
+            <WorkEntryExpensesEditor entryId={entry.id} drafts={expenseDrafts} onDraftsChange={setExpenseDrafts} requiresReason={requiresReason===true}/>
             <label className="text-sm">
               Preço/hora efectivo
               <input
+                disabled={entry.billing_scope==='retainer'}
                 type="number"
                 min="0"
                 step="0.01"
                 value={entry.effective_hourly_rate ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    effective_hourly_rate: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const effective_hourly_rate = numeric(e.target.value);
+                    return {
+                      ...current,
+                      effective_hourly_rate,
+                      charge_type: effective_hourly_rate === null ? current.charge_type : "hourly",
+                      effective_amount: recalculateAmount(
+                        current.duration_minutes,
+                        effective_hourly_rate,
+                        current.effective_discount_amount,
+                      ),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -323,6 +360,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Valor final
               <input
+                disabled={entry.billing_scope==='retainer'}
                 type="number"
                 min="0"
                 step="0.01"
@@ -352,6 +390,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Tipo de cobrança
               <select
+                disabled={entry.billing_scope==='retainer'}
                 value={entry.charge_type ?? ""}
                 onChange={(e) =>
                   setEntry({ ...entry, charge_type: e.target.value || null })
@@ -373,9 +412,19 @@ export function EditWorkEntryModal({
                 step="0.01"
                 value={entry.effective_discount_amount ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    effective_discount_amount: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const effective_discount_amount = numeric(e.target.value);
+                    return {
+                      ...current,
+                      effective_discount_amount,
+                      discount_percentage: null,
+                      effective_amount: recalculateAmount(
+                        current.duration_minutes,
+                        current.effective_hourly_rate,
+                        effective_discount_amount,
+                      ),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -390,9 +439,23 @@ export function EditWorkEntryModal({
                 step="0.01"
                 value={entry.discount_percentage ?? ""}
                 onChange={(e) =>
-                  setEntry({
-                    ...entry,
-                    discount_percentage: numeric(e.target.value),
+                  setEntry((current) => {
+                    if (!current) return current;
+                    const discount_percentage = numeric(e.target.value);
+                    const baseAmount = current.effective_hourly_rate === null
+                      ? null
+                      : current.effective_hourly_rate * current.duration_minutes / 60;
+                    const effective_discount_amount = baseAmount === null || discount_percentage === null
+                      ? null
+                      : Math.round(baseAmount * discount_percentage) / 100;
+                    return {
+                      ...current,
+                      discount_percentage,
+                      effective_discount_amount,
+                      effective_amount: baseAmount === null
+                        ? null
+                        : Math.max(0, Math.round((baseAmount - (effective_discount_amount ?? 0)) * 100) / 100),
+                    };
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -412,7 +475,7 @@ export function EditWorkEntryModal({
               Estado
               <select
                 value={entry.status}
-                onChange={(e) => setEntry({ ...entry, status: e.target.value })}
+                onChange={(e) => setEntry(withStatus(entry, e.target.value))}
                 className="control mt-1 w-full px-3"
               >
                 {statuses.map(([value, label]) => (
@@ -449,6 +512,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
+                disabled={entry.billing_scope==='retainer'}
                 checked={entry.is_billable}
                 onChange={(e) =>
                   setEntry({ ...entry, is_billable: e.target.checked })
@@ -459,6 +523,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
+                disabled={entry.billing_scope==='retainer'}
                 checked={entry.is_invoiced}
                 onChange={(e) =>
                   setEntry({
@@ -466,6 +531,11 @@ export function EditWorkEntryModal({
                     is_invoiced: e.target.checked,
                     is_paid: e.target.checked ? entry.is_paid : false,
                     invoice_date: e.target.checked ? entry.invoice_date : null,
+                    status: e.target.checked
+                      ? entry.is_paid
+                        ? "paid"
+                        : "invoiced"
+                      : "approved",
                   })
                 }
               />
@@ -473,14 +543,25 @@ export function EditWorkEntryModal({
             </label>
             <label className="text-sm">
               Data da factura
-              <input
-                type="date"
-                disabled={!entry.is_invoiced}
+              <CalendarDateInput
+                disabled={entry.billing_scope==='retainer'}
+                ariaLabel="Data da factura"
                 value={entry.invoice_date ?? ""}
-                onChange={(e) =>
-                  setEntry({ ...entry, invoice_date: e.target.value || null })
-                }
-                className="control mt-1 w-full px-3"
+                onChange={(value) => {
+                  const invoiceDate = value || null;
+                  setEntry({
+                    ...entry,
+                    invoice_date: invoiceDate,
+                    is_invoiced: Boolean(invoiceDate),
+                    is_paid: invoiceDate ? entry.is_paid : false,
+                    status: invoiceDate
+                      ? entry.is_paid
+                        ? "paid"
+                        : "invoiced"
+                      : "approved",
+                  });
+                }}
+                className="mt-1 w-full px-3"
               />
             </label>
             <label className="flex min-h-11 items-center gap-2 text-sm">
@@ -489,14 +570,19 @@ export function EditWorkEntryModal({
                 disabled={!entry.is_invoiced}
                 checked={entry.is_paid}
                 onChange={(e) =>
-                  setEntry({ ...entry, is_paid: e.target.checked })
+                  setEntry({
+                    ...entry,
+                    is_paid: e.target.checked,
+                    status: e.target.checked ? "paid" : "invoiced",
+                  })
                 }
               />
               Pago
             </label>
             <label className="text-sm sm:col-span-2">
-              Motivo da alteração manual
+              Motivo da alteração manual{requiresReason === false ? " (opcional)" : ""}
               <textarea
+                required={requiresReason === true}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 className="control mt-1 min-h-20 w-full p-3"
@@ -514,6 +600,9 @@ export function EditWorkEntryModal({
               associadas são preservadas, mas deixam de ter ligação ao
               movimento.
             </p>
+            {error && (
+              <p className="mt-2 text-sm font-semibold text-danger">{error}</p>
+            )}
             <div className="mt-3 flex justify-end gap-2">
               <button
                 type="button"
@@ -533,34 +622,34 @@ export function EditWorkEntryModal({
             </div>
           </section>
         )}
-        <div className="mt-6 flex flex-wrap justify-between gap-3">
-          <button
+        <div className="sticky bottom-0 z-50 -mx-6 mt-6 flex flex-wrap justify-between gap-3 border-t border-border bg-surface px-6 py-3 pb-[max(.75rem,var(--safe-bottom))] shadow-[0_-8px_18px_-14px_rgba(0,0,0,.45)]">
+          {canDelete?<button
             type="button"
             disabled={saving || !entry}
             onClick={() => setDeleteMode(true)}
             className="min-h-11 rounded-lg border border-danger px-4 font-semibold text-danger disabled:opacity-40"
           >
             Apagar movimento
-          </button>
+          </button>:<span />}
           <div className="flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              disabled={saving}
-              className="control px-4 py-2 font-semibold"
+              disabled={saving || !dirty}
+              className="record-cancel rounded-lg border px-4 py-2 font-semibold"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              disabled={saving || !entry || !options}
-              className="rounded-lg bg-primary px-4 py-2 font-semibold text-surface disabled:opacity-50"
+              disabled={saving || !entry || !options || !dirty}
+              className="record-save rounded-lg border px-4 py-2 font-semibold"
             >
               {saving ? "A guardar…" : "Guardar alterações"}
             </button>
           </div>
         </div>
       </form>
-    </div>
+    </div>, document.body
   );
 }

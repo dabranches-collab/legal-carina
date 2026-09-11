@@ -21,6 +21,7 @@ const labels: Record<string, string> = {
   invalid_price: 'Sem preço ou preço inválido',
   amount_mismatch: 'Valor histórico diferente do cálculo',
   manual_amount: 'Valor possivelmente introduzido manualmente',
+  source_row_updated: 'Movimento actualizado a partir do ficheiro',
 }
 
 export function ImportReviewPage() {

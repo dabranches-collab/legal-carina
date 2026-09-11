@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { hasSupabaseConfiguration, supabase } from '../../lib/supabase'
 import { AuthContext } from './AuthContext'
@@ -6,6 +6,7 @@ import { authErrorMessage } from './messages'
 import { LoginPage } from './LoginPage'
 import { ResetPasswordPage } from './ResetPasswordPage'
 import { InitialPinChangePage } from './InitialPinChangePage'
+import type { ApplicationRole } from '../../types/database.types'
 
 const passkeyOriginError=()=>{
   const host=window.location.hostname
@@ -18,23 +19,29 @@ function ConfigurationRequired() {
   return <main className="grid min-h-screen place-items-center bg-background p-6"><section className="card max-w-lg p-7"><p className="text-xs font-semibold uppercase tracking-widest text-warning">Configuração local necessária</p><h1 className="mt-2 font-display text-2xl font-semibold">Supabase Auth não configurado</h1><p className="mt-3 text-sm leading-6 text-text-secondary">Copie <code>.env.example</code> para <code>.env.local</code> e preencha apenas a URL e a chave publicável do projecto. Nunca use a service role no frontend.</p></section></main>
 }
 
-async function recordSecurityEvent(eventType: string, email?: string) {
-  try { await supabase?.functions.invoke('security-event', { body: { eventType, email } }) } catch { /* best-effort: auth must not leak logging internals */ }
+async function recordSecurityEvent(eventType: string, email?: string,metadata:Record<string,unknown>={}) {
+  try { await supabase?.functions.invoke('security-event', { body: { eventType, email,metadata } }) } catch { /* best-effort: auth must not leak logging internals */ }
 }
 
 async function getAccessStatus(currentUser?:User|null) {
-  if (!supabase) return { active:false,mustChangePin:false }
-  const {data,error}=await supabase.rpc('get_my_access_status')
+  if (!supabase) return { active:false,mustChangePin:false,role:null as ApplicationRole|null }
+  const [{data,error},membership]=await Promise.all([
+    supabase.rpc('get_my_access_status'),
+    supabase.from('firm_members').select('role').eq('user_id',currentUser?.id??'').eq('active',true).limit(1).maybeSingle(),
+  ])
   const status=Array.isArray(data)?data[0]:data
-  if(error&&import.meta.env.DEV)return {active:true,mustChangePin:currentUser?.app_metadata?.must_change_pin===true}
-  if(error||!status||status.active!==true)return {active:false,mustChangePin:false}
-  return {active:true,mustChangePin:status.must_change_pin===true}
+  const role=(membership.data?.role??null) as ApplicationRole|null
+  if(error&&import.meta.env.DEV)return {active:true,mustChangePin:currentUser?.app_metadata?.must_change_pin===true,role}
+  if(error||membership.error||!status||status.active!==true||!role)return {active:false,mustChangePin:false,role:null}
+  return {active:true,mustChangePin:status.must_change_pin===true,role}
 }
 
 export function AuthGate({ children }: { children: ReactNode }) {
+  const lastAccessEventAt=useRef(0)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [role, setRole] = useState<ApplicationRole | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -59,7 +66,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (!accessStatus.active) { if(!import.meta.env.DEV)await client.auth.signOut();setLoading(false);return }
       setSession(initialSession); setUser(verifiedUser)
+      setRole(accessStatus.role)
       setMustChangePin(accessStatus.mustChangePin)
+      await recordSecurityEvent('login_succeeded',undefined,{auth_method:'session_restore'});lastAccessEventAt.current=Date.now()
       if (active) setLoading(false)
     }
     void initialize()
@@ -67,15 +76,31 @@ export function AuthGate({ children }: { children: ReactNode }) {
       if (!active) return
       if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
       setSession(nextSession); setUser(nextSession?.user ?? null)
-      if (!nextSession) { setMustChangePin(false); setLoading(false) }
+      if (!nextSession) { setRole(null); setMustChangePin(false); setLoading(false) }
     })
     return () => { active = false; listener.subscription.unsubscribe() }
   }, [])
+  useEffect(()=>{
+    const recordResume=()=>{if(document.visibilityState!=='visible'||!session||Date.now()-lastAccessEventAt.current<60_000)return;lastAccessEventAt.current=Date.now();void recordSecurityEvent('login_succeeded',undefined,{auth_method:'app_resumed'})}
+    document.addEventListener('visibilitychange',recordResume)
+    return()=>document.removeEventListener('visibilitychange',recordResume)
+  },[session])
 
   async function loginWithPin(username: string, pin: string) {
     if (!supabase) return
     setBusy(true); setError(''); setNotice('')
-    const { data, error: invokeError } = await supabase.functions.invoke('pin-auth', { body: { username, pin } })
+    let data:{error?:string;session?:{access_token:string;refresh_token:string};mustChangePin?:boolean}|null=null,invokeError:unknown=null
+    if(import.meta.env.DEV){
+      try{
+        const publishableKey=import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()
+        const response=await fetch('/supabase-functions/v1/pin-auth',{method:'POST',headers:{'Content-Type':'application/json',apikey:publishableKey,Authorization:`Bearer ${publishableKey}`},body:JSON.stringify({username,pin})})
+        data=await response.json()
+        if(!response.ok)invokeError=new Error(data?.error??`HTTP ${response.status}`)
+      }catch(error){invokeError=error}
+    }else{
+      const result=await supabase.functions.invoke('pin-auth', { body: { username, pin } })
+      data=result.data;invokeError=result.error
+    }
     if (invokeError || data?.error || !data?.session?.access_token || !data?.session?.refresh_token) {
       setError(data?.error ?? 'Nome de utilizador ou PIN inválido.')
       setBusy(false)
@@ -87,8 +112,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setBusy(false)
       return
     }
-    setUser(sessionData.user); setSession(sessionData.session)
-    setMustChangePin(data.mustChangePin === true || sessionData.user.app_metadata?.must_change_pin === true)
+    const accessStatus=await getAccessStatus(sessionData.user)
+    if(!accessStatus.active){await supabase.auth.signOut();setError('Este acesso está suspenso ou deixou de estar autorizado.');setBusy(false);return}
+    setUser(sessionData.user); setSession(sessionData.session);setRole(accessStatus.role)
+    setMustChangePin(data.mustChangePin === true || accessStatus.mustChangePin || sessionData.user.app_metadata?.must_change_pin === true)
     setBusy(false)
   }
 
@@ -112,7 +139,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     else {
       const accessStatus=await getAccessStatus(data.user)
       if(!accessStatus.active){await supabase.auth.signOut();setError('Este acesso está suspenso ou deixou de estar autorizado.')}
-      else { setUser(data.user); setSession(data.session); setMustChangePin(accessStatus.mustChangePin); await recordSecurityEvent('login_succeeded') }
+      else { setUser(data.user); setSession(data.session); setRole(accessStatus.role); setMustChangePin(accessStatus.mustChangePin); await recordSecurityEvent('login_succeeded') }
     }
     setBusy(false)
   }
@@ -149,7 +176,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
-    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setMustChangePin(false)
+    await recordSecurityEvent('logout'); await supabase?.auth.signOut(); setUser(null); setSession(null); setRole(null); setMustChangePin(false)
   }
 
   async function changeInitialPin(currentPin:string,newPin:string) {
@@ -157,9 +184,23 @@ export function AuthGate({ children }: { children: ReactNode }) {
     setBusy(true); setError('')
     const { data, error:changeError } = await supabase.functions.invoke('change-pin', { body:{ currentPin,newPin } })
     if (changeError || data?.error) { setError(data?.error ?? 'Não foi possível alterar o PIN.'); setBusy(false); return }
-    const { data:refreshed, error:refreshError } = await supabase.auth.refreshSession()
-    if (refreshError || !refreshed.session) { await signOut(); return }
-    setSession(refreshed.session); setUser(refreshed.user); setMustChangePin(false)
+    const accessToken = data?.session?.access_token
+    const refreshToken = data?.session?.refresh_token
+    if (!accessToken || !refreshToken) {
+      setError('O PIN foi alterado. Inicie sessão novamente com o novo PIN.')
+      setBusy(false)
+      return
+    }
+    const { data:authenticated, error:sessionError } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    })
+    if (sessionError || !authenticated.session || !authenticated.user) {
+      setError('O PIN foi alterado. Inicie sessão novamente com o novo PIN.')
+      setBusy(false)
+      return
+    }
+    setSession(authenticated.session); setUser(authenticated.user); setMustChangePin(false)
     setBusy(false)
   }
 
@@ -168,5 +209,5 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (recoveryMode && session) return <ResetPasswordPage busy={busy} error={error} onSubmit={async (password) => { await updatePassword(password) }} />
   if (!user || !session) return <LoginPage busy={busy} error={error} notice={notice} onPinLogin={loginWithPin} onRecover={recover} onPasskeyLogin={loginWithPasskey} onClearError={() => setError('')} />
   if (mustChangePin) return <InitialPinChangePage busy={busy} error={error} onSubmit={changeInitialPin} onLogout={signOut}/>
-  return <AuthContext.Provider value={{ user, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, role, signOut, updatePassword, enrollPasskey }}>{children}</AuthContext.Provider>
 }

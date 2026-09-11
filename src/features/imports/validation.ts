@@ -91,5 +91,10 @@ export function summarizeRows(rows: ImportRow[]): ImportSummary {
     paidRows: rows.filter((row) => row.normalized.paid).length,
     archivedRows: rows.filter((row) => row.normalized.archived).length,
     financialImpact: rows.reduce((sum, row) => sum + (row.normalized.effectiveAmount ?? 0), 0),
+    newRows: 0,
+    unchangedRows: 0,
+    updatedRows: 0,
+    conflictRows: 0,
+    missingRows: 0,
   }
 }

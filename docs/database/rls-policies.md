@@ -10,6 +10,7 @@ As funções `private.is_firm_member` e `private.has_firm_role` são `security d
 | --- | --- | --- |
 | owner | todo o próprio escritório, incluindo auditoria | administração, financeiro, overrides e imports |
 | admin | todo o próprio escritório, incluindo auditoria | referências, membros, financeiro, trabalho e imports |
+| operator | todo o próprio escritório, excepto administração e auditoria | clientes, documentos privados e manutenção integral dos movimentos; eliminação individual exige motivo auditável |
 | manager | apenas Sociedades, clientes, processos e equipas concedidos | operação; financeiro apenas onde exista autorização independente |
 | billing | apenas o âmbito concedido, excepto auditoria | preços, overrides, facturas, pagamentos, imports e trabalho dentro do âmbito |
 | professional | apenas o âmbito concedido, excepto auditoria | criar/editar trabalho sem alterar campos financeiros |
@@ -23,7 +24,7 @@ As funções `private.is_firm_member` e `private.has_firm_role` são `security d
 - Políticas de UPDATE têm `USING` e `WITH CHECK`.
 - `auth.uid()` e helpers são envolvidos em `select` para initPlan/caching.
 - Colunas usadas em membership/RLS e todas as FKs têm índices adequados.
-- Não há políticas ou grants DELETE para a aplicação.
+- Não há políticas ou grants DELETE directos sobre movimentos para a aplicação; a eliminação individual autorizada passa exclusivamente pelo RPC auditado e exige motivo.
 - Escritas que contêm ator exigem `created_by = auth.uid()`.
 
 ## Bootstrap
@@ -36,6 +37,7 @@ Não existe política pública para criar `law_firms`. O primeiro escritório e 
 
 - leitura limitada ao escritório;
 - admin sem escrita cross-tenant;
+- operador com manutenção de clientes, documentos e movimentos sem acesso a Definições ou ao audit log;
 - responsável capaz de criar trabalho próprio;
 - responsável impedido de alterar facturação;
 - billing capaz de aplicar override previamente registado;
