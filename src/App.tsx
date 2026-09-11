@@ -28,6 +28,7 @@ const CreateWorkEntryModal=lazy(()=>import('./features/work-entries/CreateWorkEn
 const validViews:ViewId[] = ['overview','work','notes','clients','retainers','provisions','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 const ownerViews:ViewId[]=['admin-access-logs']
+const workPrefilterParams=['professionalId','billingEntityId','invoiced','paid','collectionState','missingSociety','missingPrice','clientId'] as const
 function readLocation() {
   const params = new URLSearchParams(window.location.search)
   const requested = params.get('view') as ViewId|null
@@ -81,6 +82,7 @@ export function AuthenticatedApplication() {
     if(nextClientType) url.searchParams.set('clientType',nextClientType); else url.searchParams.delete('clientType')
     if(nextEntity) url.searchParams.set('entity',nextEntity); else url.searchParams.delete('entity')
     if(nextProfessional) url.searchParams.set('professional',nextProfessional); else url.searchParams.delete('professional')
+    for(const param of workPrefilterParams)url.searchParams.delete(param)
     url.searchParams.delete('clientMode'); url.searchParams.delete('record'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
   }
   function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }

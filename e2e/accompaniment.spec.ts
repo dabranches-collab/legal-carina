@@ -18,6 +18,7 @@ async function mock(page:Page){
   }
   if(rpc==='get_client_category_summaries')result=[{category:'individual',clients:1,movements:4,minutes:600,total:2000,invoiced:1300}]
   if(rpc==='get_dashboard_overview')result={metrics:{minutes:600,worked:2000,invoiced:1300,paid:1000,receivable:300,uninvoicedCount:2,unpaidCount:1,uncollectibleCount:1,uncollectibleValue:100,averageRate:200,activeClients:2,missingPrice:1,missingBilling:1,overrides:0,importErrors:0},annual:[],monthly:[],monthlyByYear:[],billingAnnual:[],billingMonthly:[],byClient:[],byBilling:[],byProfessional:[],byArchive:[],clientTypes:[],latestYear:2026}
+  if(rpc==='get_dashboard_metric_breakdowns')result=[{society:'Sociedade Sintética',minutes:570,worked:1960,invoiced:1300,paid:1000,receivable:300,uninvoicedCount:1,unpaidCount:1,averageRate:200,activeClients:1,missingPrice:1,missingBilling:0},{society:'Sem sociedade',minutes:30,worked:40,invoiced:null,paid:null,receivable:null,uninvoicedCount:1,unpaidCount:0,averageRate:80,activeClients:1,missingPrice:0,missingBilling:1}]
   await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
  })
  return requests
@@ -53,6 +54,22 @@ test('Visão Geral mantém navegação para Registos',async({page})=>{
  await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview')
  await page.getByRole('link',{name:'Abrir movimentos de Não facturados',exact:true}).click()
  await expect(page).toHaveURL(/view=work/);await expect(page.getByRole('region',{name:'Resultados do acompanhamento'})).toHaveCount(0)
+})
+
+test('menu Registos limpa pré-filtros e abre a listagem completa',async({page})=>{
+ await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview&collectionState=unpaid&missingPrice=true&billingEntityId=soc-1')
+ await page.getByRole('button',{name:'Registos'}).click()
+ await expect(page).toHaveURL(/\?qa-iphone=1&qa-role=admin&view=work$/)
+ await expect(page.getByRole('button',{name:'Facturados não pagos'})).toHaveAttribute('aria-pressed','false')
+ await expect(page.getByRole('button',{name:'Sem preço'})).toHaveAttribute('aria-pressed','false')
+ await expect(page.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
+})
+
+test('Por receber mostra zero quando não existem facturados por pagar',async({page})=>{
+ await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview')
+ const card=page.getByText('Por receber',{exact:true}).locator('xpath=ancestor::article')
+ await expect(card.getByText('Sem sociedade')).toBeVisible()
+ await expect(card).toContainText('0 €')
 })
 
 for(const width of [320,390,768,1440])test(`barra, resumos e caixas de escrita ${width}px`,async({page})=>{

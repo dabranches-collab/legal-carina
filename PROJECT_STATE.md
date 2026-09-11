@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Dashboard e entrada geral de Registos — 0.10.10 em preparação, 11-09-2026
+
+- Pedido e autorização: corrigir o subtotal «Sem sociedade» em «Por receber», abrir o menu Registos sem pré-filtros e publicar quando estivesse pronto.
+- Um total por receber nulo passa a `0 €` apenas quando não existem facturados por pagar; a protecção «Sem acesso» mantém-se para valores financeiros efectivamente indisponíveis. O menu Registos limpa os parâmetros de pré-filtro antigos; os links directos continuam a aplicar o filtro escolhido.
+- Browser integrado confirmou `0 €` no subtotal e entrada em `?view=work`, com pré-filtros desmarcados e os 7 271 movimentos acessíveis. Segurança, lint, tipos, 182 testes unitários, runtime de tradução, build, dry-run e 13 E2E focados aprovados. A passagem E2E paralela teve 114 aprovados, três ignorados e três timeouts de esforço antigos sob elevada contenção local; a CI limpa é o gate final para publicação.
+- Auditoria de nível alto aprovada, com as duas ocorrências moderadas já conhecidas. Sem migrations nem alterações no Supabase, Azure Translator ou segredos. Branch `codex/legalteam-distribution`, base/upstream `b1fbb451`; produção permanece 0.10.9 até CI verde e deploy explícito.
+
 ## Auditoria do tooling Cloudflare corrigida — 10-09-2026
 
 - CONFIRMADO: a CI do commit `e36fb8f` falhou apenas em `pnpm audit --audit-level high`; validação funcional, 181 testes, runtime do Worker, build e E2E tinham passado. A causa era `sharp 0.35.2`, dependência transitiva de `wrangler → miniflare`, abrangida pelo aviso de segurança `GHSA-rgj7-g3m4-5g8c`.

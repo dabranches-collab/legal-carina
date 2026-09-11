@@ -11,7 +11,7 @@ vi.mock('./lib/supabase', () => ({
    functions: { invoke: vi.fn(async () => ({ data:{ users:[{userId:'user-1',email:'admin@example.test',role:'owner',active:true,invitedAt:'2026-01-01',lastSignInAt:null}] },error:null })) },
    rpc: vi.fn(async (name:string, args?:{p_kind?:string}) => {
     if (name === 'get_dashboard_overview') return { error:null, data:{ metrics:{minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,overrides:0,importErrors:1}, annual:[{label:2026,value:200,minutes:120}],monthly:[{label:4,value:200}],latestYear:2026,byClient:[{label:'Cliente Atlas',value:200}],byBilling:[{label:'Carina Santos',value:200}],byProfessional:[{label:'Carina',value:200}],byArchive:[{label:'dossier',value:1}],clientTypes:[{label:'company',value:1}] } }
-    if (name === 'get_dashboard_metric_breakdowns') return { error:null,data:[{society:'Carina Santos',minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,missingBilling:0}] }
+    if (name === 'get_dashboard_metric_breakdowns') return { error:null,data:[{society:'Carina Santos',minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,missingBilling:0},{society:'Sem sociedade',minutes:30,worked:40,invoiced:null,paid:null,receivable:null,uninvoicedCount:1,unpaidCount:0,averageRate:80,activeClients:1,missingPrice:0,missingBilling:1}] }
     if (name === 'get_client_category_summaries') return { error:null,data:[{category:'individual',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'company',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'mixed',clients:0,movements:0,minutes:0,total:0,invoiced:0}] }
     if (name === 'get_professional_landing_summaries') return { error:null,data:[{id:'1',name:'Carina',minutes:120,total:200,invoiced:150,clients:1,uninvoiced:1,unpaid:1,missingPrice:0}] }
     if (name === 'search_work_entries') return { error:null,data:{items:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}],total:1,page:1,pageSize:25,professionals:[],billingEntities:[]} }
@@ -42,6 +42,8 @@ describe('interface principal', () => {
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Visão Geral')).toBeInTheDocument()
     expect(await screen.findByText('Valor trabalhado')).toBeInTheDocument()
+    const receivableCard=screen.getAllByText('Por receber').map(element=>element.closest('article')).find(Boolean)!
+    expect(within(receivableCard).getByText('Sem sociedade').nextElementSibling).toHaveTextContent('0 €')
   })
 
   it('navega para os registos sem edição em massa e mostra pendências', async () => {
@@ -62,6 +64,18 @@ describe('interface principal', () => {
     await userEvent.click(screen.getByRole('button',{name:'Criar movimento'}))
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(screen.getByText(/preço e o valor são resolvidos no backend/i)).toBeInTheDocument()
+  }, 15000)
+
+  it('abre o menu Registos com a listagem completa e sem pré-filtro antigo', async () => {
+    window.history.replaceState({},'', '/?view=overview&collectionState=unpaid&missingPrice=true&billingEntityId=soc-1&invoiced=true')
+    vi.mocked(supabase!.rpc).mockClear()
+    renderApp()
+    await userEvent.click(screen.getByRole('button', { name: 'Registos' }))
+    expect(await screen.findByRole('table', { name: 'Registos de trabalho' }, { timeout: 5000 })).toBeInTheDocument()
+    expect(window.location.search).toBe('?view=work')
+    expect(screen.getByRole('button',{name:'Facturados não pagos'})).toHaveAttribute('aria-pressed','false')
+    expect(screen.getByRole('button',{name:'Sem preço'})).toHaveAttribute('aria-pressed','false')
+    expect(vi.mocked(supabase!.rpc)).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_missing_price:false,p_missing_society:false}))
   }, 15000)
 
   it('abre os dashboards de entrada de clientes, sociedades e responsáveis', async () => {

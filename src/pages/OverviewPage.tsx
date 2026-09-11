@@ -276,9 +276,13 @@ export function OverviewPage() {
     return key
       ? breakdowns.map((row) => {
           const value = row[key] as number | null;
+          const displayValue =
+            key === "receivable" && value == null && row.unpaidCount === 0
+              ? 0
+              : value;
           const formatted =
             key === "minutes"
-              ? `${number.format(Math.round((value ?? 0) / 60))} h`
+              ? `${number.format(Math.round((displayValue ?? 0) / 60))} h`
               : [
                     "worked",
                     "invoiced",
@@ -286,12 +290,12 @@ export function OverviewPage() {
                     "receivable",
                     "averageRate",
                   ].includes(key)
-                ? financial(value)
-                : number.format(value ?? 0);
+                ? financial(displayValue)
+                : number.format(displayValue ?? 0);
           return {
             label: row.society,
             value:
-              key === "averageRate" && value != null
+              key === "averageRate" && displayValue != null
                 ? `${formatted}/h`
                 : formatted,
           };

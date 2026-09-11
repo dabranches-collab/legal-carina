@@ -1,7 +1,8 @@
 {
-  "version": "0.10.9",
+  "version": "0.10.10",
   "changes": [
-    "Correcção dos campos de duração: dias, horas e minutos seleccionados ficam legíveis ao criar e editar movimentos, incluindo em ecrãs pequenos."
+    "O subtotal Por receber apresenta 0 € quando uma sociedade não tem movimentos facturados por pagar.",
+    "O menu Registos abre a listagem completa sem conservar pré-filtros de uma consulta anterior."
   ],
   "releases": [
     {
@@ -78,6 +79,13 @@
       "version": "0.10.9",
       "changes": [
         "Correcção dos campos de duração: dias, horas e minutos seleccionados ficam legíveis ao criar e editar movimentos, incluindo em ecrãs pequenos."
+      ]
+    },
+    {
+      "version": "0.10.10",
+      "changes": [
+        "O subtotal Por receber apresenta 0 € quando uma sociedade não tem movimentos facturados por pagar.",
+        "O menu Registos abre a listagem completa sem conservar pré-filtros de uma consulta anterior."
       ]
     }
   ]
