@@ -1,12 +1,14 @@
 # Legal Carina — handover
 
-## Dashboard e entrada geral de Registos — 0.10.10 em preparação, 11-09-2026
+## Publicação 0.10.10 confirmada — 11-09-2026
 
 - Pedido e autorização: corrigir o subtotal «Sem sociedade» em «Por receber», abrir o menu Registos sem pré-filtros e publicar quando estivesse pronto.
 - Correcção: um total por receber nulo passa a `0 €` apenas quando `unpaidCount` é zero; valores nulos sem esta prova continuam «Sem acesso». A navegação pelo menu remove os parâmetros exclusivos dos pré-filtros de Registos; os links directos do dashboard conservam os filtros pedidos.
 - CONFIRMADO no browser integrado com os dados actuais: «Sem sociedade» mostra `0 €` em «Por receber»; entrar pelo menu termina em `?view=work`, com todos os pré-filtros desmarcados e 7 271 movimentos acessíveis. A revisão foi apenas de leitura.
-- CONFIRMADO localmente: segurança de ficheiros, lint, TypeScript, 33 ficheiros/182 testes unitários, runtime de tradução, build e dry-run Cloudflare aprovados. E2E focado: 13/13 em 320/390/768/1440 px, claro/escuro. Na suite paralela, 114 passaram, três foram ignorados e três testes pesados antigos excederam limites locais; um deles passou isolado e os outros dois ficaram condicionados pelos 59 processos Chrome e 27 Node activos. A CI limpa é o gate final antes do deploy.
-- Auditoria de nível alto aprovada; permanecem as duas ocorrências moderadas já registadas. Sem migrations, alterações no Supabase, Azure Translator, segredos ou dados. Checkout inicial e upstream em `b1fbb451`; `origin/main` em `108f1e76`; produção ainda 0.10.9, deployment `258a0595-43d7-4dfe-b407-c26c19faba3e`, version `3881b267-a9aa-48b7-8aff-acf0a8e0c69e`.
+- CONFIRMADO localmente: segurança de ficheiros, lint, TypeScript, 33 ficheiros/182 testes unitários, runtime de tradução, build e dry-run Cloudflare aprovados. E2E focado: 13/13 em 320/390/768/1440 px, claro/escuro. Na suite paralela, 114 passaram, três foram ignorados e três testes pesados antigos excederam limites locais; a CI limpa aprovou a suite completa.
+- Commit funcional `f609b1ee690fb1e961978e07e7a35ca0d7cc1524` no GitHub antes do deploy. CI `34601819105` verde: validação integral, auditoria de nível alto e 117 E2E aprovados/3 condicionais ignorados; secret scan `34601819097` verde. Permanecem apenas as duas ocorrências moderadas já registadas.
+- CONFIRMADO em produção a 100% desde 13:05:13 UTC (14:05:13 local): deployment `e36f5d19-df01-4ef4-ad22-e0380a2f0afc`, version `fa63aacc-022e-4f6e-b1cd-301dd9c15f56`, tag 0.10.10. HTTP 200, `release-notes.json` 0.10.10, dashboard e navegação verificados no browser integrado sem erros de consola.
+- Sem migrations, alterações no Supabase, Azure Translator, segredos ou dados. Checkout inicial e upstream em `b1fbb451`; `origin/main` em `108f1e76`.
 
 ## Auditoria do tooling Cloudflare corrigida — 10-09-2026
 

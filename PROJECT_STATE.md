@@ -1,11 +1,11 @@
 # Estado do projecto
 
-## Dashboard e entrada geral de Registos — 0.10.10 em preparação, 11-09-2026
+## Publicação 0.10.10 confirmada — 11-09-2026
 
 - Pedido e autorização: corrigir o subtotal «Sem sociedade» em «Por receber», abrir o menu Registos sem pré-filtros e publicar quando estivesse pronto.
 - Um total por receber nulo passa a `0 €` apenas quando não existem facturados por pagar; a protecção «Sem acesso» mantém-se para valores financeiros efectivamente indisponíveis. O menu Registos limpa os parâmetros de pré-filtro antigos; os links directos continuam a aplicar o filtro escolhido.
-- Browser integrado confirmou `0 €` no subtotal e entrada em `?view=work`, com pré-filtros desmarcados e os 7 271 movimentos acessíveis. Segurança, lint, tipos, 182 testes unitários, runtime de tradução, build, dry-run e 13 E2E focados aprovados. A passagem E2E paralela teve 114 aprovados, três ignorados e três timeouts de esforço antigos sob elevada contenção local; a CI limpa é o gate final para publicação.
-- Auditoria de nível alto aprovada, com as duas ocorrências moderadas já conhecidas. Sem migrations nem alterações no Supabase, Azure Translator ou segredos. Branch `codex/legalteam-distribution`, base/upstream `b1fbb451`; produção permanece 0.10.9 até CI verde e deploy explícito.
+- Browser integrado confirmou `0 €` no subtotal e entrada em `?view=work`, com pré-filtros desmarcados e os 7 271 movimentos acessíveis. Segurança, lint, tipos, 182 testes unitários, runtime de tradução, build, dry-run e 13 E2E focados aprovados. A CI limpa `34601819105` aprovou a validação integral, auditoria e 117 E2E; três condicionais foram ignorados. Secret scan `34601819097` verde.
+- Commit funcional `f609b1ee690fb1e961978e07e7a35ca0d7cc1524`. Produção 0.10.10 activa a 100% desde 13:05:13 UTC: deployment `e36f5d19-df01-4ef4-ad22-e0380a2f0afc`, version `fa63aacc-022e-4f6e-b1cd-301dd9c15f56`. HTTP 200, notas 0.10.10 e browser publicado sem erros de consola. Sem migrations nem alterações no Supabase, Azure Translator ou segredos.
 
 ## Auditoria do tooling Cloudflare corrigida — 10-09-2026
 
