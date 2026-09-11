@@ -1,10 +1,10 @@
 # Legal Carina — handover
 
-## Versão 0.10.11 em preparação — indicador Sem sociedade
+## Publicação 0.10.11 confirmada — indicador Sem sociedade
 
-- Pedido: o cartão «Sem sociedade» da Visão Geral deve conter apenas o total de movimentos sem sociedade associada. A geração genérica de subtotais por sociedade foi desactivada apenas neste cartão; o total e o botão «Ver movimentos» permanecem.
-- Regressões unitária e E2E acrescentadas. Segurança, lint, TypeScript, build, runtime de tradução e 182/182 testes unitários aprovados. O E2E local dirigido ficou bloqueado no carregamento do servidor Vite por contenção do Chromium e será confirmado na CI limpa antes de publicar.
-- Versão local 0.10.11 na branch `codex/legalteam-distribution`. Produção continua 0.10.10 (`e36f5d19-df01-4ef4-ad22-e0380a2f0afc` / `fa63aacc-022e-4f6e-b1cd-301dd9c15f56`) até GitHub e CI estarem verdes. Sem alterações de base de dados, Azure Translator ou segredos.
+- O cartão «Sem sociedade» da Visão Geral contém apenas o total de movimentos sem sociedade associada. A geração genérica de subtotais por sociedade foi desactivada apenas neste cartão; o total e o botão «Ver movimentos» permanecem.
+- Commits `3f76d179c17e3df483f939cb96c6055e4e73345e` e `6489e4c6b9060f4730824bfc43e6bc1653f387b4` na branch `codex/legalteam-distribution`. CI `34621786800` e `34622385108`, auditorias e secret scans verdes; 182/182 testes unitários e suite E2E completa aprovados.
+- CONFIRMADO em produção: versão 0.10.11, deployment `00fe667a-e300-4365-bff4-97c16e87f37f`, version `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`, 100% desde 16:35:11 UTC. HTTP 200 e histórico sem duplicações; browser autenticado mostra apenas «Sem sociedade 46» e «Ver movimentos» no cartão. Sem alterações de base de dados, Azure Translator ou segredos.
 
 ## Publicação 0.10.10 confirmada — 11-09-2026
 

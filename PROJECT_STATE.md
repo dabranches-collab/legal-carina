@@ -1,10 +1,10 @@
 # Estado do projecto
 
-## Versão 0.10.11 em preparação — indicador Sem sociedade
+## Publicação 0.10.11 confirmada — 11-09-2026
 
-- Pedido: na Visão Geral, o cartão «Sem sociedade» deve apresentar apenas o número total de registos sem sociedade associada. Foi removida deste cartão a repartição por sociedades, que mostrava linhas sem significado com valor zero; o total e o acesso aos registos afectados mantêm-se.
-- Versão preparada: 0.10.11. Segurança de ficheiros, lint, TypeScript, build, runtime de tradução e 182 testes unitários aprovados. O teste E2E dirigido não chegou à asserção porque o servidor local não respondeu ao Chromium em 30 nem 90 segundos; validação E2E integral obrigatória na CI limpa antes da publicação.
-- Produção permanece confirmada em 0.10.10, deployment `e36f5d19-df01-4ef4-ad22-e0380a2f0afc`, version `fa63aacc-022e-4f6e-b1cd-301dd9c15f56`, até o novo commit estar preservado no GitHub e a CI ficar verde. Sem migrations nem alterações no Supabase, Azure Translator ou segredos.
+- Na Visão Geral, o cartão «Sem sociedade» apresenta apenas o total de registos sem sociedade associada. Foi removida a repartição por sociedades com valores zero; o total e o acesso aos registos afectados mantêm-se.
+- Commit funcional `3f76d179c17e3df483f939cb96c6055e4e73345e` e limpeza das notas em `6489e4c6b9060f4730824bfc43e6bc1653f387b4`, preservados no GitHub antes da publicação. CI `34621786800` e CI final `34622385108` integralmente verdes, incluindo segurança, lint, tipos, 182 testes unitários, runtime de tradução, build, auditoria e E2E; secret scans verdes.
+- Produção 0.10.11 activa a 100% desde 16:35:11 UTC: deployment `00fe667a-e300-4365-bff4-97c16e87f37f`, version `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`. HTTP 200, notas sem versões duplicadas e browser autenticado confirmam o cartão apenas com «Sem sociedade 46» e «Ver movimentos». Sem migrations nem alterações no Supabase, Azure Translator ou segredos.
 
 ## Publicação 0.10.10 confirmada — 11-09-2026
 
