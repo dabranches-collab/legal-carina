@@ -5,13 +5,6 @@
   ],
   "releases": [
     {
-      "version": "0.10.10",
-      "changes": [
-        "O subtotal Por receber apresenta 0 € quando uma sociedade não tem movimentos facturados por pagar.",
-        "O menu Registos abre a listagem completa sem conservar pré-filtros de uma consulta anterior."
-      ]
-    },
-    {
       "version": "0.10.0",
       "changes": [
         "Notas de honorários com histórico de versões, revisão da selecção e filtros Todos, Com nota, Sem nota e Estornada.",
