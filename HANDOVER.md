@@ -2,6 +2,7 @@
 
 ## Auditoria de continuidade preparada — 14-09-2026
 
+- Alerta GitHub Actions corrigido após a primeira CI verde: `checkout`, `setup-node` e `pnpm/action-setup` passaram das actions v4, ainda baseadas em Node 20, para as versões oficiais v6 com runtime Node 24. Alteração apenas de CI, sem dependências da aplicação ou deploy.
 - Linha funcional confirmada sem alterações de produção: versão `0.10.11`, branch `codex/legalteam-distribution`, HEAD documental `793644c9ca666fe5d1b118468f20296ae438b267`; não foi encontrada versão posterior nas branches remotas.
 - Checkout oficial retomado em `C:\Projetos\legal-carina` na branch de trabalho `codex/centralize-0.10.11`. README, arquitectura, deployment e protocolo de computador novo foram alinhados com Supabase/Cloudflare/Azure efectivamente activos.
 - Auditoria Supabase exclusivamente de leitura: 5 utilizadores Auth confirmados, 5 pertenças à firma, 6 acessos, 6 permissões financeiras, zero órfãos; 46/46 tabelas públicas com RLS e 96 políticas. Ver `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`.
