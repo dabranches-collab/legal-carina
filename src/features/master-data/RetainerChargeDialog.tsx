@@ -2,6 +2,7 @@ import { chargeStatuses } from './retainerCharge'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useModalLifecycle } from '../../hooks/useModalLifecycle'
+import {CalendarDateInput} from '../../components/CalendarDateInput'
 
 export type RetainerCharge={id:string;period_start:string;amount:number;currency:string;status:'pending'|'invoiced'|'paid'|'uncollectible';invoice_reference:string|null;invoice_date:string|null;due_on:string|null;paid_on:string|null;notes:string|null}
 
@@ -15,7 +16,7 @@ export function RetainerChargeDialog({charge,readOnly,onClose,onSave}:{charge:Re
   <fieldset disabled={readOnly||busy} className="mt-4 grid gap-3 sm:grid-cols-2">
    <label>Estado<select aria-label="Estado" className="control mt-1 w-full px-2" value={draft.status} onChange={event=>setDraft({...draft,status:event.target.value as RetainerCharge['status']})}>{Object.entries(chargeStatuses).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>
    <label>N.º factura<input aria-label="N.º factura" className="control mt-1 w-full px-2" disabled={draft.status==='pending'} value={draft.invoice_reference??''} onChange={event=>setDraft({...draft,invoice_reference:event.target.value})}/></label>
-   {([['invoice_date','Data da factura'],['due_on','Vencimento'],['paid_on','Liquidação']] as const).map(([key,label])=><label key={key}>{label}<input aria-label={label} type="date" className="control mt-1 w-full min-w-0 px-2" disabled={key==='invoice_date'?draft.status==='pending':key==='paid_on'?draft.status!=='paid':false} value={draft[key]??''} onChange={event=>setDraft({...draft,[key]:event.target.value||null})}/></label>)}
+   {([['invoice_date','Data da factura'],['due_on','Vencimento'],['paid_on','Liquidação']] as const).map(([key,label])=><label key={key}>{label}<CalendarDateInput ariaLabel={label} className="mt-1 w-full px-2" disabled={key==='invoice_date'?draft.status==='pending':key==='paid_on'?draft.status!=='paid':false} value={draft[key]??''} onChange={value=>setDraft({...draft,[key]:value||null})}/></label>)}
    <label className="sm:col-span-2">Observações<textarea aria-label="Observações" className="control mt-1 w-full p-2" value={draft.notes??''} onChange={event=>setDraft({...draft,notes:event.target.value})}/></label>
   </fieldset>
   {error&&<p role="alert" className="mt-3 text-danger">{error}</p>}

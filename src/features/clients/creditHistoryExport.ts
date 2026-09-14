@@ -1,6 +1,7 @@
 import type { CreditAccount, CreditMovement } from './credit'
 import { creditDate, creditMoney } from './credit'
 import type { CreditUsage } from './creditUsage'
+import {formatDate} from '../../utils/date'
 
 export type HistoryMode='values'|'time'
 export function creditHistoryData(account:CreditAccount,usage:CreditUsage,movements:CreditMovement[],mode:HistoryMode){
@@ -27,7 +28,7 @@ export function creditHistoryData(account:CreditAccount,usage:CreditUsage,moveme
 }
 
 export async function createCreditHistoryFile(account:CreditAccount,usage:CreditUsage,movements:CreditMovement[],mode:HistoryMode,format:'pdf'|'xlsx'){
- const data=creditHistoryData(account,usage,movements,mode),name=`historico-provisoes-${new Date().toLocaleDateString('sv-SE')}`
+ const data=creditHistoryData(account,usage,movements,mode),name=`historico-provisoes-${formatDate(new Date(),'')}`
  if(format==='xlsx'){
   const XLSX=await import('xlsx'),book=XLSX.utils.book_new()
   const sheet=XLSX.utils.aoa_to_sheet([[account.client_name],[account.society_name],['Histórico de provisões · '+account.currency],[],data.header,...data.rows,[],['Resumo final'],...data.summary])

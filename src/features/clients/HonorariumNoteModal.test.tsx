@@ -61,7 +61,7 @@ describe('HonorariumNoteModal',()=>{
   expect(printable).not.toHaveTextContent('Reunião')
   await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
-  expect(downloads).toEqual([expect.stringMatching(/^nota-honorarios-cliente-teste-\d{4}-\d{2}-\d{2}\.pdf$/)])
+  expect(downloads).toEqual([expect.stringMatching(/^nota-honorarios-cliente-teste-\d{2}-\d{2}-\d{4}\.pdf$/)])
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='07-2026'&&options?.align==='center')).toBe(true)
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='1:15:00'&&options?.align==='center')).toBe(true)
  })
@@ -80,7 +80,7 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Provisão descontada: 123,00 EUR'))).toBe(true)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Valor a pagar: 0,00 EUR'))).toBe(true)
   const generatedText=pdfText.mock.calls.flatMap(([text])=>Array.isArray(text)?text:[text]).join(' ')
-  expect(generatedText).toContain('Alfragide, 03 de Setembro de 2026')
+  expect(generatedText).toContain('Alfragide, 03-09-2026')
   expect(generatedText).toContain('valor de 100,00 EUR (cem euros)')
   expect(generatedText).toContain('perfazendo 123,00 EUR (cento e vinte e três euros)')
   expect(generatedText).toContain('Não existe valor adicional a pagar nesta nota.')
@@ -159,7 +159,7 @@ describe('HonorariumNoteModal',()=>{
   await user.click(screen.getByLabelText('Seleccionar movimento de 2026-07-03'))
   await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   await waitFor(()=>expect(URL.createObjectURL).toHaveBeenCalled())
-  expect(downloads).toEqual([expect.stringMatching(/^cobranca-cliente-cobranca-\d{4}-\d{2}-\d{2}\.pdf$/)])
+  expect(downloads).toEqual([expect.stringMatching(/^cobranca-cliente-cobranca-\d{2}-\d{2}-\d{4}\.pdf$/)])
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('COBRANÇA')
   expect(document.querySelector('.honorarium-print-area')).toHaveTextContent('Cliente: Cliente Cobrança')
   expect(pdfText.mock.calls.some(([value])=>value==='ASSUNTO: COBRANÇA')).toBe(true)
@@ -247,8 +247,8 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfRect.mock.calls.some((call)=>Number(call[3])>8&&Number(call[3])!==9)).toBe(true)
  })
  it.each([
-  ['honorarium' as const,/^nota-honorarios-cliente-acores-teste-\d{4}-\d{2}-\d{2}\.pdf$/],
-  ['collection' as const,/^cobranca-cliente-acores-teste-\d{4}-\d{2}-\d{2}\.pdf$/],
+  ['honorarium' as const,/^nota-honorarios-cliente-acores-teste-\d{2}-\d{2}-\d{4}\.pdf$/],
+  ['collection' as const,/^cobranca-cliente-acores-teste-\d{2}-\d{2}-\d{4}\.pdf$/],
  ])('gera %s multipágina com todas as linhas, cabeçalhos e rodapés repetidos e nome seguro',async(documentKind,filePattern)=>{
   const manyRows=Array.from({length:90},(_,index)=>({id:`many-${index}`,work_date:`2026-${String(index%12+1).padStart(2,'0')}-15`,activity_description:`Intervenção sintética número ${index+1} com descrição suficiente para validar a paginação`,duration_minutes:15+(index%8)*15,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:10+index,status:'approved'}))
   rpc.mockResolvedValueOnce({error:null,data:{total:manyRows.length,items:manyRows}})

@@ -100,7 +100,7 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
   for(const row of rows)expect(text).toContain(row.id)
   expect(text).toContain(language==='en'?'VAT':'TVA')
-  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, le 4 septembre 2026')
+  expect(text).toContain('Alfragide, 04-09-2026')
   const mutations:string[]=[];page.on('request',request=>{if(request.url().includes('/rest/v1/')&&request.method()==='POST'&&!/get_|search_/.test(request.url()))mutations.push(request.url())})
   await expect(page.getByLabel('Idioma do documento')).toBeDisabled()
   const repeat=page.waitForEvent('download');await page.getByRole('button',{name:'Guardar novamente a nota'}).click();await (await repeat).saveAs(path.resolve(`.tmp/reprint-${language}-repeat.pdf`))
@@ -116,8 +116,8 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
 })
 
 for(const document of [
-  {button:'Nota de Honorários',file:'nota-honorarios-cliente-acores-qa-2026-09-04.pdf'},
-  {button:'Cobrança',file:'cobranca-cliente-acores-qa-2026-09-04.pdf'},
+  {button:'Nota de Honorários',file:'nota-honorarios-cliente-acores-qa-04-09-2026.pdf'},
+  {button:'Cobrança',file:'cobranca-cliente-acores-qa-04-09-2026.pdf'},
 ] as const){
   test(`gera PDF real multipágina de ${document.button}`,async({page})=>{
     await page.setViewportSize({width:1440,height:900})

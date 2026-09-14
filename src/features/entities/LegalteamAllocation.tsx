@@ -101,7 +101,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
  const amount=(row:AllocationWork,field:'amount'|'clientShare'|'taskShare'|'executionShare'|'officeShare')=>allocations.get(row.id)?.[field]
  const shareColumn=(id:string,label:string,field:'amount'|'clientShare'|'taskShare'|'executionShare'|'officeShare'):TableColumn<AllocationWork>=>({id,label,value:r=>{const n=amount(r,field);return n===undefined?null:n/100},render:r=>{const n=amount(r,field);return n===undefined?(r.billing_scope==='retainer'||!r.is_billable?'—':'Por apurar'):euros(n)},width:150})
  const columns:TableColumn<AllocationWork>[]=[
-  {id:'date',label:'Data',value:r=>r.work_date,width:115},
+  {id:'date',label:'Data',kind:'date',value:r=>r.work_date,width:115},
   {id:'client',label:'Cliente',value:r=>r.client_name,width:190},
   {id:'activity',label:'Actividade',value:r=>r.activity_description,width:260},
   {id:'responsible',label:'Responsável',value:r=>professionalName(r.professional_name?.trim()||'Por identificar'),width:170},

@@ -3,7 +3,7 @@
 ## Release 0.10.12 autorizada — 14-09-2026
 
 - Ordem explícita recebida: «avança e publica».
-- Candidato limitado às quatro correcções já revistas no PR #19; sem migrations, alterações de Auth/permissões, Storage, Edge Functions ou segredos.
+- O candidato inclui as quatro correcções já revistas no PR #19 e o formato global `DD-MM-AAAA` para apresentação, introdução, impressão e exportação. Datas persistidas e transmitidas ao Supabase continuam em ISO; sem migrations, alterações de Auth/permissões, Storage, Edge Functions ou segredos.
 - Produção permanece em 0.10.11 até o commit exacto da release estar em `main`, com CI/secret scan verdes, sentinela de continuidade revista e dry-run Cloudflare aprovado.
 - Rollback preservado: versão Cloudflare anterior `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`.
 

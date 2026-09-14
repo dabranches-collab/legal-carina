@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf'
 import type { ProvisionNote } from './credit'
 import { formalCopy, moneyInWords } from './formalDocumentCopy'
+import {formatDate} from '../../utils/date'
 export type Entry={id:string;work_date:string;activity_description:string;duration_minutes:number;professional_name:string;billing_entity_name:string|null;billing_entity_id?:string;effective_amount:number|null;status?:string;is_invoiced?:boolean;is_paid?:boolean}
 export type EntryExpense={id:string;work_entry_id:string;amount:number;currency:string;observations:string|null}
 export type SearchResult={items:Entry[];total:number;pageSize?:number}
@@ -24,12 +25,8 @@ const expenseCopy:Record<DocumentLanguage,{heading:string;movement:string;amount
 const monthYear=(date:string)=>{const [year,month]=date.split('-');return `${month}-${year}`}
 const duration=(minutes:number)=>`${Math.floor(minutes/60)}:${String(minutes%60).padStart(2,'0')}:00`
 export const filePart=(value:string)=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'').toLowerCase()||'cliente'
-export const fileDate=(value:Date)=>`${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`
-const formalDate=(value:Date,language:DocumentLanguage)=>{
- if(language==='pt')return `Alfragide, ${String(value.getDate()).padStart(2,'0')} de ${value.toLocaleDateString('pt-PT',{month:'long'}).replace(/^./,letter=>letter.toLocaleUpperCase('pt-PT'))} de ${value.getFullYear()}`
- const date=value.toLocaleDateString(language==='fr'?'fr-FR':'en-GB',{day:'numeric',month:'long',year:'numeric'})
- return language==='fr'?`Alfragide, le ${date.replace(/^1 /,'1er ')}`:`Alfragide, ${date}`
-}
+export const fileDate=(value:Date)=>formatDate(value,'')
+const formalDate=(value:Date,_language:DocumentLanguage)=>`Alfragide, ${formatDate(value)}`
 export const downloadPdf=(doc:jsPDF,fileName:string)=>{const url=URL.createObjectURL(doc.output('blob')),link=document.createElement('a');link.href=url;link.download=fileName;link.style.display='none';document.body.appendChild(link);link.click();link.remove();window.setTimeout(()=>URL.revokeObjectURL(url),1000)}
 
 export type FormalSnapshot={version:1;clientName:string;clientDocument:ClientDocumentData|null;issuer:IssuerData|null;issuerLogo:string|null;language:DocumentLanguage;columns:PdfColumn[];showTimeTotal:boolean;showAmountTotal:boolean;bankAccounts:BankAccount[]}
