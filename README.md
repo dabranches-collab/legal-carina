@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.11`; release `0.10.12` em preparação a partir de `main`.
-- Fonte canónica do código no GitHub: `main`, reconciliada no commit `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`.
+- Versão publicada: `0.10.12`; release `0.10.13` em preparação para apresentar progressivamente a lista completa de registos.
+- Fonte canónica do código no GitHub: `main`, no commit `a178a48dfcb295f053a28dff5639fe3be8868b2b`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- A release 0.10.12 acrescenta quatro correcções validadas e uniformiza a apresentação de datas como `DD-MM-AAAA`, mantendo ISO no backend; a publicação foi autorizada em 14-09-2026 e só avança depois de todos os gates verdes.
+- A release 0.10.12 acrescentou quatro correcções validadas e uniformizou a apresentação de datas como `DD-MM-AAAA`, mantendo ISO no backend. A 0.10.13 corrige apenas a apresentação progressiva da tabela durante o carregamento integral.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 

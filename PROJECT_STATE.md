@@ -1,10 +1,19 @@
 # Estado do projecto
 
-## Release 0.10.12 em preparação — 14-09-2026
+## Release 0.10.13 em preparação — 14-09-2026
+
+- A tabela de Registos passa a incorporar progressivamente blocos completos de 400 linhas durante a preparação do universo integral, em vez de conservar apenas as primeiras 100 até ao fim.
+- Teste de regressão incluído; 190 testes unitários e TypeScript aprovados nesta primeira validação. Sem alterações remotas de dados ou acessos.
+- As novidades da 0.10.12 foram movidas para o histórico e a 0.10.13 identifica esta correcção, preservando o resumo acumulado por utilizador.
+
+## Release 0.10.12 publicada — 14-09-2026
 
 - Publicação explicitamente autorizada pelo utilizador.
 - A release contém as quatro correcções revistas no PR #19 e uniformiza todas as datas visíveis, introduzidas, impressas e exportadas como `DD-MM-AAAA`; o formato técnico ISO permanece inalterado. Não contém migrations nem alterações remotas de dados, acessos, permissões, Storage, Edge Functions ou segredos.
-- Promoção condicionada a commit em `main`, CI/secret scan verdes, dry-run Cloudflare e comparação das sentinelas antes/depois. Produção mantém 0.10.11 durante a preparação.
+- PR #21 fundido em `main` no commit `a178a48dfcb295f053a28dff5639fe3be8868b2b`; CI `34830591941` e secret scan `34830591990` verdes.
+- Produção 0.10.12 activa a 100% desde `10:02:08 UTC`: deployment `eed372db-b709-42bb-9732-145ae84e2eb4`, version `8f822fe7-584b-4d90-8977-6d297c5b6b24`. HTTP e `release-notes.json` responderam 200.
+- Browser autenticado manteve a sessão e os 7 271 movimentos acessíveis após a actualização; versão 0.10.12 e datas `DD-MM-AAAA` confirmadas. A lista das cinco alterações foi apresentada antes de actualizar.
+- Nenhuma migration nem alteração de Auth, utilizadores, permissões, dados, Storage, Edge Functions ou segredos. Rollback preservado para `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387` (0.10.11).
 
 ## Continuidade centralizada — 14-09-2026
 

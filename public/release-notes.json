@@ -1,13 +1,19 @@
 {
-  "version": "0.10.12",
+  "version": "0.10.13",
   "changes": [
+    "A lista de registos passa a mostrar progressivamente os blocos já carregados, sem ficar parada nas primeiras linhas até terminar de preparar todo o universo."
+  ],
+  "releases": [
+    {
+      "version": "0.10.12",
+      "changes": [
     "A primeira cobrança de uma avença anual respeita correctamente a data de início, sem criar um período mensal indevido.",
     "Ao criar um registo, é seleccionada apenas a avença válida na data indicada, mesmo quando existe um histórico extenso.",
     "O histórico de provisões desconta apenas o montante efectivamente utilizado numa nota parcial.",
     "Novos documentos de identificação do cliente conservam o identificador guardado e deixam de poder ser inseridos novamente por engano.",
     "Todas as datas visíveis, introduzidas, impressas e exportadas usam o formato DD-MM-AAAA, sem alterar o formato técnico guardado na base de dados."
-  ],
-  "releases": [
+      ]
+    },
     {
       "version": "0.10.11",
       "changes": [

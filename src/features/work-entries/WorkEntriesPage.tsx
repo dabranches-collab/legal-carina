@@ -150,7 +150,7 @@ export function prefetchWorkEntries(){
   return backgroundPrefetch;
 }
 function invalidateWorkUniverse(){cacheGeneration++;workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
-async function hydrateExpenseSummaries(entries:Entry[]){
+async function hydrateExpenseSummaryChunk(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
   const db=supabase;
   const scopeRows=await readIdBatches(entries.filter(row=>!row.billing_scope).map(row=>row.id),(ids,from,to)=>db.from('work_entries').select('id,billing_scope').in('id',ids).order('id').range(from,to));
@@ -159,6 +159,15 @@ async function hydrateExpenseSummaries(entries:Entry[]){
   const expenses=await readIdBatches(entries.map(row=>row.id),(ids,from,to)=>db.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',ids).eq('status','active').order('id').range(from,to));
   for(const item of expenses){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count++;if(item.observations)current.notes.push(item.observations);current.details.push(money.format(amount)+' — '+(item.observations||'Sem observação'));summaries.set(item.work_entry_id,current)}
   return entries.map(row=>{const summary=summaries.get(row.id),billing_scope=row.billing_scope??scopes.get(row.id)??'standard';return summary?{...row,billing_scope,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,billing_scope,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
+}
+async function hydrateExpenseSummaries(entries:Entry[],onProgress?: (loaded:number,total:number,rows?:Entry[])=>void){
+  if(!onProgress)return hydrateExpenseSummaryChunk(entries);
+  const hydrated:Entry[]=[];
+  for(let start=0;start<entries.length;start+=400){
+    hydrated.push(...await hydrateExpenseSummaryChunk(entries.slice(start,start+400)));
+    onProgress(hydrated.length,entries.length,[...hydrated]);
+  }
+  return hydrated;
 }
 const money = new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -391,7 +400,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     clientType &&
       `Tipo de cliente: ${clientType === "company" ? "Empresa" : clientType === "mixed" ? "Mistos" : "Particular"}`,
   ].filter(Boolean) as string[];
-  const loadExportRows = useCallback(async (onProgress?: (loaded:number,total:number)=>void) => {
+  const loadExportRows = useCallback(async (onProgress?: (loaded:number,total:number,rows?:Entry[])=>void) => {
     if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
     const exportArgs = {
       p_search: query || null,
@@ -454,10 +463,9 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       if (response.error) throw new Error(response.error.message);
       entries = ((response.data as SearchMeta).items ?? []);
     } else {
-      entries = await fetchWorkUniverse(exportArgs,onProgress);
+      entries = await fetchWorkUniverse(exportArgs);
     }
-    onProgress?.(entries.length,entries.length);
-    return hydrateExpenseSummaries(entries);
+    return hydrateExpenseSummaries(entries,onProgress);
   }, [
     query,
     year,

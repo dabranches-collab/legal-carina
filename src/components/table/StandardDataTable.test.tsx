@@ -65,6 +65,20 @@ describe('StandardDataTable',()=>{
     expect(screen.queryByLabelText('Linhas por página')).not.toBeInTheDocument()
   })
 
+  test('apresenta progressivamente as linhas completas enquanto carrega o universo',async()=>{
+    const partial=[...rows,{id:'4',name:'Duarte',amount:5,active:true}]
+    let finish!: (value:Row[])=>void
+    const loadAllRows=vi.fn((onProgress?: (loaded:number,total:number,rows?:Row[])=>void)=>new Promise<Row[]>(resolve=>{
+      finish=resolve
+      onProgress?.(partial.length,8,partial)
+    }))
+    render(<StandardDataTable id="progressive-universe" label="Tabela progressiva" rows={rows.slice(0,1)} columns={columns} rowKey={row=>row.id} loadAllRows={loadAllRows}/>)
+    expect(await screen.findByText('A carregar todo o universo (4 de 8)…')).toBeInTheDocument()
+    expect(screen.getByText('Duarte')).toBeInTheDocument()
+    finish(partial)
+    expect(await screen.findByText('4 resultados de 4')).toBeInTheDocument()
+  })
+
   test('abre uma linha com duplo clique ou Enter quando existe acção configurada',async()=>{
     const user=userEvent.setup(),onOpen=vi.fn()
     render(<StandardDataTable id="open-row" label="Tabela editável" rows={rows} columns={columns} rowKey={row=>row.id} onRowDoubleClick={onOpen}/>)

@@ -55,7 +55,7 @@ type Props<Row> = {
   onSelectionChange?: (ids: string[]) => void;
   emptyMessage?: string;
   loadExportRows?: () => Promise<Row[]>;
-  loadAllRows?: (onProgress?: (loaded: number, total: number) => void) => Promise<Row[]>;
+  loadAllRows?: (onProgress?: (loaded: number, total: number, rows?: Row[]) => void) => Promise<Row[]>;
   totalRows?: number;
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
@@ -640,7 +640,11 @@ export function StandardDataTable<Row>({
     setUniverseLoading(true);
     setUniverseProgress(null);
     setUniverseError("");
-    void loadAllRows((loaded,total)=>{if(active)setUniverseProgress({loaded,total})})
+    void loadAllRows((loaded,total,partialRows)=>{
+      if(!active)return;
+      setUniverseProgress({loaded,total});
+      if(partialRows)setUniverseRows(partialRows);
+    })
       .then((result) => {
         if (active) setUniverseRows(result);
       })

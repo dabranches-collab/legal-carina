@@ -2,6 +2,8 @@
 
 Esta linha de base foi recolhida apenas por leitura. Não contém nomes, emails, identificadores de utilizador, PINs, tokens, segredos nem conteúdo de clientes.
 
+Actualização de publicação: a versão 0.10.12 foi promovida em 14-09-2026 a partir do `main` `a178a48dfcb295f053a28dff5639fe3be8868b2b`, no deployment `eed372db-b709-42bb-9732-145ae84e2eb4` e version `8f822fe7-584b-4d90-8977-6d297c5b6b24`. A operação limitou-se ao frontend Cloudflare; nenhuma migration, conta, permissão, função, segredo ou ficheiro Storage foi alterado.
+
 ## Resultado
 
 - Versão publicada mais recente encontrada: `0.10.11`; não foi encontrada versão posterior em nenhuma branch remota.
