@@ -1,10 +1,16 @@
 {
-  "version": "0.10.14",
+  "version": "0.10.15",
   "changes": [
-    "Ao acrescentar ou mudar uma vertente de cliente para Empresa, o próximo código 01.xxxx é calculado imediatamente e fica guardado com o tipo correcto.",
-    "O arquivo de documentos do cliente passa a apresentar a causa real quando o serviço rejeita um carregamento, permitindo corrigir permissões, sessão ou dados sem um aviso enganador de indisponibilidade."
+    "O menu Registos passa a aparecer imediatamente a seguir a Visão Geral, para acesso mais directo aos movimentos."
   ],
   "releases": [
+    {
+      "version": "0.10.14",
+      "changes": [
+        "Ao acrescentar ou mudar uma vertente de cliente para Empresa, o próximo código 01.xxxx é calculado imediatamente e fica guardado com o tipo correcto.",
+        "O arquivo de documentos do cliente passa a apresentar a causa real quando o serviço rejeita um carregamento, permitindo corrigir permissões, sessão ou dados sem um aviso enganador de indisponibilidade."
+      ]
+    },
     {
       "version": "0.10.13",
       "changes": [

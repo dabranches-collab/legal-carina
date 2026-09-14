@@ -10,9 +10,9 @@ const resultRows = <T,>(data: unknown): T[] => Array.isArray(data) ? data as T[]
 
 const navigation: NavigationItem[] = [
   { id: 'overview', label: 'Visão Geral', icon: 'overview' },
+  { id: 'work', label: 'Registos', icon: 'clock' },
   { id: 'clients', label: 'Clientes', icon: 'clients' },
   { id: 'billing', label: 'Sociedades', icon: 'building' }, { id: 'professionals', label: 'Responsáveis', icon: 'people' },
-  { id: 'work', label: 'Registos', icon: 'clock' },
   { id: 'notes', label: 'Notas', icon: 'audit' },
   { id: 'admin', label: 'Definições', icon: 'admin' },
 ]

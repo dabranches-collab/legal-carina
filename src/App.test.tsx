@@ -31,7 +31,10 @@ const renderApp=(role:'owner'|'admin'|'operator'='owner')=>render(<AuthContext.P
 describe('interface principal', () => {
   it('apresenta navegação, cabeçalho e indicadores da visão geral', async () => {
     renderApp()
-    expect(screen.getByRole('complementary', { name: 'Navegação principal' })).toBeInTheDocument()
+    const sidebar=screen.getByRole('complementary', { name: 'Navegação principal' })
+    expect(sidebar).toBeInTheDocument()
+    const topLevelNavigation=[...sidebar.querySelectorAll(':scope > nav > ul > li > button')].map(button=>button.textContent?.trim())
+    expect(topLevelNavigation.slice(0,2)).toEqual(['Visão Geral','Registos'])
     expect(screen.getByRole('navigation', { name: 'Localização' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Actualizar dados apresentados' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Activar modo escuro' })).toBeInTheDocument()
