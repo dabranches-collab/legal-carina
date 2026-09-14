@@ -61,13 +61,14 @@ Deno.serve(async(request)=>{
     if(!allowed)return json(request,{error:'Sem permissão para arquivar documentos deste cliente.'},403)
     const contentHash=await hash(bytes)
     const {data:duplicate,error:duplicateError}=await admin.from('client_documents').select('id,title').eq('firm_id',firmId).eq('client_id',clientId).eq('sha256',contentHash).neq('status','removed').maybeSingle()
-    if(duplicateError)throw duplicateError
+    if(duplicateError){console.error('client-documents duplicate lookup failed',duplicateError);return json(request,{error:'Não foi possível verificar se o documento já existe.'},500)}
     if(duplicate)return json(request,{error:`Este ficheiro já está arquivado neste cliente como “${duplicate.title}”.`},409)
     const documentId=crypto.randomUUID(),path=`${firmId}/${clientId}/${documentId}/${safeName(file.name)}`
-    const {error:uploadError}=await admin.storage.from('client-documents').upload(path,bytes,{contentType:canonicalMime,upsert:false});if(uploadError)throw uploadError
+    const {error:uploadError}=await admin.storage.from('client-documents').upload(path,bytes,{contentType:canonicalMime,upsert:false})
+    if(uploadError){console.error('client-documents storage upload failed',uploadError);return json(request,{error:'Não foi possível guardar o ficheiro no arquivo privado.'},500)}
     const record={id:documentId,firm_id:firmId,client_id:clientId,category,title,description:String(form.get('description')??'').trim()||null,original_filename:file.name.normalize('NFKC').slice(0,255),storage_path:path,mime_type:canonicalMime,size_bytes:file.size,sha256:contentHash,document_date:String(form.get('documentDate')??'')||null,expires_at:String(form.get('expiresAt')??'')||null,uploaded_by:authData.user.id}
     const {error:metadataError}=await admin.from('client_documents').insert(record)
-    if(metadataError){await admin.storage.from('client-documents').remove([path]);throw metadataError}
+    if(metadataError){console.error('client-documents metadata insert failed',metadataError);await admin.storage.from('client-documents').remove([path]);return json(request,{error:'Não foi possível registar os dados do documento.'},500)}
     return json(request,{documentId},201)
-  }catch{return json(request,{error:'Não foi possível concluir a operação documental.'},400)}
+  }catch(error){console.error('client-documents unexpected failure',error);return json(request,{error:'Não foi possível concluir a operação documental.'},500)}
 })
