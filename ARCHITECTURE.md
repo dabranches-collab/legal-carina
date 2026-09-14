@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-SPA React/TypeScript compilada pelo Vite. A interface está separada por componentes e páginas; integrações externas ainda não foram ativadas.
+SPA React/TypeScript compilada pelo Vite e servida por um Cloudflare Worker com Static Assets. O Supabase centraliza dados, autenticação, autorização, auditoria, ficheiros privados e Edge Functions. A tradução PT/EN/FR é mediada pelo Worker e enviada ao Azure Translator; as credenciais ficam em segredos backend e nunca no bundle.
 
 ## Fronteiras
 
@@ -17,9 +17,11 @@ SPA React/TypeScript compilada pelo Vite. A interface está separada por compone
 
 ## Decisões
 
-1. SPA estática nesta fase; autenticação e modelo de dados serão desenhados antes da integração.
+1. O browser é um cliente da plataforma online; nenhum computador local é fonte canónica de dados ou código.
 2. O browser receberá apenas credenciais públicas do Supabase; operações privilegiadas ficam no servidor.
 3. Tabelas expostas terão RLS e políticas por escritório/utilizador. Views deverão usar `security_invoker` quando aplicável.
-4. O deploy Cloudflare será configurado e validado numa fase posterior, sem duplicar o backend Supabase.
+4. A publicação Cloudflare é manual e exige a ordem explícita `publica`. Pushes e pull requests não podem publicar produção automaticamente.
+5. O GitHub é a fonte canónica do código. Enquanto `main` não for reconciliada, a linha funcional publicada é `codex/legalteam-distribution` no commit documentado.
+6. Migrations aplicadas nunca são renomeadas, apagadas ou reexecutadas por suposição. A divergência histórica é reconciliada por nome e efeito, com SQL novo e aditivo quando necessário.
 
 Registos detalhados de decisões futuras deverão ficar em `docs/architecture/`.

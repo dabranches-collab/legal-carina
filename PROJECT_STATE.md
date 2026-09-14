@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Continuidade centralizada — 14-09-2026
+
+- A versão canónica confirmada continua `0.10.11`; não existe versão posterior nas branches remotas. Produção e código funcional permanecem inalterados.
+- O GitHub contém a linha funcional em `codex/legalteam-distribution` / `793644c9ca666fe5d1b118468f20296ae438b267`; `main` continua antiga e requer reconciliação por PR, sem force-push.
+- Integridade de acessos confirmada apenas por agregados: 5 Auth/5 pertenças, 6 atribuições, 6 permissões financeiras e zero órfãos. Todas as 46 tabelas públicas têm RLS; 96 políticas activas.
+- A documentação corrente e o script de auditoria read-only estão em `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`. CI e secret scan passam também a vigiar pushes na branch funcional.
+- Nenhum dado, utilizador, permissão, migration, bucket, ficheiro, função, segredo ou deployment remoto foi modificado. Backup/PITR e cópia independente dos objectos Storage continuam por confirmar e bloqueiam alterações remotas.
+
 ## Publicação 0.10.11 confirmada — 11-09-2026
 
 - Na Visão Geral, o cartão «Sem sociedade» apresenta apenas o total de registos sem sociedade associada. Foi removida a repartição por sociedades com valores zero; o total e o acesso aos registos afectados mantêm-se.
