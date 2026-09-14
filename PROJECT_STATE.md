@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Release 0.10.12 em preparação — 14-09-2026
+
+- Publicação explicitamente autorizada pelo utilizador.
+- A release contém as quatro correcções revistas no PR #19 e uniformiza todas as datas visíveis, introduzidas, impressas e exportadas como `DD-MM-AAAA`; o formato técnico ISO permanece inalterado. Não contém migrations nem alterações remotas de dados, acessos, permissões, Storage, Edge Functions ou segredos.
+- Promoção condicionada a commit em `main`, CI/secret scan verdes, dry-run Cloudflare e comparação das sentinelas antes/depois. Produção mantém 0.10.11 durante a preparação.
+
 ## Continuidade centralizada — 14-09-2026
 
 - O aviso de depreciação do runtime Node 20 das GitHub Actions foi tratado com as versões oficiais v6 de `checkout`, `setup-node` e `pnpm/action-setup`; o Node de validação da aplicação mantém-se 24.

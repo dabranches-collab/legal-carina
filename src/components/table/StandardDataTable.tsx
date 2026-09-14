@@ -10,6 +10,8 @@ import {
 } from "react";
 import { createPortal, flushSync } from "react-dom";
 import { useAuth } from "../../features/auth/AuthContext";
+import {CalendarDateInput} from '../CalendarDateInput'
+import {formatDate,formatDateTime} from '../../utils/date'
 
 type Scalar = string | number | boolean | Date | null | undefined;
 type FilterValue = {
@@ -325,25 +327,11 @@ function FilterPanel<Row>({
         <div className="grid gap-3">
           <label className="text-xs font-semibold">
             Mínimo / início
-            <input
-              type={column.kind === "date" ? "date" : "number"}
-              value={value.min ?? ""}
-              onChange={(event) =>
-                onChange({ ...value, min: event.target.value })
-              }
-              className="control mt-1 w-full px-2"
-            />
+            {column.kind === "date"?<CalendarDateInput ariaLabel={`Data inicial — ${column.label}`} value={value.min??''} onChange={min=>onChange({...value,min})} className="mt-1 w-full px-2"/>:<input type="number" value={value.min??''} onChange={event=>onChange({...value,min:event.target.value})} className="control mt-1 w-full px-2"/>}
           </label>
           <label className="text-xs font-semibold">
             Máximo / fim
-            <input
-              type={column.kind === "date" ? "date" : "number"}
-              value={value.max ?? ""}
-              onChange={(event) =>
-                onChange({ ...value, max: event.target.value })
-              }
-              className="control mt-1 w-full px-2"
-            />
+            {column.kind === "date"?<CalendarDateInput ariaLabel={`Data final — ${column.label}`} value={value.max??''} onChange={max=>onChange({...value,max})} className="mt-1 w-full px-2"/>:<input type="number" value={value.max??''} onChange={event=>onChange({...value,max:event.target.value})} className="control mt-1 w-full px-2"/>}
           </label>
         </div>
       ) : (
@@ -834,7 +822,7 @@ export function StandardDataTable<Row>({
             ]),
           ),
         );
-      const sheet = utils.json_to_sheet(exportRows, { cellDates: true }),
+      const sheet = utils.json_to_sheet(exportRows, { cellDates: true, dateNF:'dd-mm-yyyy' }),
         book = utils.book_new();
       utils.book_append_sheet(book, sheet, label.slice(0, 31));
       const context = fold(query)
@@ -843,7 +831,7 @@ export function StandardDataTable<Row>({
         .slice(0, 30);
       writeFile(
         book,
-        `${id}-${new Date().toISOString().slice(0, 10)}${context ? `-${context}` : ""}.xlsx`,
+        `${id}-${formatDate(new Date(),"")}${context ? `-${context}` : ""}.xlsx`,
       );
       setExportStatus(`${sourceRows.length} resultados exportados para XLSX.`);
     } catch (exportError) {
@@ -870,7 +858,7 @@ export function StandardDataTable<Row>({
       <div className="print-table-heading hidden">
         <h2>{label}</h2>
         <p>
-          Gerado em {new Date().toLocaleString("pt-PT")} · {processed.length}{" "}
+          Gerado em {formatDateTime(new Date())} · {processed.length}{" "}
           resultados · {Object.values(filters).filter(hasFilterValue).length}{" "}
           filtros por coluna{query ? ` · Pesquisa: ${query}` : ""}
         </p>
@@ -1267,7 +1255,7 @@ export function StandardDataTable<Row>({
                           >
                             {column.render
                               ? column.render(row)
-                              : String(raw ?? "—")}
+                              : column.kind==='date'?formatDate(raw instanceof Date?raw:String(raw??'')):String(raw ?? "—")}
                           </div>
                         </td>
                       );

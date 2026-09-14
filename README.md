@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.11`; não foi encontrada versão posterior nas branches remotas.
+- Versão publicada: `0.10.11`; release `0.10.12` em preparação a partir de `main`.
 - Fonte canónica do código no GitHub: `main`, reconciliada no commit `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- O `main` contém quatro correcções validadas posteriores ao artefacto actualmente publicado; não foram publicadas porque falta a ordem explícita `publica`.
+- A release 0.10.12 acrescenta quatro correcções validadas e uniformiza a apresentação de datas como `DD-MM-AAAA`, mantendo ISO no backend; a publicação foi autorizada em 14-09-2026 e só avança depois de todos os gates verdes.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 

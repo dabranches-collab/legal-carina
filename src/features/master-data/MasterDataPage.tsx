@@ -20,6 +20,7 @@ import { ClientCreditPanel } from "../clients/ClientCreditPanel";
 import { ClientRetainerPanel } from "./ClientRetainerPanel";
 import { ClientCredentialsPanel } from "./ClientCredentialsPanel";
 import { withTransientRetry } from "../../lib/transientRetry";
+import {CalendarDateInput} from '../../components/CalendarDateInput'
 
 const HonorariumNoteModal = lazy(() =>
   import("../clients/HonorariumNoteModal").then((module) => ({
@@ -1798,29 +1799,11 @@ export function MasterDataPage({
                             </label>
                             <label className="text-sm font-semibold">
                               Data de emissão
-                              <input
-                                type="date"
-                                value={item.issued_on}
-                                onChange={(e) =>
-                                  updateIdentifier(index, {
-                                    issued_on: e.target.value,
-                                  })
-                                }
-                                className="control mt-1 w-full px-3"
-                              />
+                              <CalendarDateInput ariaLabel="Data de emissão" value={item.issued_on} onChange={issued_on=>updateIdentifier(index,{issued_on})} className="mt-1 w-full px-3"/>
                             </label>
                             <label className="text-sm font-semibold">
                               Validade
-                              <input
-                                type="date"
-                                value={item.expires_on}
-                                onChange={(e) =>
-                                  updateIdentifier(index, {
-                                    expires_on: e.target.value,
-                                  })
-                                }
-                                className="control mt-1 w-full px-3"
-                              />
+                              <CalendarDateInput ariaLabel="Validade" value={item.expires_on} onChange={expires_on=>updateIdentifier(index,{expires_on})} className="mt-1 w-full px-3"/>
                             </label>
                             <label className="text-sm font-semibold sm:col-span-2">
                               Notas do documento

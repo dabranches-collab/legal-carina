@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 import { supabase } from "../../lib/supabase";
+import {CalendarDateInput} from '../../components/CalendarDateInput'
+import {formatDate} from '../../utils/date'
 
 type Retainer = {
   id: string;
@@ -395,7 +397,7 @@ export function ClientRetainerPanel({
           <table className="w-full min-w-[48rem] text-sm">
             <thead className="bg-surface-subtle"><tr><th className="p-2 text-left">Vigência</th><th className="p-2 text-right">Valor mensal</th><th className="p-2 text-right">Horas incluídas</th><th className="p-2 text-left">Sociedade</th><th className="p-2 text-center">Estado</th><th className="p-2"></th></tr></thead>
             <tbody>{retainers.map(item=><tr key={item.id} tabIndex={0} onDoubleClick={()=>editTerms(item)} onKeyDown={event=>{if(event.key==='Enter'&&event.target===event.currentTarget){event.preventDefault();editTerms(item)}}} className={retainer?.id===item.id?'bg-secondary-soft':''}>
-              <td className="border-t border-border p-2">{item.starts_on} — {item.ends_on??'sem fim'}</td>
+              <td className="border-t border-border p-2">{formatDate(item.starts_on)} — {item.ends_on?formatDate(item.ends_on):'sem fim'}</td>
               <td className="border-t border-border p-2 text-right">{money(item.monthly_amount,item.currency)}</td>
               <td className="border-t border-border p-2 text-right">{item.included_hours==null?'—':`${item.included_hours} h / ${item.hours_interval_months===1?'mês':item.hours_interval_months===12?'ano':`${item.hours_interval_months} meses`}`}</td>
               <td className="border-t border-border p-2">{societies.find(s=>s.id===item.billing_entity_id)?.name??'—'}</td>
@@ -409,7 +411,7 @@ export function ClientRetainerPanel({
         <button type="button" onClick={()=>editTerms(null)} className="mt-3 min-h-10 rounded-lg border border-primary/40 px-3 font-semibold text-primary">+ Nova condição temporal</button>
       )}
       <div>
-        <h4 className="mt-4 font-display text-lg font-semibold">{retainer?`Editar condição iniciada em ${retainer.starts_on}`:'Adicionar nova condição temporal'}</h4>
+        <h4 className="mt-4 font-display text-lg font-semibold">{retainer?`Editar condição iniciada em ${formatDate(retainer.starts_on)}`:'Adicionar nova condição temporal'}</h4>
         <fieldset
           ref={formRef}
           data-independent-form
@@ -455,25 +457,11 @@ export function ClientRetainerPanel({
           </label>
           <label className="text-sm font-semibold">
             Início
-            <input
-              type="date"
-              value={form.starts_on}
-              onChange={(event) =>
-                setForm({ ...form, starts_on: event.target.value })
-              }
-              className="control mt-1 w-full px-3"
-            />
+            <CalendarDateInput ariaLabel="Início da avença" value={form.starts_on} onChange={starts_on=>setForm({...form,starts_on})} className="mt-1 w-full px-3"/>
           </label>
           <label className="text-sm font-semibold">
             Fim (opcional)
-            <input
-              type="date"
-              value={form.ends_on}
-              onChange={(event) =>
-                setForm({ ...form, ends_on: event.target.value })
-              }
-              className="control mt-1 w-full px-3"
-            />
+            <CalendarDateInput ariaLabel="Fim da avença" value={form.ends_on} onChange={ends_on=>setForm({...form,ends_on})} className="mt-1 w-full px-3"/>
           </label>
           <label className="text-sm font-semibold">
             Valor/hora de referência (opcional)
@@ -631,9 +619,9 @@ export function ClientRetainerPanel({
                     <td className="border-t border-border p-2 text-right">{money(charge.amount,charge.currency)}</td>
                     <td className="border-t border-border p-2">{chargeStatuses[charge.status]}</td>
                     <td className="border-t border-border p-2">{charge.invoice_reference||'—'}</td>
-                    <td className="border-t border-border p-2">{charge.invoice_date||'—'}</td>
-                    <td className="border-t border-border p-2">{charge.due_on||'—'}</td>
-                    <td className="border-t border-border p-2">{charge.paid_on||'—'}<button type="button" onClick={()=>setEditingCharge(charge)} className="control ml-2 px-3">Abrir prestação</button></td>
+                    <td className="border-t border-border p-2">{formatDate(charge.invoice_date)}</td>
+                    <td className="border-t border-border p-2">{formatDate(charge.due_on)}</td>
+                    <td className="border-t border-border p-2">{formatDate(charge.paid_on)}<button type="button" onClick={()=>setEditingCharge(charge)} className="control ml-2 px-3">Abrir prestação</button></td>
                   </tr>
                 ))}
               </tbody>

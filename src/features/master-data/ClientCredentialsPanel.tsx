@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import {formatDateTime} from '../../utils/date'
 type Credential = {
   id: string;
   platform_name: string;
@@ -254,15 +255,11 @@ export function ClientCredentialsPanel({
                             {version.password}
                           </td>
                           <td className="border-t border-border p-2">
-                            {new Date(version.valid_from).toLocaleString(
-                              "pt-PT",
-                            )}
+                            {formatDateTime(version.valid_from)}
                           </td>
                           <td className="border-t border-border p-2">
                             {version.valid_until
-                              ? new Date(version.valid_until).toLocaleString(
-                                  "pt-PT",
-                                )
+                              ? formatDateTime(version.valid_until)
                               : "Actual"}
                           </td>
                         </tr>

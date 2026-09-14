@@ -3,7 +3,7 @@ import { allocateHonoraria, allocationColors } from './allocation'
 
 export type AllocationReport={start:string;end:string;payment:'all'|'paid'|'unpaid';clientNames:string[];allClients:boolean;rates:AllocationRates;work:AllocationWork[]}
 const money=(cents:number)=>new Intl.NumberFormat('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(cents/100)+' EUR'
-const date=(value:string)=>value.split('-').reverse().join('/')
+const date=(value:string)=>formatDate(value)
 const time=(minutes:number)=>`${Math.floor(minutes/60)}h ${minutes%60}m`
 export async function createAllocationPdf(report:AllocationReport){
  const {jsPDF}=await import('jspdf'),doc=new jsPDF(),map=allocateHonoraria(report.work,false,report.rates)
@@ -64,3 +64,4 @@ export async function createAllocationPdf(report:AllocationReport){
  return doc
 }
 export async function saveAllocationPdf(report:AllocationReport){const doc=await createAllocationPdf(report);doc.save(`legalteam-reparticao-${report.start}-${report.end}.pdf`)}
+import {formatDate} from '../../utils/date'
