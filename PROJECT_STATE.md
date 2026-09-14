@@ -2,6 +2,7 @@
 
 ## Continuidade centralizada — 14-09-2026
 
+- O aviso de depreciação do runtime Node 20 das GitHub Actions foi tratado com as versões oficiais v6 de `checkout`, `setup-node` e `pnpm/action-setup`; o Node de validação da aplicação mantém-se 24.
 - A versão canónica confirmada continua `0.10.11`; não existe versão posterior nas branches remotas. Produção e código funcional permanecem inalterados.
 - O GitHub contém a linha funcional em `codex/legalteam-distribution` / `793644c9ca666fe5d1b118468f20296ae438b267`; `main` continua antiga e requer reconciliação por PR, sem force-push.
 - Integridade de acessos confirmada apenas por agregados: 5 Auth/5 pertenças, 6 atribuições, 6 permissões financeiras e zero órfãos. Todas as 46 tabelas públicas têm RLS; 96 políticas activas.
