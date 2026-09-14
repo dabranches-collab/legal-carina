@@ -1,14 +1,17 @@
 # Legal Carina — handover
 
-## Auditoria de continuidade preparada — 14-09-2026
+## Centralização em `main` concluída — 14-09-2026
 
 - Alerta GitHub Actions corrigido após a primeira CI verde: `checkout`, `setup-node` e `pnpm/action-setup` passaram das actions v4, ainda baseadas em Node 20, para as versões oficiais v6 com runtime Node 24. Alteração apenas de CI, sem dependências da aplicação ou deploy.
-- Linha funcional confirmada sem alterações de produção: versão `0.10.11`, branch `codex/legalteam-distribution`, HEAD documental `793644c9ca666fe5d1b118468f20296ae438b267`; não foi encontrada versão posterior nas branches remotas.
-- Checkout oficial retomado em `C:\Projetos\legal-carina` na branch de trabalho `codex/centralize-0.10.11`. README, arquitectura, deployment e protocolo de computador novo foram alinhados com Supabase/Cloudflare/Azure efectivamente activos.
+- Versão publicada confirmada sem alterações de produção: `0.10.11`; não foi encontrada versão posterior nas branches remotas.
+- O PR #14 reconciliou toda a linha funcional com `main`, sem force-push, no merge `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`. A CI pós-merge e o secret scan passaram; `main` é agora a fonte canónica para todos os computadores.
+- Quatro achados válidos da revisão foram corrigidos primeiro no PR #19 e preservados no merge `e76cb11ae67c66cd40e8b2ab70c712a7cccc021d`: periodicidade inicial da avença, selecção da avença pela data, saldo de provisão numa nota parcial e retenção do ID de novo identificador.
+- Checkout oficial: `C:\Projetos\legal-carina`, sempre iniciado a partir de `origin/main`. A antiga `codex/legalteam-distribution` fica preservada apenas como histórico e não é base para trabalho novo.
 - Auditoria Supabase exclusivamente de leitura: 5 utilizadores Auth confirmados, 5 pertenças à firma, 6 acessos, 6 permissões financeiras, zero órfãos; 46/46 tabelas públicas com RLS e 96 políticas. Ver `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`.
 - Foram registadas 67 migrations remotas e a divergência de carimbos continua deliberadamente bloqueada a `db push`/`migration repair`. Nenhuma migration, utilizador, permissão, dado, ficheiro, Edge Function, segredo ou deployment foi alterado.
-- Backup/PITR actual e recuperação independente dos objectos do Storage ainda não foram confirmados. Até essa prova, ficam bloqueadas alterações de Auth/permissões, DDL, limpeza/importação e publicação. O backup da base não substitui uma cópia dos objectos privados.
-- Gates locais deste lote documental: ficheiros sensíveis, lint, TypeScript, 33 ficheiros/182 testes, build, runtime Cloudflare e auditoria de nível alto aprovados; permanecem duas ocorrências moderadas conhecidas.
+- Backups físicos diários do Supabase foram confirmados entre 7 e 14 de Setembro; o mais recente observado foi `2026-09-14 05:45:44 UTC`. PITR não está activo. A recuperação independente dos objectos do Storage ainda não existe, pelo que alterações remotas de risco continuam bloqueadas.
+- Após o merge, a sentinela de acessos e Storage foi repetida sem diferenças: 5 contas confirmadas, 5 pertenças, 6 acessos, 6 permissões, zero órfãos e as mesmas contagens/tamanhos nos quatro buckets privados.
+- Produção permanece no artefacto 0.10.11 anterior a estas quatro correcções. Não publicar sem a palavra explícita `publica` e sem repetir os gates e sentinelas.
 
 ## Publicação 0.10.11 confirmada — indicador Sem sociedade
 

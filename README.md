@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Produção e código funcional: `0.10.11`.
-- Branch funcional no GitHub: `codex/legalteam-distribution`.
-- Commit documental da publicação: `793644c9ca666fe5d1b118468f20296ae438b267`.
+- Versão publicada: `0.10.11`; não foi encontrada versão posterior nas branches remotas.
+- Fonte canónica do código no GitHub: `main`, reconciliada no commit `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`.
+- A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- O `main` ainda não representa a produção e não deve ser usado como base sem reconciliação explícita.
+- O `main` contém quatro correcções validadas posteriores ao artefacto actualmente publicado; não foram publicadas porque falta a ordem explícita `publica`.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 

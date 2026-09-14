@@ -3,11 +3,13 @@
 ## Continuidade centralizada — 14-09-2026
 
 - O aviso de depreciação do runtime Node 20 das GitHub Actions foi tratado com as versões oficiais v6 de `checkout`, `setup-node` e `pnpm/action-setup`; o Node de validação da aplicação mantém-se 24.
-- A versão canónica confirmada continua `0.10.11`; não existe versão posterior nas branches remotas. Produção e código funcional permanecem inalterados.
-- O GitHub contém a linha funcional em `codex/legalteam-distribution` / `793644c9ca666fe5d1b118468f20296ae438b267`; `main` continua antiga e requer reconciliação por PR, sem force-push.
+- A versão publicada confirmada continua `0.10.11`; não existe versão posterior nas branches remotas e produção permanece inalterada.
+- O PR #14 reconciliou a linha funcional com `main`, sem force-push, no merge `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`. A CI pós-merge e o secret scan passaram; `main` é a fonte canónica para todos os computadores.
+- O PR #19 corrigiu os quatro achados válidos da revisão antes da reconciliação. Estas correcções estão em `main`, mas ainda não no artefacto publicado por faltar a ordem explícita `publica`.
 - Integridade de acessos confirmada apenas por agregados: 5 Auth/5 pertenças, 6 atribuições, 6 permissões financeiras e zero órfãos. Todas as 46 tabelas públicas têm RLS; 96 políticas activas.
-- A documentação corrente e o script de auditoria read-only estão em `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`. CI e secret scan passam também a vigiar pushes na branch funcional.
-- Nenhum dado, utilizador, permissão, migration, bucket, ficheiro, função, segredo ou deployment remoto foi modificado. Backup/PITR e cópia independente dos objectos Storage continuam por confirmar e bloqueiam alterações remotas.
+- A documentação corrente e o script de auditoria read-only estão em `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`.
+- Backups físicos diários Supabase foram confirmados, com ponto mais recente observado em `2026-09-14 05:45:44 UTC`; PITR não está activo e a cópia independente dos objectos Storage continua pendente.
+- Nenhum dado, utilizador, permissão, migration, bucket, ficheiro, função, segredo ou deployment remoto foi modificado. A sentinela de acessos e Storage permaneceu igual depois do merge.
 
 ## Publicação 0.10.11 confirmada — 11-09-2026
 

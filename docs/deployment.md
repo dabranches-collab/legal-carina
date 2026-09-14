@@ -11,6 +11,7 @@
 - Version ID activo: `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387` (100% do tráfego desde 16:35:11 UTC).
 - Commit funcional: `3f76d179c17e3df483f939cb96c6055e4e73345e`.
 - Commit documental da publicação: `793644c9ca666fe5d1b118468f20296ae438b267` na branch `codex/legalteam-distribution`.
+- Fonte canónica actual no GitHub: `main` no merge `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`. Contém quatro correcções posteriores ainda não publicadas.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 
