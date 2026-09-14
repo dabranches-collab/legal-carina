@@ -5,6 +5,7 @@
 - Corrige a lista de Registos para incorporar blocos de 400 movimentos já enriquecidos enquanto o restante universo é preparado. O utilizador deixa de ficar retido nas primeiras 100 linhas até à conclusão do carregamento.
 - Inclui teste de regressão para confirmar que um bloco parcial aparece antes da promessa final. Sem alterações de base de dados, Auth, permissões, Storage, Edge Functions ou segredos.
 - A listagem de novidades passa a conservar a 0.10.12 no histórico e apresenta esta correcção como novidade da 0.10.13, permitindo o resumo acumulado conforme a versão instalada por cada utilizador.
+- A P. Chaves via os 46 movimentos sem sociedade na pesquisa, mas a leitura detalhada exigia uma concessão compatível com `billing_entity_id = null`. A migration aditiva `20260914114000_grant_paula_firm_edit_access.sql` acrescenta apenas a esta utilizadora uma concessão `firm/edit`; conserva as três concessões por sociedade, as permissões financeiras, a pertença e o perfil actuais.
 
 ## Release 0.10.12 publicada — 14-09-2026
 

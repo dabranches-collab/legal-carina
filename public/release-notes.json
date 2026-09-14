@@ -1,7 +1,8 @@
 {
   "version": "0.10.13",
   "changes": [
-    "A lista de registos passa a mostrar progressivamente os blocos já carregados, sem ficar parada nas primeiras linhas até terminar de preparar todo o universo."
+    "A lista de registos passa a mostrar progressivamente os blocos já carregados, sem ficar parada nas primeiras linhas até terminar de preparar todo o universo.",
+    "A P. Chaves passa a poder abrir e corrigir movimentos sem sociedade, conservando as permissões actuais e a auditoria das alterações."
   ],
   "releases": [
     {
