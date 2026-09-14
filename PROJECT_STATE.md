@@ -5,6 +5,7 @@
 - A tabela de Registos passa a incorporar progressivamente blocos completos de 400 linhas durante a preparação do universo integral, em vez de conservar apenas as primeiras 100 até ao fim.
 - Teste de regressão incluído; 190 testes unitários e TypeScript aprovados nesta primeira validação. Sem alterações remotas de dados ou acessos.
 - As novidades da 0.10.12 foram movidas para o histórico e a 0.10.13 identifica esta correcção, preservando o resumo acumulado por utilizador.
+- Correcção de autorização preparada para a P. Chaves: concessão aditiva `firm/edit`, necessária para abrir os 46 movimentos cuja sociedade ainda é nula. Não remove nem substitui acessos existentes e não altera outros utilizadores.
 
 ## Release 0.10.12 publicada — 14-09-2026
 
