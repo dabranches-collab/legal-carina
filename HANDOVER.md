@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Auditoria de continuidade preparada — 14-09-2026
+
+- Linha funcional confirmada sem alterações de produção: versão `0.10.11`, branch `codex/legalteam-distribution`, HEAD documental `793644c9ca666fe5d1b118468f20296ae438b267`; não foi encontrada versão posterior nas branches remotas.
+- Checkout oficial retomado em `C:\Projetos\legal-carina` na branch de trabalho `codex/centralize-0.10.11`. README, arquitectura, deployment e protocolo de computador novo foram alinhados com Supabase/Cloudflare/Azure efectivamente activos.
+- Auditoria Supabase exclusivamente de leitura: 5 utilizadores Auth confirmados, 5 pertenças à firma, 6 acessos, 6 permissões financeiras, zero órfãos; 46/46 tabelas públicas com RLS e 96 políticas. Ver `docs/continuity-audit-2026-09-14.md` e `scripts/audit-continuity.sql`.
+- Foram registadas 67 migrations remotas e a divergência de carimbos continua deliberadamente bloqueada a `db push`/`migration repair`. Nenhuma migration, utilizador, permissão, dado, ficheiro, Edge Function, segredo ou deployment foi alterado.
+- Backup/PITR actual e recuperação independente dos objectos do Storage ainda não foram confirmados. Até essa prova, ficam bloqueadas alterações de Auth/permissões, DDL, limpeza/importação e publicação. O backup da base não substitui uma cópia dos objectos privados.
+- Gates locais deste lote documental: ficheiros sensíveis, lint, TypeScript, 33 ficheiros/182 testes, build, runtime Cloudflare e auditoria de nível alto aprovados; permanecem duas ocorrências moderadas conhecidas.
+
 ## Publicação 0.10.11 confirmada — indicador Sem sociedade
 
 - O cartão «Sem sociedade» da Visão Geral contém apenas o total de movimentos sem sociedade associada. A geração genérica de subtotais por sociedade foi desactivada apenas neste cartão; o total e o botão «Ver movimentos» permanecem.

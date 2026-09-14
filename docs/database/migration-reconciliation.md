@@ -1,5 +1,25 @@
 # Reconciliação do histórico de migrations
 
+## Estado verificado em 2026-09-14
+
+- O projecto remoto `vtvvqyebigflgqccbqsw` regista 67 migrations aplicadas.
+- A primeira é `20260805113851_create_legal_carina_data_model` e a última é `20260904101950_add_revisable_honorarium_documents`.
+- O checkout contém SQL com os mesmos nomes funcionais, mas vários lotes foram aplicados remotamente com carimbos diferentes. A equivalência de nome não basta para autorizar nova execução.
+- Não existem migrations funcionais posteriores à que suporta a versão 0.10.11.
+- O estado actual continua a bloquear `supabase db push`, `migration repair`, renomeação e eliminação de ficheiros aplicados. Antes de qualquer DDL, listar novamente o histórico remoto e comparar nome, definição instalada e efeito esperado.
+
+Mapeamentos recentes confirmados:
+
+| Migration local | Migration remota |
+| --- | --- |
+| `20260902180905_add_client_credit_ledger.sql` | `20260902192704_add_client_credit_ledger` |
+| `20260902235343_add_legalteam_allocation.sql` | `20260903011816_add_legalteam_allocation` |
+| `20260903033000_expand_allocation_read_page.sql` | `20260903021033_expand_allocation_read_page` |
+| `20260903034500_add_client_referrer_directory.sql` | `20260903022253_add_client_referrer_directory` |
+| `20260903134329_add_client_default_hourly_rate.sql` | `20260903134646_add_client_default_hourly_rate` |
+| `20260903143052_fix_workspace_note_insert_returning.sql` | `20260903143150_fix_workspace_note_insert_returning` |
+| `20260903140910_add_revisable_honorarium_documents.sql` | `20260904101950_add_revisable_honorarium_documents` |
+
 Estado em 2026-08-16: **histórico local reconciliado; aplicação remota pendente**.
 
 O comando de leitura `supabase migration list --linked` e o `db push --linked --dry-run` mostraram que o projecto remoto contém onze identificadores de migration sem ficheiro local com o mesmo carimbo. A operação de leitura `supabase migration fetch` guardou uma cópia isolada desses onze ficheiros numa pasta temporária, sem substituir ficheiros do repositório e sem alterar o projecto remoto.
