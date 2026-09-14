@@ -4,9 +4,9 @@ Esta linha de base foi recolhida apenas por leitura. Não contém nomes, emails,
 
 ## Resultado
 
-- Versão funcional mais recente encontrada no GitHub e em produção: `0.10.11`; não foi encontrada versão posterior em nenhuma branch remota.
-- Branch funcional: `codex/legalteam-distribution`; HEAD validado `e1b3aac6b556bbda4edf1b27d7108179ffc1d5c9`.
-- `main` permanece numa linha antiga (`0.2.5`) e não é ainda a fonte funcional de produção.
+- Versão publicada mais recente encontrada: `0.10.11`; não foi encontrada versão posterior em nenhuma branch remota.
+- Fonte canónica no GitHub: `main`, reconciliada pelo PR #14 no merge `c0b8ad02b1bb2ae34b9677cbdcb823a1991d170c`; CI pós-merge e secret scan verdes.
+- A antiga `codex/legalteam-distribution` fica preservada como histórico. `main` contém quatro correcções validadas posteriores ao artefacto actualmente publicado, ainda sem deploy.
 - Produção Cloudflare: `legal-carina`, deployment `00fe667a-e300-4365-bff4-97c16e87f37f`, version `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`.
 - Supabase central: projecto `vtvvqyebigflgqccbqsw` (`CARINA LEGAL`), `ACTIVE_HEALTHY`, PostgreSQL 17.6, região `eu-west-2`.
 - Integrações activas: Supabase, Cloudflare Workers/Static Assets e Azure Translator. GitHub executa CI, auditoria de dependências e pesquisa de segredos; a publicação Cloudflare é manual.
@@ -54,8 +54,7 @@ As 46 tabelas públicas têm RLS activa e existem 96 políticas. Estes números 
 
 - Decidir se o custo do PITR se justifica para reduzir a janela máxima de perda da base de dados; a activação é uma alteração paga e não foi efectuada.
 - Criar e testar uma cópia externa cifrada dos quatro buckets privados, com retenção e ensaio de recuperação; não guardar a cópia num checkout nem numa pasta local sincronizada.
-- Corrigir os quatro achados ainda válidos da revisão do PR #14 antes de reconciliar `main`: periodicidade inicial da avença, selecção da avença pela data, saldo de provisão numa nota parcial e persistência do ID de novo documento de identificação.
-- Reconciliar `main` através do PR #14 a partir da linha 0.10.11, preservando todo o histórico e exigindo revisão/CI. Não fazer force-push.
+- Publicar as quatro correcções já integradas em `main` apenas após a ordem explícita `publica`, repetição dos gates e comparação da sentinela de continuidade imediatamente antes e depois.
 - Rever individualmente os avisos Supabase: 74 chaves estrangeiras sem índice, 2 políticas com `auth` recalculado por linha, 6 grupos de políticas permissivas múltiplas, 22 índices ainda não usados e protecção de passwords comprometidas desactivada. Nenhuma correcção automática foi aplicada.
 
 ## Repetição
