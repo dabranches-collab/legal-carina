@@ -1,5 +1,6 @@
 import { chargeStatuses } from './retainerCharge';
 import { RetainerChargeDialog } from './RetainerChargeDialog';
+import { missingRetainerChargePeriods } from './retainerPeriods';
 import {
   useCallback,
   useEffect,
@@ -242,24 +243,9 @@ export function ClientRetainerPanel({
     if (!supabase || !retainers.length) return;
     setSaving(true);
     setError("");
-    const chronological = [...retainers].sort((a,b)=>a.starts_on.localeCompare(b.starts_on));
-    const first = new Date(`${chronological[0].starts_on.slice(0, 7)}-01T12:00:00`),
-      lastTerms = chronological[chronological.length-1],
-      last = lastTerms.ends_on
-        ? new Date(`${lastTerms.ends_on.slice(0, 7)}-01T12:00:00`)
-        : new Date(),
-      existing = new Set(charges.map((item) => item.period_start.slice(0, 7))),
-      rows = [];
-    for (
-      const date = new Date(first);
-      date <= last;
-      date.setMonth(date.getMonth() + (termsForStep?.billing_interval_months??1))
-    ) {
-      const period = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-      const periodStart=`${period}-01`;
-      const terms=chronological.find(item=>item.starts_on<=periodStart&&(!item.ends_on||item.ends_on>=periodStart));
-      if (!existing.has(period)&&terms)
-        rows.push({
+    const existing = new Set(charges.map((item) => item.period_start.slice(0, 7))),
+      rows = missingRetainerChargePeriods(retainers, existing).map(
+        ({ periodStart, terms }) => ({
           firm_id: firmId,
           retainer_id: terms.id,
           client_id: clientId,
@@ -267,9 +253,8 @@ export function ClientRetainerPanel({
           period_start: periodStart,
           amount: terms.monthly_amount,
           currency: terms.currency,
-        });
-      var termsForStep=terms;
-    }
+        }),
+      );
     if (!rows.length) {
       setNotice("Não existem mensalidades em falta.");
       setSaving(false);

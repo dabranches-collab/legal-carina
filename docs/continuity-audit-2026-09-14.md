@@ -5,7 +5,7 @@ Esta linha de base foi recolhida apenas por leitura. Não contém nomes, emails,
 ## Resultado
 
 - Versão funcional mais recente encontrada no GitHub e em produção: `0.10.11`; não foi encontrada versão posterior em nenhuma branch remota.
-- Branch funcional: `codex/legalteam-distribution`; HEAD documental `793644c9ca666fe5d1b118468f20296ae438b267`.
+- Branch funcional: `codex/legalteam-distribution`; HEAD validado `e1b3aac6b556bbda4edf1b27d7108179ffc1d5c9`.
 - `main` permanece numa linha antiga (`0.2.5`) e não é ainda a fonte funcional de produção.
 - Produção Cloudflare: `legal-carina`, deployment `00fe667a-e300-4365-bff4-97c16e87f37f`, version `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`.
 - Supabase central: projecto `vtvvqyebigflgqccbqsw` (`CARINA LEGAL`), `ACTIVE_HEALTHY`, PostgreSQL 17.6, região `eu-west-2`.
@@ -44,11 +44,18 @@ As 46 tabelas públicas têm RLS activa e existem 96 políticas. Estes números 
 4. Não publicar Cloudflare sem a palavra explícita `publica` e sem CI/secret scan verdes no commit exacto.
 5. Não considerar um backup de PostgreSQL suficiente para documentos: é necessária uma cópia online, cifrada e independente dos objectos privados de Storage.
 
+## Recuperação confirmada
+
+- O painel Supabase mostrou backups físicos diários concluídos de 7 a 14 de Setembro de 2026. O ponto mais recente observado foi `2026-09-14 05:45:44 UTC`.
+- O projecto está no plano Pro, com restauro diário disponível; o PITR não está activo e aparece como add-on disponível.
+- Consequência operacional: a base de dados tem recuperação diária, mas pode existir uma janela de perda inferior a 24 horas. Os objectos do Storage continuam fora desta recuperação.
+
 ## Pendências confirmadas
 
-- Confirmar no painel/API de gestão do Supabase o plano, o último backup disponível e se PITR está activo. Esta auditoria não conseguiu obter essa prova de forma independente.
+- Decidir se o custo do PITR se justifica para reduzir a janela máxima de perda da base de dados; a activação é uma alteração paga e não foi efectuada.
 - Criar e testar uma cópia externa cifrada dos quatro buckets privados, com retenção e ensaio de recuperação; não guardar a cópia num checkout nem numa pasta local sincronizada.
-- Reconciliar `main` através de PR a partir da linha 0.10.11, preservando todo o histórico e exigindo revisão/CI. Não fazer force-push.
+- Corrigir os quatro achados ainda válidos da revisão do PR #14 antes de reconciliar `main`: periodicidade inicial da avença, selecção da avença pela data, saldo de provisão numa nota parcial e persistência do ID de novo documento de identificação.
+- Reconciliar `main` através do PR #14 a partir da linha 0.10.11, preservando todo o histórico e exigindo revisão/CI. Não fazer force-push.
 - Rever individualmente os avisos Supabase: 74 chaves estrangeiras sem índice, 2 políticas com `auth` recalculado por linha, 6 grupos de políticas permissivas múltiplas, 22 índices ainda não usados e protecção de passwords comprometidas desactivada. Nenhuma correcção automática foi aplicada.
 
 ## Repetição
