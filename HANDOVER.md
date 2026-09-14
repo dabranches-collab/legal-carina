@@ -1,11 +1,19 @@
 # Legal Carina — handover
 
-## Release 0.10.12 autorizada — 14-09-2026
+## Release 0.10.13 em preparação — 14-09-2026
+
+- Corrige a lista de Registos para incorporar blocos de 400 movimentos já enriquecidos enquanto o restante universo é preparado. O utilizador deixa de ficar retido nas primeiras 100 linhas até à conclusão do carregamento.
+- Inclui teste de regressão para confirmar que um bloco parcial aparece antes da promessa final. Sem alterações de base de dados, Auth, permissões, Storage, Edge Functions ou segredos.
+- A listagem de novidades passa a conservar a 0.10.12 no histórico e apresenta esta correcção como novidade da 0.10.13, permitindo o resumo acumulado conforme a versão instalada por cada utilizador.
+
+## Release 0.10.12 publicada — 14-09-2026
 
 - Ordem explícita recebida: «avança e publica».
 - O candidato inclui as quatro correcções já revistas no PR #19 e o formato global `DD-MM-AAAA` para apresentação, introdução, impressão e exportação. Datas persistidas e transmitidas ao Supabase continuam em ISO; sem migrations, alterações de Auth/permissões, Storage, Edge Functions ou segredos.
-- Produção permanece em 0.10.11 até o commit exacto da release estar em `main`, com CI/secret scan verdes, sentinela de continuidade revista e dry-run Cloudflare aprovado.
-- Rollback preservado: versão Cloudflare anterior `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`.
+- PR #21 fundido em `main` no commit `a178a48dfcb295f053a28dff5639fe3be8868b2b`; CI `34830591941` e secret scan `34830591990` verdes. Gates locais, runtime do Worker, build, dry-run e testes focados aprovados.
+- Produção activa em `https://legal-carina.dabranches.workers.dev`: deployment `eed372db-b709-42bb-9732-145ae84e2eb4`, version `8f822fe7-584b-4d90-8977-6d297c5b6b24`, 100% desde `10:02:08 UTC`.
+- Browser autenticado actualizado de 0.10.11 para 0.10.12: sessão preservada, 7 271 movimentos acessíveis e datas `DD-MM-AAAA`. O aviso mostrou as cinco alterações acumuladas antes da actualização.
+- Rollback preservado: versão Cloudflare anterior `63ce5b87-ea8b-4ddf-a0b6-78e7276bc387`. A publicação não executou migrations nem alterou Auth, permissões, dados, Storage, Edge Functions ou segredos.
 
 ## Centralização em `main` concluída — 14-09-2026
 
