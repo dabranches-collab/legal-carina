@@ -9,7 +9,7 @@ vi.mock('../../lib/supabase',()=>({supabase:{
     {id:'b',client_id:'b',client_code:'02.2',client_type:'individual',display_name:'Beta'},
   ]},error:null}),
   from:()=>{
-    let id='';const query:any={select:()=>query,eq:(key:string,value:string)=>{if(key==='id')id=value;return query},
+    let id='';const query:any={select:()=>query,eq:(key:string,value:string)=>{if(key==='id')id=value;return query},lte:()=>query,or:()=>query,order:()=>query,limit:()=>query,
       single:()=>loadDefaults(id),maybeSingle:async()=>({data:null,error:null})};
     return query
   },

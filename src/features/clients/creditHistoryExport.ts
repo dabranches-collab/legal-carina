@@ -4,23 +4,23 @@ import type { CreditUsage } from './creditUsage'
 
 export type HistoryMode='values'|'time'
 export function creditHistoryData(account:CreditAccount,usage:CreditUsage,movements:CreditMovement[],mode:HistoryMode){
- const events:Array<{id:string;date:string;description:string;minutes:number;receipt:number;base:number;total:number;missing:boolean}>=[]
+ const events:Array<{id:string;date:string;description:string;minutes:number;receipt:number;base:number;total:number;deduction:number;missing:boolean}>=[]
  const active=movements.filter(m=>!m.reversed&&m.kind!=='reversal')
- for(const m of active.filter(m=>m.kind==='payment'))events.push({id:m.id,date:m.movement_date,description:'Provisão recebida',minutes:0,receipt:Math.round(m.amount*100),base:0,total:0,missing:false})
+ for(const m of active.filter(m=>m.kind==='payment'))events.push({id:m.id,date:m.movement_date,description:'Provisão recebida',minutes:0,receipt:Math.round(m.amount*100),base:0,total:0,deduction:0,missing:false})
  const seen=new Set<string>()
- function services(rows:Array<{id:string;work_date:string;activity_description:string;duration_minutes:number;effective_amount:number|null}>,total:number){
+ function services(rows:Array<{id:string;work_date:string;activity_description:string;duration_minutes:number;effective_amount:number|null}>,total:number,deduction=total){
   const base=rows.reduce((n,r)=>n+Math.round(Number(r.effective_amount??0)*100),0)
-  let cumulative=0,previous=0
-  for(const r of rows){const cents=Math.round(Number(r.effective_amount??0)*100);cumulative+=cents;const allocated=base?Math.round(cumulative*Math.round(total*100)/base):0
-   if(!seen.has(r.id)){events.push({id:r.id,date:r.work_date,description:r.activity_description,minutes:r.duration_minutes,receipt:0,base:cents,total:allocated-previous,missing:r.effective_amount===null});seen.add(r.id)}previous=allocated
+  let cumulative=0,previous=0,previousDeduction=0
+  for(const r of rows){const cents=Math.round(Number(r.effective_amount??0)*100);cumulative+=cents;const allocated=base?Math.round(cumulative*Math.round(total*100)/base):0,allocatedDeduction=base?Math.round(cumulative*Math.round(deduction*100)/base):0
+   if(!seen.has(r.id)){events.push({id:r.id,date:r.work_date,description:r.activity_description,minutes:r.duration_minutes,receipt:0,base:cents,total:allocated-previous,deduction:allocatedDeduction-previousDeduction,missing:r.effective_amount===null});seen.add(r.id)}previous=allocated;previousDeduction=allocatedDeduction
   }
  }
- for(const m of active)if(m.note&&m.kind==='consumption')services(m.note.items,m.note.total)
+ for(const m of active)if(m.note&&m.kind==='consumption')services(m.note.items,m.note.total,m.note.deducted)
  services(usage.rows,usage.total)
  events.sort((a,b)=>a.date.localeCompare(b.date)||(b.receipt-a.receipt)||a.id.localeCompare(b.id))
  const header=mode==='values'?['Data','Descrição','Tempo (min)','Provisão recebida','Honorários sem IVA','IVA','Total com IVA','Saldo estimado']:['Data','Descrição','Tempo (min)']
  let balance=0
- const rows=events.map(e=>{balance+=e.receipt-e.total;return mode==='values'?[creditDate(e.date),e.description,e.minutes,e.receipt/100,e.missing?'Sem preço':e.base/100,(e.total-e.base)/100,e.missing?'Por apurar':e.total/100,Math.max(0,balance)/100]:[creditDate(e.date),e.receipt?`${e.description} · ${creditMoney(e.receipt/100,account.currency)}`:e.description,e.minutes]})
+ const rows=events.map(e=>{balance+=e.receipt-e.deduction;return mode==='values'?[creditDate(e.date),e.description,e.minutes,e.receipt/100,e.missing?'Sem preço':e.base/100,(e.total-e.base)/100,e.missing?'Por apurar':e.total/100,Math.max(0,balance)/100]:[creditDate(e.date),e.receipt?`${e.description} · ${creditMoney(e.receipt/100,account.currency)}`:e.description,e.minutes]})
  const summary:[string,number|string][]=[['Provisões recebidas',Number(account.received)],['Abatido em notas válidas',Number(account.consumed)],['Saldo disponível',Number(account.balance)],['Utilização estimada pelos registos',usage.consumed],['Saldo estimado após registos',usage.balance],['Valor dos registos sem cobertura',usage.excess],['Tempo total (min)',events.reduce((n,e)=>n+e.minutes,0)]]
  if(usage.missingPrice)summary.push(['Registos sem preço · saldo por apurar',usage.missingPrice])
  return {header,rows,summary}

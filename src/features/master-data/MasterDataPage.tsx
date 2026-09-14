@@ -864,9 +864,9 @@ export function MasterDataPage({
       setProfiles(current=>current.map(item=>persistedProfiles.find(saved=>saved.client_type===item.client_type)??item));
     }
     if (section === "clients" && targetId && identifiersAvailable) {
-      for (const item of identifiers.filter((value) =>
-        value.identifier_number.trim(),
-      )) {
+      const savedIdentifierIds = new Map<number, string>();
+      for (const [index, item] of identifiers.entries()) {
+        if (!item.identifier_number.trim()) continue;
         const payload = {
           firm_id: firmId,
           client_id: targetId,
@@ -883,13 +883,26 @@ export function MasterDataPage({
               .from("client_identifiers")
               .update(payload)
               .eq("id", item.id)
-          : await supabase.from("client_identifiers").insert(payload);
+          : await supabase
+              .from("client_identifiers")
+              .insert(payload)
+              .select("id")
+              .single();
         if (result.error) {
           setError(result.error.message);
           setSaving(false);
           return;
         }
+        if (!item.id && result.data?.id) savedIdentifierIds.set(index, result.data.id);
       }
+      if (savedIdentifierIds.size)
+        setIdentifiers((current) =>
+          current.map((item, index) =>
+            savedIdentifierIds.has(index)
+              ? { ...item, id: savedIdentifierIds.get(index) }
+              : item,
+          ),
+        );
     }
     if (section === "billing_entities" && targetId) {
       const path = `${firmId}/${targetId}/logo.png`;
