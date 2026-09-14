@@ -1,12 +1,13 @@
 # Estado do projecto
 
-## Release 0.10.14 em preparação — 14-09-2026
+## Release 0.10.14 publicada e arquivo documental operacional — 14-09-2026
 
-- A edição de clientes existentes calcula agora os próximos códigos `01.xxxx` e `02.xxxx`; ao activar Empresa, o código deixa de ficar em «A calcular…» e a linha canónica do cliente acompanha a vertente activa.
-- A resposta não-2xx de `client-documents` é lida e apresentada ao utilizador, em vez de classificar todos os erros funcionais como serviço ainda não publicado.
-- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 35 ficheiros/191 testes unitários, runtime do Worker, build, dry-run Cloudflare, 119 E2E gerais e três E2E PWA dedicados. O executor Playwright foi encerrado apenas depois de imprimir todos os resultados finais, devido ao bloqueio conhecido no fecho do processo. No browser local autenticado, HAPPY AMBICION recebeu a sugestão `01.0109`; o ensaio foi cancelado sem alterar produção.
-- Supabase confirmado sem alterações: `client-documents` versão 2 `ACTIVE`, `verify_jwt=true`. Este lote não contém migrations nem alterações de Auth, RLS, Storage, Edge Functions ou segredos.
-- Publicação e alterações reais autorizadas expressamente pelo utilizador; execução pós-publicação ainda pendente neste ponto.
+- A edição de clientes existentes calcula os próximos códigos `01.xxxx` e `02.xxxx`; ao activar Empresa, o código deixa de ficar em «A calcular…» e a linha canónica acompanha a vertente activa. Os erros não-2xx do arquivo documental apresentam agora a mensagem funcional segura devolvida pelo backend.
+- PR #24 fundido em `e6ff464d782afae03912ca78e5ce2826ab0bb695`; CI `34876591087` e secret scan `34876591095` verdes. Produção Cloudflare 0.10.14 activa desde `17:51:47 UTC`: deployment `e528b0a7-88b0-4b51-83b5-41d9e55fb82b`, version `455d288f-3bf0-4e63-956a-136ba2c0a203`.
+- Browser autenticado confirmou a versão publicada e a alteração real de HAPPY AMBICION: apenas Empresa activa, código `01.0109`, uma única correspondência na lista de Empresas e menos uma ficha em Particulares.
+- O teste integral dos documentos identificou uma falha de auditoria dos metadados: a Edge Function usava a conta técnica e o trigger exigia um actor humano. PR #25/merge `de762bf` distinguiu com segurança cada etapa; PR #26/merge `4b33d74` permite ao trigger usar o `uploaded_by` validado. CI `34878730168` e `34880538698` verdes após repetição de um E2E instável e não relacionado; secret scans verdes.
+- Supabase CONFIRMADO: `client-documents` versão 3 `ACTIVE`, `verify_jwt=true`. Aplicado isoladamente o SQL `20260914192000_allow_uploaded_by_audit_actor.sql` por `db query`, sem `db push`; não houve alterações de Auth, utilizadores, permissões, buckets ou segredos. A divergência conhecida dos carimbos de migrations continua bloqueada para reconciliação dedicada.
+- Teste real do circuito com dados exclusivamente sintéticos: PDF carregado no cliente XPANDALPHABET, protegido, listado como Activo e consultável por ligação temporária. O PDF real indicado para SUSANA HENRIQUES não foi encontrado no computador e, por isso, não foi carregado nem substituído por conteúdo fabricado.
 
 ## Release 0.10.13 publicada — 14-09-2026
 
