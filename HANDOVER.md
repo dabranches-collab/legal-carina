@@ -1,10 +1,12 @@
 # Legal Carina — handover
 
-## Release 0.10.15 em preparação — 15-09-2026
+## Release 0.10.15 publicada — 15-09-2026
 
 - O menu principal `Registos` passa a surgir imediatamente depois de `Visão Geral`, antes de `Clientes`, em todos os tamanhos de ecrã. A ordem fica coberta por um teste de regressão.
 - CONFIRMADO no browser integrado com dados sintéticos: a versão local 0.10.15 apresenta `Visão Geral → Registos → Clientes`. Segurança de ficheiros, lint, TypeScript, 35 ficheiros/191 testes unitários e build aprovados; 31 E2E focados aprovados, incluindo a matriz de 11 iPhones (dois cenários antigos passaram na repetição isolada após excederem o primeiro limite local). Sem alterações de Supabase, dados, Auth, RLS, Storage, Edge Functions ou segredos.
-- Produção permanece na versão 0.10.14 (deployment `e528b0a7-88b0-4b51-83b5-41d9e55fb82b`, version `455d288f-3bf0-4e63-956a-136ba2c0a203`). Este lote não está publicado porque o novo pedido não incluiu a ordem explícita `publica`.
+- Ordem explícita `Publica` recebida. PR #28 fundido em `main` no commit `39142e8b3f61baf179c43af875c68b0a2c284bd0`; CI pós-merge `34907859049`, auditoria de dependências e secret scan verdes. Dry-run Cloudflare estrito aprovado.
+- Produção CONFIRMADA a 100% na versão 0.10.15: deployment `100194aa-35db-4651-8e1e-bf462c2559c0`, version `d0c49de5-1b5e-4b86-8cb8-6e5005627115`, desde `2026-09-14 23:19:25 UTC` (`15-09-2026 00:19:25` em Luanda). HTTP, manifesto e service worker responderam 200; o browser autenticado confirmou a versão, a ordem `Visão Geral → Registos → Clientes` e a abertura funcional da tabela de Registos.
+- Rollback imediato do frontend: version `455d288f-3bf0-4e63-956a-136ba2c0a203` (0.10.14). A publicação não executou migrations nem alterou Supabase, dados, Auth, RLS, Storage, Edge Functions ou segredos.
 
 ## Release 0.10.14 publicada e arquivo documental corrigido — 14-09-2026
 
