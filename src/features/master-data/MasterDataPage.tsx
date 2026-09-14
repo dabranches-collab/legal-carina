@@ -177,6 +177,23 @@ const identifierLabels: Record<Identifier["identifier_type"], string> = {
   other: "Outro",
 };
 
+const suggestedClientCodes = (
+  rows: Array<{ client_type?: string | null; client_code?: string | null }>,
+) => {
+  const next = (type: "individual" | "company") => {
+    const prefix = type === "company" ? "01" : "02";
+    const highest = rows
+      .filter((item) => item.client_type === type)
+      .map((item) =>
+        new RegExp(`^${prefix}\\.(\\d+)$`).exec(item.client_code ?? ""),
+      )
+      .filter((match): match is RegExpExecArray => Boolean(match))
+      .reduce((maximum, match) => Math.max(maximum, Number(match[1])), 0);
+    return `${prefix}.${String(highest + 1).padStart(4, "0")}`;
+  };
+  return { individual: next("individual"), company: next("company") };
+};
+
 export function MasterDataPage({
   initialSection = "clients",
   clientTypeFilter = null,
@@ -361,6 +378,7 @@ export function MasterDataPage({
     setPhones([""]);
     setIdentifiers([]);
     setIdentifiersAvailable(true);
+    setSuggestedCodes({ individual: "", company: "" });
     if (section === "billing_entities") {
       setProfiles([]);
       setLogoPath("");
@@ -441,7 +459,7 @@ export function MasterDataPage({
       setProfiles([]);
       return;
     }
-    const [clientResult, profileResult, identifierResult, referrersResult] = await Promise.all([
+    const [clientResult, profileResult, identifierResult, referrersResult, codesResult] = await Promise.all([
       supabase!
         .from("clients")
         .select(
@@ -461,9 +479,18 @@ export function MasterDataPage({
         .eq("client_id", row.id)
         .order("created_at"),
       supabase!.from("client_referrers").select("id,name").order("name"),
+      supabase!
+        .from("client_profiles")
+        .select("client_type,client_code")
+        .eq("firm_id", firmId),
     ]);
     setReferrerOptions(referrersResult.data??[]);
     if(clientResult.error||profileResult.error){setError(clientResult.error?.message??profileResult.error!.message);return;}
+    if (codesResult.error) {
+      setError(`Não foi possível calcular os próximos códigos: ${codesResult.error.message}`);
+    } else {
+      setSuggestedCodes(suggestedClientCodes(codesResult.data ?? []));
+    }
     setClientDetailsReady(true);
     if (clientResult.data) {
       const data = clientResult.data as Record<string, string | null>;
@@ -571,21 +598,7 @@ export function MasterDataPage({
       );
       return;
     }
-    const next = (type: "individual" | "company") => {
-      const prefix = type === "company" ? "01" : "02";
-      const highest = (data ?? [])
-        .filter((item) => item.client_type === type)
-        .map((item) =>
-          new RegExp(`^${prefix}\\.(\\d+)$`).exec(item.client_code ?? ""),
-        )
-        .filter((match): match is RegExpExecArray => Boolean(match))
-        .reduce((maximum, match) => Math.max(maximum, Number(match[1])), 0);
-      return `${prefix}.${String(highest + 1).padStart(4, "0")}`;
-    };
-    setSuggestedCodes({
-      individual: next("individual"),
-      company: next("company"),
-    });
+    setSuggestedCodes(suggestedClientCodes(data ?? []));
   }
   useEffect(() => {
     if (!supabase) return;
@@ -823,9 +836,16 @@ export function MasterDataPage({
       targetId = data.id;
     } else {
       const field = section === "billing_entities" ? "name" : "display_name";
+      const primary = profiles.find((item) => item.active);
       const updatePayload =
         section === "clients"
-          ? { [field]: name, active: true, ...savedDetails }
+          ? {
+              [field]: name,
+              active: true,
+              client_code: primary?.client_code.trim(),
+              client_type: primary?.client_type,
+              ...savedDetails,
+            }
           : section === "billing_entities"
             ? { [field]: name, active: true, ...savedBillingDetails }
             : { [field]: name, active: true };

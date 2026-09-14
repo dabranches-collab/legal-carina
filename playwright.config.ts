@@ -7,6 +7,7 @@ const externalServer=Boolean(process.env.PLAYWRIGHT_EXTERNAL_SERVER)
 
 export default defineConfig({
   testDir: './e2e',
+  workers: 1,
   use: { baseURL: `http://127.0.0.1:${port}`, trace: 'on-first-retry', storageState: {cookies:[],origins:[{origin:`http://127.0.0.1:${port}`,localStorage:[{name:'carina-release-notes-seen',value:packageJson.version}]}]} },
   webServer: externalServer ? undefined : {
     command: `node ./node_modules/vite/bin/vite.js ${productionQa?'preview':''} --host 127.0.0.1 --port ${port}`,

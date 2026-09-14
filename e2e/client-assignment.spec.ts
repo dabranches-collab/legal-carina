@@ -56,10 +56,10 @@ test('novo movimento assume a sociedade do cliente, permite alteração e reinic
 })
 
 test('ficha mostra só a vertente activa e guarda sociedade e novo angariador reutilizável',async({page})=>{
- const fixture=createQaAllocationData(),directory:Array<{id:string;name:string}>=[];let writes=0
+ const fixture=createQaAllocationData(),directory:Array<{id:string;name:string}>=[],writes:Array<{table:string;method:string;args:Record<string,unknown>}>=[]
  await page.route('**/rest/v1/**',async route=>{
   const req=route.request(),url=new URL(req.url()),table=url.pathname.split('/').at(-1)??'',rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=['POST','PATCH'].includes(req.method())?req.postDataJSON():{}
-  if(!rpc&&['POST','PATCH'].includes(req.method()))writes++
+  if(!rpc&&['POST','PATCH'].includes(req.method()))writes.push({table,method:req.method(),args})
   if(table==='clients'&&req.method()==='PATCH'&&args.client_referrer==='other'&&!directory.length)directory.push({id:id(60),name:args.client_referrer_other})
   const result=table==='client_referrers'?directory:fixture(rpc,table,args,url,req.method(),req.headers().accept?.includes('vnd.pgrst.object')??false)
   await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
@@ -76,12 +76,13 @@ test('ficha mostra só a vertente activa e guarda sociedade e novo angariador re
 
  await dialog.getByRole('button',{name:'Acrescentar vertente Empresa',exact:true}).click()
  await dialog.getByRole('checkbox',{name:'Empresa',exact:true}).check()
+ await expect(dialog.getByLabel('Código desta vertente').last()).toHaveValue(/^01\.\d{4,}$/)
  await expect(dialog.getByRole('button',{name:'Guardar alterações',exact:true})).toBeEnabled()
  await expect(dialog.getByRole('button',{name:'Guardar alterações',exact:true})).toHaveClass(/record-save/)
  await expect(dialog.getByRole('button',{name:'Cancelar alterações',exact:true})).toBeEnabled()
  await expect(dialog.getByRole('button',{name:'Cancelar alterações',exact:true})).toHaveClass(/record-cancel/)
  await dialog.getByRole('button',{name:'Cancelar alterações',exact:true}).click()
- await expect(dialog.getByRole('checkbox',{name:'Empresa',exact:true})).toHaveCount(0);expect(writes).toBe(0)
+ await expect(dialog.getByRole('checkbox',{name:'Empresa',exact:true})).toHaveCount(0);expect(writes).toHaveLength(0)
 
  await dialog.getByLabel('Sociedade do cliente',{exact:true}).selectOption(id(2))
  await dialog.getByRole('button',{name:'Predefinir valor/hora',exact:true}).click()
@@ -90,6 +91,7 @@ test('ficha mostra só a vertente activa e guarda sociedade e novo angariador re
  await dialog.getByLabel('Nome do angariador',{exact:true}).fill('Parceiro Sintético')
  await dialog.getByRole('button',{name:'Guardar alterações',exact:true}).click()
  await expect(dialog.getByRole('button',{name:'Guardar alterações',exact:true})).toBeDisabled()
+ expect(writes.filter(item=>item.table==='clients'&&item.method==='PATCH').at(-1)?.args).toMatchObject({client_type:'individual',client_code:'02.0001'})
  await dialog.getByRole('button',{name:'Fechar',exact:true}).first().click();await cell.dblclick()
  await expect(dialog.getByLabel('Sociedade do cliente',{exact:true})).toHaveValue(id(2))
  await expect(dialog.getByLabel('Valor/hora predefinido (€)',{exact:true})).toHaveValue('125.5')
@@ -111,6 +113,28 @@ test('ficha mostra só a vertente activa e guarda sociedade e novo angariador re
 
  await dialog.getByLabel('Angariador do cliente',{exact:true}).selectOption({label:'Parceiro Sintético'})
  await expect(dialog.getByLabel('Nome do angariador',{exact:true})).toHaveValue('Parceiro Sintético')
+})
+
+test('muda um cliente particular para empresa com novo código canónico',async({page})=>{
+ const fixture=createQaAllocationData(),writes:Array<{table:string;method:string;args:Record<string,unknown>}>=[]
+ await page.route('**/rest/v1/**',async route=>{
+  const req=route.request(),url=new URL(req.url()),table=url.pathname.split('/').at(-1)??'',rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],args=['POST','PATCH'].includes(req.method())?req.postDataJSON():{}
+  if(!rpc&&['POST','PATCH'].includes(req.method()))writes.push({table,method:req.method(),args})
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(fixture(rpc,table,args,url,req.method(),req.headers().accept?.includes('vnd.pgrst.object')??false))})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
+ await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).dblclick()
+ const dialog=page.getByRole('dialog')
+ await dialog.getByRole('button',{name:'Acrescentar vertente Empresa',exact:true}).click()
+ await dialog.getByRole('checkbox',{name:'Empresa',exact:true}).check()
+ await dialog.getByRole('checkbox',{name:'Particular',exact:true}).uncheck()
+ const companyCode=await dialog.getByLabel('Código desta vertente').last().inputValue()
+ expect(companyCode).toMatch(/^01\.\d{4,}$/)
+ await dialog.getByRole('button',{name:'Guardar alterações',exact:true}).click()
+ await expect(dialog.getByRole('button',{name:'Guardar alterações',exact:true})).toBeDisabled()
+ expect(writes.find(item=>item.table==='clients'&&item.method==='PATCH')?.args).toMatchObject({client_type:'company',client_code:companyCode})
+ expect(writes.find(item=>item.table==='client_profiles'&&item.method==='PATCH')?.args).toMatchObject({client_type:'individual',active:false})
+ expect(writes.find(item=>item.table==='client_profiles'&&item.method==='POST')?.args).toMatchObject({client_type:'company',client_code:companyCode,active:true})
 })
 
 

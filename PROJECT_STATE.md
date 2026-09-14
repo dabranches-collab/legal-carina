@@ -1,11 +1,20 @@
 # Estado do projecto
 
-## Release 0.10.13 em preparação — 14-09-2026
+## Release 0.10.14 em preparação — 14-09-2026
+
+- A edição de clientes existentes calcula agora os próximos códigos `01.xxxx` e `02.xxxx`; ao activar Empresa, o código deixa de ficar em «A calcular…» e a linha canónica do cliente acompanha a vertente activa.
+- A resposta não-2xx de `client-documents` é lida e apresentada ao utilizador, em vez de classificar todos os erros funcionais como serviço ainda não publicado.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 35 ficheiros/191 testes unitários, runtime do Worker, build, dry-run Cloudflare, 119 E2E gerais e três E2E PWA dedicados. O executor Playwright foi encerrado apenas depois de imprimir todos os resultados finais, devido ao bloqueio conhecido no fecho do processo. No browser local autenticado, HAPPY AMBICION recebeu a sugestão `01.0109`; o ensaio foi cancelado sem alterar produção.
+- Supabase confirmado sem alterações: `client-documents` versão 2 `ACTIVE`, `verify_jwt=true`. Este lote não contém migrations nem alterações de Auth, RLS, Storage, Edge Functions ou segredos.
+- Publicação e alterações reais autorizadas expressamente pelo utilizador; execução pós-publicação ainda pendente neste ponto.
+
+## Release 0.10.13 publicada — 14-09-2026
 
 - A tabela de Registos passa a incorporar progressivamente blocos completos de 400 linhas durante a preparação do universo integral, em vez de conservar apenas as primeiras 100 até ao fim.
 - Teste de regressão incluído; 190 testes unitários e TypeScript aprovados nesta primeira validação. Sem alterações remotas de dados ou acessos.
 - As novidades da 0.10.12 foram movidas para o histórico e a 0.10.13 identifica esta correcção, preservando o resumo acumulado por utilizador.
 - Correcção de autorização preparada para a P. Chaves: concessão aditiva `firm/edit`, necessária para abrir os 46 movimentos cuja sociedade ainda é nula. Não remove nem substitui acessos existentes e não altera outros utilizadores.
+- PR #23 fundido em `main` no commit `db0dbd758d8ed0d97f2e5d1533a30beacba74e74`; versão Cloudflare `e4985bf2-4c3a-425d-8851-3f2b6b6d5589` activa desde `10:49:14 UTC`.
 
 ## Release 0.10.12 publicada — 14-09-2026
 

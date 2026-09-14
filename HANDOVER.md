@@ -1,11 +1,21 @@
 # Legal Carina — handover
 
-## Release 0.10.13 em preparação — 14-09-2026
+## Release 0.10.14 em preparação — 14-09-2026
+
+- Ao abrir uma ficha existente, a aplicação consulta agora todos os códigos das vertentes do escritório. Activar Empresa preenche imediatamente o próximo `01.xxxx`; o registo principal do cliente fica sincronizado com a vertente activa, preservando as vertentes antigas para o histórico dos movimentos.
+- O painel documental extrai a resposta JSON das Edge Functions que devolvem estado não-2xx. Erros de sessão, permissão, duplicação ou validação deixam de ser apresentados como uma inexistência genérica do serviço.
+- Testes novos cobrem o erro funcional documental e o cálculo do código de Empresa. O browser local autenticado confirmou `01.0109` para HAPPY AMBICION; o ensaio foi cancelado, sem escrita remota.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 35 ficheiros/191 testes unitários, runtime do Worker, build e dry-run Cloudflare. A matriz E2E terminou com 119 cenários aprovados e três condicionais; os três cenários PWA foram depois aprovados separadamente contra o preview de produção. O runner Playwright deste checkout continua a não terminar o processo depois de imprimir o último resultado, pelo que foi encerrado apenas após todos os resultados finais.
+- A Edge Function `client-documents` versão 2 foi reconfirmada `ACTIVE`, com JWT obrigatório. Sem migrations, alterações de Auth, políticas, Storage, funções ou segredos neste candidato.
+- Ordem explícita recebida para concluir, testar e publicar. A alteração real da HAPPY AMBICION e o carregamento da certidão da SUSANA HENRIQUES ficam para a validação pós-publicação.
+
+## Release 0.10.13 publicada — 14-09-2026
 
 - Corrige a lista de Registos para incorporar blocos de 400 movimentos já enriquecidos enquanto o restante universo é preparado. O utilizador deixa de ficar retido nas primeiras 100 linhas até à conclusão do carregamento.
 - Inclui teste de regressão para confirmar que um bloco parcial aparece antes da promessa final. Sem alterações de base de dados, Auth, permissões, Storage, Edge Functions ou segredos.
 - A listagem de novidades passa a conservar a 0.10.12 no histórico e apresenta esta correcção como novidade da 0.10.13, permitindo o resumo acumulado conforme a versão instalada por cada utilizador.
 - A P. Chaves via os 46 movimentos sem sociedade na pesquisa, mas a leitura detalhada exigia uma concessão compatível com `billing_entity_id = null`. A migration aditiva `20260914114000_grant_paula_firm_edit_access.sql` acrescenta apenas a esta utilizadora uma concessão `firm/edit`; conserva as três concessões por sociedade, as permissões financeiras, a pertença e o perfil actuais.
+- PR #23 fundido em `main` no commit `db0dbd758d8ed0d97f2e5d1533a30beacba74e74`; produção confirmada na versão Cloudflare `e4985bf2-4c3a-425d-8851-3f2b6b6d5589` desde `10:49:14 UTC`.
 
 ## Release 0.10.12 publicada — 14-09-2026
 
