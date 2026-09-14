@@ -13,6 +13,22 @@ const windowsViewports = [
   { name:'Windows 2560×1440', width:2560, height:1440 },
 ]
 
+test('arranque standalone preserva o menu indicado no URL',async({page})=>{
+  await page.addInitScript(()=>{const original=window.matchMedia.bind(window);Object.defineProperty(window,'matchMedia',{configurable:true,value:(query:string)=>query==='(display-mode: standalone)'?{matches:true,media:query,onchange:null,addListener:()=>undefined,removeListener:()=>undefined,addEventListener:()=>undefined,removeEventListener:()=>undefined,dispatchEvent:()=>true}:original(query)})})
+  await page.goto('/?qa-iphone=1&view=billing&society=MASSIVE+SEARCH')
+  await expect(page).toHaveURL(/view=billing&society=MASSIVE\+SEARCH/)
+  await expect(page.getByRole('button',{name:'Sociedades'})).toBeVisible()
+})
+
+test('browser normal preserva o submenu de Clientes num refresh directo',async({page})=>{
+  await page.goto('/?qa-iphone=1&view=clients&clientType=company&clientMode=list')
+  await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
+  await expect(page.getByText('Lista · Empresas',{exact:true})).toBeVisible()
+  await page.reload()
+  await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
+  await expect(page.getByText('Lista · Empresas',{exact:true})).toBeVisible()
+})
+
 for (const viewport of windowsViewports) {
   test(`${viewport.name}: sidebar, versão e overflow`, async ({ page }) => {
     await page.setViewportSize(viewport)

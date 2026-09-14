@@ -79,14 +79,24 @@ Deno.serve(async (request) => {
       if (memberError) throw memberError
       const userIds = (firmUsers ?? []).map((membership) => membership.user_id)
       if (!userIds.length) return json(request, { groups: [] })
-      const [{ data: events, error: eventsError }, { data: credentials, error: credentialsError }] = await Promise.all([
+      const [{ data: events, error: eventsError }, { data: credentials, error: credentialsError }, { data:authUsers,error:authUsersError }] = await Promise.all([
         admin.from('security_events').select('id,user_id,occurred_at').eq('event_type', 'login_succeeded').in('user_id', userIds).order('occurred_at', { ascending: false }).limit(500),
         admin.from('user_login_credentials').select('user_id,username,display_name').eq('firm_id', firmId),
+        admin.auth.admin.listUsers({page:1,perPage:1000}),
       ])
-      if (eventsError || credentialsError) throw eventsError ?? credentialsError
-      const identityById = new Map((credentials ?? []).map((credential) => [credential.user_id, credential]))
+      if (eventsError || credentialsError || authUsersError) throw eventsError ?? credentialsError ?? authUsersError
+      const authIdentityById=new Map((authUsers.users??[]).map(user=>[user.id,user.user_metadata??{}]))
+      const identityById = new Map((credentials ?? []).map((credential) => {
+        const metadata=authIdentityById.get(credential.user_id)
+        const metadataName=typeof metadata?.display_name==='string'?metadata.display_name.trim():''
+        return [credential.user_id,{...credential,display_name:metadataName||credential.display_name?.trim()||credential.username}]
+      }))
+      const recoveredEvents=(authUsers.users??[]).filter(user=>userIds.includes(user.id)&&user.last_sign_in_at).flatMap(user=>{
+        const latest=(events??[]).find(event=>event.user_id===user.id)?.occurred_at
+        return !latest||new Date(user.last_sign_in_at!).getTime()-new Date(latest).getTime()>60_000?[{id:`auth-${user.id}`,user_id:user.id,occurred_at:user.last_sign_in_at!}]:[]
+      })
       const groups: Array<{ userId:string; username:string; displayName:string; firstAt:string; lastAt:string; count:number; events:string[] }> = []
-      for (const event of events ?? []) {
+      for (const event of [...(events??[]),...recoveredEvents].sort((a,b)=>b.occurred_at.localeCompare(a.occurred_at))) {
         if (!event.user_id) continue
         const previous = groups.at(-1)
         if (previous?.userId === event.user_id) {
@@ -107,7 +117,7 @@ Deno.serve(async (request) => {
       const displayName = normalizeDisplayName(input.displayName)
       const pin = String(input.pin ?? '')
       const role = String(input.role ?? '')
-      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'operator', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId)
         || !allowedRoles.includes(role)
         || displayName.length < 1 || displayName.length > 100
@@ -178,7 +188,11 @@ Deno.serve(async (request) => {
       const { data: target } = await admin.from('firm_members').select('user_id,role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target) return json(request, { error: 'Utilizador inválido.' }, 400)
       const callerMembership = memberships.find((membership) => membership.firm_id === firmId)
-      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) return json(request, { error: 'O perfil do proprietário só pode ser alterado pelo próprio.' }, 403)
+      if (target.role === 'owner' && (callerMembership?.role !== 'owner' || userId !== authData.user.id)) {
+        const { data: ownerCredential, error: ownerCredentialError } = await admin.from('user_login_credentials').select('username').eq('user_id', userId).eq('firm_id', firmId).maybeSingle()
+        if (ownerCredentialError) throw ownerCredentialError
+        if (!ownerCredential || username !== ownerCredential.username) return json(request, { error: 'Um Administrador pode corrigir o nome visível, mas não pode alterar o login do Proprietário.' }, 403)
+      }
       const { data: targetAuthData, error: targetAuthError } = await admin.auth.admin.getUserById(userId)
       if (targetAuthError || !targetAuthData.user) throw targetAuthError ?? new Error('Utilizador não encontrado')
       const { error: authUpdateError } = await admin.auth.admin.updateUserById(userId, { user_metadata: { ...(targetAuthData.user.user_metadata ?? {}), username, display_name: displayName } })
@@ -224,7 +238,7 @@ Deno.serve(async (request) => {
       const userId = String(input.userId ?? '')
       const role = String(input.role ?? '')
       const active = Boolean(input.active)
-      const allowedRoles = ['admin', 'manager', 'billing', 'professional', 'viewer', 'auditor']
+      const allowedRoles = ['admin', 'manager', 'operator', 'billing', 'professional', 'viewer', 'auditor']
       if (!memberships.some((membership) => membership.firm_id === firmId) || !allowedRoles.includes(role)) return json(request, { error: 'Alteração inválida.' }, 400)
       const { data: target } = await admin.from('firm_members').select('role').eq('firm_id', firmId).eq('user_id', userId).maybeSingle()
       if (!target || target.role === 'owner') return json(request, { error: 'O proprietário não pode ser alterado por esta operação.' }, 400)

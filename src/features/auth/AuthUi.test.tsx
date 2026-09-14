@@ -18,6 +18,13 @@ describe('autenticação', () => {
     expect(onPinLogin).toHaveBeenCalledWith('dabranches', '2468')
   })
 
+  it('apresenta o busto da Justiça na zona institucional do login', () => {
+    render(<LoginPage {...loginProps} />)
+    const bust = screen.getByTestId('login-justice-bust')
+    expect(bust).toHaveStyle({ maskImage:'url(/brand/lady-justice-bust-a.png)' })
+    expect(bust).toHaveAttribute('aria-hidden','true')
+  })
+
   it('mantém recuperação administrativa sem registo público', async () => {
     render(<LoginPage {...loginProps} />)
     expect(screen.queryByRole('button', { name:/regist/i })).not.toBeInTheDocument()

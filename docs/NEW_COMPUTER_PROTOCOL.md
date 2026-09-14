@@ -25,9 +25,11 @@ Criar `.env.local` apenas neste computador, com `VITE_SUPABASE_URL`, `VITE_SUPAB
 ## Reconciliar antes de trabalhar
 
 - Ler `AGENTS.md`, `HANDOVER.md`, `PROJECT_STATE.md` e documentação relevante.
-- Comparar HEAD local com `origin/main`.
+- Executar `git fetch --all --prune` e comparar HEAD com `origin/main` e com a branch/commit funcional registada no topo de `HANDOVER.md`.
+- Não assumir que a branch predefinida ou `main` é a mais recente. Confirmar a versão de `package.json`, `public/release-notes.json` e a versão online.
 - Confirmar a versão online e deployment activo na Cloudflare.
 - Confirmar o projecto Supabase e listar migrations remotas antes de qualquer operação de base de dados.
+- Executar `scripts/audit-continuity.sql` apenas em modo de leitura e comparar os agregados com `docs/continuity-audit-2026-09-14.md`. Nunca copiar nomes, emails, PINs, tokens ou documentos para o repositório.
 - Arrancar com `pnpm dev --host 127.0.0.1 --port 5173` e abrir `http://127.0.0.1:5173/`.
 
-Um computador só está pronto quando o checkout está limpo/sincronizado, a configuração local não está no Git e a aplicação local foi validada no browser integrado.
+Um computador só está pronto quando o checkout está limpo/sincronizado com a linha funcional confirmada, a configuração local não está no Git, os agregados de continuidade não mostram órfãos e a aplicação local foi validada no browser integrado. A ausência de prova de backup/PITR bloqueia migrations, alterações de Auth/permissões e operações destrutivas, mas não bloqueia auditorias de leitura ou documentação.

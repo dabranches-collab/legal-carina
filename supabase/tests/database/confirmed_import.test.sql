@@ -1,9 +1,11 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(20);
+select plan(22);
 
 select has_function('public','analyze_import_candidates',array['jsonb'],'server import preflight exists');
 select has_function('public','commit_validated_import',array['jsonb'],'transactional import endpoint exists');
+select has_function('private','import_changed_fields',array['jsonb','uuid'],'full-row comparison helper exists');
+select ok(not has_function_privilege('authenticated','private.import_changed_fields(jsonb,uuid)','EXECUTE'),'comparison helper is not exposed to authenticated clients');
 select ok(has_function_privilege('authenticated','public.analyze_import_candidates(jsonb)','EXECUTE'),'authenticated can run controlled preflight');
 select ok(not has_function_privilege('anon','public.analyze_import_candidates(jsonb)','EXECUTE'),'anonymous users cannot run preflight');
 select ok(not exists(select 1 from information_schema.routine_privileges where routine_schema='public' and routine_name='analyze_import_candidates' and grantee='PUBLIC' and privilege_type='EXECUTE'),'PUBLIC cannot run preflight');

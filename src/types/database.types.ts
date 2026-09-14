@@ -4,7 +4,7 @@ export interface FirmMemberRow {
   id: string
   firm_id: string
   user_id: string
-  role: 'owner' | 'admin' | 'manager' | 'billing' | 'professional' | 'viewer' | 'auditor'
+  role: 'owner' | 'admin' | 'manager' | 'operator' | 'billing' | 'professional' | 'viewer' | 'auditor'
   active: boolean
 }
 
@@ -21,7 +21,7 @@ export interface Database {
       get_my_access_status: { Args: Record<PropertyKey, never>; Returns: Array<{ active:boolean; must_change_pin:boolean }> }
       get_work_entry_form_options: { Args: Record<PropertyKey, never>; Returns: Record<string, unknown> }
       get_work_entry_for_edit: { Args: { p_work_entry_id:string }; Returns: Record<string, unknown>|null }
-      create_work_entry: { Args: { p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_billing_entity_id:string|null; p_activity_description:string; p_duration_minutes:number; p_observations:string|null }; Returns:string }
+      create_work_entry: { Args: { p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_billing_entity_id:string|null; p_activity_description:string; p_duration_minutes:number; p_observations:string|null; p_hourly_rate:number|null }; Returns:string }
       update_work_entry_details: { Args: { p_work_entry_id:string; p_work_date:string; p_client_profile_id:string; p_matter_id:string|null; p_professional_id:string; p_activity_description:string; p_observations:string|null }; Returns:undefined }
       update_work_entry_full: { Args: { p_work_entry_id:string; p_values:Record<string,unknown>; p_reason:string }; Returns:undefined }
       delete_work_entry: { Args: { p_work_entry_id:string; p_reason:string }; Returns:undefined }

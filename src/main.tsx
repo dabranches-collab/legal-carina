@@ -2,8 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { installQaDemoFetch } from './lib/qaDemoFetch'
 
-if (import.meta.env.DEV) {
+installQaDemoFetch()
+
+if (import.meta.env.DEV || import.meta.env.VITE_APP_ENV === 'test') {
   const params = new URLSearchParams(window.location.search)
   if (params.get('qa-iphone') === '1') {
     const safeTop = Number(params.get('safe-top'))

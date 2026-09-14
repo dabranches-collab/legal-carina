@@ -4,7 +4,17 @@ Aplicação de gestão de horas, clientes, facturação e recebimentos para um e
 
 ## Stack
 
-React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwright. Supabase é o backend e o serviço Cloudflare `legal-carina` é o destino de alojamento. A versão candidata actual permanece apenas local até aprovação expressa.
+React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwright. O Supabase é o backend central (dados, autenticação, RLS, Storage e Edge Functions), o Worker Cloudflare `legal-carina` serve a aplicação e o Azure Translator trata a tradução de documentos através do Worker.
+
+## Estado canónico
+
+- Produção e código funcional: `0.10.11`.
+- Branch funcional no GitHub: `codex/legalteam-distribution`.
+- Commit documental da publicação: `793644c9ca666fe5d1b118468f20296ae438b267`.
+- Produção: `https://legal-carina.dabranches.workers.dev`.
+- O `main` ainda não representa a produção e não deve ser usado como base sem reconciliação explícita.
+
+Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 
 ## Desenvolvimento local
 
@@ -30,6 +40,6 @@ pnpm test:e2e
 
 Consulte [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md) e [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
 
-## Importação
+## Importação histórica
 
-O analisador local aceita `.xlsx` e `.csv`, calcula SHA-256, rejeita conteúdo activo e apresenta um relatório antes de qualquer gravação. A comparação com os dados existentes e a confirmação transaccional no Supabase estão preparadas localmente, mas as migrations candidatas ainda não foram aplicadas remotamente. Consulte [IMPORT_SPECIFICATION.md](IMPORT_SPECIFICATION.md).
+O analisador aceita `.xlsx` e `.csv`, calcula SHA-256, rejeita conteúdo activo e apresenta um relatório antes de qualquer gravação. A plataforma online é agora a fonte corrente; o importador permanece para reconciliação histórica controlada e nunca autoriza limpeza automática. Consulte [IMPORT_SPECIFICATION.md](IMPORT_SPECIFICATION.md).
