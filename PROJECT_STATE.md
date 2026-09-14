@@ -1,10 +1,12 @@
 # Estado do projecto
 
-## Release 0.10.15 em preparação — 15-09-2026
+## Release 0.10.15 publicada — 15-09-2026
 
 - A navegação principal apresenta agora `Registos` imediatamente a seguir a `Visão Geral`, antes de `Clientes`; teste de regressão incluído.
 - Browser integrado CONFIRMADO com dados sintéticos na versão local 0.10.15. Segurança de ficheiros, lint, TypeScript, 35 ficheiros/191 testes unitários, build e 31 E2E focados aprovados; dois cenários antigos passaram na repetição isolada após um primeiro timeout local. A alteração é apenas de interface e não modifica Supabase, dados, acessos, permissões, Storage, Edge Functions ou segredos.
-- Produção continua na versão 0.10.14, deployment `e528b0a7-88b0-4b51-83b5-41d9e55fb82b`, version `455d288f-3bf0-4e63-956a-136ba2c0a203`; falta ordem explícita `publica` para promover este lote.
+- Publicação explicitamente autorizada. PR #28/merge `39142e8b3f61baf179c43af875c68b0a2c284bd0`; CI pós-merge `34907859049`, auditoria de dependências, secret scan e dry-run estrito aprovados.
+- Produção 0.10.15 activa a 100% desde `2026-09-14 23:19:25 UTC`: deployment `100194aa-35db-4651-8e1e-bf462c2559c0`, version `d0c49de5-1b5e-4b86-8cb8-6e5005627115`. HTTP, manifesto, service worker e browser autenticado confirmados; rollback frontend preservado para `455d288f-3bf0-4e63-956a-136ba2c0a203` (0.10.14).
+- Nenhuma migration nem alteração de Supabase, dados, Auth, RLS, Storage, Edge Functions ou segredos.
 
 ## Release 0.10.14 publicada e arquivo documental operacional — 14-09-2026
 
