@@ -56,6 +56,15 @@ describe('ClientDocumentsPanel',()=>{
     render(<ClientDocumentsPanel firmId="firm-id" clientId="client-id"/>)
     await user.upload(document.querySelector<HTMLInputElement>('input[type="file"]')!,pdf('teste.pdf'))
     await user.click(screen.getByRole('button',{name:'Carregar documento'}))
-    expect((await screen.findAllByText(/o serviço documental ainda não está disponível nesta versão publicada/)).length).toBeGreaterThan(0)
+    expect((await screen.findAllByText(/o serviço documental ainda não está disponível nesta versão publicada/i)).length).toBeGreaterThan(0)
+  })
+
+  it('apresenta a causa devolvida por uma Edge Function publicada',async()=>{
+    const user=userEvent.setup()
+    invoke.mockResolvedValueOnce({data:null,error:{message:'Edge Function returned a non-2xx status code',context:new Response(JSON.stringify({error:'Sem permissão para arquivar documentos deste cliente.'}),{status:403,headers:{'content-type':'application/json'}})}})
+    render(<ClientDocumentsPanel firmId="firm-id" clientId="client-id"/>)
+    await user.upload(document.querySelector<HTMLInputElement>('input[type="file"]')!,pdf('teste.pdf'))
+    await user.click(screen.getByRole('button',{name:'Carregar documento'}))
+    expect((await screen.findAllByText(/Sem permissão para arquivar documentos deste cliente/)).length).toBeGreaterThan(0)
   })
 })

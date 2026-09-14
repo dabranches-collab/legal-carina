@@ -19,6 +19,23 @@ const categories = [
 ] as const
 const maxSize = 20 * 1024 * 1024
 const categoryLabel = (value:string) => categories.find(([key])=>key===value)?.[1] ?? 'Outro'
+const functionFailureMessage=async(data:unknown,failure:unknown)=>{
+  const direct=typeof data==='object'&&data!==null&&'error' in data?String((data as {error?:unknown}).error??''):''
+  if(direct)return direct
+  const response=(failure as {context?:Response}|null)?.context
+  if(response){
+    try{
+      const payload=await response.clone().json() as {error?:unknown}
+      if(payload.error)return String(payload.error)
+    }catch{/* conserva a mensagem técnica como último recurso */}
+    if(response.status===401)return 'A sessão expirou. Volte a entrar e repita o carregamento.'
+    if(response.status===403)return 'Sem permissão para arquivar documentos deste cliente.'
+    if(response.status===404)return 'O serviço documental ainda não está disponível nesta versão publicada.'
+  }
+  const technical=String((failure as {message?:unknown}|null)?.message??'')
+  if(/failed to send|function not found|not found/i.test(technical))return 'O serviço documental ainda não está disponível nesta versão publicada.'
+  return technical||'Não foi possível arquivar o documento.'
+}
 const validity=(expiresAt:string|null)=>{
   if(!expiresAt)return {label:'Sem validade',tone:'text-text-secondary'}
   const today=new Date();today.setHours(0,0,0,0)
@@ -59,9 +76,7 @@ export function ClientDocumentsPanel({firmId,clientId,readOnly=false}:{firmId:st
       const body=new FormData();body.set('file',file);body.set('firmId',firmId);body.set('clientId',clientId);body.set('category',category);body.set('title',title.trim()||(fallbackTitle||'Documento'));body.set('description',description.trim());body.set('documentDate',documentDate);body.set('expiresAt',expiresAt)
       const {data,error:uploadError}=await supabase.functions.invoke('client-documents',{body})
       if(uploadError||data?.error){
-        const technicalMessage=data?.error??uploadError?.message??''
-        const unavailable=/failed to send|edge function|not found|non-2xx/i.test(technicalMessage)
-        failures.push(`${file.name}: ${unavailable?'o serviço documental ainda não está disponível nesta versão publicada.':technicalMessage||'não foi possível arquivar.'}`)
+        failures.push(`${file.name}: ${await functionFailureMessage(data,uploadError)}`)
       }
       else uploaded.push(file.name)
     }
@@ -82,7 +97,7 @@ export function ClientDocumentsPanel({firmId,clientId,readOnly=false}:{firmId:st
     if(!window.confirm(`Pretende ${label} “${document.title}”?`))return
     setBusy(true);setError('');setNotice('')
     const {data,error:actionError}=await supabase!.functions.invoke('client-documents',{body:{action,documentId:document.id}})
-    if(actionError||data?.error)setError(data?.error??'Não foi possível alterar o documento.')
+    if(actionError||data?.error)setError(await functionFailureMessage(data,actionError))
     else{setNotice(action==='remove'?'Documento removido do arquivo visível e mantido para recuperação.':action==='archive'?'Documento arquivado.':'Documento reactivado.');await load()}
     setBusy(false)
   }

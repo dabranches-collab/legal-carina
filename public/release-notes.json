@@ -1,10 +1,17 @@
 {
-  "version": "0.10.13",
+  "version": "0.10.14",
   "changes": [
-    "A lista de registos passa a mostrar progressivamente os blocos já carregados, sem ficar parada nas primeiras linhas até terminar de preparar todo o universo.",
-    "A P. Chaves passa a poder abrir e corrigir movimentos sem sociedade, conservando as permissões actuais e a auditoria das alterações."
+    "Ao acrescentar ou mudar uma vertente de cliente para Empresa, o próximo código 01.xxxx é calculado imediatamente e fica guardado com o tipo correcto.",
+    "O arquivo de documentos do cliente passa a apresentar a causa real quando o serviço rejeita um carregamento, permitindo corrigir permissões, sessão ou dados sem um aviso enganador de indisponibilidade."
   ],
   "releases": [
+    {
+      "version": "0.10.13",
+      "changes": [
+        "A lista de registos passa a mostrar progressivamente os blocos já carregados, sem ficar parada nas primeiras linhas até terminar de preparar todo o universo.",
+        "A P. Chaves passa a poder abrir e corrigir movimentos sem sociedade, conservando as permissões actuais e a auditoria das alterações."
+      ]
+    },
     {
       "version": "0.10.12",
       "changes": [
