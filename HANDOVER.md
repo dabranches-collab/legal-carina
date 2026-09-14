@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Release 0.10.15 em preparação — 15-09-2026
+
+- O menu principal `Registos` passa a surgir imediatamente depois de `Visão Geral`, antes de `Clientes`, em todos os tamanhos de ecrã. A ordem fica coberta por um teste de regressão.
+- CONFIRMADO no browser integrado com dados sintéticos: a versão local 0.10.15 apresenta `Visão Geral → Registos → Clientes`. Segurança de ficheiros, lint, TypeScript, 35 ficheiros/191 testes unitários e build aprovados; 31 E2E focados aprovados, incluindo a matriz de 11 iPhones (dois cenários antigos passaram na repetição isolada após excederem o primeiro limite local). Sem alterações de Supabase, dados, Auth, RLS, Storage, Edge Functions ou segredos.
+- Produção permanece na versão 0.10.14 (deployment `e528b0a7-88b0-4b51-83b5-41d9e55fb82b`, version `455d288f-3bf0-4e63-956a-136ba2c0a203`). Este lote não está publicado porque o novo pedido não incluiu a ordem explícita `publica`.
+
 ## Release 0.10.14 publicada e arquivo documental corrigido — 14-09-2026
 
 - Ao abrir uma ficha existente, a aplicação consulta agora todos os códigos das vertentes do escritório. Activar Empresa preenche imediatamente o próximo `01.xxxx`; o registo principal do cliente fica sincronizado com a vertente activa, preservando as vertentes antigas para o histórico dos movimentos. O painel documental apresenta a resposta funcional real das Edge Functions em vez de mascarar todos os estados não-2xx como serviço indisponível.

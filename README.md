@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.13`; release `0.10.14` em preparação para corrigir a mudança de vertente para Empresa e o diagnóstico do arquivo documental.
-- Fonte canónica do código no GitHub: `main`, no commit `db0dbd758d8ed0d97f2e5d1533a30beacba74e74`.
+- Versão publicada: `0.10.14`; release `0.10.15` em preparação para colocar `Registos` imediatamente depois de `Visão Geral`.
+- Fonte canónica do código publicado no GitHub: `main`, no commit `b70aa7123d5e681402d2c7ca12004d909b752443`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- A release 0.10.13 apresenta progressivamente a tabela de registos e concede à P. Chaves a leitura detalhada dos movimentos sem sociedade. A 0.10.14 corrige os códigos de novas vertentes em clientes existentes e revela a resposta funcional real do serviço documental.
+- A release 0.10.14 corrige os códigos de novas vertentes em clientes existentes e torna operacional o circuito documental. A 0.10.15 altera apenas a ordem do menu principal.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 

@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Release 0.10.15 em preparação — 15-09-2026
+
+- A navegação principal apresenta agora `Registos` imediatamente a seguir a `Visão Geral`, antes de `Clientes`; teste de regressão incluído.
+- Browser integrado CONFIRMADO com dados sintéticos na versão local 0.10.15. Segurança de ficheiros, lint, TypeScript, 35 ficheiros/191 testes unitários, build e 31 E2E focados aprovados; dois cenários antigos passaram na repetição isolada após um primeiro timeout local. A alteração é apenas de interface e não modifica Supabase, dados, acessos, permissões, Storage, Edge Functions ou segredos.
+- Produção continua na versão 0.10.14, deployment `e528b0a7-88b0-4b51-83b5-41d9e55fb82b`, version `455d288f-3bf0-4e63-956a-136ba2c0a203`; falta ordem explícita `publica` para promover este lote.
+
 ## Release 0.10.14 publicada e arquivo documental operacional — 14-09-2026
 
 - A edição de clientes existentes calcula os próximos códigos `01.xxxx` e `02.xxxx`; ao activar Empresa, o código deixa de ficar em «A calcular…» e a linha canónica acompanha a vertente activa. Os erros não-2xx do arquivo documental apresentam agora a mensagem funcional segura devolvida pelo backend.
