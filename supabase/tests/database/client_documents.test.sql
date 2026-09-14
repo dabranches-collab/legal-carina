@@ -1,5 +1,5 @@
 begin;
-select plan(13);
+select plan(14);
 
 select has_table('public','client_documents','client_documents metadata table exists');
 select row_security_active('public','client_documents','RLS is active for client documents');
@@ -14,6 +14,10 @@ select has_function('public','can_manage_client_document',array['uuid','uuid'],'
 select function_privs_are('public','can_manage_client_document',array['uuid','uuid'],'authenticated',array['EXECUTE'],'only authenticated users can invoke the authorisation probe');
 select has_function('public','can_manage_client_document_record',array['uuid'],'record authorisation probe exists');
 select function_privs_are('public','can_manage_client_document_record',array['uuid'],'authenticated',array['EXECUTE'],'only authenticated users can invoke the record authorisation probe');
+select ok(
+  pg_get_functiondef('private.audit_business_change()'::regprocedure) like '%uploaded_by%',
+  'document uploads preserve their authenticated actor in the audit log'
+);
 
 select * from finish();
 rollback;
