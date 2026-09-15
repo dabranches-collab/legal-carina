@@ -1,14 +1,15 @@
 # Legal Carina — handover
 
-## Release 0.10.16 em preparação — documentos formais — 15-09-2026
+## Release 0.10.16 publicada — documentos formais — 15-09-2026
 
-- Branch `codex/documentos-sociedades-0.10.16`, criada a partir do `main`/`origin/main` limpo em `95a3b2091174676eacb889e5b2f8aa933322e592`; implementação registada no commit `ef0b18f`. A produção foi confirmada antes da edição e continua na versão 0.10.15, deployment `100194aa-35db-4651-8e1e-bf462c2559c0`, version `d0c49de5-1b5e-4b86-8cb8-6e5005627115`.
+- Branch `codex/documentos-sociedades-0.10.16`, criada a partir do `main`/`origin/main` limpo em `95a3b2091174676eacb889e5b2f8aa933322e592`. PR #30 fundido em `main` no commit `0a4aa70350f7740afeadd8f5000d0fc243b383c0`; CI `35006168821`, auditoria de dependências e secret scan `35006168804` verdes.
 - PDF e Word passam a partilhar destinatário, tratamento formal, data por extenso, conteúdo, totais, logótipo e rodapé. O Word é editável; a paginação do PDF foi compactada para acompanhar a apresentação do Word e evitar páginas finais quase vazias.
 - Para Carina Santos, o rodapé contém `CP 19372L · NIF 201739380`, `Avenida dos Moinhos, 1C, 2610-118 Alfragide` e `carinamarquesdossantos-19372l@adv.oa.pt`; o logótipo guardado na sociedade substitui o nome textual no cabeçalho.
 - Para todas as sociedades, desconto zero elimina todas as referências documentais a provisões. A secção de provisões só existe na janela quando há uma conta de provisão.
 - A ficha de cliente ganhou tratamento formal (`Exmo. Senhor,`, `Exma. Senhora,`, `Exmos. Senhores,`, `Exmas. Senhoras,`). Se estiver omisso, a janela de emissão exige a escolha antes de activar a geração.
-- Migration local `20260915162917_add_client_honorarium_salutation.sql` criada após `supabase migration list --linked`; não foi aplicada devido à divergência histórica de carimbos já registada. Publicação e alterações remotas continuam proibidas sem ordem explícita `publica`.
-- Verificação sintética visual concluída com renderização real pelo Microsoft Word e rasterização do PDF: uma página em ambos, sem cortes ou sobreposições, com cabeçalho/rodapé e sem texto de provisões. Testes focados: 32 unitários e 6 E2E aprovados. Gates finais aprovados: segurança de ficheiros, lint, TypeScript, 37 ficheiros/198 testes unitários, runtime do Worker, build e dry-run Cloudflare.
+- Após autorização explícita para publicar tudo, a migration aditiva `20260915162917_add_client_honorarium_salutation.sql` foi aplicada isoladamente por `db query`, sem `db push` nem `migration repair`. Coluna, restrição e zero valores inválidos confirmados. A divergência histórica de carimbos mantém-se para reconciliação dedicada; Auth, RLS, Storage, Edge Functions, permissões, utilizadores e segredos não foram alterados. Backup físico mais recente observado: `2026-09-15 05:47:54 UTC`; advisor pós-migration sem erros.
+- Verificação sintética visual concluída com renderização real pelo Microsoft Word e rasterização do PDF: uma página em ambos, sem cortes ou sobreposições, com cabeçalho/rodapé e sem texto de provisões. Gates finais aprovados: segurança de ficheiros, lint, TypeScript, 37 ficheiros/198 testes unitários, runtime do Worker, build, dry-run Cloudflare e E2E integral com 119 aprovações e três testes condicionais ignorados.
+- Produção CONFIRMADA a 100% em `https://legal-carina.dabranches.workers.dev`: versão 0.10.16, deployment `66b33873-f219-4367-afe8-07bb3d47c722`, version `6930409c-b1fc-4424-9794-691e8665bd17`, desde `2026-09-15 18:23:05 UTC` (`19:23:05` em Luanda). HTTP 200 e browser autenticado confirmaram a aplicação actualizada; rollback frontend: `d0c49de5-1b5e-4b86-8cb8-6e5005627115` (0.10.15).
 
 ## Release 0.10.15 publicada — 15-09-2026
 

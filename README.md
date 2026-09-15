@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.15`; `Registos` aparece imediatamente depois de `Visão Geral`.
-- Fonte canónica do código publicado no GitHub: `main`, no commit `39142e8b3f61baf179c43af875c68b0a2c284bd0`.
+- Versão publicada: `0.10.16`; documentos formais em PDF e Word editável usam a mesma apresentação, tratamento formal e datas por extenso, omitindo provisões quando não existem.
+- Fonte canónica do código publicado no GitHub: `main`, no commit `0a4aa70350f7740afeadd8f5000d0fc243b383c0`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- A release 0.10.14 corrige os códigos de novas vertentes em clientes existentes e torna operacional o circuito documental. A 0.10.15 coloca `Registos` imediatamente depois de `Visão Geral` no menu principal.
+- A release 0.10.16 acrescenta tratamento formal por cliente, escolha obrigatória na emissão quando omisso e o cabeçalho/rodapé profissional da Carina Santos; a 0.10.15 colocou `Registos` imediatamente depois de `Visão Geral` no menu principal.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 
