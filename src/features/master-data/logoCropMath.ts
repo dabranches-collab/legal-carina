@@ -22,3 +22,7 @@ export function squareCropAroundBounds(imageWidth:number,imageHeight:number,boun
  const y=Math.max(0,Math.min(imageHeight-side,(bounds.top+bounds.bottom+1-side)/2))
  return{left:x/imageWidth*100,right:(imageWidth-x-side)/imageWidth*100,top:y/imageHeight*100,bottom:(imageHeight-y-side)/imageHeight*100}
 }
+
+export function cropAroundBounds(imageWidth:number,imageHeight:number,bounds:PixelBounds):CropInsets{
+ return{left:bounds.left/imageWidth*100,right:(imageWidth-bounds.right-1)/imageWidth*100,top:bounds.top/imageHeight*100,bottom:(imageHeight-bounds.bottom-1)/imageHeight*100}
+}

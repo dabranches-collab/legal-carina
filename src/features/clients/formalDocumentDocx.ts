@@ -3,6 +3,7 @@ import type { ProvisionNote } from './credit'
 import { formalCopy, moneyInWords } from './formalDocumentCopy'
 import {documentCopy,expenseCopy,type Entry,type EntryExpense,type FormalSnapshot,type PdfColumn} from './formalDocumentPdf'
 import {documentGreeting,duration,formalDate,issuerFooterLines,monthYear} from './formalDocumentShared'
+import {assertIssuerMatchesSociety} from './societyBranding'
 
 const border={style:BorderStyle.SINGLE,size:1,color:'777777'}
 const borders={top:border,bottom:border,left:border,right:border,insideHorizontal:border,insideVertical:border}
@@ -10,15 +11,23 @@ const cell=(children:Paragraph[],width:number,shading?:string)=>new TableCell({c
 const text=(value:string,bold=false,size=20)=>new TextRun({text:value,bold,size,font:'Arial'})
 const para=(value:string,bold=false,options:IParagraphOptions={})=>new Paragraph({...options,children:[text(value,bold)]})
 const imageBytes=(data:string)=>Uint8Array.from(atob(data.slice(data.indexOf(',')+1)),character=>character.charCodeAt(0))
+const imageDimensions=(data:Uint8Array,type:'png'|'jpg')=>{
+ if(type==='png'&&data.length>=24)return {width:new DataView(data.buffer,data.byteOffset,data.byteLength).getUint32(16),height:new DataView(data.buffer,data.byteOffset,data.byteLength).getUint32(20)}
+ if(type==='jpg')for(let offset=2;offset+8<data.length;){if(data[offset]!==0xff){offset++;continue}const marker=data[offset+1],length=(data[offset+2]<<8)+data[offset+3];if([0xc0,0xc1,0xc2,0xc3,0xc5,0xc6,0xc7,0xc9,0xca,0xcb,0xcd,0xce,0xcf].includes(marker))return {width:(data[offset+7]<<8)+data[offset+8],height:(data[offset+5]<<8)+data[offset+6]};if(length<2)break;offset+=2+length}
+ return null
+}
+export const fitLogoDimensions=(dimensions:{width:number;height:number}|null)=>{if(!dimensions||dimensions.width<=0||dimensions.height<=0)return {width:181,height:121};const scale=Math.min(181/dimensions.width,121/dimensions.height);return {width:Math.max(1,Math.round(dimensions.width*scale)),height:Math.max(1,Math.round(dimensions.height*scale))}}
 
 export async function createFormalDocumentDocx(snapshot:FormalSnapshot,rows:Entry[],expenses:EntryExpense[],note:ProvisionNote|null,isCollection=false){
  const {clientName,clientDocument,issuer,issuerLogo,language,columns,showTimeTotal,showAmountTotal,bankAccounts}=snapshot
+ if(snapshot.societyName)assertIssuerMatchesSociety(issuer,snapshot.societyName)
  const copy=documentCopy[language],expenseLabels=expenseCopy[language],formal=formalCopy[language],title=isCollection?copy.collection:copy.honorarium
  const locale=language==='pt'?'pt-PT':language==='fr'?'fr-FR':'en-GB',currency=issuer?.default_currency||'EUR',issueDate=note?new Date(note.issued_at):new Date()
  const subtotal=note?Number(note.subtotal):rows.reduce((sum,row)=>sum+Number(row.effective_amount??0),0),vatRate=note?.vat_rate??issuer?.default_vat_rate??23,vat=note?.vat??Math.round(subtotal*vatRate)/100,total=note?.total??Math.round((subtotal+vat)*100)/100
  const money=(value:number)=>`${value.toLocaleString(locale,{minimumFractionDigits:2,maximumFractionDigits:2})} ${currency}`,hasProvision=Number(note?.deducted??0)>0
  const recipient=clientDocument?.honorarium_recipient_name||clientDocument?.legal_name||clientName
- const headerLeft=issuerLogo?[new Paragraph({children:[new ImageRun({type:'jpg',data:imageBytes(issuerLogo),transformation:{width:136,height:100}})]})]:[para((issuer?.name||title).toLocaleUpperCase(locale),true)]
+ const logoType=issuerLogo?.startsWith('data:image/png')?'png':'jpg',logoBytes=issuerLogo?imageBytes(issuerLogo):null,logoTransformation=logoBytes?fitLogoDimensions(imageDimensions(logoBytes,logoType)):null
+ const headerLeft=issuerLogo&&logoBytes&&logoTransformation?[new Paragraph({children:[new ImageRun({type:logoType,data:logoBytes,transformation:logoTransformation})]})]:[para((issuer?.name||title).toLocaleUpperCase(locale),true)]
  const headerRight=[para(recipient,true,{alignment:AlignmentType.LEFT}),...String(clientDocument?.address||'').split(/\r?\n/).filter(Boolean).map(line=>para(line))]
  const noBorder={style:BorderStyle.NONE,size:0,color:'FFFFFF'}
  const children:(Paragraph|Table)[]=[

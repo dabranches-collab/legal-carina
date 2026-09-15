@@ -8,7 +8,7 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.16`; documentos formais em PDF e Word editável usam a mesma apresentação, tratamento formal e datas por extenso, omitindo provisões quando não existem.
+- Versão publicada: `0.10.16`; versão `0.10.17` em validação local melhora os logótipos, acrescenta pré-visualização com escolha da pasta ao guardar PDF ou Word e bloqueia qualquer cruzamento de identidade entre sociedades.
 - Fonte canónica do código publicado no GitHub: `main`, no commit `0a4aa70350f7740afeadd8f5000d0fc243b383c0`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.

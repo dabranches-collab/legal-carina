@@ -1,5 +1,5 @@
 import { describe,expect,it } from 'vitest'
-import { cropSourceRect, logoFitScale, squareCropAroundBounds, squareCropInside } from './logoCropMath'
+import { cropAroundBounds, cropSourceRect, logoFitScale, squareCropAroundBounds, squareCropInside } from './logoCropMath'
 
 describe('enquadramento inicial do logótipo',()=>{
   it('mantém integralmente visível uma imagem larga',()=>{
@@ -32,5 +32,8 @@ describe('recorte independente do logótipo',()=>{
   it('impede que lados opostos eliminem toda a imagem',()=>{
     const rect=cropSourceRect(100,100,{left:80,right:80,top:0,bottom:0})
     expect(rect.width).toBe(1)
+  })
+  it('ajusta automaticamente cada margem aos limites reais sem forçar um quadrado',()=>{
+    expect(cropAroundBounds(1000,400,{left:100,right:899,top:50,bottom:349})).toEqual({left:10,right:10,top:12.5,bottom:12.5})
   })
 })
