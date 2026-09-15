@@ -2,7 +2,7 @@
 
 ## Release 0.10.16 em preparação — documentos formais — 15-09-2026
 
-- Branch `codex/documentos-sociedades-0.10.16`, criada a partir do `main`/`origin/main` limpo em `95a3b2091174676eacb889e5b2f8aa933322e592`. A produção foi confirmada antes da edição e continua na versão 0.10.15, deployment `100194aa-35db-4651-8e1e-bf462c2559c0`, version `d0c49de5-1b5e-4b86-8cb8-6e5005627115`.
+- Branch `codex/documentos-sociedades-0.10.16`, criada a partir do `main`/`origin/main` limpo em `95a3b2091174676eacb889e5b2f8aa933322e592`; implementação registada no commit `ef0b18f`. A produção foi confirmada antes da edição e continua na versão 0.10.15, deployment `100194aa-35db-4651-8e1e-bf462c2559c0`, version `d0c49de5-1b5e-4b86-8cb8-6e5005627115`.
 - PDF e Word passam a partilhar destinatário, tratamento formal, data por extenso, conteúdo, totais, logótipo e rodapé. O Word é editável; a paginação do PDF foi compactada para acompanhar a apresentação do Word e evitar páginas finais quase vazias.
 - Para Carina Santos, o rodapé contém `CP 19372L · NIF 201739380`, `Avenida dos Moinhos, 1C, 2610-118 Alfragide` e `carinamarquesdossantos-19372l@adv.oa.pt`; o logótipo guardado na sociedade substitui o nome textual no cabeçalho.
 - Para todas as sociedades, desconto zero elimina todas as referências documentais a provisões. A secção de provisões só existe na janela quando há uma conta de provisão.
