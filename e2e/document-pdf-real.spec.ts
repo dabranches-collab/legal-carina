@@ -39,7 +39,7 @@ test.beforeEach(async({page})=>{
       const select=url.searchParams.get('select')??''
       const body=select.includes('id,firm_id,display_name')
         ?[{id:'client-pdf-qa',firm_id:'firm-pdf-qa',display_name:'Cliente Açores QA',client_code:'01.9999',client_type:'company',active:true}]
-        :{legal_name:'Cliente Açores QA, Lda.',address:'Rua de Teste, 1\n9500-000 Ponta Delgada',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Departamento Financeiro',default_billing_entity_id:'society-pdf-qa'}
+        :{legal_name:'Cliente Açores QA, Lda.',address:'Rua de Teste, 1\n9500-000 Ponta Delgada',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Departamento Financeiro',honorarium_salutation:'exma_senhora',default_billing_entity_id:'society-pdf-qa'}
       await route.fulfill({contentType:'application/json',body:JSON.stringify(body)});return
     }
     if(pathname.endsWith('/client_profiles')){
@@ -49,7 +49,7 @@ test.beforeEach(async({page})=>{
       const select=url.searchParams.get('select')??''
       const body=select==='id,name'
         ?[{id:'society-pdf-qa',name:'LEGALTEAM'}]
-        :{name:'LEGALTEAM',legal_name:'Sociedade QA Documentos, Lda.',tax_number:'500000000',address:'Avenida de Teste, 10\n1000-000 Lisboa',phone:'210000000',bank_account_holder:'Sociedade QA Documentos, Lda.',bank_name:'Banco QA',bank_account_number:'0001',iban:'PT50000000000000000000000',bic_swift:'QAPTPPL',default_vat_rate:23,default_currency:'EUR',logo_path:null}
+        :{name:'LEGALTEAM',legal_name:'Sociedade QA Documentos, Lda.',tax_number:'500000000',address:'Avenida de Teste, 10\n1000-000 Lisboa',email:'documentos@example.test',phone:'210000000',bank_account_holder:'Sociedade QA Documentos, Lda.',bank_name:'Banco QA',bank_account_number:'0001',iban:'PT50000000000000000000000',bic_swift:'QAPTPPL',default_vat_rate:23,default_currency:'EUR',logo_path:null}
       await route.fulfill({contentType:'application/json',body:JSON.stringify(body)});return
     }
     await route.fulfill({contentType:'application/json',body:'[]'})
@@ -99,8 +99,8 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   else {expect(text).toContain(translated);expect(text).toContain(expense)}
   expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
   for(const row of rows)expect(text).toContain(row.id)
-  expect(text).toContain(language==='en'?'VAT':'TVA')
-  expect(text).toContain('Alfragide, 04-09-2026')
+  expect(text.replace(/\s/g,'')).toContain(language==='en'?'VAT':'TVA')
+  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, 4 septembre 2026')
   const mutations:string[]=[];page.on('request',request=>{if(request.url().includes('/rest/v1/')&&request.method()==='POST'&&!/get_|search_/.test(request.url()))mutations.push(request.url())})
   await expect(page.getByLabel('Idioma do documento')).toBeDisabled()
   const repeat=page.waitForEvent('download');await page.getByRole('button',{name:'Guardar novamente a nota'}).click();await (await repeat).saveAs(path.resolve(`.tmp/reprint-${language}-repeat.pdf`))

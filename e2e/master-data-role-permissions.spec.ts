@@ -84,7 +84,7 @@ test('Operador edita fichas existentes de Cliente, Sociedade e Responsável',asy
 })
 
 for(const role of ['admin','operator'] as const)test(`${role} altera e persiste os dados usados em Notas de Honorários e Cobranças`,async({page})=>{
- const writes:Write[]=[],client={legal_name:'Cliente existente',tax_number:'',email:'',phone:'',address:'',notes:'',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário inicial',default_billing_entity_id:'qa-society-a'}
+ const writes:Write[]=[],client={legal_name:'Cliente existente',tax_number:'',email:'',phone:'',address:'',notes:'',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário inicial',honorarium_salutation:'exmos_senhores',default_billing_entity_id:'qa-society-a'}
  await page.route('**/rest/v1/**',async route=>{
   const request=route.request(),url=new URL(request.url()),table=url.pathname.split('/').at(-1)??'',method=request.method(),select=url.searchParams.get('select')??''
   if(table==='firm_members')return route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'qa-firm'})})
@@ -100,16 +100,18 @@ for(const role of ['admin','operator'] as const)test(`${role} altera e persiste 
  })
  await page.goto(`/?qa-iphone=1&qa-role=${role}&view=master-data&entity=clients`)
  await page.getByRole('button',{name:'Abrir ficha'}).click();let dialog=page.getByRole('dialog');await dialog.getByRole('button',{name:'Facturação',exact:true}).click()
- await expect(dialog.getByLabel('Destinatário')).toBeEnabled();await expect(dialog.getByLabel('Sociedade emissora').first()).toBeEnabled();await expect(dialog.getByLabel('Idioma')).toBeEnabled();await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeDisabled()
+ await expect(dialog.getByLabel('Destinatário')).toBeEnabled();await expect(dialog.getByLabel('Tratamento no documento')).toBeEnabled();await expect(dialog.getByLabel('Sociedade emissora').first()).toBeEnabled();await expect(dialog.getByLabel('Idioma')).toBeEnabled();await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeDisabled()
  await dialog.getByLabel('Destinatário').fill(`${role} destinatário persistido`)
+ await dialog.getByLabel('Tratamento no documento').selectOption('exma_senhora')
  await dialog.getByLabel('Sociedade emissora').first().selectOption('qa-society-b')
  await dialog.getByLabel('Idioma').selectOption('fr')
  await dialog.getByRole('button',{name:'Guardar alterações'}).click()
  await expect(page.getByRole('status').filter({hasText:'Cliente existente actualizado.'})).toBeVisible()
  const write=writes.find(item=>item.table==='clients'&&item.method==='PATCH')
- expect(write?.body).toMatchObject({honorarium_recipient_name:`${role} destinatário persistido`,default_billing_entity_id:'qa-society-b',honorarium_language:'fr'})
+ expect(write?.body).toMatchObject({honorarium_recipient_name:`${role} destinatário persistido`,honorarium_salutation:'exma_senhora',default_billing_entity_id:'qa-society-b',honorarium_language:'fr'})
  dialog=page.getByRole('dialog');await dialog.getByRole('button',{name:'Facturação',exact:true}).click()
  await expect(dialog.getByLabel('Destinatário')).toHaveValue(`${role} destinatário persistido`)
+ await expect(dialog.getByLabel('Tratamento no documento')).toHaveValue('exma_senhora')
  await expect(dialog.getByLabel('Sociedade emissora').first()).toHaveValue('qa-society-b')
  await expect(dialog.getByLabel('Idioma')).toHaveValue('fr')
 })

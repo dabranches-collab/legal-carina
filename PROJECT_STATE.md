@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## Release 0.10.16 em preparação — 15-09-2026
+
+- Notas de Honorários e Cobranças podem ser descarregadas em PDF ou Word editável com os mesmos dados, estrutura visual, logótipo à esquerda, destinatário à direita, data formal por extenso e rodapé da sociedade.
+- A sociedade Carina Santos usa o rodapé `CP 19372L · NIF 201739380`, `Avenida dos Moinhos, 1C, 2610-118 Alfragide` e `carinamarquesdossantos-19372l@adv.oa.pt`; o logótipo já guardado na ficha é usado no cabeçalho.
+- Quando não existe desconto de provisão, não é emitida qualquer referência a provisão na introdução, resumo, saldo ou mensagem de emissão. Sem conta de provisão, a própria secção de provisões não aparece.
+- A ficha do cliente aceita `Exmo. Senhor,`, `Exma. Senhora,`, `Exmos. Senhores,` e `Exmas. Senhoras,`. Se o tratamento estiver em falta, a emissão exige uma escolha na própria janela e adapta o documento a essa escolha.
+- Migration local `20260915162917_add_client_honorarium_salutation.sql` preparada, mas não aplicada. Produção permanece CONFIRMADA na versão 0.10.15, version Cloudflare `d0c49de5-1b5e-4b86-8cb8-6e5005627115`; não houve publicação, migration, alteração de dados, Auth, RLS, Storage, Edge Functions ou segredos.
+- Verificação sintética: Word renderizado pelo Microsoft Word e PDF rasterizado, ambos com uma página e conteúdo equivalente; rodapé, cabeçalho, data, saudação e ausência de provisões confirmados visualmente. Testes focados: 32 unitários e 6 E2E aprovados. Gates finais aprovados: segurança de ficheiros, lint, TypeScript, 37 ficheiros/198 testes unitários, runtime do Worker, build e dry-run Cloudflare.
+
 ## Release 0.10.15 publicada — 15-09-2026
 
 - A navegação principal apresenta agora `Registos` imediatamente a seguir a `Visão Geral`, antes de `Clientes`; teste de regressão incluído.

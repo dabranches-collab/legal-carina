@@ -68,8 +68,8 @@ export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,
  line(note.document_options?.society_name??account.society_name,true);line(note.document_options?.client_name??account.client_name);line(`${copy[2]}: ${creditDate(note.issued_at)}`)
  for(const item of note.items){line(`${creditDate(item.work_date)} · ${item.duration_minutes} min · ${money(item.effective_amount)}`,true);line(description(item.id,item.activity_description))}
  line(`${copy[3]}: ${money(note.subtotal)}`);line(`${copy[4]} (${note.vat_rate}%): ${money(note.vat)}`)
- line(`${copy[5]}: ${money(note.total)}`,true);line(`${copy[6]}: ${money(note.deducted)}`,true)
- line(`${copy[7]}: ${money(note.remaining)}`,true);line(`${copy[8]}: ${money(note.balance_after)}`)
+ line(`${copy[5]}: ${money(note.total)}`,true);if(note.deducted>0)line(`${copy[6]}: ${money(note.deducted)}`,true)
+ line(`${copy[7]}: ${money(note.remaining)}`,true);if(note.deducted>0)line(`${copy[8]}: ${money(note.balance_after)}`)
  if(note.document_options?.expenses?.length){line(copy[9],true);for(const expense of note.document_options.expenses){const item=note.items.find(row=>row.id===expense.work_entry_id);if(item)line(description(item.id,item.activity_description));line(money(expense.amount,expense.currency));if(expense.observations)line(expense.observations)}}
  for(let page=1;page<=doc.getNumberOfPages();page++){doc.setPage(page);doc.setFontSize(8);doc.text(`${note.number} · ${page} / ${doc.getNumberOfPages()}`,105,290,{align:'center'})}
  return doc
@@ -86,7 +86,7 @@ export async function saveProvisionNotePdf(account:CreditAccount,note:ProvisionN
  const legacy=!snapshot
  if(!snapshot){
   if(!supabase)throw new Error('Ligação indisponível para recuperar a apresentação da nota antiga.')
-  const [client,entity]=await Promise.all([supabase.from('clients').select('legal_name,address,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id').eq('id',account.client_id).maybeSingle(),supabase.from('billing_entities').select('id,name,legal_name,tax_number,address,phone,bank_account_holder,bank_name,bank_account_number,iban,bic_swift,bank_accounts,default_vat_rate,default_currency,logo_path').eq('id',account.billing_entity_id).maybeSingle()])
+  const [client,entity]=await Promise.all([supabase.from('clients').select('legal_name,address,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,honorarium_salutation,default_billing_entity_id').eq('id',account.client_id).maybeSingle(),supabase.from('billing_entities').select('id,name,legal_name,tax_number,address,email,phone,bank_account_holder,bank_name,bank_account_number,iban,bic_swift,bank_accounts,default_vat_rate,default_currency,logo_path').eq('id',account.billing_entity_id).maybeSingle()])
   if(client.error||entity.error)throw new Error('Não foi possível recuperar a apresentação da nota antiga.')
   const opts=(note.document_options??{}) as Record<string,unknown>,issuer=entity.data as IssuerData|null,clientDocument=client.data as ClientDocumentData|null
   let issuerLogo:string|null=null

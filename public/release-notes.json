@@ -1,9 +1,18 @@
 {
-  "version": "0.10.15",
+  "version": "0.10.16",
   "changes": [
-    "O menu Registos passa a aparecer imediatamente a seguir a Visão Geral, para acesso mais directo aos movimentos."
+    "Notas de Honorários e Cobranças podem ser guardadas em PDF ou Word editável, com apresentação equivalente.",
+    "Os documentos usam tratamento formal escolhido na ficha do cliente ou, quando estiver em falta, solicitado obrigatoriamente no momento da emissão.",
+    "As datas dos documentos passam a ser apresentadas por extenso e as notas sem desconto de provisão deixam de conter qualquer referência a provisões.",
+    "Os documentos da Carina Santos usam o logótipo da sociedade no cabeçalho e o rodapé profissional completo."
   ],
   "releases": [
+    {
+      "version": "0.10.15",
+      "changes": [
+        "O menu Registos passa a aparecer imediatamente a seguir a Visão Geral, para acesso mais directo aos movimentos."
+      ]
+    },
     {
       "version": "0.10.14",
       "changes": [
