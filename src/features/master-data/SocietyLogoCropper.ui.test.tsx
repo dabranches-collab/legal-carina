@@ -15,5 +15,5 @@ test('apresenta uma moldura arrastável em vez de barras de recorte',()=>{
   expect(screen.queryByRole('slider')).not.toBeInTheDocument()
 
   fireEvent.keyDown(screen.getByRole('button',{name:'Arrastar margem esquerda'}),{key:'ArrowRight'})
-  expect(screen.getByText(/esquerda 1%/i)).toBeInTheDocument()
+  expect(screen.getByText(/esquerda 1%, direita 0%, topo 0%, base 0%/i)).toBeInTheDocument()
 })

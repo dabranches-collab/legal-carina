@@ -11,13 +11,14 @@ const {pdfRect,pdfText,pdfAddPage,pdfSetPage,pdfState}=vi.hoisted(()=>({pdfRect:
 vi.mock('jspdf',()=>({jsPDF:class{constructor(){pdfState.pages=1}setFont(){}setFontSize(){}text=pdfText;setFillColor(){}rect=pdfRect;addPage(){pdfState.pages+=1;pdfAddPage()}getNumberOfPages(){return pdfState.pages}setPage=pdfSetPage;setProperties(){}splitTextToSize(value:string){return value.length>80?[value.slice(0,40),value.slice(40,80),value.slice(80)]:[value]}output(){return new Blob(['pdf'],{type:'application/pdf'})}}}))
 const downloads:string[]=[]
 const query=(data:unknown)=>{const result={error:null,data};const chain:any={select:()=>chain,eq:()=>chain,in:()=>chain,order:()=>chain,range:()=>chain,maybeSingle:async()=>result,then:(resolve:(value:typeof result)=>void)=>Promise.resolve(result).then(resolve)};return chain}
+const testIssuer={id:'sociedade-1',name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',email:'sociedade@example.test',phone:null,bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',bank_accounts:null,default_vat_rate:23,default_currency:'EUR',logo_path:null}
 
 describe('HonorariumNoteModal',()=>{
  beforeEach(()=>{translateDocument.mockReset();translateDocument.mockImplementation(async(_client,language,items)=>({language,items:items.map((item:any)=>({...item,text:({ 'Análise documental':language==='en'?'Document review':'Analyse documentaire',Reunião:language==='en'?'Meeting':'Réunion',Certidões:language==='en'?'Certificates':'Certificats'} as Record<string,string>)[item.text]??item.text}))}))})
  it.each(['en','fr'] as const)('traduz registos e despesas antes de guardar a nota em %s e conserva a tradução no histórico',async(language)=>{
   const description=language==='en'?'Document review':'Analyse documentaire',expense=language==='en'?'Registered post':'Courrier recommandé'
   translateDocument.mockImplementation(async(_client,lang,items)=>({language:lang,items:items.map((item:any)=>({...item,text:item.kind==='work'?description:expense}))}))
-  from.mockImplementation((table:string)=>query(table==='work_entry_expenses'?[{id:'expense',work_entry_id:'one',amount:5,currency:'EUR',observations:'Correio registado'}]:null))
+  from.mockImplementation((table:string)=>query(table==='work_entry_expenses'?[{id:'expense',work_entry_id:'one',amount:5,currency:'EUR',observations:'Correio registado'}]:table==='billing_entities'?testIssuer:null))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'));await user.selectOptions(screen.getByLabelText('Idioma do documento'),language)
   await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}));await waitFor(()=>expect(downloads).toHaveLength(1))
@@ -25,7 +26,7 @@ describe('HonorariumNoteModal',()=>{
   expect(text).toContain(description);expect(text).toContain(expense);expect(text).not.toContain('Análise documental');expect(text).not.toContain('Correio registado')
   expect(documentRpc).toHaveBeenCalledWith('save_honorarium_document',expect.objectContaining({p_document_options:expect.objectContaining({translation:expect.objectContaining({language}),expenses:[expect.objectContaining({observations:expense})]})}))
   expect(screen.getByText('Análise documental',{selector:'td'})).toBeInTheDocument()
-  await user.click(screen.getByRole('button',{name:'Guardar novamente a nota'}));await waitFor(()=>expect(downloads).toHaveLength(2));expect(translateDocument).toHaveBeenCalledTimes(1)
+  await user.click(screen.getByRole('button',{name:'Guardar novamente em PDF'}));await waitFor(()=>expect(downloads).toHaveLength(2));expect(translateDocument).toHaveBeenCalledTimes(1)
  })
  it('não emite nem desconta provisão enquanto aguarda tradução e permite tentar novamente após falha',async()=>{
   let fail!:(reason:Error)=>void;translateDocument.mockReturnValue(new Promise((_resolve,reject)=>{fail=reject}))
@@ -35,7 +36,7 @@ describe('HonorariumNoteModal',()=>{
   await act(async()=>fail(new Error('Tradução incompleta')));expect(await screen.findByRole('alert')).toHaveTextContent('Tradução incompleta');expect(documentRpc).not.toHaveBeenCalled();expect(downloads).toHaveLength(0)
   expect(screen.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeEnabled()
  })
- beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,items:(rpc.mock.results.at(-1)?.value? (await rpc.mock.results.at(-1)!.value).data.items:[]).filter((row:any)=>args.p_work_entry_ids.includes(row.id)),vat_rate:args.p_vat_rate,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:args.p_expected_total-args.p_expected_deduction,balance_after:0}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockReturnValue(query(null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
+ beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,items:(rpc.mock.results.at(-1)?.value? (await rpc.mock.results.at(-1)!.value).data.items:[]).filter((row:any)=>args.p_work_entry_ids.includes(row.id)),vat_rate:args.p_vat_rate,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:args.p_expected_total-args.p_expected_deduction,balance_after:0}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockImplementation((table:string)=>query(table==='billing_entities'?testIssuer:null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
   {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade'},
   {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
  ]}})})
@@ -71,10 +72,10 @@ describe('HonorariumNoteModal',()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
   await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
-  await screen.findByRole('button',{name:'Guardar novamente a nota'})
+  await screen.findByRole('button',{name:'Guardar novamente em PDF'})
   expect(documentRpc.mock.calls.filter(([name])=>name==='save_honorarium_document')).toHaveLength(1)
   expect(documentRpc).toHaveBeenCalledWith('save_honorarium_document',expect.objectContaining({p_client_id:'client',p_work_entry_ids:['one'],p_expected_total:123,p_expected_deduction:123}))
-  await user.click(screen.getByRole('button',{name:'Guardar novamente a nota'}))
+  await user.click(screen.getByRole('button',{name:'Guardar novamente em PDF'}))
   await waitFor(()=>expect(downloads).toHaveLength(2))
   expect(documentRpc.mock.calls.filter(([name])=>name==='save_honorarium_document')).toHaveLength(1)
   expect(pdfText.mock.calls.some(([text])=>String(text).includes('Provisão descontada: 123,00 EUR'))).toBe(true)
@@ -95,7 +96,7 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[value]).join(' ')).not.toMatch(/provis|advance deducted|provision déduite/i)
  })
  it('exige a escolha de uma saudação formal quando a ficha do cliente não a tem definida',async()=>{
-  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente sem tratamento',address:'Rua de Teste, 1',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Maria Teste',honorarium_salutation:null,default_billing_entity_id:null}:table==='work_entry_expenses'?[]:null))
+  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente sem tratamento',address:'Rua de Teste, 1',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Maria Teste',honorarium_salutation:null,default_billing_entity_id:null}:table==='work_entry_expenses'?[]:table==='billing_entities'?testIssuer:null))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente sem tratamento" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
   expect(screen.getByRole('alert',{name:'Escolher tratamento formal'})).toBeInTheDocument()
@@ -194,7 +195,7 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfText.mock.calls.some(([value])=>Array.isArray(value)&&value.join(' ').includes('permanecem por liquidar'))).toBe(true)
  })
  it.each(['honorarium','collection'] as const)('permite substituir destinatário e idioma no próprio documento %s',async(documentKind)=>{
-  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Legal',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário inicial',honorarium_salutation:'exmos_senhores',default_billing_entity_id:null}:null))
+  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Legal',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário inicial',honorarium_salutation:'exmos_senhores',default_billing_entity_id:null}:table==='billing_entities'?testIssuer:null))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-override" clientName="Cliente Legal" documentKind={documentKind} onClose={()=>{}}/> )
   const recipient=await screen.findByLabelText('Destinatário do documento')
   await waitFor(()=>expect(recipient).toHaveValue('Destinatário inicial'))

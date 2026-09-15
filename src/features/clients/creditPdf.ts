@@ -4,6 +4,7 @@ import { jsPDF } from 'jspdf'
 import { creditDate, creditKind, creditMoney, creditStatement, type CreditAccount, type ProvisionNote, type CreditMovement } from './credit'
 import type { CreditUsage } from './creditUsage'
 import {formatDate,todayIso} from '../../utils/date'
+import {assertIssuerMatchesSociety,issuerLogoPath} from './societyBranding'
 
 export function saveCreditUsagePdf(account:CreditAccount,usage:CreditUsage){
  const doc=new jsPDF();let y=20
@@ -75,6 +76,9 @@ export function createProvisionNotePdf(account:CreditAccount,note:ProvisionNote,
  return doc
 }
 function formalCopyPdf(note:ProvisionNote,snapshot:FormalSnapshot,reversed:boolean,legacy=false){
+ const societyName=note.document_options?.society_name??snapshot.issuer?.name
+ if(societyName)assertIssuerMatchesSociety(snapshot.issuer,societyName)
+ snapshot={...snapshot,societyName}
  const language=snapshot.language,translation=note.document_options?.translation
  const rows=note.items.map(row=>({...row,professional_name:'',billing_entity_name:snapshot.issuer?.name??null,activity_description:language==='pt'?row.activity_description:translation?.language===language?translation.items.find(t=>t.kind==='work'&&t.id===row.id)?.text??row.activity_description:row.activity_description}))
  const doc=createFormalDocumentPdf(snapshot,rows,note.document_options?.expenses??[],note)
@@ -90,10 +94,10 @@ export async function saveProvisionNotePdf(account:CreditAccount,note:ProvisionN
   if(client.error||entity.error)throw new Error('Não foi possível recuperar a apresentação da nota antiga.')
   const opts=(note.document_options??{}) as Record<string,unknown>,issuer=entity.data as IssuerData|null,clientDocument=client.data as ClientDocumentData|null
   let issuerLogo:string|null=null
-  const logoPath=issuer?.logo_path||(issuer?.name?.toUpperCase().includes('LEGALTEAM')?'/brand/legalteam-logo.jpg':null)
+  const logoPath=issuerLogoPath(issuer,account.society_name)
   if(logoPath){const blob=logoPath.startsWith('/')?await fetch(logoPath).then(r=>{if(!r.ok)throw new Error('Não foi possível recuperar o logótipo.');return r.blob()}):await supabase.storage.from('billing-entity-logos').download(logoPath).then(r=>{if(r.error)throw r.error;return r.data});issuerLogo=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob)})}
   const bankAccounts=Array.isArray(opts.bankAccounts)?opts.bankAccounts as FormalSnapshot['bankAccounts']:issuer?.bank_accounts?.length?issuer.bank_accounts:issuer?.iban?[{account_holder:issuer.bank_account_holder??'',bank_name:issuer.bank_name??'',account_number:issuer.bank_account_number??'',iban:issuer.iban,bic_swift:issuer.bic_swift??'',currency:account.currency}]:[]
-  snapshot={version:1,clientName:note.document_options?.client_name??account.client_name,clientDocument:clientDocument?{...clientDocument,honorarium_recipient_name:typeof opts.recipient==='string'?opts.recipient:clientDocument.honorarium_recipient_name}:null,issuer:issuer?{...issuer,default_currency:account.currency}:null,issuerLogo,language:opts.language==='en'?'en':opts.language==='fr'?'fr':'pt',columns:Array.isArray(opts.columns)&&opts.columns.length?opts.columns.filter(c=>['period','description','duration'].includes(String(c))) as FormalSnapshot['columns']:['period','description','duration'],showTimeTotal:opts.showTimeTotal!==false,showAmountTotal:opts.showAmountTotal===true,bankAccounts}
+  snapshot={version:1,societyName:account.society_name,clientName:note.document_options?.client_name??account.client_name,clientDocument:clientDocument?{...clientDocument,honorarium_recipient_name:typeof opts.recipient==='string'?opts.recipient:clientDocument.honorarium_recipient_name}:null,issuer:issuer?{...issuer,default_currency:account.currency}:null,issuerLogo,language:opts.language==='en'?'en':opts.language==='fr'?'fr':'pt',columns:Array.isArray(opts.columns)&&opts.columns.length?opts.columns.filter(c=>['period','description','duration'].includes(String(c))) as FormalSnapshot['columns']:['period','description','duration'],showTimeTotal:opts.showTimeTotal!==false,showAmountTotal:opts.showAmountTotal===true,bankAccounts}
  }
  downloadPdf(formalCopyPdf(note,snapshot,reversed,legacy),`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`)
 }

@@ -1,5 +1,15 @@
 # Legal Carina — handover
 
+## Release 0.10.17 pronta para publicação — identidade documental — 15-09-2026
+
+- A geração formal valida agora a sociedade emissora antes de criar qualquer PDF ou Word. Se o nome da sociedade, o rodapé, o logótipo ou os dados bancários não pertencerem à mesma entidade, a geração é bloqueada em segurança; deixou de existir qualquer fallback que possa colocar a marca LEGALTEAM num documento da Carina Santos ou de outra sociedade.
+- PDF e Word usam o mesmo logótipo preparado, sempre com a proporção original. O tamanho útil aumentou, as margens brancas são removidas e o ficheiro é optimizado a uma resolução superior à usada na impressão, sem ultrapassar o limite seguro do histórico. Na ficha da sociedade, as margens superior, direita, inferior e esquerda são ajustadas independentemente.
+- As notas guardadas abrem numa pré-visualização que não cria nova emissão nem novo desconto. A partir daí, `Guardar PDF como…` e `Guardar Word como…` usam o selector de pasta do browser. A emissão nova também permite escolher PDF ou Word editável.
+- Mantém-se a regra global: se o desconto for zero, não aparece qualquer referência a provisões no formulário, na introdução, nos totais ou no documento final. Datas formais, tratamento do destinatário e rodapé continuam a ser obtidos da sociedade/cliente correspondentes.
+- Verificação visual sintética concluída para Carina Santos: Nota de Honorários e Cobrança, em PDF e Word renderizado pelo Microsoft Word, uma página, logótipo proporcional, rodapé correcto, data por extenso e sem referência a provisões. O exemplo Word corrigido permanece em `C:\Users\diogo\Downloads\nota-honorarios-carina-exemplo-15-09-2026.docx`.
+- Gates locais aprovados: ficheiros sensíveis, lint, TypeScript, 38 ficheiros/206 testes unitários, runtime do Worker, build, dry-run Cloudflare e suite E2E integral com 119 aprovações e três testes de produção condicionais ignorados. Não há migrations nem alterações de Supabase, dados, Auth, RLS, Storage, Edge Functions, utilizadores, permissões ou segredos.
+- Branch `codex/logotipos-download-0.10.17`, baseada no `main`/`origin/main` limpo em `3c16867becb076e6573ccd5145ef6e3a5f87b0d3`. Publicação explicitamente autorizada; falta ainda centralizar por PR/CI e confirmar a produção 0.10.17 antes de classificar esta release como publicada.
+
 ## Release 0.10.16 publicada — documentos formais — 15-09-2026
 
 - Branch `codex/documentos-sociedades-0.10.16`, criada a partir do `main`/`origin/main` limpo em `95a3b2091174676eacb889e5b2f8aa933322e592`. PR #30 fundido em `main` no commit `0a4aa70350f7740afeadd8f5000d0fc243b383c0`; CI `35006168821`, auditoria de dependências e secret scan `35006168804` verdes.

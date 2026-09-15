@@ -1,12 +1,21 @@
 {
-  "version": "0.10.16",
+  "version": "0.10.17",
   "changes": [
-    "Notas de Honorários e Cobranças podem ser guardadas em PDF ou Word editável, com apresentação equivalente.",
-    "Os documentos usam tratamento formal escolhido na ficha do cliente ou, quando estiver em falta, solicitado obrigatoriamente no momento da emissão.",
-    "As datas dos documentos passam a ser apresentadas por extenso e as notas sem desconto de provisão deixam de conter qualquer referência a provisões.",
-    "Os documentos da Carina Santos usam o logótipo da sociedade no cabeçalho e o rodapé profissional completo."
+    "As notas de honorários guardadas podem ser abertas numa pré-visualização sem criar uma nova versão e os botões Guardar PDF como e Guardar Word como permitem escolher a pasta e o nome do ficheiro.",
+    "Os logótipos dos documentos ficam maiores e conservam melhor qualidade, com remoção automática das margens brancas.",
+    "Na ficha da sociedade, cada margem do logótipo pode ser ajustada separadamente, sem deslocar as restantes.",
+    "A geração de PDF e Word confirma a identidade da sociedade emissora e bloqueia qualquer combinação de logótipo, rodapé ou dados bancários pertencentes a outra sociedade."
   ],
   "releases": [
+    {
+      "version": "0.10.16",
+      "changes": [
+        "Notas de Honorários e Cobranças podem ser guardadas em PDF ou Word editável, com apresentação equivalente.",
+        "Os documentos usam tratamento formal escolhido na ficha do cliente ou, quando estiver em falta, solicitado obrigatoriamente no momento da emissão.",
+        "As datas dos documentos passam a ser apresentadas por extenso e as notas sem desconto de provisão deixam de conter qualquer referência a provisões.",
+        "Os documentos da Carina Santos usam o logótipo da sociedade no cabeçalho e o rodapé profissional completo."
+      ]
+    },
     {
       "version": "0.10.15",
       "changes": [
