@@ -6,11 +6,11 @@
 - Serviço: `legal-carina`.
 - Ambiente: produção.
 - URL: `https://legal-carina.dabranches.workers.dev`.
-- Versão visível: `0.10.16`.
-- Deployment activo: `66b33873-f219-4367-afe8-07bb3d47c722`.
-- Version ID activo: `6930409c-b1fc-4424-9794-691e8665bd17` (100% do tráfego desde `2026-09-15 18:23:05 UTC`).
-- Commit funcional publicado e fonte canónica no GitHub: `main` em `0a4aa70350f7740afeadd8f5000d0fc243b383c0`.
-- Rollback imediato do frontend: `d0c49de5-1b5e-4b86-8cb8-6e5005627115` (0.10.15). Não repor a base de dados para reverter apenas o frontend; a coluna aditiva nullable de tratamento formal pode permanecer.
+- Versão visível: `0.10.17`.
+- Deployment activo: `36fb5678-68a5-486f-8140-cd801c68d6a3`.
+- Version ID activo: `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (100% do tráfego desde `2026-09-15 21:54:12 UTC`).
+- Commit funcional publicado e fonte canónica no GitHub: `main` em `7f674534631843bc52caf64fc625f8dd573bd108`.
+- Rollback imediato do frontend: `6930409c-b1fc-4424-9794-691e8665bd17` (0.10.16). Não repor a base de dados para reverter apenas o frontend; a coluna aditiva nullable de tratamento formal pode permanecer.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 

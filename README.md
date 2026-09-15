@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.16`; versão `0.10.17` em validação local melhora os logótipos, acrescenta pré-visualização com escolha da pasta ao guardar PDF ou Word e bloqueia qualquer cruzamento de identidade entre sociedades.
-- Fonte canónica do código publicado no GitHub: `main`, no commit `0a4aa70350f7740afeadd8f5000d0fc243b383c0`.
+- Versão publicada: `0.10.17`, com logótipos proporcionais, pré-visualização com escolha da pasta ao guardar PDF ou Word e bloqueio de qualquer cruzamento de identidade entre sociedades.
+- Fonte canónica do código publicado no GitHub: `main`, no commit `7f674534631843bc52caf64fc625f8dd573bd108`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- A release 0.10.16 acrescenta tratamento formal por cliente, escolha obrigatória na emissão quando omisso e o cabeçalho/rodapé profissional da Carina Santos; a 0.10.15 colocou `Registos` imediatamente depois de `Visão Geral` no menu principal.
+- A release 0.10.17 garante o isolamento da identidade visual em PDF e Word; a 0.10.16 acrescentou tratamento formal por cliente, escolha obrigatória na emissão quando omisso e o cabeçalho/rodapé profissional da Carina Santos.
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 

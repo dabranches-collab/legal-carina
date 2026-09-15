@@ -1,13 +1,13 @@
 # Estado do projecto
 
-## Release 0.10.17 pronta para publicação — 15-09-2026
+## Release 0.10.17 publicada — 15-09-2026
 
 - PDF e Word confirmam a identidade da sociedade emissora e bloqueiam qualquer cruzamento de logótipo, rodapé ou dados bancários. A LEGALTEAM só pode usar a sua marca; Carina Santos e as demais sociedades só podem usar os dados da respectiva ficha.
 - Os logótipos mantêm a proporção original, aparecem maiores e são optimizados sem perda visível no tamanho de impressão. O recorte da ficha da sociedade permite alterar separadamente as quatro margens.
 - O histórico abre uma pré-visualização sem nova emissão. Os botões `Guardar PDF como…` e `Guardar Word como…` permitem escolher pasta e nome; o Word continua editável e com apresentação equivalente ao PDF.
 - Desconto de provisão igual a zero continua a eliminar todas as referências a provisões. Nota de Honorários e Cobrança foram verificadas em PDF e Word com dados sintéticos; datas por extenso, tratamento formal e rodapé correcto confirmados.
 - Segurança de ficheiros, lint, tipos, 38 ficheiros/206 testes unitários, runtime do Worker, build, dry-run Cloudflare e 119 E2E passaram; três E2E exclusivos de produção foram ignorados como previsto. Sem migrations nem alterações de Supabase ou segredos.
-- Branch `codex/logotipos-download-0.10.17`, base `3c16867becb076e6573ccd5145ef6e3a5f87b0d3`. Ordem de publicação recebida; PR, CI, deployment e confirmação de produção ainda pendentes.
+- Ordem de publicação recebida. PR #31 fundido no `main` em `7f674534631843bc52caf64fc625f8dd573bd108`; CI `35027521290`, auditoria e secret scan `35027521277` verdes. Produção 0.10.17 activa a 100% desde `2026-09-15 21:54:12 UTC`: deployment `36fb5678-68a5-486f-8140-cd801c68d6a3`, version `3741a2f2-2736-4b40-ad58-6c2cc1674d38`. HTTP, notas de versão e browser autenticado confirmados; rollback frontend preservado para `6930409c-b1fc-4424-9794-691e8665bd17` (0.10.16).
 
 ## Release 0.10.16 publicada — 15-09-2026
 
