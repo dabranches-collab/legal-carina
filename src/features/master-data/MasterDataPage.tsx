@@ -55,6 +55,7 @@ type ClientDetails = {
   honorarium_language: "pt" | "en" | "fr";
   honorarium_delivery_method: "email" | "post" | "hand";
   honorarium_recipient_name: string;
+  honorarium_salutation: "" | "exmo_senhor" | "exma_senhora" | "exmos_senhores" | "exmas_senhoras";
   default_billing_entity_id: string;
   client_referrer: string;
   client_referrer_other: string;
@@ -122,6 +123,7 @@ const emptyDetails = (): ClientDetails => ({
   honorarium_language: "pt",
   honorarium_delivery_method: "email",
   honorarium_recipient_name: "",
+  honorarium_salutation: "",
   default_billing_entity_id: "",
   client_referrer: "",
   client_referrer_other: "",
@@ -463,7 +465,7 @@ export function MasterDataPage({
       supabase!
         .from("clients")
         .select(
-          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,default_billing_entity_id,client_referrer,client_referrer_other,primary_billing_entity_id,default_hourly_rate",
+          "legal_name,tax_number,email,phone,address,notes,honorarium_language,honorarium_delivery_method,honorarium_recipient_name,honorarium_salutation,default_billing_entity_id,client_referrer,client_referrer_other,primary_billing_entity_id,default_hourly_rate",
         )
         .eq("id", row.id)
         .single(),
@@ -767,6 +769,7 @@ export function MasterDataPage({
       phone: storedContacts(phones),
       honorarium_recipient_name:
         details.honorarium_recipient_name.trim() || null,
+      honorarium_salutation: details.honorarium_salutation || null,
       default_billing_entity_id: details.default_billing_entity_id || null,
     };
     const savedBankAccounts = bankAccounts
@@ -1659,6 +1662,27 @@ export function MasterDataPage({
                             placeholder="Nome a apresentar no documento"
                             className="control mt-1 w-full px-3"
                           />
+                        </label>
+                        <label className="text-sm font-semibold">
+                          Tratamento no documento
+                          <select
+                            aria-label="Tratamento no documento"
+                            value={details.honorarium_salutation}
+                            onChange={(e) =>
+                              setDetails({
+                                ...details,
+                                honorarium_salutation: e.target.value as ClientDetails["honorarium_salutation"],
+                              })
+                            }
+                            className="control mt-1 w-full px-3"
+                          >
+                            <option value="">Não definido — usar tratamento geral</option>
+                            <option value="exmo_senhor">Exmo. Senhor</option>
+                            <option value="exma_senhora">Exma. Senhora</option>
+                            <option value="exmos_senhores">Exmos. Senhores</option>
+                            <option value="exmas_senhoras">Exmas. Senhoras</option>
+                          </select>
+                          <span className="mt-1 block text-xs font-normal text-text-secondary">A forma escolhida é aplicada automaticamente, com a pontuação correcta, nos documentos emitidos.</span>
                         </label>
                         <label className="text-sm font-semibold">
                           Sociedade emissora
