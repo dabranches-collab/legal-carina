@@ -15,7 +15,7 @@ export function createQaProvisionData(){
  ]
  const reverse=(id:string)=>{const movement=movements.find(m=>m.note_id===id&&m.kind==='consumption'&&!m.reversed);if(!movement)return;movement.reversed=true;account.balance-=movement.amount;account.consumed+=movement.amount;account.noted_work_ids=account.noted_work_ids.filter(id=>!movement.note!.items.some(item=>item.id===id));movements.push({...movement,id:crypto.randomUUID(),kind:'reversal',amount:-movement.amount,reverses_id:movement.id,reversed:false})}
  return (rpc:string|undefined,table:string,args:Record<string,unknown>)=>{
-  if(!rpc){if(table==='billing_entities')return [{id:account.billing_entity_id,name:account.society_name,default_currency:'EUR',default_vat_rate:23,bank_accounts:[]}];if(table==='work_entries')return [work];if(table==='clients')return {legal_name:account.client_name,default_billing_entity_id:account.billing_entity_id,honorarium_language:'pt'};return []}
+  if(!rpc){if(table==='billing_entities')return [{id:account.billing_entity_id,name:account.society_name,default_currency:'EUR',default_vat_rate:23,bank_accounts:[]}];if(table==='work_entries')return [work];if(table==='clients')return {legal_name:account.client_name,default_billing_entity_id:account.billing_entity_id,honorarium_language:'pt',honorarium_salutation:'exmo_senhor'};return []}
   if(rpc==='get_client_credit_accounts')return args.p_client_id?[account,zero].filter(row=>row.client_id===args.p_client_id):[account,zero]
   if(rpc==='get_client_credit_detail')return {account:args.p_account_id===zero.id?zero:account,movements}
   if(rpc==='search_work_entries')return {items:[...note.items,work],total:2,pageSize:100}

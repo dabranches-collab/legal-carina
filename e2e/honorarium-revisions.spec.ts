@@ -7,7 +7,7 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await page.route('**/rest/v1/**',async route=>{
   const request=route.request(),url=new URL(request.url()),rpc=url.pathname.includes('/rpc/')?url.pathname.split('/').at(-1):undefined,table=url.pathname.split('/').at(-1)!,args=request.postDataJSON()??{}
   let body:unknown
-  if(table==='clients'&&url.searchParams.get('select')?.includes('id,firm_id,display_name'))body=[{id:client,firm_id:'firm-qa',display_name:'Cliente Sintético',client_code:'02.001',client_type:'individual',active:true}]
+  if(table==='clients'&&url.searchParams.get('select')?.includes('id,firm_id,display_name'))body=[{id:client,firm_id:'firm-qa',display_name:'Cliente Sintético',client_code:'02.001',client_type:'individual',honorarium_salutation:'exmo_senhor',active:true}]
   else if(table==='firm_members')body={firm_id:'firm-qa'}
   else if(table==='client_profiles')body=[{client_id:client,client_type:'individual'}]
   else if(rpc==='get_client_document_action_flags')body=[{client_id:client,has_uninvoiced:true,has_unpaid:false}]
