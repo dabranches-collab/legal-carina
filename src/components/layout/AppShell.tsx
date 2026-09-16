@@ -105,7 +105,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
             <Icon name="chevron" className={`size-4 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
           </button>
         </div>
-        <nav className="scrollbar-thin flex flex-1 flex-col overflow-y-auto px-3 py-4">
+        <nav className="scrollbar-thin flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4">
           <ul className="space-y-1">
             {navigation.filter(item=>item.id!=='admin'||canManageMasterData).map((item) => {const selected=isNavigationSelected(item.id);const hasSubmenu=item.id==='billing'||item.id==='professionals'||item.id==='clients'||item.id==='admin';const expanded=expandedMenu===item.id;return <li key={item.id}><button type="button" title={collapsed ? menuLabel(item.label) : undefined} onClick={() => { if(hasSubmenu)setExpandedMenu(value=>value===item.id?null:item.id);else setExpandedMenu(null);onNavigate(item.id==='admin'&&!canManageSettings?'master-data':item.id) }} aria-current={selected ? 'page' : undefined} aria-expanded={hasSubmenu?expanded:undefined}
               className={`flex min-h-10 w-full items-center gap-3 rounded-lg border px-3 py-2 text-left text-sm font-medium transition-colors ${selected ? 'border-accent bg-accent font-semibold text-navigation shadow-sm' : 'border-accent/35 bg-surface/5 text-accent/85 hover:border-accent/60 hover:bg-surface/10 hover:text-accent'}`}>
@@ -122,8 +122,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
             </ul>}
             </li>})}
           </ul>
-        </nav>
-        {!collapsed && <div className="sidebar-justice pointer-events-none flex h-24 shrink-0 translate-y-2 items-end justify-center px-5 py-2 sm:h-32 lg:h-64 lg:translate-y-0 lg:items-center lg:py-3" aria-hidden="true">
+        {!collapsed && <div className="sidebar-justice pointer-events-none mt-auto flex h-24 shrink-0 translate-y-2 items-end justify-center px-5 py-2 sm:h-32 lg:h-64 lg:translate-y-0 lg:items-center lg:py-3" aria-hidden="true">
           <div
             className="h-full w-full max-w-28 bg-accent opacity-80 lg:max-w-52"
             style={{
@@ -138,6 +137,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
             }}
           />
         </div>}
+        </nav>
         <div className="space-y-1 border-t border-surface/10 p-3"><InstallAppButton collapsed={collapsed}/><button type="button" onClick={() => void signOut()} className={`flex min-h-10 w-full items-center rounded-lg border border-accent/35 bg-surface/5 px-3 text-sm font-medium text-accent/85 transition hover:border-danger/60 hover:bg-danger/15 hover:text-navigation-text ${collapsed?'justify-center':'gap-3'}`} aria-label="Terminar sessão"><Icon name="logout" className="size-5 shrink-0"/>{!collapsed&&<span>Terminar sessão</span>}</button></div>
         <div className="border-t border-surface/10 p-3"><div className={`flex items-center gap-3 rounded-lg bg-surface/5 p-2 ${collapsed ? 'justify-center' : ''}`}>
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-sm font-semibold">{displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase()}</span>
