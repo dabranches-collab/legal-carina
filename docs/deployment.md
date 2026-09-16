@@ -6,11 +6,11 @@
 - Serviço: `legal-carina`.
 - Ambiente: produção.
 - URL: `https://legal-carina.dabranches.workers.dev`.
-- Versão visível: `0.10.18`.
-- Deployment activo: `cee7d3d1-709b-4436-aa99-a1cb8c755af7`.
-- Version ID activo: `4f24cadf-9d5a-4844-9ee5-be5c29346550` (100% do tráfego desde `2026-09-16 07:01:39 UTC`).
-- Commit funcional publicado e fonte canónica no GitHub: `main` em `f0453b77337988265aad4a8aeee9fc2ed5bc180c`.
-- Rollback imediato do frontend: `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (0.10.17). Esta publicação não alterou a base de dados; não repor o Supabase para reverter apenas o frontend.
+- Versão visível: `0.10.20`.
+- Deployment activo: `af4dd533-6daf-4efe-af87-dd811504c82c`.
+- Version ID activo: `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3` (100% do tráfego desde `2026-09-16 10:42:47 UTC`).
+- Commit funcional publicado e fonte canónica no GitHub: `main` em `82a0b35b13734c00701dbd5eac62d352aa80f5e7` (PR #35).
+- Rollback imediato do frontend: `e0a0442b-c268-4e3d-a00c-0f759708ff19` (0.10.19). A migration `20260916104110_filter_paid_work_without_invoice_evidence` alterou apenas duas funções de leitura no Supabase; reverter o Worker não a desfaz. Não repor a base de dados para reverter apenas o frontend.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 
