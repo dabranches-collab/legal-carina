@@ -16,6 +16,8 @@ vi.mock('./lib/supabase', () => ({
     if (name === 'get_professional_landing_summaries') return { error:null,data:[{id:'1',name:'Carina',minutes:120,total:200,invoiced:150,clients:1,uninvoiced:1,unpaid:1,missingPrice:0}] }
     if (name === 'search_work_entries') return { error:null,data:{items:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}],total:1,page:1,pageSize:25,professionals:[],billingEntities:[]} }
     if (name === 'get_work_attention_counts') return { error:null,data:{missing_society:47,missing_price:665,uninvoiced:796,unpaid:487,historical:248,retainer:3} }
+    if (name === 'get_work_attention_summaries') return { error:null,data:{} }
+    if (name === 'get_receivable_client_summary') return { error:null,data:[] }
     if (name === 'export_visible_work_entries') return { error:null,data:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',matter_code:null,matter_title:null,activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',observations:null,source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}] }
     if (name === 'get_work_entry_form_options') return { error:null,data:{societies:[{id:'soc-1',name:'Carina Santos'}],clientProfiles:[{id:'profile-1',client_id:'client-1',client_type:'company',client_code:'C-0142',display_name:'Cliente Atlas'}],responsibles:[{id:'professional-1',display_name:'Carina'}],processes:[]} }
     const titles:Record<string,string>={client:'Cliente Atlas',billing:'Carina Santos',professional:'Carina'}
@@ -45,8 +47,8 @@ describe('interface principal', () => {
     expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Visão Geral')).toBeInTheDocument()
     expect(await screen.findByText('Valor trabalhado')).toBeInTheDocument()
-    const receivableCard=screen.getAllByText('Por receber').map(element=>element.closest('article')).find(Boolean)!
-    expect(within(receivableCard).getByText('Sem sociedade').nextElementSibling).toHaveTextContent('0 €')
+    const receivableCard=screen.getAllByText('Facturado por receber').map(element=>element.closest('article')).find(Boolean)!
+    expect(within(receivableCard).getByText('Sem sociedade').nextElementSibling).toHaveTextContent('0,00 €')
     const missingSocietyCard=screen.getAllByText('Sem sociedade').map(element=>element.closest('article')).find(article=>article?.textContent?.includes('Movimentos sem sociedade associada'))!
     expect(within(missingSocietyCard).queryByText('Carina Santos')).not.toBeInTheDocument()
     expect(within(missingSocietyCard).queryByRole('definition')).not.toBeInTheDocument()

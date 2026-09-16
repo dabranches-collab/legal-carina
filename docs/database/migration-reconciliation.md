@@ -1,5 +1,11 @@
 # Reconciliação do histórico de migrations
 
+## Resumos de recebimentos — 16-09-2026
+
+- O histórico remoto foi lido pela integração Supabase antes da alteração; a última migration anterior era `20260916104110_filter_paid_work_without_invoice_evidence`.
+- A migration local `20260916182123_add_fast_receivables_summaries.sql` foi aplicada isoladamente pela integração como `add_fast_receivables_summaries`; a lista remota confirmou o mesmo carimbo `20260916182123`. Cria apenas `get_receivable_client_summary` e `get_work_attention_summaries`, ambas de leitura, com controlo de pertença, PIN, âmbito e visibilidade financeira. Não executa DML nem altera RLS ou permissões existentes.
+- O checkout não tem CLI Supabase ligada. Não se executou `supabase db push` nem `migration repair`; a divergência histórica permanece sujeita ao protocolo desta página.
+
 ## Aplicação confirmada em 2026-09-16
 
 - A migration `20260916104110_filter_paid_work_without_invoice_evidence` foi aplicada isoladamente no projecto `vtvvqyebigflgqccbqsw` e o ficheiro local usa o mesmo carimbo remoto. Substitui duas funções de leitura; não executa DML nem altera RLS, Auth ou permissões.

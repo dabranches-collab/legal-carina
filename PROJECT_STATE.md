@@ -1,5 +1,13 @@
 # Estado do projecto
 
+## Versão 0.11.0 em publicação — 16-09-2026
+
+- Branch local `codex/debtors-0.11.0`, baseada no commit `6c83e85` da correcção PWA 0.10.22. GitHub `main` e produção continuam na 0.10.21 até ao deploy; produção confirmada com deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47` e version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- A área «Por receber» agrega facturas pendentes, trabalho por facturar e prestações de avença pendentes, incluindo clientes que só tenham uma destas categorias. A lista tem 90 clientes acessíveis na sessão de verificação, conserva os cêntimos, distingue valores parciais, usa cartões compactos com indicadores azuis e abre ficha/registos a partir do próprio ecrã.
+- A Visão Geral distingue total por receber, facturado por receber e por facturar. Os botões ficam alinhados no fundo das seis caixas de acompanhamento. Os pré-filtros de Registos mostram horas e valor quando aplicável.
+- Migration `20260916182123_add_fast_receivables_summaries.sql` aplicada isoladamente por integração Supabase: duas funções de leitura agregada, sem DML, alterações de RLS, Auth, permissões ou segredos. O histórico remoto foi listado antes e depois, com o mesmo carimbo no ficheiro local; o projecto local não possui CLI Supabase ligada, pelo que não foi usado `db push` ou `migration repair`. Browser local confirmou 90 clientes, 7 072,50 € facturados por receber e 117 055,75 € por facturar; abertura medida em cerca de 2,1 s após a função agregada. Produção frontend ainda na 0.10.21.
+- Segurança de ficheiros, lint, tipos, 211 testes unitários e build aprovados neste lote. E2E e dry-run Cloudflare em curso antes de commit, CI e deploy.
+
 ## Versão 0.10.22 local em preparação
 
 - Branch `codex/pwa-update-delta-0.10.22` parte de GitHub `main` `d445c1ff1b0da86137391b40d4a70b8eb95b9078`. Produção mantém a 0.10.21 (`dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`; version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`).

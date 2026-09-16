@@ -1,9 +1,21 @@
 {
-  "version": "0.10.22",
+  "version": "0.11.0",
   "changes": [
-    "O aviso de actualização apresenta apenas as alterações entre a versão instalada neste equipamento e a nova versão."
+    "A área Por receber reúne os clientes com facturas pendentes, trabalho e avenças por facturar, ordenados pelo total conhecido, e abre mais depressa.",
+    "A Visão Geral distingue o total por receber, o facturado por receber e o valor por facturar, com cêntimos visíveis.",
+    "Os pré-filtros de Registos mostram horas e montantes quando se aplicam, sem carregar toda a lista antes de abrir o ecrã.",
+    "Na lista Por receber, as caixas com valores abrem os movimentos para consulta e edição; ao fechar, regressa-se à mesma posição da lista."
   ],
   "releases": [
+    {
+      "version": "0.11.0",
+      "changes": [
+        "A área Por receber reúne os clientes com facturas pendentes, trabalho e avenças por facturar, ordenados pelo total conhecido, e abre mais depressa.",
+        "A Visão Geral distingue o total por receber, o facturado por receber e o valor por facturar, com cêntimos visíveis.",
+        "Os pré-filtros de Registos mostram horas e montantes quando se aplicam, sem carregar toda a lista antes de abrir o ecrã.",
+        "Na lista Por receber, as caixas com valores abrem os movimentos para consulta e edição; ao fechar, regressa-se à mesma posição da lista."
+      ]
+    },
     {
       "version": "0.10.22",
       "changes": [
@@ -84,11 +96,11 @@
     {
       "version": "0.10.12",
       "changes": [
-    "A primeira cobrança de uma avença anual respeita correctamente a data de início, sem criar um período mensal indevido.",
-    "Ao criar um registo, é seleccionada apenas a avença válida na data indicada, mesmo quando existe um histórico extenso.",
-    "O histórico de provisões desconta apenas o montante efectivamente utilizado numa nota parcial.",
-    "Novos documentos de identificação do cliente conservam o identificador guardado e deixam de poder ser inseridos novamente por engano.",
-    "Todas as datas visíveis, introduzidas, impressas e exportadas usam o formato DD-MM-AAAA, sem alterar o formato técnico guardado na base de dados."
+        "A primeira cobrança de uma avença anual respeita correctamente a data de início, sem criar um período mensal indevido.",
+        "Ao criar um registo, é seleccionada apenas a avença válida na data indicada, mesmo quando existe um histórico extenso.",
+        "O histórico de provisões desconta apenas o montante efectivamente utilizado numa nota parcial.",
+        "Novos documentos de identificação do cliente conservam o identificador guardado e deixam de poder ser inseridos novamente por engano.",
+        "Todas as datas visíveis, introduzidas, impressas e exportadas usam o formato DD-MM-AAAA, sem alterar o formato técnico guardado na base de dados."
       ]
     },
     {

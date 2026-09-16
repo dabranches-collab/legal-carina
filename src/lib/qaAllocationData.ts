@@ -23,6 +23,8 @@ export function createQaAllocationData(){
   if(rpc==='search_work_entries')return {items:work,total:work.length,page:1,pageSize:100,professionals:people.map(p=>({id:p.id,label:p.display_name})),billingEntities:[{id:society.id,label:society.name}]}
   if(rpc==='get_professional_landing_summaries')return people.map(p=>({id:p.id,name:p.display_name,minutes:work.filter(w=>w.professional_id===p.id).reduce((n,w)=>n+w.duration_minutes,0),total:1000,invoiced:500,clients:2,missing_society:0,missing_price:0,missingPrice:0,uninvoiced:0,unpaid:0,uncollectible:0,retainer:0}))
   if(rpc==='get_work_attention_counts')return {missing_society:0,missing_price:0,uninvoiced:0,unpaid:0,uncollectible:0,retainer:0}
+  if(rpc==='get_work_attention_summaries')return {}
+  if(rpc==='get_receivable_client_summary')return []
   return []
  }
 }

@@ -13,6 +13,7 @@ import {
   type SocietyYearPoint,
 } from "../components/dashboard/Charts";
 import { supabase } from "../lib/supabase";
+import { loadDebtors,type Debtor } from "../features/collections/debtorSummary";
 
 type AnnualPoint = ChartPoint & { minutes: number };
 type MoneyValue = number | null;
@@ -63,7 +64,6 @@ type OverviewData = {
 const money = new Intl.NumberFormat("pt-PT", {
   style: "currency",
   currency: "EUR",
-  maximumFractionDigits: 0,
 });
 const number = new Intl.NumberFormat("pt-PT");
 const financial = (value: MoneyValue) =>
@@ -77,6 +77,8 @@ export function OverviewPage() {
   const [data, setData] = useState<OverviewData | null>(null);
   const [breakdowns, setBreakdowns] = useState<MetricBreakdown[]>([]);
   const [error, setError] = useState("");
+  const [receivingRows, setReceivingRows] = useState<Debtor[]|null>(null);
+  useEffect(()=>{if(!data)return;let active=true;void loadDebtors().then(rows=>{if(active)setReceivingRows(rows)}).catch(()=>undefined);return()=>{active=false}},[data]);
   useEffect(() => {
     let active = true;
     void (async () => {
@@ -150,6 +152,13 @@ export function OverviewPage() {
       </div>
     );
   const m = data.metrics;
+  const receiving=receivingRows?{
+    billed:receivingRows.reduce((sum,row)=>sum+(row.unpaidAmount??0)+row.retainerAmount,0),
+    unbilled:receivingRows.reduce((sum,row)=>sum+(row.uninvoicedAmount??0)+row.retainerPendingAmount,0),
+    workUnbilled:receivingRows.reduce((sum,row)=>sum+(row.uninvoicedAmount??0),0),
+    retainerPending:receivingRows.reduce((sum,row)=>sum+row.retainerPendingAmount,0),
+    partial:receivingRows.some(row=>row.unpaidPartial||row.uninvoicedPartial),
+  }:null;
   const metrics = [
     [
       "Total de horas",
@@ -184,16 +193,23 @@ export function OverviewPage() {
       "success",
     ],
     [
-      "Por receber",
-      financial(m.receivable),
-      "Facturado e ainda não pago",
+      "Total por receber",
+      receiving?financial(receiving.billed+receiving.unbilled):"A calcular…",
+      "Facturado e por facturar",
       "warning",
       "warning",
     ],
     [
-      "Não facturados",
-      number.format(m.uninvoicedCount),
-      "Movimentos",
+      "Facturado por receber",
+      receiving?financial(receiving.billed):financial(m.receivable),
+      "Facturado e ainda não pago",
+      "payment",
+      "warning",
+    ],
+    [
+      "Por facturar: trabalho e avenças",
+      receiving?`${financial(receiving.unbilled)}${receiving.partial?' · parcial':''}`:"A calcular…",
+      "Trabalho e prestações pendentes",
       "invoice",
       "warning",
     ],
@@ -241,8 +257,9 @@ export function OverviewPage() {
     ],
   ] as const;
   const detailLinks: Record<string, string> = {
-    "Por receber": "?view=work&collectionState=unpaid",
-    "Não facturados": "?view=work&collectionState=uninvoiced",
+    "Total por receber": "?view=debtors",
+    "Facturado por receber": "?view=debtors",
+    "Por facturar: trabalho e avenças": "?view=debtors",
     "Facturados não pagos": "?view=work&collectionState=unpaid",
     "Movimentos sem preço": "?view=work&missingPrice=true",
     "Sem sociedade": "?view=work&missingSociety=true",
@@ -251,8 +268,9 @@ export function OverviewPage() {
   const followUpMetrics = metrics.filter(([label]) => detailLinks[label] && (label !== "Incobráveis" || m.uncollectibleCount !== 0)),
     generalMetrics = metrics.filter(([label]) => !detailLinks[label]);
   const followUpCount:Record<string,number|null>={
-    "Por receber":m.receivable,
-    "Não facturados":m.uninvoicedCount,
+    "Total por receber":receiving?receiving.billed+receiving.unbilled:null,
+    "Facturado por receber":receiving?.billed??m.receivable,
+    "Por facturar: trabalho e avenças":receiving?.unbilled??null,
     "Facturados não pagos":m.unpaidCount,
     "Incobráveis":m.uncollectibleCount,
     "Movimentos sem preço":m.missingPrice,
@@ -263,8 +281,7 @@ export function OverviewPage() {
     "Valor trabalhado": "worked",
     "Valor facturado": "invoiced",
     "Valor recebido": "paid",
-    "Por receber": "receivable",
-    "Não facturados": "uninvoicedCount",
+    "Facturado por receber": "receivable",
     "Facturados não pagos": "unpaidCount",
     "Preço médio/hora": "averageRate",
     "Clientes": "activeClients",
@@ -272,6 +289,7 @@ export function OverviewPage() {
     "Sem sociedade": "missingBilling",
   };
   const metricSubtotals = (label: string) => {
+    if(label==="Por facturar: trabalho e avenças")return receiving?[{label:"Trabalho",value:financial(receiving.workUnbilled)},{label:"Avenças",value:financial(receiving.retainerPending)}]:[];
     if (label === "Sem sociedade") return [];
     const key = subtotalKey[label];
     return key

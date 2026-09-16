@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Versão 0.11.0 em publicação — recebimentos e pré-filtros
+
+- Branch `codex/debtors-0.11.0` a partir de `6c83e85`, que inclui o aviso PWA por versão instalada (0.10.22). GitHub `main` e frontend Cloudflare mantêm 0.10.21 antes do deploy: `d445c1ff1b0da86137391b40d4a70b8eb95b9078`, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- O utilizador autorizou a publicação após os ajustes visuais. A lista «Por receber» inclui facturado não pago, trabalho e avenças por facturar; total conhecido ordenado, parcial explicitado, cartões compactos e realce azul só nas categorias aplicáveis. Nomes reforçados, ficha e registos acessíveis. O cálculo foi deslocado para uma função agregada e a abertura local mediu cerca de 2,1 s; 90 clientes, 7 072,50 € facturados por receber e 117 055,75 € por facturar na sessão de verificação.
+- A Visão Geral tem seis caixas de acompanhamento alinhadas com acções no fundo. «Total por receber» soma facturado e por facturar; os valores têm cêntimos. Registos apresenta horas e montante por pré-filtro conforme aplicável.
+- A caixa «Por facturar: trabalho e avenças» separa o total de 117 055,75 € em trabalho (78 695,75 €) e avenças (38 360,00 €); o pré-filtro «Trabalho por facturar» em Registos cobre apenas a primeira parcela. Em «Por receber», as quatro caixas de valor de cada cliente abrem os movimentos correspondentes no próprio ecrã, com edição de registos e prestações; fechar regressa à posição da lista. Os botões «Abrir ficha» estão alinhados à direita dos nomes, sem fila de atalhos inferior.
+- Migration `20260916182123_add_fast_receivables_summaries.sql` aplicada isoladamente pelo conector Supabase, após leitura do histórico remoto; o carimbo local coincide com o remoto. Apenas duas funções de leitura agregada. Nenhum dado, RLS, Auth, acesso, Storage ou segredo foi alterado. O checkout não tem CLI Supabase ligada; não executar `db push` ou `migration repair` sobre a divergência histórica. Validar a correspondência dos totais e as permissões antes do deploy frontend.
+- Gates locais aprovados até agora: segurança de ficheiros, lint, TypeScript, 211 testes unitários e build. E2E, dry-run Cloudflare, CI, merge e deploy ainda pendentes neste ponto do handover.
+
 ## Versão 0.10.22 em preparação — aviso PWA por equipamento
 
 - Branch `codex/pwa-update-delta-0.10.22` a partir de GitHub `main`/checkout local limpos em `d445c1ff1b0da86137391b40d4a70b8eb95b9078`. Produção permanece 0.10.21, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
