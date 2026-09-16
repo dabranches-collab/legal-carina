@@ -9,7 +9,7 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 ## Estado canónico
 
 - Versão publicada: `0.10.20`. O pré-filtro «Pagos s/ factura ou data» exclui movimentos pagos com data ou número de factura comprovados; os cartões têm molduras mais visíveis e os filtros de coluna desactivam opções sem resultados.
-- Fonte canónica no GitHub: `main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`; o commit funcional publicado é `82a0b35b13734c00701dbd5eac62d352aa80f5e7`.
+- Fonte canónica no GitHub: `main`; o commit funcional publicado é `82a0b35b13734c00701dbd5eac62d352aa80f5e7`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
 - As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).
