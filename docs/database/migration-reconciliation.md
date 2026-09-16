@@ -1,5 +1,11 @@
 # Reconciliação do histórico de migrations
 
+## Aplicação confirmada em 2026-09-16
+
+- A migration `20260916104110_filter_paid_work_without_invoice_evidence` foi aplicada isoladamente no projecto `vtvvqyebigflgqccbqsw` e o ficheiro local usa o mesmo carimbo remoto. Substitui duas funções de leitura; não executa DML nem altera RLS, Auth ou permissões.
+- A lista remota foi confirmada pela integração Supabase antes e depois da aplicação. Neste checkout, `supabase migration list --linked` indicou que o projecto local não está ligado; não se executou `db push` nem `migration repair`.
+- Após a aplicação, GHH deixou de ter 58 falsos positivos no pré-filtro de pagos sem factura ou data; a contagem global passou de 117 para 41. Permaneceram iguais os totais de utilizadores Auth, pertenças, concessões e permissões financeiras.
+
 ## Estado verificado em 2026-09-14
 
 - O projecto remoto `vtvvqyebigflgqccbqsw` regista 67 migrations aplicadas.
