@@ -1,14 +1,17 @@
 # Legal Carina — handover
 
-## Versão 0.11.0 em publicação — recebimentos e pré-filtros
+## Versão 0.11.0 publicada — recebimentos e pré-filtros
 
-- Branch `codex/debtors-0.11.0` a partir de `6c83e85`, que inclui o aviso PWA por versão instalada (0.10.22). GitHub `main` e frontend Cloudflare mantêm 0.10.21 antes do deploy: `d445c1ff1b0da86137391b40d4a70b8eb95b9078`, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- Publicação confirmada em 2026-09-16 19:10:46 UTC: GitHub `main` `ba2a67bfbcd1129d60472456cf82c7c101f493eb` (PR #42), Cloudflare `https://legal-carina.dabranches.workers.dev`, deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d` a 100%. As notas da versão online responderam HTTP 200 com `0.11.0`. Rollback frontend: version ID `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (0.10.21).
+- CI do PR #42 verde: validação E2E, auditoria de dependências e scan. Dry-run Wrangler aprovado sobre o commit fundido, seguido de deploy. A migration de leitura agregada já estava aplicada e confirmada antes do frontend.
+
+- Branch funcional `codex/debtors-0.11.0` a partir de `6c83e85`, incluindo o aviso PWA por versão instalada; integrada em `main` pelo PR #42.
 - O utilizador autorizou a publicação após os ajustes visuais. A lista «Por receber» inclui facturado não pago, trabalho e avenças por facturar; total conhecido ordenado, parcial explicitado, cartões compactos e realce azul só nas categorias aplicáveis. Nomes reforçados, ficha e registos acessíveis. O cálculo foi deslocado para uma função agregada e a abertura local mediu cerca de 2,1 s; 90 clientes, 7 072,50 € facturados por receber e 117 055,75 € por facturar na sessão de verificação.
 - A Visão Geral tem seis caixas de acompanhamento alinhadas com acções no fundo. «Total por receber» soma facturado e por facturar; os valores têm cêntimos. Registos apresenta horas e montante por pré-filtro conforme aplicável.
 - A caixa «Por facturar: trabalho e avenças» separa o total de 117 055,75 € em trabalho (78 695,75 €) e avenças (38 360,00 €); o pré-filtro «Trabalho por facturar» em Registos cobre apenas a primeira parcela. Em «Por receber», as quatro caixas de valor de cada cliente abrem os movimentos correspondentes no próprio ecrã, com edição de registos e prestações; fechar regressa à posição da lista. Os botões «Abrir ficha» estão alinhados à direita dos nomes, sem fila de atalhos inferior.
 - O menu móvel desloca o emblema da Justiça com a própria área rolável da navegação para impedir sobreposição nos iPhones curtos após a adição de «Por Receber».
 - Migration `20260916182123_add_fast_receivables_summaries.sql` aplicada isoladamente pelo conector Supabase, após leitura do histórico remoto; o carimbo local coincide com o remoto. Apenas duas funções de leitura agregada. Nenhum dado, RLS, Auth, acesso, Storage ou segredo foi alterado. O checkout não tem CLI Supabase ligada; não executar `db push` ou `migration repair` sobre a divergência histórica. Validar a correspondência dos totais e as permissões antes do deploy frontend.
-- Gates locais aprovados até agora: segurança de ficheiros, lint, TypeScript, 211 testes unitários e build. E2E, dry-run Cloudflare, CI, merge e deploy ainda pendentes neste ponto do handover.
+- Gates locais aprovados: segurança de ficheiros, lint, TypeScript, 211 testes unitários, build, testes E2E focados nos quatro iPhones anteriormente falhados e dry-run Cloudflare. A CI completa do PR #42 passou antes do merge e deploy.
 
 ## Versão 0.10.22 em preparação — aviso PWA por equipamento
 
