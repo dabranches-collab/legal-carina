@@ -94,8 +94,8 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
-      {mobileOpen && <button className="app-safe-fixed fixed z-30 bg-navigation/35 lg:hidden" aria-label="Fechar navegação" onClick={() => setMobileOpen(false)} />}
-      <aside aria-label="Navegação principal" className={`app-shell-sidebar fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-navigation text-navigation-text transition-[width,transform] duration-200 ${collapsed ? 'lg:w-20' : 'lg:w-64'} w-[min(18rem,calc(100vw-var(--safe-right)))] ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+      {mobileOpen && <button className="app-safe-fixed fixed z-[55] bg-navigation/35 lg:hidden" aria-label="Fechar navegação" onClick={() => setMobileOpen(false)} />}
+      <aside aria-label="Navegação principal" className={`app-shell-sidebar fixed inset-y-0 left-0 z-[60] flex flex-col border-r border-border bg-navigation text-navigation-text transition-[width,transform] duration-200 ${collapsed ? 'lg:w-20' : 'lg:w-64'} w-[min(18rem,calc(100vw-var(--safe-right)))] ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex h-18 items-center gap-3 border-b border-surface/10 px-5">
           <div className="grid size-9 shrink-0 place-items-center rounded-lg border border-accent/50 bg-surface/5 font-display text-xl font-semibold text-accent">CS</div>
           {!collapsed && <div className="min-w-0 flex-1 text-accent"><p className="whitespace-nowrap font-display text-base font-semibold leading-none">Carina - Legal</p><p className="mt-1 whitespace-nowrap text-[0.6rem] uppercase tracking-[0.14em] text-accent/75">Gestão de clientes</p></div>}

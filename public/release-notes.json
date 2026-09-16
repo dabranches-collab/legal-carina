@@ -5,7 +5,8 @@
     "A posição da provisão considera o trabalho realizado com valor, incluindo o facturado e não pago, sem contar duas vezes as notas; saldos negativos ficam a vermelho e o saldo contabilístico continua separado.",
     "Nas avenças, o total de prestações geradas ainda sem pagamento mantém visíveis tanto as pendentes como as facturadas; emitir um documento não as liquida.",
     "O histórico da provisão abre os registos das notas activas mesmo quando não há trabalho novo por lançar.",
-    "As listas de clientes abrem em caixas compactas, com alternância para tabela; pesquisa, apresentação e criação ficam acessíveis na mesma linha, e os botões mostram descrições claras ao passar o rato."
+    "As listas de clientes abrem em caixas compactas, com alternância para tabela; pesquisa, apresentação e criação ficam acessíveis na mesma linha, e os botões mostram descrições claras ao passar o rato.",
+    "Em iPhone, a navegação fica à frente da pesquisa e da tabela de clientes quando é aberta, em vez de ser tapada por esses controlos."
   ],
   "releases": [
     {
@@ -15,7 +16,8 @@
         "A posição da provisão considera o trabalho realizado com valor, incluindo o facturado e não pago, sem contar duas vezes as notas; saldos negativos ficam a vermelho e o saldo contabilístico continua separado.",
         "Nas avenças, o total de prestações geradas ainda sem pagamento mantém visíveis tanto as pendentes como as facturadas; emitir um documento não as liquida.",
         "O histórico da provisão abre os registos das notas activas mesmo quando não há trabalho novo por lançar.",
-        "As listas de clientes abrem em caixas compactas, com alternância para tabela; pesquisa, apresentação e criação ficam acessíveis na mesma linha, e os botões mostram descrições claras ao passar o rato."
+        "As listas de clientes abrem em caixas compactas, com alternância para tabela; pesquisa, apresentação e criação ficam acessíveis na mesma linha, e os botões mostram descrições claras ao passar o rato.",
+        "Em iPhone, a navegação fica à frente da pesquisa e da tabela de clientes quando é aberta, em vez de ser tapada por esses controlos."
       ]
     },
     {

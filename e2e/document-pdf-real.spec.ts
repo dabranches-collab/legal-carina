@@ -79,7 +79,12 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   for(const width of [1440,768,390,320])for(const theme of ['light','dark']){
     await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme)
     await expect(page.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeVisible()
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+    const layout=await page.evaluate(()=>({
+      viewport:innerWidth,
+      document:document.documentElement.scrollWidth,
+      overflow:[...document.querySelectorAll<HTMLElement>('body *')].filter(element=>element.getBoundingClientRect().right>innerWidth+1&&getComputedStyle(element).position!=='fixed').slice(0,8).map(element=>({tag:element.tagName,className:element.className,right:Math.round(element.getBoundingClientRect().right)})),
+    }))
+    expect(layout.document,JSON.stringify(layout)).toBeLessThanOrEqual(layout.viewport)
     if(width===390)await page.screenshot({path:`.tmp/translation-${language}-${theme}-iphone.png`})
   }
   const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click();const download=await pending
