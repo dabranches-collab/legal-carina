@@ -31,7 +31,7 @@ test('Operador cria clientes, sociedades e responsáveis nas Definições operac
   {query:'billing_entities',button:'Criar Sociedade',name:'tcodexoperador sociedade UI',table:'billing_entities'},
   {query:'professionals',button:'Criar Responsável',name:'tcodexoperador responsável UI',table:'professionals'},
  ] as const){
-  await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}`)
+  await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}&clientLayout=table`)
   await page.getByRole('button',{name:entity.button}).click();const entityDialog=page.getByRole('dialog')
   await entityDialog.getByLabel('Nome').fill(entity.name);await entityDialog.getByRole('button',{name:'Guardar alterações'}).click()
   await expect(page.getByRole('status').filter({hasText:`${entity.name} criado.`})).toBeVisible()
@@ -75,7 +75,7 @@ test('Operador edita fichas existentes de Cliente, Sociedade e Responsável',asy
   {query:'billing_entities',current:'Sociedade existente',next:'tcodexoperador sociedade editada',table:'billing_entities'},
   {query:'professionals',current:'Responsável existente',next:'tcodexoperador responsável editado',table:'professionals'},
  ] as const){
-  await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}`)
+  await page.goto(`/?qa-iphone=1&qa-role=operator&view=master-data&entity=${entity.query}&clientLayout=table`)
   await expect(page.getByRole('main').getByText(entity.current,{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Abrir ficha'}).click()
   const dialog=page.getByRole('dialog');await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeDisabled();await dialog.getByLabel('Nome').fill(entity.next);await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeEnabled();await dialog.getByRole('button',{name:'Guardar alterações'}).click()
   await expect(page.getByRole('status').filter({hasText:`${entity.next} actualizado.`})).toBeVisible()
@@ -98,7 +98,7 @@ for(const role of ['admin','operator'] as const)test(`${role} altera e persiste 
   if(table==='client_profiles')return route.fulfill({contentType:'application/json',body:select.includes('id,client_type')?JSON.stringify([{id:'qa-profile-existing',client_type:'company',client_code:'01.0099',active:true}]):JSON.stringify([{client_id:'qa-client-existing',client_type:'company'}])})
   return route.fulfill({contentType:'application/json',body:'[]'})
  })
- await page.goto(`/?qa-iphone=1&qa-role=${role}&view=master-data&entity=clients`)
+ await page.goto(`/?qa-iphone=1&qa-role=${role}&view=master-data&entity=clients&clientLayout=table`)
  await page.getByRole('button',{name:'Abrir ficha'}).click();let dialog=page.getByRole('dialog');await dialog.getByRole('button',{name:'Facturação',exact:true}).click()
  await expect(dialog.getByLabel('Destinatário')).toBeEnabled();await expect(dialog.getByLabel('Tratamento no documento')).toBeEnabled();await expect(dialog.getByLabel('Sociedade emissora').first()).toBeEnabled();await expect(dialog.getByLabel('Idioma')).toBeEnabled();await expect(dialog.getByRole('button',{name:'Guardar alterações'})).toBeDisabled()
  await dialog.getByLabel('Destinatário').fill(`${role} destinatário persistido`)
