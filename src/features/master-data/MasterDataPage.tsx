@@ -220,6 +220,25 @@ export function MasterDataPage({
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const [clientLayout, setClientLayout] = useState<"cards" | "table">(() =>
+    new URLSearchParams(window.location.search).get("clientLayout") === "table"
+      ? "table"
+      : "cards",
+  );
+  const [cardSearch, setCardSearch] = useState("");
+  const clientToolbarRef = useRef<HTMLDivElement>(null);
+  const [tableToolbarOffset, setTableToolbarOffset] = useState<number>();
+  useEffect(() => {
+    const toolbar = clientToolbarRef.current;
+    const header = document.querySelector<HTMLElement>(".app-shell-header");
+    if (!toolbar || !header) return;
+    const update = () => setTableToolbarOffset(header.getBoundingClientRect().height + toolbar.getBoundingClientRect().height);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(toolbar);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [section, clientLayout]);
   const [editing, setEditing] = useState<Row | null>(null),
     [creating, setCreating] = useState(false),
     [editName, setEditName] = useState("");
@@ -1085,7 +1104,7 @@ export function MasterDataPage({
       render: (row) => (
         <button
           type="button"
-          title="Abrir a ficha completa deste Cliente para consultar ou editar os seus dados."
+          title="Abrir ficha do cliente."
           onClick={() => void openEditor(row)}
           className="min-h-9 shrink-0 whitespace-nowrap rounded-lg border border-border px-3 py-1.5 font-semibold text-primary"
         >
@@ -1124,19 +1143,17 @@ export function MasterDataPage({
             render: (row: Row) => {
               const available = unpaidClientIds.has(row.id);
               return (
+                <span title={available ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."}>
                 <button
                   type="button"
                   disabled={!available}
-                  title={
-                    available
-                      ? "Seleccionar movimentos facturados e não pagos para reforçar a cobrança."
-                      : "Sem movimentos facturados e não pagos disponíveis."
-                  }
+                  title={available ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."}
                   onClick={() => setDocumentClient({ row, kind: "collection" })}
-                  className="min-h-9 whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 font-semibold text-surface disabled:cursor-not-allowed disabled:border disabled:border-border disabled:bg-surface-subtle disabled:text-text-secondary"
+                  className="min-h-9 whitespace-nowrap rounded-lg bg-danger px-3 py-1.5 font-semibold text-white disabled:cursor-not-allowed disabled:border disabled:border-success/30 disabled:bg-success-soft disabled:text-success"
                 >
                   Cobrança
                 </button>
+                </span>
               );
             },
           },
@@ -1168,6 +1185,11 @@ export function MasterDataPage({
             : types.includes(clientTypeFilter);
         })
       : rows;
+  const cardRows = visibleRows.filter((row) =>
+    `${row.display_name ?? row.name ?? ""} ${row.client_code ?? ""}`
+      .toLocaleLowerCase("pt-PT")
+      .includes(cardSearch.trim().toLocaleLowerCase("pt-PT")),
+  );
   return (
     <div className="space-y-5">
       {!focusedRecordId && !createOnMount && notice && (
@@ -1179,14 +1201,14 @@ export function MasterDataPage({
         </p>
       )}
       {!focusedRecordId && !createOnMount && <section className="card p-4">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        {section === "clients" && <h2 className="sr-only">Lista · {label}</h2>}
+        {section !== "clients" && <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="sr-only">
               Lista · {label}
             </h2>
             <p className="mt-1 text-sm text-text-secondary">
-              Clientes desta categoria. Abra a ficha com duplo clique numa
-              linha.
+              Abra a ficha com duplo clique numa linha.
             </p>
           </div>
           <button
@@ -1195,17 +1217,35 @@ export function MasterDataPage({
             className="min-h-11 rounded-lg bg-primary px-4 font-semibold text-surface"
           >
             Criar{" "}
-            {section === "clients"
-              ? "cliente"
-              : section === "billing_entities"
+            {section === "billing_entities"
                 ? "Sociedade"
                 : "Responsável"}
           </button>
-        </div>
-        <StandardDataTable
+        </div>}
+        {section === "clients" && <div ref={clientToolbarRef} style={{top:"var(--app-header-height, 9.75rem)"}} className="sticky z-50 -mx-4 -mt-4 mb-3 flex min-w-0 items-center gap-2 rounded-t-xl border-b border-border bg-surface px-4 py-2 shadow-sm"><input aria-label="Pesquisar clientes" type="search" value={cardSearch} onChange={event => setCardSearch(event.target.value)} placeholder="Pesquisar nome ou código…" className="control min-w-0 flex-1 px-3"/><div role="group" aria-label="Apresentação dos clientes" className="flex shrink-0 rounded-lg border border-border bg-surface-subtle p-0.5"><button type="button" aria-pressed={clientLayout === "cards"} onClick={() => setClientLayout("cards")} className={`min-h-9 rounded-md px-2 text-xs font-semibold sm:px-3 ${clientLayout === "cards" ? "bg-secondary text-surface" : "text-text-secondary"}`}>Caixas</button><button type="button" aria-pressed={clientLayout === "table"} onClick={() => setClientLayout("table")} className={`min-h-9 rounded-md px-2 text-xs font-semibold sm:px-3 ${clientLayout === "table" ? "bg-secondary text-surface" : "text-text-secondary"}`}>Tabela</button></div><button type="button" onClick={() => void openCreator()} className="min-h-10 shrink-0 rounded-lg bg-primary px-2 text-xs font-semibold text-surface sm:px-3">Criar cliente</button></div>}
+        {section === "clients" && clientLayout === "cards" ? (
+          <div className="space-y-3">
+            {loading ? <p role="status">A carregar clientes…</p> : error ? <div role="alert" className="text-danger">{error}<button type="button" onClick={() => void load()} className="control ml-2 px-3">Tentar novamente</button></div> : (
+              <div role="list" aria-label={`Lista de ${label} em caixas`} className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))]">
+                {cardRows.map(row => {
+                  const canCollect = unpaidClientIds.has(row.id);
+                  return <article role="listitem" key={row.id} className="flex min-w-0 flex-col justify-between rounded-xl border border-border bg-surface p-2.5 shadow-sm">
+                    <div className="min-w-0"><h3 className="truncate text-sm font-semibold" title={row.display_name ?? row.name ?? ""}>{row.display_name ?? row.name}</h3><p className="mt-1 text-xs text-text-secondary">{row.client_code ?? "Sem código"} · {(row.profile_types?.length ?? 1) > 1 ? "Misto" : row.client_type === "company" ? "Empresa" : "Particular"}</p></div>
+                    <div className="mt-2 grid grid-cols-2 gap-1.5 text-xs font-semibold">
+                      <button type="button" onClick={() => void openEditor(row)} className="min-h-9 rounded-lg border border-border px-1 text-primary" title="Abrir ficha do cliente">Ficha</button>
+                      <button type="button" onClick={() => setDocumentClient({row,kind:"honorarium"})} className="min-h-9 rounded-lg bg-primary px-2 text-surface" title="Preparar, consultar ou rever notas de honorários">Nota</button>
+                      <span className="col-span-2" title={canCollect ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."}><button type="button" disabled={!canCollect} title={canCollect ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."} onClick={() => setDocumentClient({row,kind:"collection"})} className="min-h-9 w-full rounded-lg bg-danger px-2 text-white disabled:border disabled:border-success/30 disabled:bg-success-soft disabled:text-success">Cobrança</button></span>
+                    </div>
+                  </article>;
+                })}
+              </div>
+            )}
+            {!loading && !error && cardRows.length === 0 && <p className="py-5 text-center text-sm text-text-secondary">Nenhum cliente corresponde à pesquisa.</p>}
+          </div>
+        ) : <StandardDataTable
           id={`master-${section}-${clientTypeFilter ?? "all"}`}
           label={`Lista de ${label}`}
-          rows={visibleRows}
+          rows={section === "clients" ? cardRows : visibleRows}
           columns={columns}
           rowKey={(row) => row.id}
           loading={loading}
@@ -1217,7 +1257,8 @@ export function MasterDataPage({
           onRetry={() => void load()}
           onRowDoubleClick={(row) => void openEditor(row)}
           defaultPageSize={20}
-        />
+          stickyHeaderOffset={section === "clients" ? tableToolbarOffset : undefined}
+        />}
       </section>}
       {(focusedRecordId||createOnMount)&&!editorOpen&&<div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-4"><section role="dialog" aria-modal="true" aria-label="Abrir ficha" className="card max-w-lg p-6"><p role={loading?'status':'alert'}>{loading||createOnMount&&firmId?'A abrir ficha…':error||'A ficha não foi encontrada ou não está acessível.'}</p><button type="button" data-close-record disabled={saving} onClick={closeEditor} className="control mt-4 px-4">Fechar</button></section></div>}
       {editorOpen && (
