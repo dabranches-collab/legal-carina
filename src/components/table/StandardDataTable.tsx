@@ -159,12 +159,14 @@ function matchesFilter<Row>(
 function FilterPanel<Row>({
   column,
   anchor,
+  availableValues,
   value,
   onChange,
   onClose,
 }: {
   column: TableColumn<Row>;
   anchor: HTMLElement | null;
+  availableValues: ReadonlySet<string>;
   value: FilterValue;
   onChange: (next: FilterValue) => void;
   onClose: () => void;
@@ -216,11 +218,12 @@ function FilterPanel<Row>({
     options?.filter((option) =>
       fold(option.label).includes(fold(optionQuery)),
     ) ?? [];
+  const selectableOptions = visibleOptions.filter((option) => availableValues.has(option.value));
   const typed=fold(value.text??""),textSuggestions=typed.length<2?[]:(column.textSuggestions??[]).filter(item=>fold(item).includes(typed)).slice(0,10);
   const selected = value.selected ?? options?.map((item) => item.value) ?? [];
   const normalizedSelection=(next:string[])=>options&&next.length===options.length&&options.every(option=>next.includes(option.value))?undefined:next;
   const selectVisible = () => {
-    const next=[...new Set([...selected,...visibleOptions.map(item=>item.value)])];
+    const next=[...new Set([...selected,...selectableOptions.map(item=>item.value)])];
     onChange({...value,selected:normalizedSelection(next)});
   };
   const clearAll = () =>
@@ -233,9 +236,9 @@ function FilterPanel<Row>({
       ...value,
       selected: [
         ...selected.filter(
-          (item) => !visibleOptions.some((option) => option.value === item),
+          (item) => !selectableOptions.some((option) => option.value === item),
         ),
-        ...visibleOptions
+        ...selectableOptions
           .filter((option) => !selected.includes(option.value))
           .map((option) => option.value),
       ],
@@ -297,10 +300,12 @@ function FilterPanel<Row>({
             {visibleOptions.map((option) => (
               <label
                 key={option.value}
-                className="flex h-7 items-center gap-2 border-b border-border/60 px-1 text-xs last:border-b-0 hover:bg-surface-subtle"
+                className={`flex h-7 items-center gap-2 border-b border-border/60 px-1 text-xs last:border-b-0 ${availableValues.has(option.value) ? "hover:bg-surface-subtle" : "cursor-not-allowed bg-surface-subtle text-text-secondary opacity-55"}`}
+                title={availableValues.has(option.value) ? undefined : "Sem resultados com os restantes filtros"}
               >
                 <input
                   type="checkbox"
+                  disabled={!availableValues.has(option.value)}
                   checked={selected.includes(option.value)}
                   onChange={(event) =>
                     onChange({
@@ -487,6 +492,17 @@ export function StandardDataTable<Row>({
     return left;
   };
   const sourceRows = universeRows ?? rows;
+  const availableValuesFor = (target: TableColumn<Row>) => {
+    const words = fold(query).split(/\s+/).filter(Boolean);
+    const values = new Set<string>();
+    for (const row of sourceRows) {
+      if (!words.every((word) => columns.some((column) =>
+        (column.searchable ?? column.exportable !== false) && fold(column.value(row)).includes(word)))) continue;
+      if (!columns.every((column) => column.id === target.id || !hasFilterValue(filters[column.id]) || matchesFilter(row,column,filters[column.id]))) continue;
+      for (const candidate of target.filterValues?.(row) ?? [String(target.value(row) ?? "")]) values.add(String(candidate ?? ""));
+    }
+    return values;
+  };
   const reportedTotal = universeRows ? sourceRows.length : (totalRows ?? sourceRows.length);
   const processed = useMemo(() => {
     const words = fold(query).split(/\s+/).filter(Boolean);
@@ -1112,6 +1128,7 @@ export function StandardDataTable<Row>({
                               <FilterPanel
                                 column={optionsFor(column)}
                                 anchor={filterButtons.current[column.id]}
+                                availableValues={availableValuesFor(column)}
                                 value={filters[column.id] ?? {}}
                                 onChange={(next) => {
                                   setFilters((current) => ({
