@@ -8,11 +8,11 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.10.17`, com logótipos proporcionais, pré-visualização com escolha da pasta ao guardar PDF ou Word e bloqueio de qualquer cruzamento de identidade entre sociedades.
-- Fonte canónica do código publicado no GitHub: `main`, no commit `7f674534631843bc52caf64fc625f8dd573bd108`.
+- Versão publicada: `0.10.20`. O pré-filtro «Pagos s/ factura ou data» exclui movimentos pagos com data ou número de factura comprovados; os cartões têm molduras mais visíveis e os filtros de coluna desactivam opções sem resultados.
+- Fonte canónica no GitHub: `main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`; o commit funcional publicado é `82a0b35b13734c00701dbd5eac62d352aa80f5e7`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
-- A release 0.10.17 garante o isolamento da identidade visual em PDF e Word; a 0.10.16 acrescentou tratamento formal por cliente, escolha obrigatória na emissão quando omisso e o cabeçalho/rodapé profissional da Carina Santos.
+- As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).
 
 Consulte [a auditoria de continuidade](docs/continuity-audit-2026-09-14.md) antes de alterar autenticação, permissões, migrations, Storage ou publicação.
 
