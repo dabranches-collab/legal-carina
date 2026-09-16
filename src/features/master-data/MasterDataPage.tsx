@@ -1229,7 +1229,7 @@ export function MasterDataPage({
               <div role="list" aria-label={`Lista de ${label} em caixas`} className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))]">
                 {cardRows.map(row => {
                   const canCollect = unpaidClientIds.has(row.id);
-                  return <article role="listitem" key={row.id} className="flex min-w-0 flex-col justify-between rounded-xl border-[1.5px] border-border-strong bg-surface p-2.5 shadow-sm">
+                  return <article role="listitem" key={row.id} className="flex min-w-0 flex-col justify-between rounded-xl border-2 border-border-strong bg-surface p-2.5 shadow-sm">
                     <div className="min-w-0"><h3 className="truncate text-sm font-semibold" title={row.display_name ?? row.name ?? ""}>{row.display_name ?? row.name}</h3><p className="mt-1 text-xs text-text-secondary">{row.client_code ?? "Sem código"} · {(row.profile_types?.length ?? 1) > 1 ? "Misto" : row.client_type === "company" ? "Empresa" : "Particular"}</p></div>
                     <div className="mt-2 grid grid-cols-2 gap-1.5 text-xs font-semibold">
                       <button type="button" onClick={() => void openEditor(row)} className="min-h-9 rounded-lg border border-border px-1 text-primary" title="Abrir ficha do cliente">Ficha</button>
