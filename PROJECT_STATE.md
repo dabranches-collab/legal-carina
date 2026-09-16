@@ -1,10 +1,10 @@
 # Estado do projecto
 
-## Próxima versão local 0.10.21 — 16-09-2026
+## Release 0.10.21 publicada — 16-09-2026
 
-- Branch `codex/client-filter-summaries-0.10.21`, iniciada de `main`/`origin/main` em `7b64b305d2cab78a61d7abe852c93825a53a1881`. Produção permanece em 0.10.20; a versão 0.10.21 está apenas no servidor local `http://127.0.0.1:5173/`, confirmado por HTTP 200 e no browser integrado autenticado. Sem publicação nem migration.
+- PR #39 da branch `codex/client-filter-summaries-0.10.21` fundido em GitHub `main` no commit `d135ad82a287881e964732e2f8b133b175cda22c`. Produção `https://legal-carina.dabranches.workers.dev` confirmada na versão 0.10.21 a 100% desde `2026-09-16 12:39:16 UTC`: deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`. Rollback frontend 0.10.20: `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3`. Código local e GitHub `main` coincidem; sem migration.
 - A ficha de cliente mostra horas e montante em cada pré-filtro, calculados assincronamente por RPCs existentes e guardados em memória por um minuto. Montantes sem acesso surgem indisponíveis ou parciais. A lista de clientes abre em tabela, com alternância para caixas.
-- Os pré-filtros de clientes, sociedades e responsáveis são separadores dentro da ficha; a tabela de registos abre no mesmo diálogo. Fechar conserva a página, o URL e a lista de origem. Validação sintética E2E dos três tipos de ficha aprovada; 208 testes unitários, 10 E2E Windows/ficha e 2 E2E da matriz iPhone em claro/escuro aprovados; segurança de ficheiros, lint, tipos e build aprovados. Browser integrado autenticado confirmou a tabela por defeito, totais calculados sem bloquear a ficha e regresso à mesma lista.
+- Os pré-filtros de clientes, sociedades e responsáveis são separadores dentro da ficha; a tabela de registos abre no mesmo diálogo. Fechar conserva a página, o URL e a lista de origem. Validação sintética E2E dos três tipos de ficha aprovada; 208 testes unitários, 10 E2E Windows/ficha e 2 E2E da matriz iPhone em claro/escuro aprovados; segurança de ficheiros, lint, tipos, runtime do Worker, build e dry-run Cloudflare aprovados. CI do PR `35094727970` verde; CI pós-merge `35095703677` verde na repetição, após falha intermitente do teste antigo da data de repartição. Browser integrado online confirmou a 0.10.21 e a tabela por defeito. Nenhuma alteração de base de dados, Auth, RLS, Storage, permissões ou segredos.
 
 ## Alinhamento do checkout — 16-09-2026
 
