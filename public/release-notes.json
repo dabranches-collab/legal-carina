@@ -1,11 +1,15 @@
 {
-  "version": "0.10.21",
+  "version": "0.10.22",
   "changes": [
-    "As fichas de clientes mostram as horas e o montante de cada pré-filtro directamente nos respectivos atalhos, sem atrasar a abertura da ficha.",
-    "As listas de clientes abrem em tabela por defeito; a apresentação em caixas continua disponível.",
-    "As fichas de clientes, sociedades e responsáveis apresentam os registos em separadores no próprio diálogo e regressam ao ponto de origem ao fechar."
+    "O aviso de actualização apresenta apenas as alterações entre a versão instalada neste equipamento e a nova versão."
   ],
   "releases": [
+    {
+      "version": "0.10.22",
+      "changes": [
+        "O aviso de actualização apresenta apenas as alterações entre a versão instalada neste equipamento e a nova versão."
+      ]
+    },
     {
       "version": "0.10.21",
       "changes": [

@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.10.22 em preparação — aviso PWA por equipamento
+
+- Branch `codex/pwa-update-delta-0.10.22` a partir de GitHub `main`/checkout local limpos em `d445c1ff1b0da86137391b40d4a70b8eb95b9078`. Produção permanece 0.10.21, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- O aviso consulta a versão do service worker activo em cada equipamento e mostra apenas as alterações posteriores a essa versão até à versão em espera. Ao aceitar, grava essa origem para o resumo mostrado após o reinício, substituindo origens antigas guardadas no navegador. O caso em que o HTML novo chega antes de o worker activar também usa a versão activa.
+- Alteração apenas de frontend/PWA e notas de versão. Sem migration ou alteração de dados, Auth, RLS, Storage, permissões ou segredos. Publicação ainda não autorizada para este lote.
+- Validação local: segurança de ficheiros, lint, tipos, 38 ficheiros/208 testes unitários e build aprovados. Teste sintético cobre origem antiga no armazenamento local e HTML 0.10.22 com worker 0.10.20 activo, mostrando só as novidades 0.10.21–0.10.22.
+
 ## Release 0.10.21 publicada — 16-09-2026
 
 - Ordem explícita «publica» recebida. Branch funcional `codex/client-filter-summaries-0.10.21`, commit `fa748233f51f5a9b30dff637ff89ea8425dbf181`; PR #39 fundido em GitHub `main` no commit `d135ad82a287881e964732e2f8b133b175cda22c`. A CI do PR `35094727970`, a auditoria e o secret scan passaram. A CI pós-merge `35095703677` passou na segunda execução: a primeira falhou num teste antigo da data de repartição, aprovado isoladamente antes da repetição. Dry-run Cloudflare com `--strict --keep-vars` aprovado a partir da `main` limpa.

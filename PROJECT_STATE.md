@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Versão 0.10.22 local em preparação
+
+- Branch `codex/pwa-update-delta-0.10.22` parte de GitHub `main` `d445c1ff1b0da86137391b40d4a70b8eb95b9078`. Produção mantém a 0.10.21 (`dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`; version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`).
+- O resumo da actualização passa a usar a versão do service worker activo do próprio equipamento, incluindo quando o HTML já carregou a versão seguinte. A origem do resumo após actualizar é substituída em cada actualização. Sem alterações de base de dados ou acessos; ainda não publicado.
+- Segurança de ficheiros, lint, tipos, build e 208 testes unitários passaram localmente.
+
 ## Release 0.10.21 publicada — 16-09-2026
 
 - PR #39 da branch `codex/client-filter-summaries-0.10.21` fundido em GitHub `main` no commit `d135ad82a287881e964732e2f8b133b175cda22c`. Produção `https://legal-carina.dabranches.workers.dev` confirmada na versão 0.10.21 a 100% desde `2026-09-16 12:39:16 UTC`: deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`. Rollback frontend 0.10.20: `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3`. Código local e GitHub `main` coincidem; sem migration.
