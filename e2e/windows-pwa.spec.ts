@@ -23,10 +23,10 @@ test('arranque standalone preserva o menu indicado no URL',async({page})=>{
 test('browser normal preserva o submenu de Clientes num refresh directo',async({page})=>{
   await page.goto('/?qa-iphone=1&view=clients&clientType=company&clientMode=list')
   await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
-  await expect(page.getByRole('button',{name:'Caixas',exact:true})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByRole('button',{name:'Tabela',exact:true})).toHaveAttribute('aria-pressed','true')
   await page.reload()
   await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list/)
-  await expect(page.getByRole('button',{name:'Caixas',exact:true})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByRole('button',{name:'Tabela',exact:true})).toHaveAttribute('aria-pressed','true')
 })
 
 for (const viewport of windowsViewports) {

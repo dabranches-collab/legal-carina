@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Trabalho local 0.10.21 para revisão — 16-09-2026
+
+- Branch `codex/client-filter-summaries-0.10.21` desde `main`/`origin/main` `7b64b305d2cab78a61d7abe852c93825a53a1881`. Ambiente local `http://127.0.0.1:5173/` com Vite, versão 0.10.21 confirmada no browser integrado; deployment ID e version ID: não aplicáveis ao ambiente local. Produção continua em 0.10.20, deployment `af4dd533-6daf-4efe-af87-dd811504c82c`, version `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3` conforme registo da publicação e confirmação da versão online anterior. Sem ordem de publicação.
+- Os pré-filtros da ficha de cliente apresentam horas e montantes sem bloquear a abertura, usando apenas RPCs já existentes. Os montantes ocultos por permissões são marcados como parciais/indisponíveis. As listas de clientes abrem em tabela e permitem escolher caixas.
+- Clientes, sociedades e responsáveis têm separadores de registos dentro do diálogo. A navegação não altera o URL; fechar repõe a lista de origem. E2E sintético específico para os três tipos aprovado, bem como 208 testes unitários, 10 E2E Windows/ficha e 2 E2E da matriz iPhone em claro/escuro. Segurança de ficheiros, lint, tipos e build aprovados. O browser integrado autenticado confirmou a versão 0.10.21, a tabela por defeito, a ficha sem espera pelos totais, a lista filtrada dentro do diálogo e o regresso ao mesmo URL. Nenhuma migration ou escrita remota foi executada.
+
 ## Alinhamento documental da 0.10.20 — 16-09-2026
 
 - O checkout limpo em `C:\Projetos\legal-carina` foi actualizado por fast-forward de `cad59ef8ec6311970f209e6412c7430671337066` para `main`/`origin/main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`. A documentação de versão é corrigida na branch `codex/align-version-docs-0.10.20`, sem alteração funcional ou nova publicação.

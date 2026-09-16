@@ -1,11 +1,19 @@
 {
-  "version": "0.10.20",
+  "version": "0.10.21",
   "changes": [
-    "O pré-filtro «Pagos s/ factura ou data» deixa de incluir movimentos pagos quando existe data da factura no registo ou data ou número de factura associada; o marcador histórico não prevalece sobre esses dados.",
-    "As molduras das caixas ficam mais visíveis nas listas de clientes e nos cartões da plataforma.",
-    "Nos filtros das colunas, as opções sem resultados face aos restantes filtros ficam sombreadas e indisponíveis."
+    "As fichas de clientes mostram as horas e o montante de cada pré-filtro directamente nos respectivos atalhos, sem atrasar a abertura da ficha.",
+    "As listas de clientes abrem em tabela por defeito; a apresentação em caixas continua disponível.",
+    "As fichas de clientes, sociedades e responsáveis apresentam os registos em separadores no próprio diálogo e regressam ao ponto de origem ao fechar."
   ],
   "releases": [
+    {
+      "version": "0.10.21",
+      "changes": [
+        "As fichas de clientes mostram as horas e o montante de cada pré-filtro directamente nos respectivos atalhos, sem atrasar a abertura da ficha.",
+        "As listas de clientes abrem em tabela por defeito; a apresentação em caixas continua disponível.",
+        "As fichas de clientes, sociedades e responsáveis apresentam os registos em separadores no próprio diálogo e regressam ao ponto de origem ao fechar."
+      ]
+    },
     {
       "version": "0.10.20",
       "changes": [
