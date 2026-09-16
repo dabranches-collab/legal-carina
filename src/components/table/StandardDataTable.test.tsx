@@ -110,6 +110,26 @@ describe('StandardDataTable',()=>{
     expect(screen.getByText('3 resultados de 3')).toBeInTheDocument()
   })
 
+  test('sombreia e desactiva opções sem resultados nos filtros em cascata',async()=>{
+    const user=userEvent.setup()
+    render(<StandardDataTable id="cascading-filters" label="Filtros em cascata" rows={rows} columns={columns} rowKey={row=>row.id}/> )
+    await user.click(screen.getAllByRole('button',{name:'Filtrar…'})[0])
+    const nameFilter=screen.getByRole('dialog',{name:'Filtro Nome'})
+    await user.click(within(nameFilter).getByRole('button',{name:'Limpar'}))
+    await user.click(within(nameFilter).getByRole('checkbox',{name:'Álvaro'}))
+    await user.click(within(nameFilter).getByRole('button',{name:'Concluir'}))
+    await user.click(screen.getAllByRole('button',{name:'Filtrar…'})[1])
+    const activeFilter=screen.getByRole('dialog',{name:'Filtro Activo'})
+    expect(within(activeFilter).getByRole('checkbox',{name:'Não'})).toBeDisabled()
+    expect(within(activeFilter).getByRole('checkbox',{name:'Sim'})).toBeEnabled()
+    expect(within(activeFilter).getByText('Não').closest('label')).toHaveClass('opacity-55')
+    await user.click(within(activeFilter).getByRole('button',{name:'Limpar'}))
+    await user.click(within(activeFilter).getByRole('checkbox',{name:'Sim'}))
+    await user.click(within(activeFilter).getByRole('button',{name:'Concluir'}))
+    await user.click(screen.getAllByRole('button',{name:'Filtro activo'})[0])
+    expect(within(screen.getByRole('dialog',{name:'Filtro Nome'})).getByRole('checkbox',{name:'Beatriz'})).toBeDisabled()
+  })
+
   test('alterna o fundo e permite destacar uma linha com um clique',async()=>{
     const user=userEvent.setup()
     render(<StandardDataTable id="selected-row" label="Tabela seleccionável" rows={rows} columns={columns} rowKey={row=>row.id}/> )

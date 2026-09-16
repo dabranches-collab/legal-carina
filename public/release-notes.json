@@ -1,14 +1,19 @@
 {
-  "version": "0.10.19",
+  "version": "0.10.20",
   "changes": [
-    "Os clientes cobertos por avença e os clientes com provisões aparecem em cartões completos, com acesso directo à ficha e aos registos de cada cliente.",
-    "A posição da provisão considera o trabalho realizado com valor, incluindo o facturado e não pago, sem contar duas vezes as notas; saldos negativos ficam a vermelho e o saldo contabilístico continua separado.",
-    "Nas avenças, o total de prestações geradas ainda sem pagamento mantém visíveis tanto as pendentes como as facturadas; emitir um documento não as liquida.",
-    "O histórico da provisão abre os registos das notas activas mesmo quando não há trabalho novo por lançar.",
-    "As listas de clientes abrem em caixas compactas, com alternância para tabela; pesquisa, apresentação e criação ficam acessíveis na mesma linha, e os botões mostram descrições claras ao passar o rato.",
-    "Em iPhone, a navegação fica à frente da pesquisa e da tabela de clientes quando é aberta, em vez de ser tapada por esses controlos."
+    "O pré-filtro «Pagos s/ factura ou data» deixa de incluir movimentos pagos quando existe data da factura no registo ou data ou número de factura associada; o marcador histórico não prevalece sobre esses dados.",
+    "As molduras das caixas ficam mais visíveis nas listas de clientes e nos cartões da plataforma.",
+    "Nos filtros das colunas, as opções sem resultados face aos restantes filtros ficam sombreadas e indisponíveis."
   ],
   "releases": [
+    {
+      "version": "0.10.20",
+      "changes": [
+        "O pré-filtro «Pagos s/ factura ou data» deixa de incluir movimentos pagos quando existe data da factura no registo ou data ou número de factura associada; o marcador histórico não prevalece sobre esses dados.",
+        "As molduras das caixas ficam mais visíveis nas listas de clientes e nos cartões da plataforma.",
+        "Nos filtros das colunas, as opções sem resultados face aos restantes filtros ficam sombreadas e indisponíveis."
+      ]
+    },
     {
       "version": "0.10.19",
       "changes": [

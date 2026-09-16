@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Candidato 0.10.20 local — 16-09-2026
+
+- Código local em `C:\Projetos\legal-carina`, branch `codex/fix-paid-invoice-attention-0.10.20`, candidato 0.10.20. GitHub `main` e Cloudflare em 0.10.19, sem deploy novo. Produção: `https://legal-carina.dabranches.workers.dev`, deployment `a12a0d63-5f1a-4a8c-9835-a57c51019b8b`, version `e0a0442b-c268-4e3d-a00c-0f759708ff19`, desde `2026-09-16 09:10:55 UTC`.
+- Migration preparada, não aplicada, para corrigir a selecção e a contagem de pagos sem factura: a existência de data no movimento ou de data/número em factura ligada exclui o movimento. GHH: 58 falsos positivos com data, zero com a nova condição simulada; global: 117 anteriores, 41 após a condição. Consulta exclusivamente de leitura; sem escrita no Supabase ou em acessos/permissões.
+- Cartões com moldura mais visível; opções de filtros de coluna sem resultados por cascata sombreadas e desactivadas no componente de tabelas partilhado. Ver `HANDOVER.md` para validação e pendências.
+- Gates locais aprovados: segurança, lint, tipos, 208 testes unitários, build, 38 E2E focados e dry-run Cloudflare. Suite integral 119 aprovados/3 condicionais ignorados; as duas falhas intermitentes passaram na repetição isolada. Backup físico `2026-09-16 05:49:52 UTC`; 5 Auth/5 pertenças, 7 concessões, 6 permissões financeiras, zero órfãos e 46/46 tabelas públicas com RLS antes da promoção.
+
 ## Release 0.10.19 publicada — 16-09-2026
 
 - Publicação autorizada e concluída. GitHub `main` em `d0dbb9224056ed16f5b223d2bedbad82e4929ba9` pelo PR #33; checkout canónico `C:\Projetos\legal-carina`, branch documental `codex/handover-0.10.19`. Produção `https://legal-carina.dabranches.workers.dev` confirma 0.10.19 a 100% desde `2026-09-16 09:10:55 UTC`: deployment `a12a0d63-5f1a-4a8c-9835-a57c51019b8b`, version `e0a0442b-c268-4e3d-a00c-0f759708ff19`. HTTP 200 e seis alterações acumuladas confirmados; rollback frontend anterior `4f24cadf-9d5a-4844-9ee5-be5c29346550` (0.10.18).
