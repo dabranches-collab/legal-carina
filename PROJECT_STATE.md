@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Release 0.10.18 em preparação — 16-09-2026
+
+- O nome do pré-filtro «Facturados sem data / estados históricos» foi substituído por «Pagos s/ factura ou data», conforme escolha expressa do utilizador.
+- Teste de regressão confirma o novo rótulo e as novidades acumuladas incluem a alteração 0.10.18. A regra de selecção e os dados permanecem inalterados; sem alterações de Supabase, Auth, RLS, Storage, Edge Functions, utilizadores, permissões ou segredos.
+- Branch `codex/rename-historical-filter-0.10.18`, baseada no `main` canónico `cad59ef8ec6311970f209e6412c7430671337066`. Produção continua na versão 0.10.17.
+
 ## Release 0.10.17 publicada — 15-09-2026
 
 - PDF e Word confirmam a identidade da sociedade emissora e bloqueiam qualquer cruzamento de logótipo, rodapé ou dados bancários. A LEGALTEAM só pode usar a sua marca; Carina Santos e as demais sociedades só podem usar os dados da respectiva ficha.

@@ -384,7 +384,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     missing_price: "Sem preço",
     uninvoiced: "Por facturar",
     unpaid: "Facturados não pagos",
-    historical: "Facturados sem data / estados históricos",
+    historical: "Pagos s/ factura ou data",
     retainer: "Cobertos por avença",
   };
   const activeFilters = [

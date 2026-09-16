@@ -82,6 +82,7 @@ test('lista inferior abre o próprio registo e actualiza a repartição sem perd
  await page.goto(`${demo}&view=billing&society=LEGALTEAM`)
  const map=page.getByRole('region',{name:'Repartição LEGALTEAM',exact:true})
  await map.getByLabel('Data final da repartição').fill('30-09-2026')
+ await expect(map.getByLabel('Data final da repartição')).toHaveValue('30-09-2026')
  await map.getByLabel('Escritório (%)',{exact:true}).fill('20')
  await map.getByLabel('Execução (%)',{exact:true}).fill('60')
  const table=page.getByRole('table',{name:'Registos do painel',exact:true})
