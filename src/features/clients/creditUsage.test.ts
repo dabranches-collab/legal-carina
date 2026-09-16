@@ -26,4 +26,8 @@ describe('saldo após os registos',()=>{
   const usage=calculateCreditUsage(detail,[{...row,effective_amount:null},{...row,id:'paid',is_paid:true},{...row,id:'retainer',billing_scope:'retainer'},{...row,id:'cancelled',status:'cancelled'}],0,'2026-09-02')
   expect(usage.missingPrice).toBe(1);expect(usage.rows).toHaveLength(1)
  })
+ it('inclui trabalho facturado mas não pago, sem confundir a nota com liquidação',()=>{
+  const usage=calculateCreditUsage(detail,[{...row,is_invoiced:true,status:'invoiced'}],23,'2026-09-02')
+  expect(usage).toMatchObject({total:123,balance:877,invoicedUnpaid:1})
+ })
 })

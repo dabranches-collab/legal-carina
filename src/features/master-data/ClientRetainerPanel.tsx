@@ -577,6 +577,7 @@ export function ClientRetainerPanel({
               </dd>
             </div>
           </dl>
+          <p className={`mt-3 rounded-lg border-2 p-3 text-sm font-semibold ${pending+unpaid>0?'border-danger bg-danger-soft text-danger':'border-success bg-success-soft text-success'}`}>Prestações geradas ainda sem pagamento: <span className="financial-value">{money(pending+unpaid,retainers[0].currency)}</span>. Pendentes e facturadas mantêm-se neste total até serem marcadas como pagas.</p>
           <details open className="group mt-4 overflow-hidden rounded-xl border-2 border-secondary bg-surface shadow-sm">
             <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 bg-secondary px-4 py-3 font-display text-lg font-semibold text-white marker:text-white hover:bg-secondary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-white">
               <span>Mapa mensal e anual de horas</span>

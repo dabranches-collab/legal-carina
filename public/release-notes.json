@@ -1,9 +1,21 @@
 {
-  "version": "0.10.18",
+  "version": "0.10.19",
   "changes": [
-    "O pré-filtro de movimentos com facturação irregular passa a chamar-se «Pagos s/ factura ou data», tornando o seu objectivo mais claro."
+    "Os clientes cobertos por avença e os clientes com provisões aparecem em cartões completos, com acesso directo à ficha e aos registos de cada cliente.",
+    "A posição da provisão considera o trabalho realizado com valor, incluindo o facturado e não pago, sem contar duas vezes as notas; saldos negativos ficam a vermelho e o saldo contabilístico continua separado.",
+    "Nas avenças, o total de prestações geradas ainda sem pagamento mantém visíveis tanto as pendentes como as facturadas; emitir um documento não as liquida.",
+    "O histórico da provisão abre os registos das notas activas mesmo quando não há trabalho novo por lançar."
   ],
   "releases": [
+    {
+      "version": "0.10.19",
+      "changes": [
+        "Os clientes cobertos por avença e os clientes com provisões aparecem em cartões completos, com acesso directo à ficha e aos registos de cada cliente.",
+        "A posição da provisão considera o trabalho realizado com valor, incluindo o facturado e não pago, sem contar duas vezes as notas; saldos negativos ficam a vermelho e o saldo contabilístico continua separado.",
+        "Nas avenças, o total de prestações geradas ainda sem pagamento mantém visíveis tanto as pendentes como as facturadas; emitir um documento não as liquida.",
+        "O histórico da provisão abre os registos das notas activas mesmo quando não há trabalho novo por lançar."
+      ]
+    },
     {
       "version": "0.10.18",
       "changes": [

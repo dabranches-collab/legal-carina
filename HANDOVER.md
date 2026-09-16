@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## Candidato 0.10.19 local — 16-09-2026
+
+- Checkout canónico `C:\Projetos\legal-carina`, branch `codex/client-summary-cards-0.10.19`. A versão local em preparação é 0.10.19; GitHub `main` e Cloudflare permanecem em 0.10.18 até publicação expressa. Produção: `https://legal-carina.dabranches.workers.dev`, deployment `cee7d3d1-709b-4436-aa99-a1cb8c755af7`, version `4f24cadf-9d5a-4844-9ee5-be5c29346550`, activa desde `2026-09-16 07:01:39 UTC`. O commit e o estado remoto da branch devem ser preenchidos após o push.
+- Cartões de avenças e provisões com detalhes e atalhos; avenças com valor contratual por período e equivalente anual. A demonstração local ficou explicitamente marcada como sintética; a vista autenticada não usa os valores de teste.
+- As provisões apresentam separadamente saldo contabilístico e posição económica, incluindo trabalho já realizado e facturado mas não pago. O trabalho de notas activas conta via remanescente da nota, sem duplicação; o trabalho ainda sem nota conta pelo valor com IVA. Não existe estado de pagamento fiável dessas notas na conta de provisão. A verificação remota foi somente leitura e não modificou dados, Auth, RLS, utilizadores, permissões, migrations ou segredos.
+- O detalhe «Ver os registos considerados na provisão» agrega registos da nota activa e registos ainda sem nota; não fica vazio quando a conta está esgotada por um abatimento documentado.
+- Auditoria agregada read-only: 137 prestações de avença `pending` em EUR (38 360 €), nenhuma `paid`/`invoiced`; 62 registos avulsos facturados não pagos, 83 facturáveis sem preço e 5 assinalados pagos sem indicador de factura. Sem escrita remota. A relação pagamento-documento-registo não é suficientemente explícita para inferir liquidação parcial de notas; requer desenho e reconciliação próprios antes de mudar estados históricos.
+- Segurança de ficheiros, lint, TypeScript, 38 ficheiros/207 testes unitários, build, nove E2E focados e suite E2E integral com 119 aprovados/3 condicionais ignorados. Falta push e CI; não efectuar deploy sem a ordem explícita «publica».
+
 ## Release 0.10.18 publicada — pré-filtro de facturação — 16-09-2026
 
 - O pré-filtro anteriormente apresentado como «Facturados sem data / estados históricos» passa a chamar-se «Pagos s/ factura ou data», conforme escolha expressa do utilizador.
