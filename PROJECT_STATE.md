@@ -1,10 +1,11 @@
 # Estado do projecto
 
-## Release 0.10.18 em preparação — 16-09-2026
+## Release 0.10.18 publicada — 16-09-2026
 
 - O nome do pré-filtro «Facturados sem data / estados históricos» foi substituído por «Pagos s/ factura ou data», conforme escolha expressa do utilizador.
 - Teste de regressão confirma o novo rótulo e as novidades acumuladas incluem a alteração 0.10.18. A regra de selecção e os dados permanecem inalterados; sem alterações de Supabase, Auth, RLS, Storage, Edge Functions, utilizadores, permissões ou segredos.
-- Branch `codex/rename-historical-filter-0.10.18`, baseada no `main` canónico `cad59ef8ec6311970f209e6412c7430671337066`. Produção continua na versão 0.10.17.
+- PR #32 fundido no `main` canónico em `f0453b77337988265aad4a8aeee9fc2ed5bc180c`. CI `35065860490`, auditoria e secret scan verdes; 119 E2E aprovados e três condicionais ignorados. O cenário de repartição foi estabilizado com uma espera explícita pela data e passou cinco vezes consecutivas antes da CI integral.
+- Produção 0.10.18 activa a 100% desde `2026-09-16 07:01:39 UTC`: deployment `cee7d3d1-709b-4436-aa99-a1cb8c755af7`, version `4f24cadf-9d5a-4844-9ee5-be5c29346550`, tag `0.10.18`. HTTP 200, notas e bundle online confirmados; rollback frontend preservado para `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (0.10.17).
 
 ## Release 0.10.17 publicada — 15-09-2026
 

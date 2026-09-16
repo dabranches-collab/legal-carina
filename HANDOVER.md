@@ -1,10 +1,11 @@
 # Legal Carina — handover
 
-## Release 0.10.18 em preparação — pré-filtro de facturação — 16-09-2026
+## Release 0.10.18 publicada — pré-filtro de facturação — 16-09-2026
 
 - O pré-filtro anteriormente apresentado como «Facturados sem data / estados históricos» passa a chamar-se «Pagos s/ factura ou data», conforme escolha expressa do utilizador.
 - Alteração exclusivamente de interface, com teste de regressão e nota de versão incluída no resumo acumulado apresentado na actualização. Não altera a regra do filtro, os movimentos, o Supabase, Auth, RLS, Storage, Edge Functions, utilizadores, permissões ou segredos.
-- Branch local `codex/rename-historical-filter-0.10.18`, criada a partir de `main`/`origin/main` em `cad59ef8ec6311970f209e6412c7430671337066`. Produção permanece na 0.10.17 até ordem explícita «publica».
+- PR #32 fundido no `main` canónico em `f0453b77337988265aad4a8aeee9fc2ed5bc180c`. CI `35065860490`, auditoria de dependências e secret scan verdes; suite integral com 119 E2E aprovados e três testes condicionais ignorados. O teste da repartição passou ainda cinco vezes consecutivas após se tornar explícita a espera pela actualização do campo de data.
+- Produção CONFIRMADA a 100% desde `2026-09-16 07:01:39 UTC`: deployment `cee7d3d1-709b-4436-aa99-a1cb8c755af7`, version `4f24cadf-9d5a-4844-9ee5-be5c29346550`, tag `0.10.18`. HTTP 200, notas de versão e bundle online confirmam 0.10.18 e «Pagos s/ factura ou data»; o rótulo anterior já não existe no bundle. Rollback frontend: `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (0.10.17).
 
 ## Release 0.10.17 publicada — identidade documental — 15-09-2026
 

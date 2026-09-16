@@ -1,16 +1,16 @@
 # Deployment seguro
 
-## Produção confirmada em 2026-09-15
+## Produção confirmada em 2026-09-16
 
 - Plataforma: Cloudflare Workers Static Assets.
 - Serviço: `legal-carina`.
 - Ambiente: produção.
 - URL: `https://legal-carina.dabranches.workers.dev`.
-- Versão visível: `0.10.17`.
-- Deployment activo: `36fb5678-68a5-486f-8140-cd801c68d6a3`.
-- Version ID activo: `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (100% do tráfego desde `2026-09-15 21:54:12 UTC`).
-- Commit funcional publicado e fonte canónica no GitHub: `main` em `7f674534631843bc52caf64fc625f8dd573bd108`.
-- Rollback imediato do frontend: `6930409c-b1fc-4424-9794-691e8665bd17` (0.10.16). Não repor a base de dados para reverter apenas o frontend; a coluna aditiva nullable de tratamento formal pode permanecer.
+- Versão visível: `0.10.18`.
+- Deployment activo: `cee7d3d1-709b-4436-aa99-a1cb8c755af7`.
+- Version ID activo: `4f24cadf-9d5a-4844-9ee5-be5c29346550` (100% do tráfego desde `2026-09-16 07:01:39 UTC`).
+- Commit funcional publicado e fonte canónica no GitHub: `main` em `f0453b77337988265aad4a8aeee9fc2ed5bc180c`.
+- Rollback imediato do frontend: `3741a2f2-2736-4b40-ad58-6c2cc1674d38` (0.10.17). Esta publicação não alterou a base de dados; não repor o Supabase para reverter apenas o frontend.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 
