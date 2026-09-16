@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## Alinhamento documental da 0.10.20 — 16-09-2026
+
+- O checkout limpo em `C:\Projetos\legal-carina` foi actualizado por fast-forward de `cad59ef8ec6311970f209e6412c7430671337066` para `main`/`origin/main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`. A documentação de versão é corrigida na branch `codex/align-version-docs-0.10.20`, sem alteração funcional ou nova publicação.
+- Estado confirmado: `package.json` e `public/release-notes.json` locais em 0.10.20; GitHub `main` em 0.10.20; aplicação e notas de versão online em 0.10.20. A hora e os IDs do deployment indicados abaixo provêm do handover já publicado no GitHub; nesta verificação o painel Cloudflare exigia autenticação.
+
 ## Release 0.10.20 publicada — 16-09-2026
 
 - A ordem explícita «publica» foi recebida. Checkout canónico `C:\Projetos\legal-carina`; branch funcional `codex/fix-paid-invoice-attention-0.10.20`, PR #35 fundido no GitHub `main` em `82a0b35b13734c00701dbd5eac62d352aa80f5e7`. CI `35085689324`, auditoria de dependências e secret scan `35085689514` verdes. Produção `https://legal-carina.dabranches.workers.dev` confirmou a 0.10.20 a 100% desde `2026-09-16 10:42:47 UTC`: deployment `af4dd533-6daf-4efe-af87-dd811504c82c`, version `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3`. Rollback frontend anterior: `e0a0442b-c268-4e3d-a00c-0f759708ff19` (0.10.19).

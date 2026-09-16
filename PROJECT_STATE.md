@@ -1,8 +1,13 @@
 # Estado do projecto
 
+## Alinhamento do checkout — 16-09-2026
+
+- Checkout `C:\Projetos\legal-carina` actualizado por fast-forward até `main`/`origin/main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`, sem alterações locais prévias. Correcção documental na branch `codex/align-version-docs-0.10.20`.
+- `package.json`, `public/release-notes.json` e `docs/deployment.md` indicam 0.10.20. A aplicação online e as notas de versão foram confirmadas novamente em 0.10.20. Deployment e version ID abaixo são os registados no handover do GitHub; o painel Cloudflare não foi consultado nesta verificação por exigir autenticação.
+
 ## Release 0.10.20 publicada — 16-09-2026
 
-- Código local em `C:\Projetos\legal-carina`, branch `codex/fix-paid-invoice-attention-0.10.20`; PR #35 fundido em GitHub `main` no commit `82a0b35b13734c00701dbd5eac62d352aa80f5e7`. Produção Cloudflare 0.10.20 confirmada desde `2026-09-16 10:42:47 UTC`: `https://legal-carina.dabranches.workers.dev`, deployment `af4dd533-6daf-4efe-af87-dd811504c82c`, version `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3`. Rollback frontend 0.10.19: `e0a0442b-c268-4e3d-a00c-0f759708ff19`.
+- Branch funcional `codex/fix-paid-invoice-attention-0.10.20`; PR #35 fundido em GitHub `main` no commit `82a0b35b13734c00701dbd5eac62d352aa80f5e7`. Produção Cloudflare 0.10.20 confirmada desde `2026-09-16 10:42:47 UTC`: `https://legal-carina.dabranches.workers.dev`, deployment `af4dd533-6daf-4efe-af87-dd811504c82c`, version `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3`. Rollback frontend 0.10.19: `e0a0442b-c268-4e3d-a00c-0f759708ff19`.
 - Migration isolada de duas funções de leitura aplicada no Supabase sob `20260916104110_filter_paid_work_without_invoice_evidence`, sem DML, RLS ou alteração de acessos. Data no movimento ou data/número em factura ligada exclui o movimento pago do pré-filtro. GHH: 58 falsos positivos antes, zero após; global: 117 antes, 41 após. Os agregados de Auth, pertenças, concessões e permissões mantiveram-se iguais.
 - Cartões com moldura mais visível; opções de filtros de coluna sem resultados por cascata sombreadas e desactivadas no componente de tabelas partilhado. Ver `HANDOVER.md` para validação e pendências.
 - Gates locais aprovados: segurança, lint, tipos, 208 testes unitários, build, 38 E2E focados e dry-run Cloudflare. Suite integral 119 aprovados/3 condicionais ignorados; as duas falhas intermitentes passaram na repetição isolada. CI `35085689324`, auditoria de dependências e secret scan `35085689514` verdes. Backup físico `2026-09-16 05:49:52 UTC`; 5 Auth/5 pertenças, 7 concessões, 6 permissões financeiras, zero órfãos e 46/46 tabelas públicas com RLS antes e após a migration. Browser online autenticado e notas de versão confirmam 0.10.20.
