@@ -14,18 +14,21 @@ import {
 } from "../../components/table/StandardDataTable";
 import { supabase } from "../../lib/supabase";
 import { ClientDocumentsPanel } from "../clients/ClientDocumentsPanel";
-import { AppLink } from "../../components/ui/AppLink";
 import { SocietyLogoCropper } from "./SocietyLogoCropper";
 import { ClientCreditPanel } from "../clients/ClientCreditPanel";
 import { ClientRetainerPanel } from "./ClientRetainerPanel";
 import { ClientCredentialsPanel } from "./ClientCredentialsPanel";
 import { withTransientRetry } from "../../lib/transientRetry";
 import {CalendarDateInput} from '../../components/CalendarDateInput'
+import { formatFilterHours, formatFilterMoney, invalidateClientFilterSummaries, loadClientFilterSummaries, type ClientFilterSummaries, type FilterKey } from './clientFilterSummaries'
 
 const HonorariumNoteModal = lazy(() =>
   import("../clients/HonorariumNoteModal").then((module) => ({
     default: module.HonorariumNoteModal,
   })),
+);
+const WorkEntriesPage = lazy(() =>
+  import("../work-entries/WorkEntriesPage").then((module) => ({ default: module.WorkEntriesPage })),
 );
 
 type Section = "clients" | "billing_entities" | "professionals";
@@ -221,9 +224,9 @@ export function MasterDataPage({
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [clientLayout, setClientLayout] = useState<"cards" | "table">(() =>
-    new URLSearchParams(window.location.search).get("clientLayout") === "table"
-      ? "table"
-      : "cards",
+    new URLSearchParams(window.location.search).get("clientLayout") === "cards"
+      ? "cards"
+      : "table",
   );
   const [cardSearch, setCardSearch] = useState("");
   const clientToolbarRef = useRef<HTMLDivElement>(null);
@@ -248,6 +251,7 @@ export function MasterDataPage({
   const [showOtherProfile,setShowOtherProfile]=useState(false);
   const [showHourlyRate,setShowHourlyRate]=useState(false);
   const [clientPage,setClientPage]=useState<"general"|"contacts"|"billing"|"retainer"|"provisions"|"credentials"|"documents">("general");
+  const [activeWorkFilter, setActiveWorkFilter] = useState<FilterKey | null>(null);
   const [mode, setMode] = useState<"view" | "edit">("view"),
     [details, setDetails] = useState<ClientDetails>(emptyDetails),
     [identifiers, setIdentifiers] = useState<Identifier[]>([]);
@@ -275,6 +279,25 @@ export function MasterDataPage({
   const [retainerClientIds, setRetainerClientIds] = useState<Set<string>>(
     new Set(),
   );
+  const [filterSummaries, setFilterSummaries] = useState<ClientFilterSummaries | null>(null);
+  const [filterSummaryError, setFilterSummaryError] = useState(false);
+  const [filterSummaryRevision, setFilterSummaryRevision] = useState(0);
+  useEffect(() => {
+    const refresh = () => { if (editing?.id) invalidateClientFilterSummaries(editing.id); setFilterSummaryRevision((current) => current + 1); };
+    window.addEventListener('entity-record-saved', refresh);
+    return () => window.removeEventListener('entity-record-saved', refresh);
+  }, [editing?.id]);
+  useEffect(() => {
+    if (section !== 'clients' || !editing?.id) return;
+    let active = true;
+    setFilterSummaries(null);
+    setFilterSummaryError(false);
+    void loadClientFilterSummaries(editing.id).then(
+      (summary) => { if (active) setFilterSummaries(summary); },
+      () => { if (active) setFilterSummaryError(true); },
+    );
+    return () => { active = false; };
+  }, [section, editing?.id, filterSummaryRevision]);
   const loadSequenceRef = useRef(0);
   const creatorOpenedRef = useRef(false);
   const openedRecordRef = useRef<string | null>(null);
@@ -384,6 +407,7 @@ export function MasterDataPage({
     };
   }, [load]);
   async function openEditor(row: Row) {
+    setActiveWorkFilter(null);
     setCreating(false);
     setClientDetailsReady(false);
     setEditing(row);
@@ -643,6 +667,7 @@ export function MasterDataPage({
     if(saving)return;
     onDismiss?.();
     setEditing(null);
+    setActiveWorkFilter(null);
     setCreating(false);
     setError("");
   }
@@ -1264,8 +1289,8 @@ export function MasterDataPage({
       {editorOpen && (
         <div className="app-safe-fixed fixed z-[75] grid place-items-center bg-navigation/55 p-0 sm:p-4">
           <form
-            onSubmit={save}
-            onChangeCapture={event=>{if(!(event.target instanceof HTMLElement)||!event.target.closest('[data-independent-form]'))setDirty(true)}}
+            onSubmit={activeWorkFilter ? (event) => event.preventDefault() : save}
+            onChangeCapture={event=>{if(!activeWorkFilter&&(!(event.target instanceof HTMLElement)||!event.target.closest('[data-independent-form]')))setDirty(true)}}
             role="dialog"
             aria-modal="true"
             aria-labelledby="entity-edit-title"
@@ -1297,47 +1322,51 @@ export function MasterDataPage({
               </button>
             </div>
             <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pb-4 sm:px-6">
-              {section === "clients" && editing && (
+              {editing && (
                 <nav
-                  aria-label="Listas do cliente"
+                  aria-label="Separadores da ficha"
                   className="sticky top-0 z-10 -mx-4 grid grid-cols-2 gap-1.5 border-b border-border bg-surface px-4 py-2 shadow-sm sm:-mx-6 sm:grid-cols-4 lg:grid-cols-7 sm:px-6"
                 >
+                  <button type="button" aria-current={activeWorkFilter === null ? 'page' : undefined} onClick={() => setActiveWorkFilter(null)} className={`flex min-h-12 items-center justify-center rounded-lg border px-2 text-xs font-semibold ${activeWorkFilter === null ? 'border-primary bg-primary text-surface' : 'border-primary/35 text-primary'}`}>Ficha</button>
                   {[
                     [
                       "Ver todos os registos",
-                      `?view=work&clientId=${editing.id}`,
-                      "Abrir a tabela completa de registos filtrada por este Cliente.",
+                      "Abrir a tabela completa de registos desta ficha.",
                     ],
                     [
                       "Não facturados",
-                      `?view=work&clientId=${editing.id}&collectionState=uninvoiced`,
                       "Listar apenas os movimentos ainda não facturados.",
                     ],
                     [
                       "Facturados não pagos",
-                      `?view=work&clientId=${editing.id}&collectionState=unpaid`,
                       "Listar os movimentos facturados cujo pagamento continua pendente.",
                     ],
                     [
                       "Sem preço",
-                      `?view=work&clientId=${editing.id}&missingPrice=true`,
-                      "Listar movimentos deste Cliente sem preço definido.",
+                      "Listar movimentos sem preço definido.",
                     ],
                     [
                       "Sem sociedade",
-                      `?view=work&clientId=${editing.id}&missingSociety=true`,
-                      "Listar movimentos deste Cliente que ainda não têm Sociedade atribuída.",
+                      "Listar movimentos que ainda não têm Sociedade atribuída.",
                     ],
-                  ].map(([text, href, description]) => (
-                    <AppLink
+                  ].map(([text, description], index) => {
+                    const key = (['all', 'uninvoiced', 'unpaid', 'missingPrice', 'missingSociety'] as FilterKey[])[index];
+                    const summary = section === 'clients' ? filterSummaries?.[key] : undefined;
+                    return (
+                    <button type="button"
                       key={text}
-                      href={href}
                       title={description}
-                    className={`flex min-h-9 items-center justify-center rounded-lg border px-2 text-center text-[11px] font-semibold leading-tight hover:text-white ${text === "Ver todos os registos" ? "border-primary bg-primary text-surface hover:bg-primary/90" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
+                      aria-current={activeWorkFilter === key ? 'page' : undefined}
+                      onClick={() => setActiveWorkFilter(key)}
+                    className={`flex min-h-12 min-w-0 flex-col items-center justify-center rounded-lg border px-1.5 py-1 text-center text-[11px] font-semibold leading-tight hover:text-white ${activeWorkFilter === key ? "border-primary bg-primary text-surface" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
                     >
-                      {text}
-                    </AppLink>
-                  ))}
+                      <span>{text}</span>
+                      {section === 'clients' && <span className="mt-0.5 text-[10px] font-medium tabular-nums opacity-85" aria-label={summary ? `${summary.count} registos, ${formatFilterHours(summary.minutes)}, ${formatFilterMoney(summary)}` : undefined}>
+                        {summary ? `${formatFilterHours(summary.minutes)} · ${formatFilterMoney(summary)}` : filterSummaryError ? 'Resumo indisponível' : 'A calcular…'}
+                      </span>}
+                    </button>
+                  )})}
+                  {section === 'clients' && <>
                   <button
                     type="button"
                     title="Preparar, consultar ou rever as notas de honorários do cliente."
@@ -1363,13 +1392,15 @@ export function MasterDataPage({
                   >
                     Cobrança
                   </button>
+                  </>}
                 </nav>
               )}
-              {section === "clients" && (
+              {section === "clients" && activeWorkFilter === null && (
                 <nav aria-label="Páginas da ficha do cliente" className="sticky top-0 z-20 -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
                   {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['provisions','Provisões'],['credentials','Credenciais'],['documents','Documentos']] as const).map(([id,label])=><button key={id} type="button" aria-current={clientPage===id?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${clientPage===id?'border-primary bg-primary text-surface shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10'}`}>{label}</button>)}
                 </nav>
               )}
+              {activeWorkFilter && editing ? <Suspense fallback={<p role="status" className="p-4">A carregar registos…</p>}><WorkEntriesPage key={`${editing.id}-${activeWorkFilter}`} embeddedQuery={(() => { const query = new URLSearchParams(); query.set(section === 'clients' ? 'clientId' : section === 'billing_entities' ? 'billingEntityId' : 'professionalId', editing.id); if (activeWorkFilter === 'uninvoiced' || activeWorkFilter === 'unpaid') query.set('collectionState', activeWorkFilter); if (activeWorkFilter === 'missingPrice') query.set('missingPrice', 'true'); if (activeWorkFilter === 'missingSociety') query.set('missingSociety', 'true'); return query.toString(); })()} onEntrySaved={() => window.dispatchEvent(new Event('entity-record-saved'))}/></Suspense> : <>
               <fieldset
                 disabled={mode === "view" || (section === "clients" && !clientDetailsReady)}
                 data-compact={mode === "view" ? "true" : "false"}
@@ -2099,6 +2130,7 @@ export function MasterDataPage({
               {section === "clients" && editing && clientPage === "provisions" && <ClientCreditPanel key={editing.id} clientId={editing.id} readOnly={mode === "view"} onRequestEdit={()=>setMode("edit")}/>}
               {section === "clients" && editing && clientPage === "credentials" && <ClientCredentialsPanel clientId={editing.id} readOnly={mode === "view"}/>}
               {section === "clients" && editing && clientPage === "documents" && <ClientDocumentsPanel firmId={editing.firm_id} clientId={editing.id} readOnly={mode === "view"}/>}
+              </>}
               {error && (
                 <p
                   role="alert"
@@ -2116,7 +2148,7 @@ export function MasterDataPage({
               >
                 Fechar
               </button>
-              {(
+              {!activeWorkFilter && (
                 <button
                   type="button"
                   disabled={saving || !dirty}
@@ -2126,7 +2158,7 @@ export function MasterDataPage({
                   Cancelar alterações
                 </button>
               )}
-              {mode === "view" ? (
+              {!activeWorkFilter && (mode === "view" ? (
                 <button
                   type="button"
                   onClick={(event) => {
@@ -2145,7 +2177,7 @@ export function MasterDataPage({
                 >
                   {saving ? "A guardar…" : "Guardar alterações"}
                 </button>
-              )}
+              ))}
             </div>
           </form>
         </div>

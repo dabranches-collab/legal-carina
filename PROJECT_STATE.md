@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Próxima versão local 0.10.21 — 16-09-2026
+
+- Branch `codex/client-filter-summaries-0.10.21`, iniciada de `main`/`origin/main` em `7b64b305d2cab78a61d7abe852c93825a53a1881`. Produção permanece em 0.10.20; a versão 0.10.21 está apenas no servidor local `http://127.0.0.1:5173/`, confirmado por HTTP 200 e no browser integrado autenticado. Sem publicação nem migration.
+- A ficha de cliente mostra horas e montante em cada pré-filtro, calculados assincronamente por RPCs existentes e guardados em memória por um minuto. Montantes sem acesso surgem indisponíveis ou parciais. A lista de clientes abre em tabela, com alternância para caixas.
+- Os pré-filtros de clientes, sociedades e responsáveis são separadores dentro da ficha; a tabela de registos abre no mesmo diálogo. Fechar conserva a página, o URL e a lista de origem. Validação sintética E2E dos três tipos de ficha aprovada; 208 testes unitários, 10 E2E Windows/ficha e 2 E2E da matriz iPhone em claro/escuro aprovados; segurança de ficheiros, lint, tipos e build aprovados. Browser integrado autenticado confirmou a tabela por defeito, totais calculados sem bloquear a ficha e regresso à mesma lista.
+
 ## Alinhamento do checkout — 16-09-2026
 
 - Checkout `C:\Projetos\legal-carina` actualizado por fast-forward até `main`/`origin/main` em `3a7b098fc9fe7fefe19fd04992b8f66679858218`, sem alterações locais prévias. Correcção documental na branch `codex/align-version-docs-0.10.20`.
