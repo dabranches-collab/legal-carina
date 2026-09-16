@@ -67,11 +67,13 @@ for (const [name,width,height,safeTop] of models) {
 
 for (const theme of ['light','dark'] as const) {
   test(`Pesquisa dos clientes fica por trás da navegação em todos os iPhones (${theme})`, async ({ page }) => {
+    await page.addInitScript(selectedTheme=>localStorage.setItem('carina-theme',selectedTheme),theme)
     for (const [name,width,height,safeTop] of models) {
       await page.setViewportSize({ width, height })
       await page.goto(`/?qa-iphone=1&qa-demo=1&safe-top=${safeTop}&safe-bottom=34&theme=${theme}&view=clients&clientType=company&clientMode=list`)
       const search=page.getByRole('searchbox',{name:'Pesquisar clientes'})
       await expect(search, name).toBeVisible()
+      expect(await page.evaluate(()=>document.documentElement.dataset.theme), name).toBe(theme)
       expect(await page.evaluate(()=>document.documentElement.scrollWidth), name).toBeLessThanOrEqual(width)
       const toolbarFit=await search.evaluate(input=>{
         const toolbar=input.parentElement!
