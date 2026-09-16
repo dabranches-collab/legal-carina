@@ -6,11 +6,11 @@
 - Serviço: `legal-carina`.
 - Ambiente: produção.
 - URL: `https://legal-carina.dabranches.workers.dev`.
-- Versão visível: `0.10.21`.
-- Deployment activo: `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`.
-- Version ID activo: `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (100% do tráfego desde `2026-09-16 12:39:16 UTC`).
-- Commit funcional publicado e fonte canónica no GitHub: `main` em `d135ad82a287881e964732e2f8b133b175cda22c` (PR #39).
-- Rollback imediato do frontend: `bb3d809a-e94b-45ca-be7c-a8e3f6546dd3` (0.10.20). A versão 0.10.21 não inclui migration nem alterações de dados, Auth, RLS ou Storage.
+- Versão visível: `0.11.0` (notas online confirmadas por HTTP 200).
+- Deployment activo: `bebd45c9-795e-455d-80ad-32b0aec8fec2`.
+- Version ID activo: `4fc9aa65-9c37-42fd-871f-14d024e6d86d` (100% do tráfego desde `2026-09-16 19:10:46 UTC`).
+- Commit funcional publicado e fonte canónica no GitHub: `main` em `ba2a67bfbcd1129d60472456cf82c7c101f493eb` (PR #42; CI verde).
+- Rollback imediato do frontend: `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (0.10.21). A migration de leitura agregada `20260916182123` foi aplicada isoladamente e confirmada antes do deploy frontend.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 

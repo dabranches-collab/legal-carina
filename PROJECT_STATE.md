@@ -1,12 +1,14 @@
 # Estado do projecto
 
-## Versão 0.11.0 em publicação — 16-09-2026
+## Versão 0.11.0 publicada — 16-09-2026
 
-- Branch local `codex/debtors-0.11.0`, baseada no commit `6c83e85` da correcção PWA 0.10.22. GitHub `main` e produção continuam na 0.10.21 até ao deploy; produção confirmada com deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47` e version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- PR #42 fundido em GitHub `main` `ba2a67bfbcd1129d60472456cf82c7c101f493eb`. CI de validação, auditoria de dependências e scan aprovada; dry-run Cloudflare aprovado sobre o commit fundido. Produção `https://legal-carina.dabranches.workers.dev` a 0.11.0 desde 2026-09-16 19:10:46 UTC: deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d` a 100%. Notas da versão online confirmadas por HTTP 200. Rollback frontend: version ID `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (0.10.21).
+
+- Branch funcional `codex/debtors-0.11.0`, baseada no commit `6c83e85` da correcção PWA e integrada no PR #42.
 - A área «Por receber» agrega facturas pendentes, trabalho por facturar e prestações de avença pendentes, incluindo clientes que só tenham uma destas categorias. A lista tem 90 clientes acessíveis na sessão de verificação, conserva os cêntimos, distingue valores parciais, usa cartões compactos com indicadores azuis e abre ficha/registos a partir do próprio ecrã.
 - A Visão Geral distingue total por receber, facturado por receber e por facturar. Os botões ficam alinhados no fundo das seis caixas de acompanhamento. Os pré-filtros de Registos mostram horas e valor quando aplicável.
 - Migration `20260916182123_add_fast_receivables_summaries.sql` aplicada isoladamente por integração Supabase: duas funções de leitura agregada, sem DML, alterações de RLS, Auth, permissões ou segredos. O histórico remoto foi listado antes e depois, com o mesmo carimbo no ficheiro local; o projecto local não possui CLI Supabase ligada, pelo que não foi usado `db push` ou `migration repair`. Browser local confirmou 90 clientes, 7 072,50 € facturados por receber e 117 055,75 € por facturar; abertura medida em cerca de 2,1 s após a função agregada. Produção frontend ainda na 0.10.21.
-- Segurança de ficheiros, lint, tipos, 211 testes unitários e build aprovados neste lote. E2E e dry-run Cloudflare em curso antes de commit, CI e deploy.
+- Segurança de ficheiros, lint, tipos, 211 testes unitários, build, E2E focados nos quatro iPhones e dry-run Cloudflare aprovados localmente. CI completa do PR #42 aprovada antes do deploy.
 
 ## Versão 0.10.22 local em preparação
 
