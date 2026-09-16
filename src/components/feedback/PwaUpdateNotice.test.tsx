@@ -50,7 +50,7 @@ test('o aviso identifica a versão em espera e as suas alterações antes de act
  expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})
 })
 
-test('mostra novidades quando o HTML já tem a versão do worker em espera e preserva a origem',async()=>{
+test('usa a versão do worker activo quando o HTML já é novo e descarta a origem antiga',async()=>{
  localStorage.setItem('carina-release-notes-seen','0.10.2')
  localStorage.setItem('carina-release-notes-from','0.10.2')
  const service=new EventTarget(),waiting={postMessage:vi.fn((message:{type:string})=>{
@@ -59,14 +59,22 @@ test('mostra novidades quando o HTML já tem a versão do worker em espera e pre
    Object.defineProperty(event,'source',{value:waiting});service.dispatchEvent(event)
   })
  })}
+ const activeWorker={postMessage:vi.fn((message:{type:string})=>{
+  if(message.type==='GET_RELEASE_NOTES')queueMicrotask(()=>{
+   const event=new MessageEvent('message',{data:{type:'RELEASE_NOTES',release:{version:'0.10.20',changes:[]}}})
+   Object.defineProperty(event,'source',{value:activeWorker});service.dispatchEvent(event)
+  })
+ })}
  const registration=Object.assign(new EventTarget(),{waiting,update:vi.fn().mockResolvedValue(undefined)})
- Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:Object.assign(service,{ready:Promise.resolve(registration)})})
+ Object.defineProperty(navigator,'serviceWorker',{configurable:true,value:Object.assign(service,{ready:Promise.resolve(registration),controller:activeWorker})})
  render(<PwaUpdateNotice/>);
  expect(await screen.findByText(`Actualização disponível · ${installedNotes.version}`)).toBeInTheDocument()
- expect(screen.getByText('O que muda nesta versão:')).toBeInTheDocument()
+ expect(await screen.findByText('O que muda desde 0.10.20:')).toBeInTheDocument()
  for(const change of installedNotes.changes)expect(screen.getByText(change)).toBeInTheDocument()
- expect(screen.queryByText(`O que muda desde ${installedNotes.version}:`)).not.toBeInTheDocument()
+ expect(screen.getByText(installedNotes.releases[1].changes[0])).toBeInTheDocument()
+ expect(screen.getByText(installedNotes.releases[2].changes[0])).toBeInTheDocument()
+ expect(screen.queryByText(installedNotes.releases[3].changes[0])).not.toBeInTheDocument()
  await userEvent.click(screen.getByRole('button',{name:'Actualizar aplicação'}))
- expect(localStorage.getItem('carina-release-notes-from')).toBe('0.10.2')
+ expect(localStorage.getItem('carina-release-notes-from')).toBe('0.10.20')
  expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})
 })

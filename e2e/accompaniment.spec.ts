@@ -52,7 +52,7 @@ for(const entry of [
 
 test('Visão Geral mantém navegação para Registos',async({page})=>{
  await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview')
- await page.getByRole('link',{name:'Abrir movimentos de Não facturados',exact:true}).click()
+ await page.getByRole('link',{name:'Abrir movimentos de Facturados não pagos',exact:true}).click()
  await expect(page).toHaveURL(/view=work/);await expect(page.getByRole('region',{name:'Resultados do acompanhamento'})).toHaveCount(0)
 })
 
@@ -65,11 +65,11 @@ test('menu Registos limpa pré-filtros e abre a listagem completa',async({page})
  await expect(page.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
 })
 
-test('Por receber mostra zero quando não existem facturados por pagar',async({page})=>{
+test('Facturado por receber mostra zero quando não existem facturados por pagar',async({page})=>{
  await mock(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=overview')
- const card=page.getByText('Por receber',{exact:true}).locator('xpath=ancestor::article')
+ const card=page.getByText('Facturado por receber',{exact:true}).locator('xpath=ancestor::article')
  await expect(card.getByText('Sem sociedade')).toBeVisible()
- await expect(card).toContainText('0 €')
+ await expect(card).toContainText('0,00 €')
 })
 
 test('Sem sociedade apresenta apenas o total de registos sem sociedade',async({page})=>{

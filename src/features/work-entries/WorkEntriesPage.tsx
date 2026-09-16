@@ -42,6 +42,8 @@ type Entry = {
   billing_scope?: 'standard'|'retainer';
 };
 const attentionCountsCache=new Map<string,Record<string,number>>();
+type FilterSummary={minutes:number;amount:number;priced:number;count:number};
+const attentionSummariesCache=new Map<string,Record<string,FilterSummary>>();
 const attentionCacheStorageKey='carina-work-attention-counts';
 type Option = { id: string; label: string };
 type SearchMeta = {
@@ -59,7 +61,7 @@ let cacheGeneration=0;
 let cacheUser:string|null=null;
 const cacheAuthSubscription=supabase?.auth.onAuthStateChange((_event,session)=>{
   const next=session?.user.id??null;
-  if(next!==cacheUser){cacheUser=next;invalidateWorkUniverse();attentionCountsCache.clear();try{sessionStorage.removeItem(attentionCacheStorageKey)}catch{/* Sem armazenamento. */}}
+  if(next!==cacheUser){cacheUser=next;invalidateWorkUniverse();attentionCountsCache.clear();attentionSummariesCache.clear();try{sessionStorage.removeItem(attentionCacheStorageKey)}catch{/* Sem armazenamento. */}}
 });
 if(import.meta.hot)import.meta.hot.dispose(()=>cacheAuthSubscription?.data.subscription.unsubscribe());
 
@@ -223,6 +225,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
   const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>({});
+  const [reviewSummaries,setReviewSummaries]=useState<Record<string,FilterSummary>>({});
   const silentRefreshRef=useRef(false);
   const filtersBarRef=useRef<HTMLDivElement>(null);
   const [tableStickyOffset,setTableStickyOffset]=useState(112);
@@ -359,6 +362,28 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     })();
     return()=>{active=false};
   },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
+  useEffect(()=>{
+    if(embeddedQuery!==undefined||!supabase)return;
+    let active=true;
+    const common={p_search:query||null,p_year:year?Number(year):null,p_professional_id:professional||null,p_billing_entity_id:billing||null,p_archive:archive||null,p_client_type:clientType||null,p_client_id:clientId||null};
+    const key=JSON.stringify(common),cached=attentionSummariesCache.get(key);
+    if(cached){setReviewSummaries(cached);return()=>{active=false}};
+    const kinds=['missing_price','uninvoiced','unpaid','historical','retainer'] as const;
+    void Promise.resolve(supabase.rpc('get_work_attention_summaries',common)).then(async fast=>{
+      if(!active)return;
+      if(!fast.error){const summaries=fast.data as Record<string,FilterSummary>;attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);return}
+      if(fast.error.code!=='PGRST202')return;
+      const results=await Promise.all([...kinds.map(kind=>supabase!.rpc('get_attention_work_entries',{...common,p_kind:kind})),supabase!.rpc('search_work_entries',{...common,p_page:1,p_page_size:10000,p_missing_society:true})]);
+      if(!active||results.some(result=>result.error))return;
+      const summaries:Record<string,FilterSummary>={};
+      [...kinds,'missing_society'].forEach((kind,index)=>{
+        const rows=(results[index].data as {items?:Entry[]}|null)?.items??[];
+        summaries[kind]=rows.reduce((total,row)=>({minutes:total.minutes+Number(row.duration_minutes||0),amount:total.amount+Number(row.effective_amount||0),priced:total.priced+(row.effective_amount==null?0:1),count:total.count+1}),{minutes:0,amount:0,priced:0,count:0});
+      });
+      attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);
+    }).catch(()=>undefined);
+    return()=>{active=false};
+  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
   const clear = () => {
     setSearch("");
     setQuery("");
@@ -382,7 +407,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
   const reviewLabels: Record<string, string> = {
     missing_society: "Sem sociedade",
     missing_price: "Sem preço",
-    uninvoiced: "Por facturar",
+    uninvoiced: "Trabalho por facturar",
     unpaid: "Facturados não pagos",
     historical: "Pagos s/ factura ou data",
     retainer: "Cobertos por avença",
@@ -594,6 +619,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
         <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
           {Object.entries(reviewLabels).map(([value, label]) => {
             const active = reviewIssue === value;
+            const summary=reviewSummaries[value];
+            const showMoney=value!=='missing_price'&&value!=='retainer'&&summary&&summary.priced>0;
             return (
               <button
                 key={value}
@@ -603,7 +630,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
                 onClick={() => selectReviewIssue(value)}
                 className={`flex min-h-12 items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-xs font-semibold leading-tight transition ${active ? "border-danger bg-danger text-surface shadow-sm" : "border-danger/35 bg-surface text-text-primary hover:border-danger hover:bg-danger-soft"}`}
               >
-                <span>{label}</span>
+                <span><span className="block">{label}</span>{summary&&<span className="mt-1 block text-[11px] font-medium tabular-nums opacity-85">{Math.floor(summary.minutes/60)} h{summary.minutes%60?` ${summary.minutes%60} min`:''}{showMoney?` · ${money.format(summary.amount)}${summary.priced<summary.count?' parcial':''}`:''}</span>}</span>
                 <span className={`inline-flex min-w-10 shrink-0 justify-center rounded-md px-2 py-1 text-sm font-bold tabular-nums ${active?'bg-surface text-danger':'bg-danger text-surface'}`} aria-label={`${reviewCounts[value]??'a calcular'} registos`}>
                   {reviewCounts[value]??"—"}
                 </span>

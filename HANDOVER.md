@@ -1,5 +1,22 @@
 # Legal Carina — handover
 
+## Versão 0.11.0 em publicação — recebimentos e pré-filtros
+
+- Branch `codex/debtors-0.11.0` a partir de `6c83e85`, que inclui o aviso PWA por versão instalada (0.10.22). GitHub `main` e frontend Cloudflare mantêm 0.10.21 antes do deploy: `d445c1ff1b0da86137391b40d4a70b8eb95b9078`, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- O utilizador autorizou a publicação após os ajustes visuais. A lista «Por receber» inclui facturado não pago, trabalho e avenças por facturar; total conhecido ordenado, parcial explicitado, cartões compactos e realce azul só nas categorias aplicáveis. Nomes reforçados, ficha e registos acessíveis. O cálculo foi deslocado para uma função agregada e a abertura local mediu cerca de 2,1 s; 90 clientes, 7 072,50 € facturados por receber e 117 055,75 € por facturar na sessão de verificação.
+- A Visão Geral tem seis caixas de acompanhamento alinhadas com acções no fundo. «Total por receber» soma facturado e por facturar; os valores têm cêntimos. Registos apresenta horas e montante por pré-filtro conforme aplicável.
+- A caixa «Por facturar: trabalho e avenças» separa o total de 117 055,75 € em trabalho (78 695,75 €) e avenças (38 360,00 €); o pré-filtro «Trabalho por facturar» em Registos cobre apenas a primeira parcela. Em «Por receber», as quatro caixas de valor de cada cliente abrem os movimentos correspondentes no próprio ecrã, com edição de registos e prestações; fechar regressa à posição da lista. Os botões «Abrir ficha» estão alinhados à direita dos nomes, sem fila de atalhos inferior.
+- O menu móvel desloca o emblema da Justiça com a própria área rolável da navegação para impedir sobreposição nos iPhones curtos após a adição de «Por Receber».
+- Migration `20260916182123_add_fast_receivables_summaries.sql` aplicada isoladamente pelo conector Supabase, após leitura do histórico remoto; o carimbo local coincide com o remoto. Apenas duas funções de leitura agregada. Nenhum dado, RLS, Auth, acesso, Storage ou segredo foi alterado. O checkout não tem CLI Supabase ligada; não executar `db push` ou `migration repair` sobre a divergência histórica. Validar a correspondência dos totais e as permissões antes do deploy frontend.
+- Gates locais aprovados até agora: segurança de ficheiros, lint, TypeScript, 211 testes unitários e build. E2E, dry-run Cloudflare, CI, merge e deploy ainda pendentes neste ponto do handover.
+
+## Versão 0.10.22 em preparação — aviso PWA por equipamento
+
+- Branch `codex/pwa-update-delta-0.10.22` a partir de GitHub `main`/checkout local limpos em `d445c1ff1b0da86137391b40d4a70b8eb95b9078`. Produção permanece 0.10.21, deployment `dbfc95fa-7524-4d3e-bbdf-1af3ac753b47`, version `13705d2c-925f-4848-a3a0-ff1b599b8d4b`.
+- O aviso consulta a versão do service worker activo em cada equipamento e mostra apenas as alterações posteriores a essa versão até à versão em espera. Ao aceitar, grava essa origem para o resumo mostrado após o reinício, substituindo origens antigas guardadas no navegador. O caso em que o HTML novo chega antes de o worker activar também usa a versão activa.
+- Alteração apenas de frontend/PWA e notas de versão. Sem migration ou alteração de dados, Auth, RLS, Storage, permissões ou segredos. Publicação ainda não autorizada para este lote.
+- Validação local: segurança de ficheiros, lint, tipos, 38 ficheiros/208 testes unitários e build aprovados. Teste sintético cobre origem antiga no armazenamento local e HTML 0.10.22 com worker 0.10.20 activo, mostrando só as novidades 0.10.21–0.10.22.
+
 ## Release 0.10.21 publicada — 16-09-2026
 
 - Ordem explícita «publica» recebida. Branch funcional `codex/client-filter-summaries-0.10.21`, commit `fa748233f51f5a9b30dff637ff89ea8425dbf181`; PR #39 fundido em GitHub `main` no commit `d135ad82a287881e964732e2f8b133b175cda22c`. A CI do PR `35094727970`, a auditoria e o secret scan passaram. A CI pós-merge `35095703677` passou na segunda execução: a primeira falhou num teste antigo da data de repartição, aprovado isoladamente antes da repetição. Dry-run Cloudflare com `--strict --keep-vars` aprovado a partir da `main` limpa.

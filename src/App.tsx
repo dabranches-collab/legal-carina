@@ -10,6 +10,7 @@ import { AuthContext, useAuth } from './features/auth/AuthContext'
 
 const OverviewPage=lazy(()=>import('./pages/OverviewPage').then(module=>({default:module.OverviewPage})))
 const WorkEntriesPage=lazy(()=>import('./features/work-entries/WorkEntriesPage').then(module=>({default:module.WorkEntriesPage})))
+const DebtorsPage=lazy(()=>import('./features/collections/DebtorsPage').then(module=>({default:module.DebtorsPage})))
 const EntityDashboard=lazy(()=>import('./features/entities/EntityDashboard').then(module=>({default:module.EntityDashboard})))
 const ClientLandingPage=lazy(()=>import('./features/entities/ClientLandingPage').then(module=>({default:module.ClientLandingPage})))
 const BillingLandingPage=lazy(()=>import('./features/entities/BillingLandingPage').then(module=>({default:module.BillingLandingPage})))
@@ -25,7 +26,7 @@ const RetainersPage=lazy(()=>import('./features/master-data/RetainersPage').then
 const NotesPage=lazy(()=>import('./features/notes/NotesPage').then(module=>({default:module.NotesPage})))
 const CreateWorkEntryModal=lazy(()=>import('./features/work-entries/CreateWorkEntryModal').then(module=>({default:module.CreateWorkEntryModal})))
 
-const validViews:ViewId[] = ['overview','work','notes','clients','retainers','provisions','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
+const validViews:ViewId[] = ['overview','work','debtors','notes','clients','retainers','provisions','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 const ownerViews:ViewId[]=['admin-access-logs']
 const workPrefilterParams=['professionalId','billingEntityId','invoiced','paid','collectionState','missingSociety','missingPrice','clientId'] as const
@@ -89,6 +90,7 @@ export function AuthenticatedApplication() {
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage />
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
+  else if (view === 'debtors') content = <DebtorsPage />
   else if (view === 'notes') content = <NotesPage />
   else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')} onRetainers={()=>navigate('retainers')}/>
   else if (view === 'provisions') content = <ProvisionsPage />

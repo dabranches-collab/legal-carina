@@ -11,6 +11,7 @@ const demoRpc:Record<string,unknown>={
  get_attention_work_entries:{items:[],total:0,page:1,pageSize:100,professionals:[],billingEntities:[]},
  get_uncollectible_work_entries:{items:[],total:0,page:1,pageSize:100,professionals:[],billingEntities:[]},
  get_work_attention_counts:{missing_society:0,missing_price:0,uninvoiced:0,unpaid:0,uncollectible:0,retainer:0},
+ get_work_attention_summaries:{},get_receivable_client_summary:[],
  get_work_entry_form_options:{societies:[],clientProfiles:[],responsibles:[],processes:[]},
  get_client_category_summaries:[],get_retainer_management:[],get_professional_landing_summaries:[],get_dashboard_metric_breakdowns:[],get_client_document_action_flags:[],
 }
