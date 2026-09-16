@@ -72,14 +72,19 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
     }else await route.fulfill({json:{items:input.items.map((item:{id:string;kind:string})=>({...item,text:item.kind==='work'?`${translated} ${item.id}`:expense}))}})
   })
   await page.route('**/rest/v1/work_entry_expenses?*',route=>{const ids=new URL(route.request().url()).searchParams.get('work_entry_id')?.split(/[(),]/)??[];return route.fulfill({json:ids.includes(rows[0].id)?[{id:'expense-qa',work_entry_id:rows[0].id,amount:5,currency:'EUR',observations:'Correio registado'}]:[]})})
-  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
+  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
   await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
   await page.getByLabel(`Seleccionar todos os ${rows.length} movimentos`).check()
   await page.getByLabel('Idioma do documento').selectOption(language)
   for(const width of [1440,768,390,320])for(const theme of ['light','dark']){
     await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.documentElement.dataset.theme=theme,theme)
     await expect(page.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeVisible()
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+    const layout=await page.evaluate(()=>({
+      viewport:innerWidth,
+      document:document.documentElement.scrollWidth,
+      overflow:[...document.querySelectorAll<HTMLElement>('body *')].filter(element=>element.getBoundingClientRect().right>innerWidth+1&&getComputedStyle(element).position!=='fixed').slice(0,8).map(element=>({tag:element.tagName,className:element.className,right:Math.round(element.getBoundingClientRect().right)})),
+    }))
+    expect(layout.document,JSON.stringify(layout)).toBeLessThanOrEqual(layout.viewport)
     if(width===390)await page.screenshot({path:`.tmp/translation-${language}-${theme}-iphone.png`})
   }
   const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click();const download=await pending
@@ -123,8 +128,9 @@ for(const document of [
   test(`gera PDF real multipágina de ${document.button}`,async({page})=>{
     await page.setViewportSize({width:1440,height:900})
     await page.addInitScript(()=>{const NativeDate=Date;class FixedDate extends NativeDate{constructor(...args:ConstructorParameters<typeof Date>){super(...(args.length?args:['2026-09-04T12:00:00Z']) as ConstructorParameters<typeof Date>)}static now(){return new NativeDate('2026-09-04T12:00:00Z').getTime()}};window.Date=FixedDate as DateConstructor})
-    await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
-    await page.getByTitle(document.button==='Cobrança'?'Seleccionar movimentos facturados e não pagos para reforçar a cobrança.':'Preparar, consultar ou rever notas de honorários deste cliente.').click()
+    await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
+    if(document.button==='Cobrança')await page.locator('button[title="Há movimentos facturados e não pagos para cobrar."]').click()
+    else await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
     await expect(page.getByText(`Seleccionar todos os ${rows.length} movimentos`)).toBeVisible()
     await page.getByLabel(`Seleccionar todos os ${rows.length} movimentos`).check()
     const downloadPromise=page.waitForEvent('download')

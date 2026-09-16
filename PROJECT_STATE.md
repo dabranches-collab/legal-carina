@@ -1,5 +1,19 @@
 # Estado do projecto
 
+## Candidato 0.10.19 em preparação — 16-09-2026
+
+- Publicação autorizada; PR #33 aberto. A navegação móvel deixa de ser tapada pela barra de pesquisa dos clientes; a barra mantém os controlos dentro da caixa mesmo a 320 px. Teste de regressão nos 11 modelos de iPhone em claro e escuro. A versão continua apenas no checkout e na branch GitHub até concluir CI, merge e confirmação do deploy. Sem escrita na base de dados, Auth ou permissões.
+
+- Branch `codex/client-summary-cards-0.10.19`: cartões de contas enviados ao GitHub em `b784a1f5d411b29baa92ff06728a9491fc5d3c69`; listas de clientes no commit `4d88ac4`, com PR #33 aberto. `origin/main` permanece em `bd8159f59840db88dbc91e8627a1cc57d5f221f1`. A produção permanece em 0.10.18 (deployment `cee7d3d1-709b-4436-aa99-a1cb8c755af7`, version `4f24cadf-9d5a-4844-9ee5-be5c29346550`, activa desde `2026-09-16 07:01:39 UTC`). A publicação da 0.10.19 foi autorizada e aguarda as validações finais.
+- Avenças e provisões passam a cartões detalhados com atalhos para ficha e registos. A avença apresenta o valor do período contratual e o equivalente anual calculado pela periodicidade, sem valores de demonstração na vista autenticada.
+- As listas de clientes Particulares, Empresas e Mistos passam a caixas compactas por defeito; permitem regressar à tabela. A pesquisa, a alternância e a criação partilham uma linha fixa. Cobrança activa fica vermelha e indisponível fica verde suave; os botões conservam os rótulos Ficha/Nota/Cobrança, com explicações apenas ao passar o rato. Este lote está no commit `4d88ac4`, ainda não em produção.
+- Provisões separam saldo contabilístico e posição económica após todo o trabalho elegível com valor, incluindo o facturado mas não pago. O trabalho já abatido numa nota não volta a contar; a nota vigente contribui pelo remanescente indicado a pagar. Tanto o trabalho ainda sem nota como o remanescente podem produzir posição negativa. O livro não confirma pagamentos externos das notas, pelo que a posição não é dívida contabilística confirmada.
+- Consulta remota exclusivamente de leitura confirmou a coerência do livro de provisões e da nota vigente num caso reportado: crédito líquido e desconto equivalentes, saldo de provisão zero e remanescente da nota por liquidar segundo o documento. Nenhum dado, utilizador, permissão ou schema foi alterado.
+- A lista «Ver os registos considerados na provisão» passa a incluir também os registos das notas activas, não apenas os ainda sem nota. A conta reportada tinha 30 registos na nota vigente apesar de zero registos por lançar.
+- Auditoria transversal de leitura: 137 prestações de avença em EUR permanecem `pending` (38 360 €), sem nenhuma marcada `invoiced` ou `paid`; o cartão e a ficha passam a mostrar o total gerado ainda sem pagamento, mas isto não prova incumprimento nem substitui a confirmação de cada prestação. Há 62 registos avulsos facturados e não pagos, 83 registos facturáveis sem preço e 5 registos marcados pagos sem indicador de factura; não foram corrigidos automaticamente, pois exigem verificação documental.
+- A emissão de Nota de Honorários não actualiza `is_invoiced`/`is_paid`; a ficha da prestação de avença distingue `pending`/`invoiced`/`paid`. Para garantir quitação auditável e parcial de notas, falta uma ligação explícita entre pagamentos, documentos e registos; não presumir liquidação por emissão de nota ou factura.
+- Browser integrado local autenticado confirmou a versão 0.10.19, os valores de avença reais e a distinção entre provisão e nota. Segurança de ficheiros, lint, TypeScript, 38 ficheiros/207 testes unitários, build, nove E2E focados e suite integral com 119 aprovados/3 condicionais ignorados; CI ainda pendente.
+
 ## Release 0.10.18 publicada — 16-09-2026
 
 - O nome do pré-filtro «Facturados sem data / estados históricos» foi substituído por «Pagos s/ factura ou data», conforme escolha expressa do utilizador.

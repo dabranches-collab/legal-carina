@@ -1,5 +1,17 @@
 # Legal Carina — handover
 
+## Candidato 0.10.19 local — 16-09-2026
+
+- Publicação da 0.10.19 autorizada pelo utilizador; PR #33 aberto para `main`. Antes do deploy, detectou-se que a barra de pesquisa fixa se sobrepunha à navegação móvel. A camada da sidebar e do respectivo fundo foi corrigida; teste de regressão cobre os 11 modelos de iPhone da matriz local em claro e escuro. Sem alteração de dados, utilizadores ou permissões. A produção mantém-se em 0.10.18 até CI, merge e deploy confirmados.
+
+- Checkout canónico `C:\Projetos\legal-carina`, branch `codex/client-summary-cards-0.10.19`, commits de código `b784a1f5d411b29baa92ff06728a9491fc5d3c69` (cartões de contas) e `4d88ac4` (listas de clientes); push da branch confirmado até ao handover `8c6f3cd` em 16-09-2026. A versão em preparação é 0.10.19; GitHub `main` continua em `bd8159f59840db88dbc91e8627a1cc57d5f221f1` (0.10.18). Produção: `https://legal-carina.dabranches.workers.dev`, 0.10.18, deployment `cee7d3d1-709b-4436-aa99-a1cb8c755af7`, version `4f24cadf-9d5a-4844-9ee5-be5c29346550`, activa desde `2026-09-16 07:01:39 UTC`. Sem deploy da 0.10.19.
+- Cartões de avenças e provisões com detalhes e atalhos; avenças com valor contratual por período e equivalente anual. A demonstração local ficou explicitamente marcada como sintética; a vista autenticada não usa os valores de teste.
+- As provisões apresentam separadamente saldo contabilístico e posição económica, incluindo trabalho já realizado e facturado mas não pago. O trabalho de notas activas conta via remanescente da nota, sem duplicação; o trabalho ainda sem nota conta pelo valor com IVA. Não existe estado de pagamento fiável dessas notas na conta de provisão. A verificação remota foi somente leitura e não modificou dados, Auth, RLS, utilizadores, permissões, migrations ou segredos.
+- O detalhe «Ver os registos considerados na provisão» agrega registos da nota activa e registos ainda sem nota; não fica vazio quando a conta está esgotada por um abatimento documentado.
+- As listas de clientes Particulares, Empresas e Mistos abrem em caixas compactas com pesquisa e alternância para tabela. A barra de pesquisa, apresentação e criação é fixa numa linha; as acções Ficha, Nota e Cobrança preservam os nomes, e só as descrições ao passar o rato explicam a ficha e a existência ou ausência de movimentos facturados por cobrar. Cobrança activa a vermelho, indisponível a verde suave. Código no commit `4d88ac4`; notas deste handover num commit documental posterior.
+- Auditoria agregada read-only: 137 prestações de avença `pending` em EUR (38 360 €), nenhuma `paid`/`invoiced`; 62 registos avulsos facturados não pagos, 83 facturáveis sem preço e 5 assinalados pagos sem indicador de factura. Sem escrita remota. A relação pagamento-documento-registo não é suficientemente explícita para inferir liquidação parcial de notas; requer desenho e reconciliação próprios antes de mudar estados históricos.
+- Segurança de ficheiros, lint, TypeScript, build, 38 ficheiros/207 testes unitários, dry-run Cloudflare e regressão móvel em 11 modelos de iPhone (claro/escuro) concluídos. Suite E2E integral e CI do PR #33 em validação; não efectuar deploy antes de ambas estarem verdes e do merge em `main`.
+
 ## Release 0.10.18 publicada — pré-filtro de facturação — 16-09-2026
 
 - O pré-filtro anteriormente apresentado como «Facturados sem data / estados históricos» passa a chamar-se «Pagos s/ factura ou data», conforme escolha expressa do utilizador.

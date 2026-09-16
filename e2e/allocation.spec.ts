@@ -245,7 +245,7 @@ test('repartição por período, pagos, campos e responsáveis completos',async(
  for(const name of ['Carina Santos','Hugo Mendonça','Paula Chaves'])await expect(page.getByRole('heading',{name,exact:true})).toBeVisible()
 })
 test('angariador existe na ficha de todos os clientes e permite preencher retroactivamente',async({page})=>{
- await page.goto(`${demo}&view=clients&clientType=company&clientMode=list`)
+ await page.goto(`${demo}&view=clients&clientType=company&clientMode=list&clientLayout=table`)
  await page.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true}).dblclick()
  const select=page.getByLabel('Angariador do cliente',{exact:true})
  await expect(select).toHaveValue('')

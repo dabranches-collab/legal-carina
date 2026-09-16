@@ -65,6 +65,40 @@ for (const [name,width,height,safeTop] of models) {
   })
 }
 
+for (const theme of ['light','dark'] as const) {
+  test(`Pesquisa dos clientes fica por trás da navegação em todos os iPhones (${theme})`, async ({ page }) => {
+    await page.addInitScript(selectedTheme=>localStorage.setItem('carina-theme',selectedTheme),theme)
+    for (const [name,width,height,safeTop] of models) {
+      await page.setViewportSize({ width, height })
+      await page.goto(`/?qa-iphone=1&qa-demo=1&safe-top=${safeTop}&safe-bottom=34&theme=${theme}&view=clients&clientType=company&clientMode=list`)
+      const search=page.getByRole('searchbox',{name:'Pesquisar clientes'})
+      await expect(search, name).toBeVisible()
+      expect(await page.evaluate(()=>document.documentElement.dataset.theme), name).toBe(theme)
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth), name).toBeLessThanOrEqual(width)
+      const toolbarFit=await search.evaluate(input=>{
+        const toolbar=input.parentElement!
+        const right=toolbar.getBoundingClientRect().right
+        return [...toolbar.children].every(element=>element.getBoundingClientRect().right<=right+1)
+      })
+      expect(toolbarFit, name).toBe(true)
+      await page.getByRole('button',{name:'Abrir navegação'}).click()
+      const sidebar=page.getByRole('complementary',{name:'Navegação principal'})
+      await expect(sidebar, name).toBeVisible()
+      const layering=await page.evaluate(()=>{
+        const search=document.querySelector<HTMLInputElement>('input[aria-label="Pesquisar clientes"]')!
+        const sidebar=document.querySelector<HTMLElement>('aside[aria-label="Navegação principal"]')!
+        const rect=search.getBoundingClientRect()
+        const x=Math.max(rect.left,0)+Math.min(rect.width,80)/2
+        const y=rect.top+rect.height/2
+        return {overlaps:sidebar.getBoundingClientRect().right>x, covered:sidebar.contains(document.elementFromPoint(x,y))}
+      })
+      expect(layering.overlaps, name).toBe(true)
+      expect(layering.covered, name).toBe(true)
+      await page.getByRole('button',{name:'Fechar navegação'}).click({position:{x:width-20,y:height/2}})
+    }
+  })
+}
+
 test('atalho global cria registos e importações deixam de aparecer na navegação',async({page})=>{
   await page.setViewportSize({width:390,height:844})
   await page.goto('/?qa-iphone=1&qa-role=admin&safe-top=47&safe-bottom=34&view=overview')

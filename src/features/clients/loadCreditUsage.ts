@@ -15,7 +15,7 @@ export async function loadCreditUsage(detail:CreditDetail){
  do{
   const response=await supabase.from('work_entries').select('id,client_id,billing_entity_id,currency,work_date,activity_description,duration_minutes,effective_amount,billing_scope,is_billable,is_paid,is_invoiced,status',{count:'exact'})
    .eq('client_id',account.client_id).eq('billing_entity_id',account.billing_entity_id).eq('currency',account.currency)
-   .gte('work_date',empty.startsOn).lte('work_date',today).eq('billing_scope','standard').eq('is_billable',true).eq('is_paid',false).eq('is_invoiced',false)
+   .gte('work_date',empty.startsOn).lte('work_date',today).eq('billing_scope','standard').eq('is_billable',true).eq('is_paid',false)
    .order('work_date').order('id').range(items.length,items.length+999)
   if(response.error)throw response.error
   total=response.count??response.data.length

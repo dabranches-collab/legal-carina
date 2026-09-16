@@ -14,7 +14,7 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
   else {body=data(rpc,table,args);if(table==='billing_entities'&&url.searchParams.get('select')!=='id,name')body=(body as unknown[])[0]}
   await route.fulfill({contentType:'application/json',body:JSON.stringify(body)})
  })
- await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients')
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
  const dialog=page.getByRole('dialog',{name:'Nota de Honorários · Cliente Sintético'})
  await expect(dialog.getByLabel('Seleccionar todos os 2 movimentos')).toBeVisible()

@@ -3,7 +3,7 @@ import { createQaAllocationData } from '../src/lib/qaAllocationData'
 
 const id=(n:number)=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`
 test('predefinição acessível no iPhone e tablet, em claro e escuro',async({page},testInfo)=>{
- await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
+ await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  for(const width of [390,768]){
   await page.setViewportSize({width,height:844})
   for(const theme of ['claro','escuro']){
@@ -64,7 +64,7 @@ test('ficha mostra só a vertente activa e guarda sociedade e novo angariador re
   const result=table==='client_referrers'?directory:fixture(rpc,table,args,url,req.method(),req.headers().accept?.includes('vnd.pgrst.object')??false)
   await route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
  })
- await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  const cell=page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}),dialog=page.getByRole('dialog')
  await cell.dblclick()
  await expect(dialog.getByRole('button',{name:'Editar',exact:true})).toHaveCount(0)
@@ -107,7 +107,7 @@ test('ficha mostra só a vertente activa e guarda sociedade e novo angariador re
  await expect(dialog.getByRole('button',{name:'Predefinir valor/hora',exact:true})).toBeVisible()
  await expect(dialog.getByLabel('Angariador do cliente',{exact:true})).toHaveValue(id(60))
  await dialog.getByRole('button',{name:'Fechar',exact:true}).first().click()
- await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=company&clientMode=list')
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=company&clientMode=list&clientLayout=table')
  await page.getByRole('cell',{name:'Cliente Demonstração Beta',exact:true}).dblclick()
  await expect(dialog.getByRole('checkbox',{name:'Particular',exact:true})).toHaveCount(0)
 
@@ -122,7 +122,7 @@ test('muda um cliente particular para empresa com novo código canónico',async(
   if(!rpc&&['POST','PATCH'].includes(req.method()))writes.push({table,method:req.method(),args})
   await route.fulfill({contentType:'application/json',body:JSON.stringify(fixture(rpc,table,args,url,req.method(),req.headers().accept?.includes('vnd.pgrst.object')??false))})
  })
- await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).dblclick()
  const dialog=page.getByRole('dialog')
  await dialog.getByRole('button',{name:'Acrescentar vertente Empresa',exact:true}).click()
