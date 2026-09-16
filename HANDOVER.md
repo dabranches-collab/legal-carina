@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## Release 0.10.18 em preparação — pré-filtro de facturação — 16-09-2026
+
+- O pré-filtro anteriormente apresentado como «Facturados sem data / estados históricos» passa a chamar-se «Pagos s/ factura ou data», conforme escolha expressa do utilizador.
+- Alteração exclusivamente de interface, com teste de regressão e nota de versão incluída no resumo acumulado apresentado na actualização. Não altera a regra do filtro, os movimentos, o Supabase, Auth, RLS, Storage, Edge Functions, utilizadores, permissões ou segredos.
+- Branch local `codex/rename-historical-filter-0.10.18`, criada a partir de `main`/`origin/main` em `cad59ef8ec6311970f209e6412c7430671337066`. Produção permanece na 0.10.17 até ordem explícita «publica».
+
 ## Release 0.10.17 publicada — identidade documental — 15-09-2026
 
 - A geração formal valida agora a sociedade emissora antes de criar qualquer PDF ou Word. Se o nome da sociedade, o rodapé, o logótipo ou os dados bancários não pertencerem à mesma entidade, a geração é bloqueada em segurança; deixou de existir qualquer fallback que possa colocar a marca LEGALTEAM num documento da Carina Santos ou de outra sociedade.

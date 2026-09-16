@@ -80,6 +80,7 @@ describe('interface principal', () => {
     expect(await screen.findByRole('table', { name: 'Registos de trabalho' }, { timeout: 5000 })).toBeInTheDocument()
     expect(window.location.search).toBe('?view=work')
     expect(screen.getByRole('button',{name:'Facturados não pagos'})).toHaveAttribute('aria-pressed','false')
+    expect(screen.getByRole('button',{name:'Pagos s/ factura ou data'})).toHaveAttribute('aria-pressed','false')
     expect(screen.getByRole('button',{name:'Sem preço'})).toHaveAttribute('aria-pressed','false')
     expect(vi.mocked(supabase!.rpc)).toHaveBeenCalledWith('search_work_entries',expect.objectContaining({p_billing_entity_id:null,p_invoiced:null,p_paid:null,p_missing_price:false,p_missing_society:false}))
   }, 15000)

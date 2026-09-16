@@ -1,12 +1,24 @@
 {
-  "version": "0.10.17",
+  "version": "0.10.18",
   "changes": [
-    "As notas de honorários guardadas podem ser abertas numa pré-visualização sem criar uma nova versão e os botões Guardar PDF como e Guardar Word como permitem escolher a pasta e o nome do ficheiro.",
-    "Os logótipos dos documentos ficam maiores e conservam melhor qualidade, com remoção automática das margens brancas.",
-    "Na ficha da sociedade, cada margem do logótipo pode ser ajustada separadamente, sem deslocar as restantes.",
-    "A geração de PDF e Word confirma a identidade da sociedade emissora e bloqueia qualquer combinação de logótipo, rodapé ou dados bancários pertencentes a outra sociedade."
+    "O pré-filtro de movimentos com facturação irregular passa a chamar-se «Pagos s/ factura ou data», tornando o seu objectivo mais claro."
   ],
   "releases": [
+    {
+      "version": "0.10.18",
+      "changes": [
+        "O pré-filtro de movimentos com facturação irregular passa a chamar-se «Pagos s/ factura ou data», tornando o seu objectivo mais claro."
+      ]
+    },
+    {
+      "version": "0.10.17",
+      "changes": [
+        "As notas de honorários guardadas podem ser abertas numa pré-visualização sem criar uma nova versão e os botões Guardar PDF como e Guardar Word como permitem escolher a pasta e o nome do ficheiro.",
+        "Os logótipos dos documentos ficam maiores e conservam melhor qualidade, com remoção automática das margens brancas.",
+        "Na ficha da sociedade, cada margem do logótipo pode ser ajustada separadamente, sem deslocar as restantes.",
+        "A geração de PDF e Word confirma a identidade da sociedade emissora e bloqueia qualquer combinação de logótipo, rodapé ou dados bancários pertencentes a outra sociedade."
+      ]
+    },
     {
       "version": "0.10.16",
       "changes": [
