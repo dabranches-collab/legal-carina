@@ -113,6 +113,9 @@ begin
  else
   if entry.billing_scope<>'fixed_fee' then return;end if;
   update public.work_entries set fixed_fee_job_id=null,billing_scope='standard' where id=entry.id;
+  -- Reposição da facturação normal: aplicar as regras de preço vigentes.
+  -- Se não existir regra, o montante continua vazio para revisão humana.
+  perform private.recalculate_work_entries(array[entry.id],false,true);
  end if;
  insert into public.manual_overrides(firm_id,work_entry_id,field_name,previous_value,calculated_value,override_value,reason,created_by)
  values(entry.firm_id,entry.id,'fixed_fee_job_id',to_jsonb(entry.fixed_fee_job_id),null,coalesce(to_jsonb(p_fixed_fee_job_id),'null'::jsonb),coalesce(nullif(btrim(p_reason),''),'Associação a trabalho de preço fixo'),auth.uid());
