@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 18-09-2026 — publicação 0.12.0 preparada; salvaguarda de Storage por confirmar
+
+- O PR #44 foi fundido em `main` (`0c07b3a69465cf1720409d0f44267882d44b0bff`); a CI pós-merge `35382799995` passou. A árvore de ficheiros local coincide com `origin/main`. As duas migrations novas foram testadas numa branch Supabase temporária, com 32 verificações pgTAP e rollback; a branch foi apagada.
+- O painel Supabase confirmou backup físico recuperável de `2026-09-18 05:46:14 UTC`. PITR não está activo. O próprio painel confirma que backups da base não incluem os objectos de Storage. Há 13 objectos privados em produção; não foi possível confirmar cópia independente recuperável. O utilizador desconhece se existe e autorizou a publicação, mas `docs/NEW_COMPUTER_PROTOCOL.md` bloqueia migrations enquanto esta salvaguarda não estiver confirmada. Nenhuma migration nem deploy da 0.12.0 foi efectuado.
+- Produção permanece na 0.11.0, deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d`. Aplicar as migrations `20260918133000` e `20260918144500` isoladamente e publicar o Worker somente após confirmar uma cópia privada independente dos objectos de Storage. Não guardar ficheiros reais de clientes no repositório ou no checkout.
+
 ## 18-09-2026 — validação da 0.12.0 antes da publicação
 
 - Produção mantém-se na 0.11.0; o código de preço fixo está na branch `codex/fixed-fee-work-0.12.0`, PR #44. A ordem explícita «publica» foi recebida.
