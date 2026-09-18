@@ -1,5 +1,16 @@
 # Estado do projecto
 
+## 18-09-2026 — produção 0.12.0 confirmada
+
+- GitHub `main` `0c07b3a69465cf1720409d0f44267882d44b0bff`, PR #44, CI pós-merge `35382799995` verde. Cloudflare `legal-carina`, `https://legal-carina.dabranches.workers.dev`, deployment `79c904bb-d22a-4186-8100-a92d3f037381`, version ID `e883ea13-7987-4c49-8e76-9914f4a21c36`, 100% desde `2026-09-18 19:48:25 UTC`. Notas de versão HTTP 200/0.12.0 e browser integrado online confirmados.
+- Backup físico Supabase recuperável de `2026-09-18 05:46:14 UTC`. Cópia independente dos 13 objectos privados para R2 `legal-carina-private-backups`, localização WEUR, prefixo `2026-09-18/`, 5 316 688 bytes, com leitura de retorno e comparação SHA-256 individual. PITR inactivo. A chave temporária e o receptor local foram removidos.
+- Migrations de produção `20260918194437_add_fixed_fee_jobs` e `20260918194504_add_fixed_fee_honorarium_notes` confirmadas. Linha de base após aplicação: Auth 5, membros 5, Storage privado 13, RLS activo nas novas tabelas, sem dados sintéticos ou trabalhos criados automaticamente. TypeScript, build e dry-run aprovados no `main` antes do deploy.
+
+## 18-09-2026 — 0.12.0 pronta no GitHub; produção aguarda cópia de Storage
+
+- `main` contém o PR #44 no commit `0c07b3a69465cf1720409d0f44267882d44b0bff`; CI pós-merge `35382799995` verde. Produção continua 0.11.0 (`bebd45c9-795e-455d-80ad-32b0aec8fec2` / `4fc9aa65-9c37-42fd-871f-14d024e6d86d`). As duas migrations da 0.12.0 passaram em branch Supabase descartada, incluindo 32 testes pgTAP sintéticos.
+- Backup físico Supabase confirmado no painel: `2026-09-18 05:46:14 UTC`; PITR inactivo. As cópias da base excluem objectos de Storage. Existe um total de 13 objectos privados, mas não foi confirmada uma cópia independente recuperável. Pelo gate de `docs/NEW_COMPUTER_PROTOCOL.md`, não aplicar as migrations nem publicar a interface dependente delas até verificar essa salvaguarda. Autorização expressa do utilizador para publicar já existe.
+
 ## Actualização de 18-09-2026 — 0.12.0 em validação final
 
 - A branch `codex/fixed-fee-work-0.12.0` inclui trabalhos a preço fixo, afectação explícita de provisões, totais por cliente/sociedade/responsável, repartição LEGALTEAM e nota de honorários própria. As entradas antigas abaixo descrevem etapas de desenvolvimento e são substituídas por este estado.

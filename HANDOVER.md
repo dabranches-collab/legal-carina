@@ -1,5 +1,18 @@
 # Legal Carina — handover
 
+## 18-09-2026 — versão 0.12.0 publicada
+
+- A ordem expressa «publica» foi cumprida. Fonte canónica GitHub `main` `0c07b3a69465cf1720409d0f44267882d44b0bff` (PR #44); CI pós-merge `35382799995` verde. Produção `https://legal-carina.dabranches.workers.dev` recebeu 0.12.0 em `2026-09-18 19:48:25 UTC`: deployment `79c904bb-d22a-4186-8100-a92d3f037381`, version ID `e883ea13-7987-4c49-8e76-9914f4a21c36`, 100% do tráfego. HTTP das notas de versão devolveu 200/0.12.0; o browser integrado mostrou a página online e a versão 0.12.0.
+- Antes das migrations, confirmou-se backup físico Supabase recuperável em `2026-09-18 05:46:14 UTC`. Os 13 objectos privados de `billing-entity-logos` e `client-documents` foram copiados para o bucket R2 `legal-carina-private-backups` (WEUR, prefixo `2026-09-18/`), 5 316 688 bytes no total. Cada objecto foi relido do R2 com tamanho e SHA-256 iguais à origem; um objecto foi relido novamente após o deploy. O contador agregado do bucket ainda mostrava zero logo após a cópia, pelo que se usou a verificação por objecto. A chave usada apenas em memória foi limpa e o receptor local temporário foi removido. PITR continua inactivo.
+- As migrations foram aplicadas isoladamente na produção Supabase: `20260918194437_add_fixed_fee_jobs` e `20260918194504_add_fixed_fee_honorarium_notes`. Validação pós-migration: 5 utilizadores Auth, 5 membros, 13 objectos privados, 0 trabalhos/registos de preço fixo criados automaticamente, RLS activo nas duas novas tabelas e três funções novas presentes. TypeScript, build e dry-run Wrangler passaram no `main` antes do deploy; a CI já tinha validado o restante gate.
+- A publicação anterior 0.11.0 permanece disponível para rollback frontend: version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d`. As entradas antigas abaixo descrevem etapas anteriores e não o estado actual.
+
+## 18-09-2026 — publicação 0.12.0 preparada; salvaguarda de Storage por confirmar
+
+- O PR #44 foi fundido em `main` (`0c07b3a69465cf1720409d0f44267882d44b0bff`); a CI pós-merge `35382799995` passou. A árvore de ficheiros local coincide com `origin/main`. As duas migrations novas foram testadas numa branch Supabase temporária, com 32 verificações pgTAP e rollback; a branch foi apagada.
+- O painel Supabase confirmou backup físico recuperável de `2026-09-18 05:46:14 UTC`. PITR não está activo. O próprio painel confirma que backups da base não incluem os objectos de Storage. Há 13 objectos privados em produção; não foi possível confirmar cópia independente recuperável. O utilizador desconhece se existe e autorizou a publicação, mas `docs/NEW_COMPUTER_PROTOCOL.md` bloqueia migrations enquanto esta salvaguarda não estiver confirmada. Nenhuma migration nem deploy da 0.12.0 foi efectuado.
+- Produção permanece na 0.11.0, deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d`. Aplicar as migrations `20260918133000` e `20260918144500` isoladamente e publicar o Worker somente após confirmar uma cópia privada independente dos objectos de Storage. Não guardar ficheiros reais de clientes no repositório ou no checkout.
+
 ## 18-09-2026 — validação da 0.12.0 antes da publicação
 
 - Produção mantém-se na 0.11.0; o código de preço fixo está na branch `codex/fixed-fee-work-0.12.0`, PR #44. A ordem explícita «publica» foi recebida.
