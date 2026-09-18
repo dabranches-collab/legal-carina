@@ -30,7 +30,12 @@ export async function loadFixedFeeLines():Promise<FixedFeeLine[]>{
  const jobs:FixedFeeJob[]=[]
  for(let from=0;;from+=500){const result=await supabase.from('fixed_fee_jobs').select('id,client_id,billing_entity_id,title,agreed_amount,currency,vat_rate,status,is_invoiced,is_paid,invoice_date,created_at').order('id').range(from,from+499);if(result.error){if(result.error.code==='PGRST205'||result.error.code==='42P01'||/fixed_fee_jobs.*schema cache/i.test(result.error.message))return[];throw result.error}const page=(result.data??[]) as FixedFeeJob[];jobs.push(...page);if(page.length<500)break}
  if(!jobs.length)return[]
- const work=await readIdBatches(jobs.map(job=>job.id),(ids,from,to)=>supabase!.from('work_entries').select('id,fixed_fee_job_id,professional_id,client_profile_id,work_date,duration_minutes').in('fixed_fee_job_id',ids).order('id').range(from,to))
+ const [work,appliedResult]=await Promise.all([
+  readIdBatches(jobs.map(job=>job.id),(ids,from,to)=>supabase!.from('work_entries').select('id,fixed_fee_job_id,professional_id,client_profile_id,work_date,duration_minutes').in('fixed_fee_job_id',ids).order('id').range(from,to)),
+  supabase.rpc('get_fixed_fee_provision_totals'),
+ ])
+ if(appliedResult.error)throw appliedResult.error
+ const applied=new Map(((appliedResult.data??[]) as {job_id:string;gross_applied:number}[]).map(row=>[row.job_id,Number(row.gross_applied)]))
  const [billing,people,clients,profiles]=await Promise.all([
   readIdBatches([...new Set(jobs.map(job=>job.billing_entity_id).filter((id):id is string=>Boolean(id)))],(ids,from,to)=>supabase!.from('billing_entities').select('id,name').in('id',ids).order('id').range(from,to)),
   readIdBatches([...new Set(work.map(row=>row.professional_id))],(ids,from,to)=>supabase!.from('professionals').select('id,display_name').in('id',ids).order('id').range(from,to)),
@@ -41,5 +46,5 @@ export async function loadFixedFeeLines():Promise<FixedFeeLine[]>{
  const defaultTypes=new Map(clients.map(row=>[row.id,row.client_type])),profileTypes=new Map(profiles.map(row=>[row.id,row.client_type])),mixedClients=new Set<string>()
  const typesByClient=new Map<string,Set<string>>()
  for(const profile of profiles){if(!profile.active)continue;const types=typesByClient.get(profile.client_id)??new Set<string>();types.add(profile.client_type);typesByClient.set(profile.client_id,types);if(types.size>1)mixedClients.add(profile.client_id)}
- return buildFixedFeeLines(jobs.map(job=>({...job,client_type:defaultTypes.get(job.client_id),mixed_client:mixedClients.has(job.client_id),billing_entity_name:job.billing_entity_id?billingNames.get(job.billing_entity_id):undefined})),work.map(row=>({...row,professional_name:peopleNames.get(row.professional_id),client_type:profileTypes.get(row.client_profile_id)})))
+ return buildFixedFeeLines(jobs.map(job=>({...job,provision_applied:applied.get(job.id)??0,client_type:defaultTypes.get(job.client_id),mixed_client:mixedClients.has(job.client_id),billing_entity_name:job.billing_entity_id?billingNames.get(job.billing_entity_id):undefined})),work.map(row=>({...row,professional_name:peopleNames.get(row.professional_id),client_type:profileTypes.get(row.client_profile_id)})))
 }

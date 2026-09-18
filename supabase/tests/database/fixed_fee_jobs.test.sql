@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(11);
+select plan(19);
 
 insert into auth.users(id,email) values('00000000-0000-0000-0000-0000000000f1','fixed-fee-owner@example.test');
 insert into public.law_firms(id,name) values('10000000-0000-0000-0000-0000000000f1','Escritório sintético preço fixo');
@@ -35,6 +35,26 @@ values('60000000-0000-0000-0000-0000000000f2','10000000-0000-0000-0000-000000000
 select throws_ok($$update public.fixed_fee_jobs set is_invoiced=true,invoice_date=current_date where id='60000000-0000-0000-0000-0000000000f2'$$,'23514',null,'Facturação exige sociedade');
 update public.fixed_fee_jobs set billing_entity_id='50000000-0000-0000-0000-0000000000f1' where id='60000000-0000-0000-0000-0000000000f2';
 select is((select vat_rate from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f2'),25.00::numeric,'Ao atribuir sociedade mais tarde, fixa a taxa actual');
+
+select set_config('request.jwt.claim.sub','00000000-0000-0000-0000-0000000000f1',true);
+select is((select total_with_vat from public.get_fixed_fee_credit_candidates('20000000-0000-0000-0000-0000000000f1','50000000-0000-0000-0000-0000000000f1') where job_id='60000000-0000-0000-0000-0000000000f2'),125.00::numeric,'Trabalho candidato mostra o preço com IVA');
+do $$begin
+ perform public.record_client_credit_payment_with_fixed_fees('20000000-0000-0000-0000-0000000000f1','50000000-0000-0000-0000-0000000000f1','EUR',123.00,current_date,'Provisão sintética','70000000-0000-0000-0000-0000000000f1','[]'::jsonb);
+ perform public.apply_client_credit_to_fixed_fees((select id from public.client_credit_accounts where client_id='20000000-0000-0000-0000-0000000000f1'),'[{"job_id":"60000000-0000-0000-0000-0000000000f2","amount":61.50}]'::jsonb,'70000000-0000-0000-0000-0000000000f2');
+end$$;
+select is((select gross_applied from public.get_fixed_fee_provision_totals() where job_id='60000000-0000-0000-0000-0000000000f2'),61.50::numeric,'O abatimento aparece no trabalho');
+select is((select (value->>'received')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),123.00::numeric,'Abatimento não cria uma segunda provisão recebida');
+select is((select (value->>'consumed')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),61.50::numeric,'Abatimento conta como provisão utilizada');
+select is((select (value->>'balance')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),61.50::numeric,'Saldo desconta o trabalho');
+do $$begin
+ perform public.reverse_client_credit((select consumption_id from public.fixed_fee_provision_applications where job_id='60000000-0000-0000-0000-0000000000f2'),'Estorno sintético','70000000-0000-0000-0000-0000000000f3');
+end$$;
+select is(coalesce((select gross_applied from public.get_fixed_fee_provision_totals() where job_id='60000000-0000-0000-0000-0000000000f2'),0),0::numeric,'Estorno devolve o trabalho ao valor por receber');
+select is((select (value->>'balance')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),123.00::numeric,'Estorno devolve o saldo à provisão');
+do $$begin
+ perform public.reverse_client_credit((select id from public.client_credit_movements where request_id='70000000-0000-0000-0000-0000000000f1'),'Estorno do pagamento sintético','70000000-0000-0000-0000-0000000000f4');
+end$$;
+select is((select (value->>'balance')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),0::numeric,'Pagamento estornado fecha a conta');
 
 select * from finish();
 rollback;

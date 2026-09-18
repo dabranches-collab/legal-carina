@@ -17,7 +17,7 @@ Estado: preparação local 0.12.0. Esta funcionalidade não pode ser publicada a
 - «Por facturar» representa o valor contratual que ainda requer documento. «Por receber» representa o remanescente após pagamentos aplicados. Se houver uma provisão aplicada antes da factura, estes números deixam de ser somáveis entre si sem ajuste; o ecrã deve mostrar claramente a provisão já recebida.
 
 - Ao associar um registo que tinha preço, esse preço deixa de entrar nos totais avulsos. Ao desassociar, o registo volta à facturação normal e tem de ser recalculado ou revisto antes de entrar nos totais.
-- `fixedFeeAnalytics.ts` já calcula a repartição em cêntimos por responsável e conserva o preço no cliente/sociedade quando ainda não há horas. Está isolado e ainda não alimenta os dashboards: a consulta deve ser validada contra as permissões e os totais reais antes de ser ligada.
+- `fixedFeeAnalytics.ts` calcula a repartição em cêntimos por responsável e conserva o preço no cliente/sociedade quando ainda não há horas. Alimenta localmente os dashboards, incluindo a parcela de provisão aplicada; falta reconciliar as consultas e permissões numa base de teste com o esquema actual.
 
 ### Pergunta ao registar uma provisão
 
@@ -42,7 +42,7 @@ Acções: **Escolher trabalhos e montantes** e **Não aplicar agora**. Na primei
 | Repartição LEGALTEAM | Base do preço fixo por responsável/angariador conforme horas e regras comerciais | Pendente: usa montantes dos registos |
 | Pré-filtros e listas de registos | Contar os registos para horas, sem duplicar preço | A verificar com a migration activa |
 | Notas de honorários e facturas | Emitir o preço do trabalho uma vez, podendo anteceder a execução | Pendente: os fluxos actuais seleccionam registos avulsos |
-| Provisões e créditos de cliente | Perguntar na entrada da provisão, escolher os trabalhos existentes e o montante para cada um; conciliar abates, notas e estornos | Pendente: o livro actual só aplica provisões a notas de registos avulsos; `loadCreditUsage` selecciona apenas `billing_scope='standard'` |
+| Provisões e créditos de cliente | Perguntar na entrada da provisão, escolher os trabalhos existentes e o montante para cada um; conciliar abates, notas e estornos | Fluxo e SQL preparados localmente, com afectação imediata ou posterior; pgTAP ainda não executado. `loadCreditUsage` continua a seleccionar os registos avulsos para notas, enquanto os trabalhos a preço fixo entram como movimentos separados do mesmo livro. |
 | Documentos e exportações | Não lançar o preço por cada registo; apresentar o trabalho como item próprio | Pendente |
 
 ## Casos de teste mínimos
