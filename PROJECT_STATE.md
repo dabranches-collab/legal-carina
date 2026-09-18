@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 18-09-2026 — 0.12.0 pronta no GitHub; produção aguarda cópia de Storage
+
+- `main` contém o PR #44 no commit `0c07b3a69465cf1720409d0f44267882d44b0bff`; CI pós-merge `35382799995` verde. Produção continua 0.11.0 (`bebd45c9-795e-455d-80ad-32b0aec8fec2` / `4fc9aa65-9c37-42fd-871f-14d024e6d86d`). As duas migrations da 0.12.0 passaram em branch Supabase descartada, incluindo 32 testes pgTAP sintéticos.
+- Backup físico Supabase confirmado no painel: `2026-09-18 05:46:14 UTC`; PITR inactivo. As cópias da base excluem objectos de Storage. Existe um total de 13 objectos privados, mas não foi confirmada uma cópia independente recuperável. Pelo gate de `docs/NEW_COMPUTER_PROTOCOL.md`, não aplicar as migrations nem publicar a interface dependente delas até verificar essa salvaguarda. Autorização expressa do utilizador para publicar já existe.
+
 ## Actualização de 18-09-2026 — 0.12.0 em validação final
 
 - A branch `codex/fixed-fee-work-0.12.0` inclui trabalhos a preço fixo, afectação explícita de provisões, totais por cliente/sociedade/responsável, repartição LEGALTEAM e nota de honorários própria. As entradas antigas abaixo descrevem etapas de desenvolvimento e são substituídas por este estado.
