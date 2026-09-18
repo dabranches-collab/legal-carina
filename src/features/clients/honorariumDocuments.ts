@@ -2,6 +2,7 @@ import type { CreditAccount, ProvisionNote } from './credit'
 
 export type HonorariumDocument=ProvisionNote&{
  document_id:string;revision:number;client_id:string;billing_entity_id:string;
+ fixed_fee_job_id?:string|null;
  society_name:string;currency:string;is_current:boolean;voided:boolean;
  credit_note_id:string|null;credit_note:ProvisionNote|null;credit_active:boolean;
  document_options:Record<string,unknown>;

@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(19);
+select plan(32);
 
 insert into auth.users(id,email) values('00000000-0000-0000-0000-0000000000f1','fixed-fee-owner@example.test');
 insert into public.law_firms(id,name) values('10000000-0000-0000-0000-0000000000f1','Escritório sintético preço fixo');
@@ -46,6 +46,35 @@ select is((select gross_applied from public.get_fixed_fee_provision_totals() whe
 select is((select (value->>'received')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),123.00::numeric,'Abatimento não cria uma segunda provisão recebida');
 select is((select (value->>'consumed')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),61.50::numeric,'Abatimento conta como provisão utilizada');
 select is((select (value->>'balance')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),61.50::numeric,'Saldo desconta o trabalho');
+select has_column('public','honorarium_document_versions','fixed_fee_job_id','A nota identifica o trabalho a preço fixo');
+do $$begin
+ perform public.issue_fixed_fee_honorarium_note('60000000-0000-0000-0000-0000000000f2','{"language":"pt","fixed_fee_paid":false}'::jsonb,125.00,61.50,null,'70000000-0000-0000-0000-0000000000f5');
+end$$;
+select is((select total from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),125.00::numeric,'A nota inclui o preço fixo com IVA uma vez');
+select is((select deducted from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),61.50::numeric,'A nota apresenta a provisão já aplicada');
+select is((select remaining from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),63.50::numeric,'A nota apresenta o remanescente correcto');
+select is((select items->0->>'kind' from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),'fixed_fee_job','O trabalho é um item próprio do documento');
+do $$begin
+ perform public.issue_fixed_fee_honorarium_note('60000000-0000-0000-0000-0000000000f2','{"language":"pt","fixed_fee_paid":false}'::jsonb,125.00,61.50,null,'70000000-0000-0000-0000-0000000000f5');
+end$$;
+select is((select count(*) from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),1::bigint,'Repetir o mesmo pedido não emite segunda nota');
+do $$begin
+ perform public.issue_fixed_fee_honorarium_note('60000000-0000-0000-0000-0000000000f2','{"language":"pt","fixed_fee_paid":false}'::jsonb,125.00,61.50,1,'70000000-0000-0000-0000-0000000000f6');
+end$$;
+select is((select count(*) from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2'),2::bigint,'A reemissão cria uma revisão da mesma nota');
+do $$begin
+ perform public.void_honorarium_document((select document_id from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2' order by revision desc limit 1),2,'70000000-0000-0000-0000-0000000000f7');
+end$$;
+select ok((select voided and fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2' from public.honorarium_document_versions where fixed_fee_job_id='60000000-0000-0000-0000-0000000000f2' order by revision desc limit 1),'A anulação conserva a ligação ao trabalho');
+select is((select (value->>'balance')::numeric from jsonb_array_elements(public.get_client_credit_accounts('20000000-0000-0000-0000-0000000000f1'))),61.50::numeric,'Anular a nota não consome nem estorna de novo a provisão do trabalho');
+update public.fixed_fee_jobs set is_invoiced=true,invoice_date=current_date,is_paid=true where id='60000000-0000-0000-0000-0000000000f2';
+do $$begin
+ perform public.issue_fixed_fee_honorarium_note('60000000-0000-0000-0000-0000000000f2','{"language":"pt","fixed_fee_paid":true}'::jsonb,125.00,61.50,3,'70000000-0000-0000-0000-0000000000f8');
+end$$;
+select is((select remaining from public.honorarium_document_versions where request_id='70000000-0000-0000-0000-0000000000f8'),0::numeric,'Trabalho já pago não aparece com valor por pagar');
+select is((select deducted from public.honorarium_document_versions where request_id='70000000-0000-0000-0000-0000000000f8'),125.00::numeric,'Nota paga mostra todo o valor já recebido');
+select is((select (document_options->'fixed_fee_payment'->>'provision')::numeric from public.honorarium_document_versions where request_id='70000000-0000-0000-0000-0000000000f8'),61.50::numeric,'Nota paga distingue provisão já aplicada');
+select is((select (document_options->'fixed_fee_payment'->>'external')::numeric from public.honorarium_document_versions where request_id='70000000-0000-0000-0000-0000000000f8'),63.50::numeric,'Nota paga distingue o restante recebido');
 do $$begin
  perform public.reverse_client_credit((select consumption_id from public.fixed_fee_provision_applications where job_id='60000000-0000-0000-0000-0000000000f2'),'Estorno sintético','70000000-0000-0000-0000-0000000000f3');
 end$$;

@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 18-09-2026 — validação da 0.12.0 antes da publicação
+
+- Produção mantém-se na 0.11.0; o código de preço fixo está na branch `codex/fixed-fee-work-0.12.0`, PR #44. A ordem explícita «publica» foi recebida.
+- A branch Supabase temporária `codex-fixed-fee-history-check-2` (`sqpfeqpsagxglqvttajr`) foi reconstruída até à última migration de produção. As migrations de preço fixo `20260918133000` e `20260918144500` foram aplicadas apenas nessa branch. O ensaio pgTAP com 32 verificações passou em transacção com rollback: preço e IVA, fases, provisões, estornos, nota, revisão, anulação e pagamento anterior à nota. Confirmados zero utilizadores, trabalhos, afectações e notas após rollback; a branch foi apagada e a lista Supabase voltou a conter apenas `main`.
+- A nota de honorários do trabalho é emitida pelo seu painel, com uma linha pelo preço acordado, PDF e histórico de versões. A provisão aplicada não é consumida novamente. Quando o trabalho já está pago, a nota apresenta o valor recebido e saldo a pagar zero. Emitir a nota não muda os estados de facturação e pagamento.
+- Segurança de ficheiros, lint, tipos, 229 testes unitários, build e dry-run Cloudflare passaram neste lote. Na suite E2E, 120 passaram, três condicionais foram ignorados e dois PDF demoraram a abrir sob carga; ambos passaram isolados. A espera do teste PDF foi ajustada para 15 s. CI, verificação de backup/PITR, cópia independente de Storage e publicação ainda têm de ser concluídas. Antes da migration de produção, confirmar o histórico remoto, o último ponto recuperável e a cópia de Storage conforme `docs/deployment.md`.
+
 ## Versão 0.12.0 local em preparação — trabalhos a preço fixo
 
 - Actualização posterior: o mapa LEGALTEAM passou a valorizar cada registo de preço fixo com a parcela analítica do preço acordado, conservando as horas e os angariadores. TypeScript, oxlint focado e nove testes de repartição passaram. Numa branch Supabase temporária, aplicar a migration histórica `reconcile_username_pin_access` permitiu avançar de 8 para 34 migrations antigas; a reconstrução voltou a falhar antes do esquema actual. A branch foi apagada e apenas `main` permanece. A causa exacta da segunda falha não está comprovada. A emissão de documentos e o ensaio da migration actual continuam pendentes; produção não foi alterada.

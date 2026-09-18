@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## Actualização de 18-09-2026 — 0.12.0 em validação final
+
+- A branch `codex/fixed-fee-work-0.12.0` inclui trabalhos a preço fixo, afectação explícita de provisões, totais por cliente/sociedade/responsável, repartição LEGALTEAM e nota de honorários própria. As entradas antigas abaixo descrevem etapas de desenvolvimento e são substituídas por este estado.
+- Na branch Supabase temporária `sqpfeqpsagxglqvttajr`, o esquema histórico foi recuperado até à última migration de produção, as duas migrations novas foram ensaiadas e 32 testes pgTAP sintéticos passaram com rollback. A branch foi apagada após confirmar zero dados sintéticos persistidos; só resta `main`. Nenhuma migration foi aplicada à produção, que continua na 0.11.0.
+- Lint, tipos, segurança de ficheiros, 229 testes unitários, build e dry-run Cloudflare passaram. Nos E2E, 120 passaram, três condicionais foram ignorados e dois PDF passaram isolados após demora na suite completa; o limite de espera do teste foi ajustado. CI, verificação de cópias de segurança e publicação estão em curso.
+
 ## Versão 0.12.0 local em preparação — 18-09-2026
 
 - Actualização posterior: a repartição LEGALTEAM local já recebe o preço do trabalho dividido pelos registos associados, sem duplicar horas ou honorários. TypeScript, oxlint focado e nove testes passaram. A branch Supabase temporária avançou até 34 migrations após aplicar a reconciliação histórica em falta, mas voltou a falhar antes de chegar ao esquema actual; foi apagada. A emissão de documentos e a validação SQL permanecem pendentes; produção continua 0.11.0.

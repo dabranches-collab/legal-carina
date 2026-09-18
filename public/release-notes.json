@@ -1,15 +1,17 @@
 {
   "version": "0.12.0",
   "changes": [
-    "A ficha do cliente prepara trabalhos a preço fixo: a fase Em curso começa com o primeiro registo e o operador assinala Terminado; mostra horas e valor médio por hora.",
-    "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
+    "A ficha do cliente gere trabalhos a preço fixo, com registos associados, fases Por iniciar, Em curso e Terminado, horas e valor médio por hora.",
+    "O preço acordado entra uma vez nas contas de clientes, sociedades, responsáveis e recebimentos; as provisões podem ser atribuídas a cada trabalho.",
+    "Cada trabalho pode ter Nota de Honorários própria, com provisões e pagamentos já recebidos discriminados e PDF guardado."
   ],
   "releases": [
     {
       "version": "0.12.0",
       "changes": [
-        "A ficha do cliente prepara trabalhos a preço fixo: a fase Em curso começa com o primeiro registo e o operador assinala Terminado; mostra horas e valor médio por hora.",
-        "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
+        "A ficha do cliente gere trabalhos a preço fixo, com registos associados, fases Por iniciar, Em curso e Terminado, horas e valor médio por hora.",
+        "O preço acordado entra uma vez nas contas de clientes, sociedades, responsáveis e recebimentos; as provisões podem ser atribuídas a cada trabalho.",
+        "Cada trabalho pode ter Nota de Honorários própria, com provisões e pagamentos já recebidos discriminados e PDF guardado."
       ]
     },
     {

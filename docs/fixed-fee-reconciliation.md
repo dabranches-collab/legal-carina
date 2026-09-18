@@ -1,5 +1,7 @@
 # Reconciliação dos trabalhos a preço fixo
 
+Actualização de 18-09-2026: a implementação local inclui os fluxos e contas descritos abaixo. As duas migrations foram ensaiadas na branch Supabase temporária `sqpfeqpsagxglqvttajr`; 32 verificações SQL sintéticas passaram com rollback. A nota de honorários guarda o preço fixo uma vez, distingue provisão aplicada e outros pagamentos recebidos e permite revisão e anulação sem novo consumo da provisão. As referências a «pendente» nesta página são o plano histórico anterior à implementação. Produção permanece 0.11.0 até concluir os gates de publicação.
+
 Estado: preparação local 0.12.0. Esta funcionalidade não pode ser publicada antes de os pontos abaixo passarem num ambiente de base de dados de teste com dados sintéticos.
 
 ## Regra contabilística
