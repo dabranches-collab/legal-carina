@@ -9,6 +9,7 @@ create table public.fixed_fee_jobs (
  description text,
  agreed_amount numeric(14,2) not null check (agreed_amount >= 0),
  currency text not null default 'EUR' check (currency ~ '^[A-Z]{3}$'),
+ vat_rate numeric(5,2) check (vat_rate between 0 and 100),
  status text not null default 'not_started' check (status in ('not_started','open','completed','cancelled')),
  is_invoiced boolean not null default false,
  invoice_date date,
@@ -20,9 +21,24 @@ create table public.fixed_fee_jobs (
  foreign key (firm_id,billing_entity_id) references public.billing_entities(firm_id,id) on delete restrict,
  unique (firm_id,id),
  check (not is_paid or is_invoiced),
+ check (not is_invoiced or billing_entity_id is not null),
  check (not is_invoiced or invoice_date is not null),
  check (is_invoiced or invoice_date is null)
 );
+create function private.set_fixed_fee_job_vat()
+returns trigger language plpgsql security definer set search_path='' as $$
+begin
+ if tg_op='UPDATE' and new.billing_entity_id is not distinct from old.billing_entity_id then
+  new.vat_rate:=old.vat_rate;return new;
+ end if;
+ if new.billing_entity_id is null then new.vat_rate:=null;return new;end if;
+ select b.default_vat_rate into new.vat_rate from public.billing_entities b
+ where b.id=new.billing_entity_id and b.firm_id=new.firm_id;
+ if new.vat_rate is null then raise exception 'invalid billing entity or VAT rate';end if;
+ return new;
+end;$$;
+create trigger set_fixed_fee_job_vat before insert or update of billing_entity_id
+on public.fixed_fee_jobs for each row execute function private.set_fixed_fee_job_vat();
 create index fixed_fee_jobs_client_idx on public.fixed_fee_jobs(client_id,created_at desc);
 create index fixed_fee_jobs_open_idx on public.fixed_fee_jobs(firm_id,client_id) where status <> 'cancelled' and not is_paid;
 create trigger fixed_fee_jobs_audit after insert or update or delete on public.fixed_fee_jobs for each row execute function private.audit_business_change();
@@ -49,7 +65,15 @@ create policy fixed_fee_jobs_update on public.fixed_fee_jobs for update to authe
 create function private.guard_fixed_fee_job_update()
 returns trigger language plpgsql set search_path='' as $$
 begin
- if new.firm_id is distinct from old.firm_id or new.client_id is distinct from old.client_id or new.billing_entity_id is distinct from old.billing_entity_id then raise exception 'fixed fee job ownership cannot be changed';end if;
+ if new.firm_id is distinct from old.firm_id or new.client_id is distinct from old.client_id then raise exception 'fixed fee job ownership cannot be changed';end if;
+ if new.billing_entity_id is distinct from old.billing_entity_id and
+  (old.billing_entity_id is not null or old.is_invoiced or old.is_paid or
+   exists(select 1 from public.work_entries w where w.fixed_fee_job_id=old.id)) then
+  raise exception 'billing entity cannot change after work or billing';
+ end if;
+ if new.billing_entity_id is not distinct from old.billing_entity_id and new.vat_rate is distinct from old.vat_rate then
+  raise exception 'VAT rate is fixed for this job';
+ end if;
  if (old.is_invoiced or old.is_paid) and new.agreed_amount is distinct from old.agreed_amount then raise exception 'invoiced fixed fee amount cannot be changed';end if;
  if new.status='not_started' and old.status<>'not_started' then raise exception 'started fixed fee job cannot return to not started';end if;
  if old.status='not_started' and new.status in ('open','completed') and not exists(select 1 from public.work_entries w where w.fixed_fee_job_id=old.id) then raise exception 'fixed fee job starts with its first work entry';end if;
