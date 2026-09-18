@@ -1,4 +1,5 @@
 import { professionalName, referrerNames, type Referrer } from '../../lib/professionalNames'
+import type { FixedFeeLine } from '../clients/fixedFeeAnalytics'
 
 export type AllocationWork = {id:string;client_id:string;work_date:string;client_name:string;professional_name:string;activity_description:string;duration_minutes:number;effective_amount:number|null;currency:string;billing_scope:string;is_billable:boolean;is_paid:boolean;status:string;client_referrer:Referrer|'other'|null;client_referrer_other?:string|null;task_referrer:Referrer|'other'|null;task_referrer_other:string|null}
 export type AllocationRates = {client:number;task:number;execution:number;office:number}
@@ -11,6 +12,15 @@ export function validAllocationRates(rates:AllocationRates){
 export const eligibleAllocationWork=(entry:AllocationWork)=>entry.currency==='EUR'&&!['cancelled','uncollectible_uninvoiced','uncollectible_invoiced'].includes(entry.status)
 export const clientReferrerName=(entry:AllocationWork)=>entry.client_referrer==='other'?entry.client_referrer_other?.trim()??'':entry.client_referrer?referrerNames[entry.client_referrer]:''
 export const missingTaskReferrer=(entry:AllocationWork)=>!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim())
+export function valueFixedFeeAllocationWork(work:AllocationWork[],lines:FixedFeeLine[]):AllocationWork[]{
+ const amounts=new Map(lines.filter(line=>line.entryId!==null).map(line=>[line.entryId!,line]))
+ return work.map(row=>{
+  if(row.billing_scope!=='fixed_fee')return row
+  const line=amounts.get(row.id)
+  if(!line)throw new Error(`Falta o preço do trabalho a preço fixo associado ao registo ${row.id}.`)
+  return {...row,effective_amount:line.amount,is_billable:true,is_paid:line.amount>0&&line.paid>=line.amount}
+ })
+}
 export function allocationPeriod(work:AllocationWork[]){
  const dates=work.filter(eligibleAllocationWork).map(r=>r.work_date).sort()
  return {start:dates[0]??'',end:dates.at(-1)??''}

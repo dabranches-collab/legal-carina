@@ -9,6 +9,8 @@ import { allocateHonoraria, clientReferrerName, allocationPeriod, eligibleAlloca
 import { AllocationChart } from './AllocationChart'
 import { allocationColors } from './allocation'
 import { saveAllocationPdf } from './allocationPdf'
+import { loadFixedFeeLines } from '../clients/fixedFeeAnalytics'
+import { valueFixedFeeAllocationWork } from './allocation'
 
 const euros=(cents:number)=>new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR'}).format(cents/100)
 const hours=(minutes:number)=>`${Math.floor(minutes/60)} h ${minutes%60} min`
@@ -46,6 +48,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
     if(result.error)throw new Error(result.error.code==='PGRST202'?'O mapa ficará disponível após a actualização da base de dados.':result.error.message)
     return result.data as {items:AllocationWork[];total:number}
    }
+   const fixedFeeLines=loadFixedFeeLines(societyId)
    const first=await readPage(0),total=first.total,pages:AllocationWork[][]=[first.items]
    if(active)setProgress({loaded:first.items.length,total})
    if(first.items.length!==Math.min(5000,total))throw new Error('Não foi possível obter todos os registos.')
@@ -62,7 +65,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
    if(!active)return
    const rows=pages.flat()
    if(rows.length!==total||new Set(rows.map(row=>row.id)).size!==total)throw new Error('Não foi possível obter a lista completa. Volte a tentar.')
-   setWork(rows)
+   setWork(valueFixedFeeAllocationWork(rows,await fixedFeeLines))
   }catch(cause){if(active)setError(cause instanceof Error?cause.message:'Não foi possível carregar o mapa.')}
   finally{if(active)setLoading(false)}
  })();return()=>{active=false;controller.abort()}},[societyId,refresh,refreshKey])

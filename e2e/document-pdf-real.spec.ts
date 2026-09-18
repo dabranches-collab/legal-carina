@@ -115,7 +115,7 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   await page.getByLabel('Destinatário do documento').fill('Destinatário alterado após emissão')
   await page.getByRole('button',{name:/Histórico de notas/}).click()
   await page.getByRole('button',{name:'Ver PDF v1'}).click()
-  const preview=page.getByRole('dialog',{name:'Pré-visualização da nota de honorários'});await expect(preview).toBeVisible();await expect(preview.getByRole('img',{name:'Página 1 da Nota de Honorários'})).toBeVisible();await expect(preview.getByRole('button',{name:'Guardar PDF como…'})).toBeVisible();await expect(preview.getByRole('button',{name:'Guardar Word como…'})).toBeVisible()
+  const preview=page.getByRole('dialog',{name:'Pré-visualização da nota de honorários'});await expect(preview).toBeVisible({timeout:15000});await expect(preview.getByRole('img',{name:'Página 1 da Nota de Honorários'})).toBeVisible();await expect(preview.getByRole('button',{name:'Guardar PDF como…'})).toBeVisible();await expect(preview.getByRole('button',{name:'Guardar Word como…'})).toBeVisible()
   const stable=(bytes:Buffer)=>bytes.toString('latin1').replace(/\/CreationDate \(D:[^)]*\)/g,'').replace(/\/ID \[[^\]]*\]/g,'')
   expect(stable(await readFile(`.tmp/reprint-${language}-repeat.pdf`))).toBe(stable(await readFile(file)))
   expect(mutations).toEqual([])

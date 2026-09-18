@@ -19,6 +19,7 @@ export function createQaProvisionData(){
   if(!rpc){if(table==='billing_entities')return [{id:account.billing_entity_id,name:account.society_name,default_currency:'EUR',default_vat_rate:23,bank_accounts:[]}];if(table==='work_entries')return [work,zeroWork];if(table==='clients')return {legal_name:account.client_name,default_billing_entity_id:account.billing_entity_id,honorarium_language:'pt',honorarium_salutation:'exmo_senhor'};return []}
   if(rpc==='get_client_credit_accounts')return args.p_client_id?[account,zero].filter(row=>row.client_id===args.p_client_id):[account,zero]
   if(rpc==='get_client_credit_detail')return {account:args.p_account_id===zero.id?zero:account,movements}
+  if(rpc==='get_fixed_fee_credit_candidates'||rpc==='get_fixed_fee_provision_totals')return []
   if(rpc==='search_work_entries')return {items:[...note.items,work],total:2,pageSize:100}
   if(rpc==='get_client_honorarium_documents')return history()
   if(rpc==='save_honorarium_document'){
@@ -35,7 +36,7 @@ export function createQaProvisionData(){
    if(prior.credit_note_id)reverse(prior.credit_note_id)
    const issued={...prior,id:crypto.randomUUID(),revision:prior.revision+1,voided:true,credit_note_id:null,credit_note:null,credit_active:false,deducted:0,remaining:prior.total,balance_after:account.balance};documents.push(issued);return issued
   }
-  if(rpc==='record_client_credit_payment'){
+  if(rpc==='record_client_credit_payment'||rpc==='record_client_credit_payment_with_fixed_fees'){
    if(requests.has(String(args.p_request_id)))return requests.get(String(args.p_request_id))
    account.received+=Number(args.p_amount);account.balance+=Number(args.p_amount)
    const id=crypto.randomUUID();movements.push({id,recorded_at:new Date().toISOString(),movement_date:String(args.p_date),kind:'payment',amount:Number(args.p_amount),reference:String(args.p_reference),note_id:null,note:null,reversed:false,reverses_id:null});requests.set(String(args.p_request_id),id);return id

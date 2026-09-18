@@ -87,7 +87,9 @@ export function EditWorkEntryModal({
   const [options, setOptions] = useState<OptionData | null>(null),
     [entry, setEntry] = useState<Editable | null>(null),
     [originalEntry,setOriginalEntry]=useState(''),
-    [originalBillingScope,setOriginalBillingScope]=useState<'standard'|'retainer'>('standard'),
+    [originalBillingScope,setOriginalBillingScope]=useState<'standard'|'retainer'|'fixed_fee'>('standard'),
+    [originalFixedFeeJobId,setOriginalFixedFeeJobId]=useState<string|null>(null),
+    [fixedFeeJobs,setFixedFeeJobs]=useState<Array<{id:string;title:string;billing_entity_id:string|null}>>([]),
     [error, setError] = useState(""),
     [saving, setSaving] = useState(false);
   const [reason, setReason] = useState(""),
@@ -121,12 +123,13 @@ export function EditWorkEntryModal({
       setOptions(form.data);
       const loaded={...item.data,billing_scope:item.data.billing_scope??'standard'} as Editable;
       setEntry(loaded);setOriginalEntry(JSON.stringify(loaded));
-      setOriginalBillingScope(item.data.billing_scope??'standard');
+      setOriginalBillingScope(item.data.billing_scope??'standard');setOriginalFixedFeeJobId(item.data.fixed_fee_job_id??null);
     })();
     return () => {
       active = false;
     };
   }, [entryId]);
+  useEffect(()=>{const clientId=options?.clientProfiles.find(item=>item.id===entry?.client_profile_id)?.client_id;if(!supabase||!clientId){setFixedFeeJobs([]);return}let active=true;void supabase.from('fixed_fee_jobs').select('id,title,billing_entity_id').eq('client_id',clientId).in('status',['not_started','open','completed']).order('title').then(result=>{if(active)setFixedFeeJobs((result.data??[]) as Array<{id:string;title:string;billing_entity_id:string|null}>)});return()=>{active=false}},[entry?.client_profile_id,options]);
   const dirty=Boolean(entry&&(JSON.stringify(entry)!==originalEntry||expenseDrafts.length));
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -141,13 +144,16 @@ export function EditWorkEntryModal({
       setError("Indique a data da factura.");
       return;
     }
+    if(entry.billing_scope==='fixed_fee'&&!entry.fixed_fee_job_id){setError('Escolha um trabalho a preço fixo deste cliente.');return}
+    if(entry.fixed_fee_job_id&&entry.billing_scope==='fixed_fee'&&(!fixedFeeJobs.some(job=>job.id===entry.fixed_fee_job_id&&(job.billing_entity_id===null||job.billing_entity_id===entry.billing_entity_id)))){setError('O trabalho escolhido não pertence à mesma sociedade deste registo.');return}
     if (requiresReason === true && !reason.trim()) {
       setError("Indique o motivo da alteração para o registo de auditoria.");
       return;
     }
     setSaving(true);
     setError("");
-    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='standard'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'standard',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
+    if(originalBillingScope==='fixed_fee'&&entry.billing_scope!=='fixed_fee'){const association=await supabase.rpc('assign_work_entry_fixed_fee',{p_work_entry_id:entry.id,p_fixed_fee_job_id:null,p_reason:reason||'Desassociação do trabalho de preço fixo'});if(association.error){setError(association.error.message);setSaving(false);return}}
+    if(originalBillingScope==='retainer'&&entry.billing_scope!=='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'standard',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     const result = await updateWorkEntry(entry, reason);
     if (result.error) {
       const messages:Record<string,string>={
@@ -161,6 +167,7 @@ export function EditWorkEntryModal({
       return;
     }
     if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'retainer',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
+    if(entry.billing_scope==='fixed_fee'&&(entry.fixed_fee_job_id!==originalFixedFeeJobId||originalBillingScope!=='fixed_fee')){const association=await supabase.rpc('assign_work_entry_fixed_fee',{p_work_entry_id:entry.id,p_fixed_fee_job_id:entry.fixed_fee_job_id,p_reason:reason||'Associação a trabalho de preço fixo'});if(association.error){setError(association.error.message);setSaving(false);return}}
     onSaved("updated");
   }
   async function remove() {
@@ -275,7 +282,7 @@ export function EditWorkEntryModal({
                   setEntry({
                     ...entry,
                     client_profile_id: e.target.value,
-                    matter_id: null,
+                    matter_id: null,fixed_fee_job_id:null,billing_scope:entry.billing_scope==='fixed_fee'?'standard':entry.billing_scope,
                   })
                 }
                 className="control mt-1 w-full px-3"
@@ -292,7 +299,8 @@ export function EditWorkEntryModal({
               </select>
             </label>
             {isLegalteam(options.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&<TaskReferrerFields value={entry.task_referrer??''} other={entry.task_referrer_other??''} onChange={(task_referrer,task_referrer_other)=>setEntry({...entry,task_referrer,task_referrer_other})}/>}
-            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer';setEntry({...entry,billing_scope,...(billing_scope==='retainer'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:'retainer',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Fora da avença · facturação normal</option><option value="retainer">Coberto pela avença · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao escolher avença, o movimento perde preço e valor individual.</span></label>
+            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer'|'fixed_fee';setEntry({...entry,billing_scope,fixed_fee_job_id:billing_scope==='fixed_fee'?entry.fixed_fee_job_id:null,...(billing_scope==='retainer'||billing_scope==='fixed_fee'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:billing_scope==='retainer'?'retainer':'fixed',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Facturação normal do registo</option><option value="retainer" disabled={originalBillingScope==='fixed_fee'}>Coberto pela avença · apenas horas</option><option value="fixed_fee" disabled={!fixedFeeJobs.length||entry.is_invoiced||entry.is_paid}>Trabalho a preço fixo · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao associar a um trabalho a preço fixo, o preço e valor anteriores deste registo deixam de contar; o valor acordado fica no trabalho.</span></label>
+            {entry.billing_scope==='fixed_fee'&&<label className="text-sm sm:col-span-2 lg:col-span-3">Trabalho deste cliente<select required aria-label="Trabalho a preço fixo" value={entry.fixed_fee_job_id??''} onChange={event=>setEntry({...entry,fixed_fee_job_id:event.target.value||null})} className="control mt-1 w-full px-3"><option value="">Escolher trabalho…</option>{fixedFeeJobs.filter(job=>job.billing_entity_id===null||job.billing_entity_id===entry.billing_entity_id).map(job=><option key={job.id} value={job.id}>{job.title}</option>)}</select></label>}
             <label className="text-sm sm:col-span-2 lg:col-span-3">
               Actividade
               <textarea
@@ -333,7 +341,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Preço/hora efectivo
               <input
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 type="number"
                 min="0"
                 step="0.01"
@@ -360,7 +368,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Valor final
               <input
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 type="number"
                 min="0"
                 step="0.01"
@@ -390,7 +398,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Tipo de cobrança
               <select
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 value={entry.charge_type ?? ""}
                 onChange={(e) =>
                   setEntry({ ...entry, charge_type: e.target.value || null })
@@ -512,7 +520,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 checked={entry.is_billable}
                 onChange={(e) =>
                   setEntry({ ...entry, is_billable: e.target.checked })
@@ -523,7 +531,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 checked={entry.is_invoiced}
                 onChange={(e) =>
                   setEntry({
@@ -544,7 +552,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Data da factura
               <CalendarDateInput
-                disabled={entry.billing_scope==='retainer'}
+                disabled={entry.billing_scope!=='standard'}
                 ariaLabel="Data da factura"
                 value={entry.invoice_date ?? ""}
                 onChange={(value) => {
