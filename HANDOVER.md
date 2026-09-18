@@ -13,6 +13,7 @@
 - Decisão recebida em 18-09-2026: o preço acordado para o trabalho é **antes de IVA**. Adaptar o modelo puro e os fluxos de provisões/documentos: honorários e médias usam base tributável, provisão é dinheiro e abate ao total com IVA. Não publicar até conciliar as duas grandezas e testar a migration.
 - A migration local fixa `vat_rate` no trabalho ao atribuir a sociedade. A ficha apresenta os honorários sem IVA e, quando há sociedade, o total com IVA. Falta ensaio SQL num ambiente de teste e integração da emissão de documentos e provisões.
 - O ensaio pgTAP `supabase/tests/database/fixed_fee_jobs.test.sql` está preparado com 11 verificações sobre fase automática, preço individual e IVA fixado, usando apenas dados sintéticos e transacção com rollback. Ainda não foi executado por falta de uma base de teste isolada.
+- Ensaio Supabase de 18-09-2026: com autorização do utilizador foi criada a branch temporária `codex-fixed-fee-012-test` (custo indicado: 0,01344 USD/h). A branch nasceu com apenas 8 migrations até `20260816101332`, sem `client_credit_accounts`, avenças ou `billing_scope`, enquanto a produção tem migrations até `20260916182123`. Não servia para ensaiar a migration actual. Foi **apagada imediatamente** e confirmado em `list_branches` que resta apenas `main`; nenhum SQL de alteração foi executado nessa branch nem na produção. É preciso outro ambiente isolado com o esquema actual antes da publicação.
 
 ## Versão 0.11.0 publicada — recebimentos e pré-filtros
 
