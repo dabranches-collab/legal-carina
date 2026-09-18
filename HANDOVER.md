@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## Versão 0.12.0 local em preparação — trabalhos a preço fixo
+
+- Checkout `C:\Projetos\legal-carina`, branch `codex/fixed-fee-work-0.12.0`, base `origin/main` `abde1031a5a3833ff1710ba4d789dc106933562e`. Produção continua 0.11.0 segundo a última verificação, com os IDs indicados abaixo. Sem deploy ou escrita remota neste lote.
+- O separador «Preço fixo» da ficha de cliente apresenta uma lista de trabalhos com assunto, preço e estados independentes de facturação e pagamento. O detalhe do trabalho mostra registos associados, candidatos do mesmo cliente, acções para associar/desassociar, horas, valor médio/hora e repartição analítica do preço. O browser local tem um exemplo de pré-visualização que não é persistido enquanto a migration não estiver activa.
+- O editor do registo permite escolher um trabalho do cliente; a tabela de Registos usa o tratamento «Preço fixo». O acompanhamento «Por receber» e a Visão Geral estão preparados para incluir o preço acordado uma vez, separando facturado pendente de por facturar. Os valores individuais dos registos associados são anulados pela migration proposta.
+- Migration proposta `20260918133000_add_fixed_fee_jobs.sql`: **não aplicada**. O histórico Supabase remoto conhecido termina em `20260916182123`. Antes de executar, confirmar `supabase migration list --linked` e ensaiar num ambiente de teste; não usar `db push` indiscriminadamente nem `migration repair`. Validar RLS, triggers, RPC de associação e contas com dados sintéticos. A activação e publicação requerem ordem explícita «publica».
+
 ## Versão 0.11.0 publicada — recebimentos e pré-filtros
 
 - Publicação confirmada em 2026-09-16 19:10:46 UTC: GitHub `main` `ba2a67bfbcd1129d60472456cf82c7c101f493eb` (PR #42), Cloudflare `https://legal-carina.dabranches.workers.dev`, deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d` a 100%. As notas da versão online responderam HTTP 200 com `0.11.0`. Rollback frontend: version ID `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (0.10.21).

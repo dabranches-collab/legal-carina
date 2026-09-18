@@ -39,7 +39,7 @@ type Entry = {
   expense_count?: number;
   expense_notes?: string[];
   expense_details?: string[];
-  billing_scope?: 'standard'|'retainer';
+  billing_scope?: 'standard'|'retainer'|'fixed_fee';
 };
 const attentionCountsCache=new Map<string,Record<string,number>>();
 type FilterSummary={minutes:number;amount:number;priced:number;count:number};
@@ -156,7 +156,7 @@ async function hydrateExpenseSummaryChunk(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
   const db=supabase;
   const scopeRows=await readIdBatches(entries.filter(row=>!row.billing_scope).map(row=>row.id),(ids,from,to)=>db.from('work_entries').select('id,billing_scope').in('id',ids).order('id').range(from,to));
-  const scopes=new Map(scopeRows.map(item=>[item.id,(item.billing_scope??'standard') as 'standard'|'retainer']));
+  const scopes=new Map(scopeRows.map(item=>[item.id,(item.billing_scope??'standard') as 'standard'|'retainer'|'fixed_fee']));
   const summaries=new Map<string,{amount:number;count:number;notes:string[];details:string[]}>();
   const expenses=await readIdBatches(entries.map(row=>row.id),(ids,from,to)=>db.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',ids).eq('status','active').order('id').range(from,to));
   for(const item of expenses){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count++;if(item.observations)current.notes.push(item.observations);current.details.push(money.format(amount)+' — '+(item.observations||'Sem observação'));summaries.set(item.work_entry_id,current)}
@@ -545,7 +545,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       align: "right",
       value: (row) => row.duration_minutes,
     },
-    {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Fora da avença'},{value:'retainer',label:'Coberto por avença'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='retainer'?'Avença':'Fora da avença'}</span>},
+    {id:'billingScope',label:'Tratamento',filterOptions:[{value:'standard',label:'Facturação normal'},{value:'retainer',label:'Avença'},{value:'fixed_fee',label:'Preço fixo'}],value:row=>row.billing_scope??'standard',render:row=><span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${row.billing_scope==='fixed_fee'?'bg-primary/10 text-primary':row.billing_scope==='retainer'?'bg-secondary-soft text-secondary':'bg-surface-subtle text-text-secondary'}`}>{row.billing_scope==='fixed_fee'?'Preço fixo':row.billing_scope==='retainer'?'Avença':'Facturação normal'}</span>},
     {
       id: "rate",
       label: "Valor/hora (EUR)",

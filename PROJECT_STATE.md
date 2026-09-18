@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## Versão 0.12.0 local em preparação — 18-09-2026
+
+- Branch `codex/fixed-fee-work-0.12.0` baseada em `origin/main` `abde1031a5a3833ff1710ba4d789dc106933562e`. Produção permanece na versão 0.11.0, deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d`, segundo o último estado confirmado. Nenhum deploy foi feito neste lote.
+- A ficha de cliente local tem separador de trabalhos a preço fixo: lista por nome, preço, estados separados de facturação e pagamento, horas e valor médio/hora. Ao abrir um trabalho, mostra os registos associados e os registos elegíveis do cliente; permite associar vários ou retirar um, com recálculo imediato. A coluna Tratamento dos registos distingue «Preço fixo», «Avença» e «Facturação normal».
+- A migration `20260918133000_add_fixed_fee_jobs.sql` prepara armazenamento, associação auditada, isolamento de valores dos registos e RLS. **Não aplicada**: o Supabase remoto mantém a última migration `20260916182123`. Até à activação, o browser local mostra uma pré-visualização identificada como tal e não grava trabalhos ou associações. Não usar os valores do exemplo como dados reais.
+- As caixas «Por receber» e «Visão Geral» estão preparadas para incluir trabalhos de preço fixo sem duplicar os valores dos registos associados. A validação do SQL e da contabilidade real depende de um ambiente de base de dados de teste antes da publicação.
+
 ## Versão 0.11.0 publicada — 16-09-2026
 
 - PR #42 fundido em GitHub `main` `ba2a67bfbcd1129d60472456cf82c7c101f493eb`. CI de validação, auditoria de dependências e scan aprovada; dry-run Cloudflare aprovado sobre o commit fundido. Produção `https://legal-carina.dabranches.workers.dev` a 0.11.0 desde 2026-09-16 19:10:46 UTC: deployment `bebd45c9-795e-455d-80ad-32b0aec8fec2`, version ID `4fc9aa65-9c37-42fd-871f-14d024e6d86d` a 100%. Notas da versão online confirmadas por HTTP 200. Rollback frontend: version ID `13705d2c-925f-4848-a3a0-ff1b599b8d4b` (0.10.21).

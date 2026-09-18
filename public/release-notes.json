@@ -1,12 +1,17 @@
 {
-  "version": "0.11.0",
+  "version": "0.12.0",
   "changes": [
-    "A área Por receber reúne os clientes com facturas pendentes, trabalho e avenças por facturar, ordenados pelo total conhecido, e abre mais depressa.",
-    "A Visão Geral distingue o total por receber, o facturado por receber e o valor por facturar, com cêntimos visíveis.",
-    "Os pré-filtros de Registos mostram horas e montantes quando se aplicam, sem carregar toda a lista antes de abrir o ecrã.",
-    "Na lista Por receber, as caixas com valores abrem os movimentos para consulta e edição; ao fechar, regressa-se à mesma posição da lista."
+    "A ficha do cliente prepara trabalhos a preço fixo, com selecção de registos, horas utilizadas e valor médio por hora.",
+    "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
   ],
   "releases": [
+    {
+      "version": "0.12.0",
+      "changes": [
+        "A ficha do cliente prepara trabalhos a preço fixo, com selecção de registos, horas utilizadas e valor médio por hora.",
+        "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
+      ]
+    },
     {
       "version": "0.11.0",
       "changes": [

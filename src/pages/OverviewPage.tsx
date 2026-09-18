@@ -153,10 +153,11 @@ export function OverviewPage() {
     );
   const m = data.metrics;
   const receiving=receivingRows?{
-    billed:receivingRows.reduce((sum,row)=>sum+(row.unpaidAmount??0)+row.retainerAmount,0),
-    unbilled:receivingRows.reduce((sum,row)=>sum+(row.uninvoicedAmount??0)+row.retainerPendingAmount,0),
+    billed:receivingRows.reduce((sum,row)=>sum+(row.unpaidAmount??0)+row.retainerAmount+(row.fixedUnpaidAmount??0),0),
+    unbilled:receivingRows.reduce((sum,row)=>sum+(row.uninvoicedAmount??0)+row.retainerPendingAmount+(row.fixedPendingAmount??0),0),
     workUnbilled:receivingRows.reduce((sum,row)=>sum+(row.uninvoicedAmount??0),0),
     retainerPending:receivingRows.reduce((sum,row)=>sum+row.retainerPendingAmount,0),
+    fixedPending:receivingRows.reduce((sum,row)=>sum+(row.fixedPendingAmount??0),0),
     partial:receivingRows.some(row=>row.unpaidPartial||row.uninvoicedPartial),
   }:null;
   const metrics = [
@@ -207,9 +208,9 @@ export function OverviewPage() {
       "warning",
     ],
     [
-      "Por facturar: trabalho e avenças",
+      "Por facturar: trabalho, avenças e preço fixo",
       receiving?`${financial(receiving.unbilled)}${receiving.partial?' · parcial':''}`:"A calcular…",
-      "Trabalho e prestações pendentes",
+      "Registos, prestações e trabalhos pendentes",
       "invoice",
       "warning",
     ],
@@ -259,7 +260,7 @@ export function OverviewPage() {
   const detailLinks: Record<string, string> = {
     "Total por receber": "?view=debtors",
     "Facturado por receber": "?view=debtors",
-    "Por facturar: trabalho e avenças": "?view=debtors",
+    "Por facturar: trabalho, avenças e preço fixo": "?view=debtors",
     "Facturados não pagos": "?view=work&collectionState=unpaid",
     "Movimentos sem preço": "?view=work&missingPrice=true",
     "Sem sociedade": "?view=work&missingSociety=true",
@@ -270,7 +271,7 @@ export function OverviewPage() {
   const followUpCount:Record<string,number|null>={
     "Total por receber":receiving?receiving.billed+receiving.unbilled:null,
     "Facturado por receber":receiving?.billed??m.receivable,
-    "Por facturar: trabalho e avenças":receiving?.unbilled??null,
+    "Por facturar: trabalho, avenças e preço fixo":receiving?.unbilled??null,
     "Facturados não pagos":m.unpaidCount,
     "Incobráveis":m.uncollectibleCount,
     "Movimentos sem preço":m.missingPrice,
@@ -289,7 +290,7 @@ export function OverviewPage() {
     "Sem sociedade": "missingBilling",
   };
   const metricSubtotals = (label: string) => {
-    if(label==="Por facturar: trabalho e avenças")return receiving?[{label:"Trabalho",value:financial(receiving.workUnbilled)},{label:"Avenças",value:financial(receiving.retainerPending)}]:[];
+    if(label==="Por facturar: trabalho, avenças e preço fixo")return receiving?[{label:"Registos",value:financial(receiving.workUnbilled)},{label:"Avenças",value:financial(receiving.retainerPending)},{label:"Preço fixo",value:financial(receiving.fixedPending)}]:[];
     if (label === "Sem sociedade") return [];
     const key = subtotalKey[label];
     return key

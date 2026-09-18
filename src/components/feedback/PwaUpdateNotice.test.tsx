@@ -73,7 +73,7 @@ test('usa a versão do worker activo quando o HTML já é novo e descarta a orig
  for(const change of installedNotes.changes)expect(screen.getByText(change)).toBeInTheDocument()
  expect(screen.getByText(installedNotes.releases[1].changes[0])).toBeInTheDocument()
  expect(screen.getByText(installedNotes.releases[2].changes[0])).toBeInTheDocument()
- expect(screen.queryByText(installedNotes.releases[3].changes[0])).not.toBeInTheDocument()
+ expect(screen.queryByText(installedNotes.releases.find(release=>release.version==='0.10.20')!.changes[0])).not.toBeInTheDocument()
  await userEvent.click(screen.getByRole('button',{name:'Actualizar aplicação'}))
  expect(localStorage.getItem('carina-release-notes-from')).toBe('0.10.20')
  expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})
