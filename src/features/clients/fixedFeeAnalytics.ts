@@ -1,8 +1,9 @@
 import { readIdBatches } from '../../lib/readBatches'
 import { supabase } from '../../lib/supabase'
 import { allocatedAmounts } from './fixedFeeAllocation'
+import { fixedFeeFinancialPosition } from './fixedFeeFinance'
 
-export type FixedFeeJob = { id:string;client_id:string;billing_entity_id:string|null;title:string;agreed_amount:number;currency:string;status:string;is_invoiced:boolean;is_paid:boolean;invoice_date:string|null;created_at:string }
+export type FixedFeeJob = { id:string;client_id:string;billing_entity_id:string|null;title:string;agreed_amount:number;currency:string;status:string;is_invoiced:boolean;is_paid:boolean;invoice_date:string|null;created_at:string;provision_applied?:number }
 export type FixedFeeWork = { id:string;fixed_fee_job_id:string;professional_id:string;work_date:string;duration_minutes:number }
 export type FixedFeeLine = { jobId:string;clientId:string;billingEntityId:string|null;professionalId:string|null;date:string;minutes:number;amount:number;invoiced:number;paid:number;unpaid:number;uninvoiced:number }
 export type FixedFeeTotals = { minutes:number;total:number;invoiced:number;paid:number;unpaid:number;uninvoiced:number }
@@ -12,9 +13,9 @@ export function buildFixedFeeLines(jobs:FixedFeeJob[],work:FixedFeeWork[]):Fixed
  for(const entry of work){const rows=byJob.get(entry.fixed_fee_job_id)??[];rows.push(entry);byJob.set(entry.fixed_fee_job_id,rows)}
  const lines:FixedFeeLine[]=[]
  for(const job of jobs){if(job.status==='cancelled')continue;if(job.currency!=='EUR')throw new Error('Há trabalhos a preço fixo noutra moeda. Os totais em euros não podem ser somados.')
-  const rows=byJob.get(job.id)??[],allocated=allocatedAmounts(Number(job.agreed_amount),rows)
+  const rows=byJob.get(job.id)??[],position=fixedFeeFinancialPosition({agreedAmount:Number(job.agreed_amount),isInvoiced:job.is_invoiced,isPaid:job.is_paid,provisionApplied:Number(job.provision_applied??0)}),allocated=allocatedAmounts(position.agreed,rows),receivedAllocation=allocatedAmounts(position.received,rows)
   const parts=rows.some(row=>row.duration_minutes>0)?rows:[{id:'unallocated',fixed_fee_job_id:job.id,professional_id:'',work_date:job.created_at.slice(0,10),duration_minutes:0}]
-  for(const row of parts){const amount=parts.length===1&&row.id==='unallocated'?Number(job.agreed_amount):allocated.get(row.id)??0;lines.push({jobId:job.id,clientId:job.client_id,billingEntityId:job.billing_entity_id,professionalId:row.professional_id||null,date:row.work_date,minutes:row.duration_minutes,amount,invoiced:job.is_invoiced?amount:0,paid:job.is_paid?amount:0,unpaid:job.is_invoiced&&!job.is_paid?amount:0,uninvoiced:!job.is_invoiced?amount:0})}
+  for(const row of parts){const unallocated=parts.length===1&&row.id==='unallocated',amount=unallocated?position.agreed:allocated.get(row.id)??0,received=unallocated?position.received:receivedAllocation.get(row.id)??0;lines.push({jobId:job.id,clientId:job.client_id,billingEntityId:job.billing_entity_id,professionalId:row.professional_id||null,date:row.work_date,minutes:row.duration_minutes,amount,invoiced:job.is_invoiced?amount:0,paid:received,unpaid:job.is_invoiced?amount-received:0,uninvoiced:!job.is_invoiced?amount:0})}
  }
  return lines
 }

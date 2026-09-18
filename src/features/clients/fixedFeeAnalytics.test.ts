@@ -19,4 +19,9 @@ describe('reconciliação analítica do preço fixo',()=>{
   expect(lines[0].professionalId).toBeNull()
   expect(fixedFeeHourlyRate(sumFixedFeeLines(lines,()=>true))).toBeNull()
  })
+ test('a provisão parcial entra como recebido sem alterar o preço nem a média por hora',()=>{
+  const lines=buildFixedFeeLines([{...job,provision_applied:400}],[{id:'a',fixed_fee_job_id:'job',professional_id:'one',work_date:'2026-09-02',duration_minutes:60}])
+  expect(sumFixedFeeLines(lines,()=>true)).toMatchObject({total:1200,invoiced:1200,paid:400,unpaid:800,minutes:60})
+  expect(fixedFeeHourlyRate(sumFixedFeeLines(lines,()=>true))).toBe(1200)
+ })
 })

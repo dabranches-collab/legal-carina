@@ -11,6 +11,12 @@ Estado: preparação local 0.12.0. Esta funcionalidade não pode ser publicada a
 - A provisão é uma entrada de dinheiro separada do preço acordado. Ao registá-la, mesmo que os trabalhos já existam, perguntar ao operador se quer aplicá-la a algum trabalho deste cliente e sociedade. Permitir escolher zero, um ou vários trabalhos e indicar o montante para cada um; nunca repartir automaticamente.
 - A soma aplicada não pode exceder a provisão disponível nem o saldo por liquidar de cada trabalho. O valor médio/hora usa sempre o preço acordado bruto; o valor por receber usa o remanescente depois dos abates confirmados. A parcela não aplicada mantém-se disponível na conta de provisões.
 - A afectação e a entrada da provisão precisam de ser gravadas numa única transacção, com histórico e estorno. A emissão posterior de nota/factura tem de reconhecer o abate já efectuado e impedir consumo duplo da mesma provisão. Sem esta integração, nenhuma escolha visual deve marcar o trabalho como pago nem reduzir o saldo.
+- A fase operacional «Em curso» ou «Terminado» é independente de facturação e pagamento. Pode haver trabalho terminado por facturar ou trabalho em curso já pago.
+- Antes de implementar o abatimento, confirmar se o preço acordado é honorário antes de IVA ou total com IVA incluído. Esta distinção afecta o saldo de provisão, o documento e o valor por receber.
+- «Por facturar» representa o valor contratual que ainda requer documento. «Por receber» representa o remanescente após pagamentos aplicados. Se houver uma provisão aplicada antes da factura, estes números deixam de ser somáveis entre si sem ajuste; o ecrã deve mostrar claramente a provisão já recebida.
+
+- Ao associar um registo que tinha preço, esse preço deixa de entrar nos totais avulsos. Ao desassociar, o registo volta à facturação normal e tem de ser recalculado ou revisto antes de entrar nos totais.
+- `fixedFeeAnalytics.ts` já calcula a repartição em cêntimos por responsável e conserva o preço no cliente/sociedade quando ainda não há horas. Está isolado e ainda não alimenta os dashboards: a consulta deve ser validada contra as permissões e os totais reais antes de ser ligada.
 
 ### Pergunta ao registar uma provisão
 
@@ -21,8 +27,6 @@ Apresentar a pergunta depois de o operador indicar cliente, sociedade e montante
 > A provisão recebida é de **[montante]**. Pode escolher um ou vários trabalhos da mesma sociedade e indicar quanto pretende atribuir a cada um. O valor atribuído reduz o montante ainda por receber desse trabalho. **Não altera o preço acordado nem o valor médio por hora.** O que não atribuir fica disponível na conta de provisões para utilizar mais tarde.
 
 Acções: **Escolher trabalhos e montantes** e **Não aplicar agora**. Na primeira opção, mostrar uma linha por trabalho com nome, preço acordado, provisão já aplicada, ainda por receber e campo «Abater agora». Antes de confirmar, mostrar «Total a atribuir», «Fica disponível na provisão» e «Fica por receber nos trabalhos». Se não houver trabalhos elegíveis, registar a provisão sem esta pergunta. A decisão negativa não é definitiva: deve existir uma acção posterior «Aplicar provisão a trabalhos» na ficha do cliente.
-- Ao associar um registo que tinha preço, esse preço deixa de entrar nos totais avulsos. Ao desassociar, o registo volta à facturação normal e tem de ser recalculado ou revisto antes de entrar nos totais.
-- `fixedFeeAnalytics.ts` já calcula a repartição em cêntimos por responsável e conserva o preço no cliente/sociedade quando ainda não há horas. Está isolado e ainda não alimenta os dashboards: a consulta deve ser validada contra as permissões e os totais reais antes de ser ligada.
 
 ## Superfícies a reconciliar
 
