@@ -1,14 +1,14 @@
 {
   "version": "0.12.0",
   "changes": [
-    "A ficha do cliente prepara trabalhos a preço fixo, com selecção de registos, horas utilizadas e valor médio por hora.",
+    "A ficha do cliente prepara trabalhos a preço fixo, com fase Em curso ou Terminado, selecção de registos, horas utilizadas e valor médio por hora.",
     "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
   ],
   "releases": [
     {
       "version": "0.12.0",
       "changes": [
-        "A ficha do cliente prepara trabalhos a preço fixo, com selecção de registos, horas utilizadas e valor médio por hora.",
+        "A ficha do cliente prepara trabalhos a preço fixo, com fase Em curso ou Terminado, selecção de registos, horas utilizadas e valor médio por hora.",
         "Os valores acordados dos trabalhos entram no acompanhamento dos recebimentos uma única vez, independentemente dos registos associados."
       ]
     },

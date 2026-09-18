@@ -8,6 +8,7 @@
 - As caixas «Por receber» e «Visão Geral» estão preparadas para incluir trabalhos de preço fixo sem duplicar os valores dos registos associados. A validação do SQL e da contabilidade real depende de um ambiente de base de dados de teste antes da publicação.
 - Auditoria de 18-09-2026: ainda não há reconciliação transversal dos trabalhos a preço fixo nos dashboards de cliente, sociedade e responsável, nos gráficos e nos resumos por categoria. Esses painéis continuam a usar agregados de registos; não afirmar que todos os totais estão completos nem publicar esta versão como funcionalidade financeira concluída.
 - Provisões sobre trabalhos a preço fixo: por decisão do utilizador, a aplicação terá de perguntar ao registar a provisão se deseja afectar montantes a trabalhos já criados, escolhendo cada trabalho e montante, ou deixar tudo disponível para mais tarde. O preço bruto e o valor médio/hora não diminuem. A arquitectura e o texto da pergunta estão em `docs/fixed-fee-reconciliation.md`; a ligação transaccional ao livro de provisões e a interface ainda não estão implementadas.
+- A fase operacional do trabalho é agora visível na lista e no detalhe da ficha, com filtro «Todos / Em curso / Terminados / Cancelados». Não altera a facturação nem o pagamento.
 
 ## Versão 0.11.0 publicada — 16-09-2026
 
