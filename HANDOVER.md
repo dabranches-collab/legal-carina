@@ -12,6 +12,7 @@
 - Modelo puro `fixedFeeFinancialPosition` adicionado: separa honorários antes de IVA, imposto, total da factura e provisão recebida em dinheiro. A repartição analítica por responsável usa os honorários integrais para a média/hora e converte proporcionalmente a provisão parcial, sem duplicar receita. Ainda não existe persistência nem leitura de afectações reais.
 - Decisão recebida em 18-09-2026: o preço acordado para o trabalho é **antes de IVA**. Adaptar o modelo puro e os fluxos de provisões/documentos: honorários e médias usam base tributável, provisão é dinheiro e abate ao total com IVA. Não publicar até conciliar as duas grandezas e testar a migration.
 - A migration local fixa `vat_rate` no trabalho ao atribuir a sociedade. A ficha apresenta os honorários sem IVA e, quando há sociedade, o total com IVA. Falta ensaio SQL num ambiente de teste e integração da emissão de documentos e provisões.
+- O ensaio pgTAP `supabase/tests/database/fixed_fee_jobs.test.sql` está preparado com 11 verificações sobre fase automática, preço individual e IVA fixado, usando apenas dados sintéticos e transacção com rollback. Ainda não foi executado por falta de uma base de teste isolada.
 
 ## Versão 0.11.0 publicada — recebimentos e pré-filtros
 

@@ -1,0 +1,40 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(11);
+
+insert into auth.users(id,email) values('00000000-0000-0000-0000-0000000000f1','fixed-fee-owner@example.test');
+insert into public.law_firms(id,name) values('10000000-0000-0000-0000-0000000000f1','Escritório sintético preço fixo');
+insert into public.firm_members(firm_id,user_id,role) values('10000000-0000-0000-0000-0000000000f1','00000000-0000-0000-0000-0000000000f1','owner');
+insert into public.clients(id,firm_id,client_code,client_type,display_name) values('20000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','FIX-1','company','Cliente sintético preço fixo');
+insert into public.client_profiles(id,firm_id,client_id,client_type,client_code) values('25000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','20000000-0000-0000-0000-0000000000f1','company','FIX-1');
+insert into public.professionals(id,firm_id,display_name) values('30000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','Profissional sintético');
+insert into public.billing_entities(id,firm_id,name,legal_name,default_vat_rate) values('50000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','Sociedade sintética','Sociedade sintética',23);
+
+select has_table('public','fixed_fee_jobs','Os trabalhos a preço fixo têm tabela própria');
+select has_column('public','fixed_fee_jobs','vat_rate','A taxa de IVA fica guardada no trabalho');
+
+insert into public.fixed_fee_jobs(id,firm_id,client_id,billing_entity_id,title,agreed_amount,created_by)
+values('60000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','20000000-0000-0000-0000-0000000000f1','50000000-0000-0000-0000-0000000000f1','Peça sintética',1200,'00000000-0000-0000-0000-0000000000f1');
+select is((select status from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f1'),'not_started','Começa por iniciar');
+select is((select vat_rate from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f1'),23.00::numeric,'Fixa a taxa da sociedade na criação');
+select throws_ok($$update public.fixed_fee_jobs set status='completed' where id='60000000-0000-0000-0000-0000000000f1'$$,'P0001',null,'Não se termina antes do primeiro registo');
+
+update public.billing_entities set default_vat_rate=25 where id='50000000-0000-0000-0000-0000000000f1';
+update public.fixed_fee_jobs set title='Peça sintética revista' where id='60000000-0000-0000-0000-0000000000f1';
+select is((select vat_rate from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f1'),23.00::numeric,'Mudança futura da taxa predefinida não altera o trabalho');
+
+insert into public.work_entries(id,firm_id,client_id,client_profile_id,professional_id,billing_entity_id,work_date,activity_description,duration_minutes,billing_scope,fixed_fee_job_id,source_type,created_by)
+values('40000000-0000-0000-0000-0000000000f1','10000000-0000-0000-0000-0000000000f1','20000000-0000-0000-0000-0000000000f1','25000000-0000-0000-0000-0000000000f1','30000000-0000-0000-0000-0000000000f1','50000000-0000-0000-0000-0000000000f1',current_date,'Registo sintético',60,'fixed_fee','60000000-0000-0000-0000-0000000000f1','manual','00000000-0000-0000-0000-0000000000f1');
+select is((select status from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f1'),'open','O primeiro registo inicia automaticamente o trabalho');
+select is((select effective_amount from public.work_entries where id='40000000-0000-0000-0000-0000000000f1'),null::numeric,'O registo associado não conserva preço individual');
+update public.fixed_fee_jobs set status='completed' where id='60000000-0000-0000-0000-0000000000f1';
+select is((select status from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f1'),'completed','O operador pode terminar o trabalho iniciado');
+
+insert into public.fixed_fee_jobs(id,firm_id,client_id,title,agreed_amount,created_by)
+values('60000000-0000-0000-0000-0000000000f2','10000000-0000-0000-0000-0000000000f1','20000000-0000-0000-0000-0000000000f1','Por atribuir',100,'00000000-0000-0000-0000-0000000000f1');
+select throws_ok($$update public.fixed_fee_jobs set is_invoiced=true,invoice_date=current_date where id='60000000-0000-0000-0000-0000000000f2'$$,'23514',null,'Facturação exige sociedade');
+update public.fixed_fee_jobs set billing_entity_id='50000000-0000-0000-0000-0000000000f1' where id='60000000-0000-0000-0000-0000000000f2';
+select is((select vat_rate from public.fixed_fee_jobs where id='60000000-0000-0000-0000-0000000000f2'),25.00::numeric,'Ao atribuir sociedade mais tarde, fixa a taxa actual');
+
+select * from finish();
+rollback;
