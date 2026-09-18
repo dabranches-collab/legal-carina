@@ -15,7 +15,10 @@ async function issuerLogo(issuer:IssuerData,societyName:string){
  canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale))
  const context=canvas.getContext('2d');if(!context)throw new Error('Não foi possível preparar o logótipo da sociedade.')
  context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);context.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close()
- return canvas.toDataURL('image/jpeg',0.8)
+ let quality=.8,result=canvas.toDataURL('image/jpeg',quality)
+ while(result.length>24000&&quality>.5){quality-=.05;result=canvas.toDataURL('image/jpeg',quality)}
+ if(result.length>24000)throw new Error('O logótipo da sociedade é demasiado grande para guardar nesta nota.')
+ return result
 }
 
 export function FixedFeeNoteActions({job,societyName,readOnly}:{job:Job;societyName:string;readOnly:boolean}){
