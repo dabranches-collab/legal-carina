@@ -36,9 +36,9 @@ Acções: **Escolher trabalhos e montantes** e **Não aplicar agora**. Na primei
 | Ficha do cliente: trabalho, horas, valor médio/hora e registos | Preço único e divisão pelas horas | Pré-visualização local; SQL por activar |
 | Registos: tratamento, preço/hora e montante | Tratamento «Preço fixo»; montante individual vazio | Preparado |
 | Por receber e Visão Geral | Somar o preço uma vez, segundo factura/pagamento | Preparado; falta reconciliação em BD |
-| Dashboards do cliente e por categoria | Total, facturado, pago, pendente, preço médio e séries temporais | Pendente: RPCs antigas somam registos |
-| Dashboards da sociedade e lista de sociedades | Mesmos valores, atribuídos à sociedade do trabalho | Pendente |
-| Dashboards do responsável | Parcela proporcional às horas e preço médio ponderado | Pendente |
+| Dashboards do cliente e por categoria | Total, facturado, pago, pendente, preço médio e séries temporais | Integração local por parcelas preparada; falta validação SQL e visual com dados sintéticos |
+| Dashboards da sociedade e lista de sociedades | Mesmos valores, atribuídos à sociedade do trabalho | Integração local dos resumos e gráficos preparada; falta reconciliação na base |
+| Dashboards do responsável | Parcela proporcional às horas e preço médio ponderado | Integração local dos resumos e gráficos preparada; falta reconciliação na base |
 | Repartição LEGALTEAM | Base do preço fixo por responsável/angariador conforme horas e regras comerciais | Pendente: usa montantes dos registos |
 | Pré-filtros e listas de registos | Contar os registos para horas, sem duplicar preço | A verificar com a migration activa |
 | Notas de honorários e facturas | Emitir o preço do trabalho uma vez, podendo anteceder a execução | Pendente: os fluxos actuais seleccionam registos avulsos |

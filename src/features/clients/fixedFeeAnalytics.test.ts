@@ -24,4 +24,13 @@ describe('reconciliação analítica do preço fixo',()=>{
   expect(sumFixedFeeLines(lines,()=>true)).toMatchObject({total:1200,invoiced:1200,paid:325.2,unpaid:874.8,minutes:60})
   expect(fixedFeeHourlyRate(sumFixedFeeLines(lines,()=>true))).toBe(1200)
  })
+ test('cliente misto reparte o preço pelas categorias dos registos associados',()=>{
+  const lines=buildFixedFeeLines([{...job,client_type:'individual',mixed_client:true}],[
+   {id:'a',fixed_fee_job_id:'job',professional_id:'one',client_type:'individual',work_date:'2026-09-02',duration_minutes:30},
+   {id:'b',fixed_fee_job_id:'job',professional_id:'two',client_type:'company',work_date:'2026-09-03',duration_minutes:90},
+  ])
+  expect(sumFixedFeeLines(lines,line=>line.clientType==='individual').total).toBe(300)
+  expect(sumFixedFeeLines(lines,line=>line.clientType==='company').total).toBe(900)
+  expect(sumFixedFeeLines(lines,line=>line.mixedClient).total).toBe(1200)
+ })
 })

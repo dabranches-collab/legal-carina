@@ -4,6 +4,8 @@ import { supabase } from "../../lib/supabase";
 import { AttentionPanel } from "./AttentionPanel";
 import { getAttentionCounts, type AttentionCounts } from "./attentionCounts";
 import { DashboardProcessingGrid } from "./DashboardProcessingGrid";
+import { loadFixedFeeLines } from '../clients/fixedFeeAnalytics'
+import { mergeFixedFeeMetrics } from './fixedFeeDashboard'
 
 type BillingSummary = {
   id: string;
@@ -37,7 +39,7 @@ export function BillingLandingPage({
 
   useEffect(() => {
     let active = true;
-    void (async () => {
+    void (async () => {try{
       if (!supabase) {
         setError("Ligação ao Supabase indisponível.");
         setLoading(false);
@@ -46,7 +48,7 @@ export function BillingLandingPage({
       const entities=await supabase.from("billing_entities").select("id,name").eq("active", true);
       if(!active)return;
       if(!entities.error)setProcessingNames((entities.data??[]).map(item=>item.name).sort((a,b)=>a.localeCompare(b,'pt-PT')));
-      const breakdowns=await supabase.rpc("get_dashboard_metric_breakdowns");
+      const [breakdowns,feeLines]=await Promise.all([supabase.rpc("get_dashboard_metric_breakdowns"),loadFixedFeeLines()]);
       if (!active) return;
       if (entities.error || breakdowns.error) {
         setError(entities.error?.message ?? breakdowns.error?.message ?? "Não foi possível carregar as sociedades.");
@@ -65,9 +67,10 @@ export function BillingLandingPage({
             }), id,
           }));
         const counts=await Promise.all(baseData.map(item=>getAttentionCounts({billingEntityId:item.id})));
-        if(active)setData(baseData.map((item,index)=>({...item,...counts[index]})));
+        if(active)setData(baseData.map((item,index)=>{const current={...item,...counts[index]},scoped=feeLines.filter(line=>line.billingEntityId===item.id);const merged=mergeFixedFeeMetrics({minutes:current.minutes,total:current.worked,invoiced:current.invoiced,paid:current.paid,pending:current.receivable,averageRate:null,uninvoicedCount:current.uninvoiced,unpaidCount:current.unpaid,missingPrice:current.missingPrice},scoped);return {...current,worked:merged.total,invoiced:merged.invoiced,paid:merged.paid,receivable:merged.pending,uninvoiced:merged.uninvoicedCount??current.uninvoiced,unpaid:merged.unpaidCount??current.unpaid,missingPrice:merged.missingPrice??current.missingPrice}}));
       }
       setLoading(false);
+      }catch(cause){if(active){setError(cause instanceof Error?cause.message:'Não foi possível carregar as sociedades.');setLoading(false)}}
     })();
     return () => {
       active = false;
