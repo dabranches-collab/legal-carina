@@ -39,7 +39,7 @@ Acções: **Escolher trabalhos e montantes** e **Não aplicar agora**. Na primei
 | Dashboards do cliente e por categoria | Total, facturado, pago, pendente, preço médio e séries temporais | Integração local por parcelas preparada; falta validação SQL e visual com dados sintéticos |
 | Dashboards da sociedade e lista de sociedades | Mesmos valores, atribuídos à sociedade do trabalho | Integração local dos resumos e gráficos preparada; falta reconciliação na base |
 | Dashboards do responsável | Parcela proporcional às horas e preço médio ponderado | Integração local dos resumos e gráficos preparada; falta reconciliação na base |
-| Repartição LEGALTEAM | Base do preço fixo por responsável/angariador conforme horas e regras comerciais | Pendente: usa montantes dos registos |
+| Repartição LEGALTEAM | Base do preço fixo por responsável/angariador conforme horas e regras comerciais | Integração local preparada: distribui o preço por registo, conserva horas e usa os angariadores existentes. Falta reconciliação em BD de ensaio. |
 | Pré-filtros e listas de registos | Contar os registos para horas, sem duplicar preço | A verificar com a migration activa |
 | Notas de honorários e facturas | Emitir o preço do trabalho uma vez, podendo anteceder a execução | Pendente: os fluxos actuais seleccionam registos avulsos |
 | Provisões e créditos de cliente | Perguntar na entrada da provisão, escolher os trabalhos existentes e o montante para cada um; conciliar abates, notas e estornos | Fluxo e SQL preparados localmente, com afectação imediata ou posterior; pgTAP ainda não executado. `loadCreditUsage` continua a seleccionar os registos avulsos para notas, enquanto os trabalhos a preço fixo entram como movimentos separados do mesmo livro. |

@@ -1,5 +1,5 @@
 import { describe,expect,it } from 'vitest'
-import { allocateHonoraria,allocationPeriod,validAllocationRates,type AllocationWork } from './allocation'
+import { allocateHonoraria,allocationPeriod,validAllocationRates,valueFixedFeeAllocationWork,type AllocationWork } from './allocation'
 const entry:AllocationWork={id:'1',client_id:'c1',work_date:'2026-01-01',client_name:'Cliente Sintético',professional_name:'Carina',activity_description:'Análise',duration_minutes:60,effective_amount:100,currency:'EUR',billing_scope:'standard',is_billable:true,is_paid:true,status:'paid',client_referrer:'carina',task_referrer:'hugo',task_referrer_other:null}
 describe('repartição de honorários',()=>{
  it('atribui a parcela ao angariador de cliente cadastrado e acumula a angariação da tarefa',()=>{
@@ -21,5 +21,12 @@ describe('repartição de honorários',()=>{
  it('obtém extremos de todo o período elegível sem depender do ano actual',()=>{
   expect(allocationPeriod([{...entry,work_date:'2023-04-05'},{...entry,work_date:'2027-02-01'},{...entry,work_date:'2020-01-01',status:'cancelled'}])).toEqual({start:'2023-04-05',end:'2027-02-01'})
   expect(allocationPeriod([])).toEqual({start:'',end:''})
+ })
+ it('reparte o preço fixo pelas tarefas sem perder as horas nem duplicar o preço',()=>{
+  const linked={...entry,id:'fixed-1',billing_scope:'fixed_fee',effective_amount:null,is_billable:false,is_paid:false}
+  const valued=valueFixedFeeAllocationWork([linked],[{jobId:'job-1',entryId:'fixed-1',title:'Peça sintética',clientId:'c1',clientType:'individual',mixedClient:false,billingEntityId:'society-1',billingEntityName:'LEGALTEAM',professionalId:'person-1',professionalName:'Carina',date:'2026-01-01',minutes:60,amount:120,paid:0,isInvoiced:false,invoiced:0,unpaid:0,uninvoiced:120}])
+  expect(valued[0]).toMatchObject({effective_amount:120,is_billable:true,is_paid:false,duration_minutes:60})
+  expect(allocateHonoraria(valued).total).toBe(12000)
+  expect(()=>valueFixedFeeAllocationWork([linked],[])).toThrow(/Falta o preço/)
  })
 })

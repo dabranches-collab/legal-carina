@@ -25,10 +25,10 @@ export function sumFixedFeeLines(lines:FixedFeeLine[],predicate:(line:FixedFeeLi
 }
 export function fixedFeeHourlyRate(totals:FixedFeeTotals):number|null{return totals.minutes>0?totals.total*60/totals.minutes:null}
 
-export async function loadFixedFeeLines():Promise<FixedFeeLine[]>{
+export async function loadFixedFeeLines(billingEntityId?:string):Promise<FixedFeeLine[]>{
  if(!supabase)return[]
  const jobs:FixedFeeJob[]=[]
- for(let from=0;;from+=500){const result=await supabase.from('fixed_fee_jobs').select('id,client_id,billing_entity_id,title,agreed_amount,currency,vat_rate,status,is_invoiced,is_paid,invoice_date,created_at').order('id').range(from,from+499);if(result.error){if(result.error.code==='PGRST205'||result.error.code==='42P01'||/fixed_fee_jobs.*schema cache/i.test(result.error.message))return[];throw result.error}const page=(result.data??[]) as FixedFeeJob[];jobs.push(...page);if(page.length<500)break}
+ for(let from=0;;from+=500){let query=supabase.from('fixed_fee_jobs').select('id,client_id,billing_entity_id,title,agreed_amount,currency,vat_rate,status,is_invoiced,is_paid,invoice_date,created_at');if(billingEntityId)query=query.eq('billing_entity_id',billingEntityId);const result=await query.order('id').range(from,from+499);if(result.error){if(result.error.code==='PGRST205'||result.error.code==='42P01'||/fixed_fee_jobs.*schema cache/i.test(result.error.message))return[];throw result.error}const page=(result.data??[]) as FixedFeeJob[];jobs.push(...page);if(page.length<500)break}
  if(!jobs.length)return[]
  const [work,appliedResult]=await Promise.all([
   readIdBatches(jobs.map(job=>job.id),(ids,from,to)=>supabase!.from('work_entries').select('id,fixed_fee_job_id,professional_id,client_profile_id,work_date,duration_minutes').in('fixed_fee_job_id',ids).order('id').range(from,to)),
