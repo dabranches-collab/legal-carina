@@ -129,7 +129,7 @@ export function EditWorkEntryModal({
       active = false;
     };
   }, [entryId]);
-  useEffect(()=>{const clientId=options?.clientProfiles.find(item=>item.id===entry?.client_profile_id)?.client_id;if(!supabase||!clientId){setFixedFeeJobs([]);return}let active=true;void supabase.from('fixed_fee_jobs').select('id,title,billing_entity_id').eq('client_id',clientId).in('status',['open','completed']).order('title').then(result=>{if(active)setFixedFeeJobs((result.data??[]) as Array<{id:string;title:string;billing_entity_id:string|null}>)});return()=>{active=false}},[entry?.client_profile_id,options]);
+  useEffect(()=>{const clientId=options?.clientProfiles.find(item=>item.id===entry?.client_profile_id)?.client_id;if(!supabase||!clientId){setFixedFeeJobs([]);return}let active=true;void supabase.from('fixed_fee_jobs').select('id,title,billing_entity_id').eq('client_id',clientId).in('status',['not_started','open','completed']).order('title').then(result=>{if(active)setFixedFeeJobs((result.data??[]) as Array<{id:string;title:string;billing_entity_id:string|null}>)});return()=>{active=false}},[entry?.client_profile_id,options]);
   const dirty=Boolean(entry&&(JSON.stringify(entry)!==originalEntry||expenseDrafts.length));
   async function submit(event: FormEvent) {
     event.preventDefault();

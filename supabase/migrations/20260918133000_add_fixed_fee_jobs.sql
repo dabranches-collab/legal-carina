@@ -9,7 +9,7 @@ create table public.fixed_fee_jobs (
  description text,
  agreed_amount numeric(14,2) not null check (agreed_amount >= 0),
  currency text not null default 'EUR' check (currency ~ '^[A-Z]{3}$'),
- status text not null default 'open' check (status in ('open','completed','cancelled')),
+ status text not null default 'not_started' check (status in ('not_started','open','completed','cancelled')),
  is_invoiced boolean not null default false,
  invoice_date date,
  is_paid boolean not null default false,
@@ -36,6 +36,7 @@ create policy fixed_fee_jobs_select on public.fixed_fee_jobs for select to authe
 create policy fixed_fee_jobs_insert on public.fixed_fee_jobs for insert to authenticated with check (
  private.has_firm_role(firm_id,array['owner','admin','billing'])
  and private.has_scope_access(firm_id,billing_entity_id,client_id,null,'edit')
+ and status='not_started'
  and created_by=(select auth.uid())
 );
 create policy fixed_fee_jobs_update on public.fixed_fee_jobs for update to authenticated using (
@@ -50,6 +51,8 @@ returns trigger language plpgsql set search_path='' as $$
 begin
  if new.firm_id is distinct from old.firm_id or new.client_id is distinct from old.client_id or new.billing_entity_id is distinct from old.billing_entity_id then raise exception 'fixed fee job ownership cannot be changed';end if;
  if (old.is_invoiced or old.is_paid) and new.agreed_amount is distinct from old.agreed_amount then raise exception 'invoiced fixed fee amount cannot be changed';end if;
+ if new.status='not_started' and old.status<>'not_started' then raise exception 'started fixed fee job cannot return to not started';end if;
+ if old.status='not_started' and new.status in ('open','completed') and not exists(select 1 from public.work_entries w where w.fixed_fee_job_id=old.id) then raise exception 'fixed fee job starts with its first work entry';end if;
  if new.status='cancelled' and exists(select 1 from public.work_entries w where w.fixed_fee_job_id=old.id) then raise exception 'remove linked work before cancelling fixed fee job';end if;
  new.updated_at:=now();
  return new;
@@ -85,6 +88,20 @@ begin
  end if;
  return new;
 end;$$;
+
+-- Também cobre associações feitas pelo editor ou por uma inserção de registo.
+create function private.start_fixed_fee_job_on_first_entry()
+returns trigger language plpgsql security definer set search_path='' as $$
+begin
+ if new.fixed_fee_job_id is null then return new;end if;
+ if tg_op='UPDATE' then
+  if new.fixed_fee_job_id is not distinct from old.fixed_fee_job_id then return new;end if;
+ end if;
+ update public.fixed_fee_jobs set status='open' where id=new.fixed_fee_job_id and status='not_started';
+ return new;
+end;$$;
+create trigger start_fixed_fee_job_on_first_entry after insert or update of fixed_fee_job_id on public.work_entries
+for each row execute function private.start_fixed_fee_job_on_first_entry();
 
 create function public.assign_work_entry_fixed_fee(p_work_entry_id uuid,p_fixed_fee_job_id uuid,p_reason text default null)
 returns void language plpgsql security definer set search_path='' as $$
