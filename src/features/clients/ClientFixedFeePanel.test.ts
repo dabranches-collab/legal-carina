@@ -13,4 +13,12 @@ describe('repartição analítica do preço fixo', () => {
     expect(allocation.get('c')).toBe(0)
     expect([...allocation.values()].reduce((sum, value) => sum + value, 0)).toBe(100)
   })
+
+  test('usa a mesma repartição independentemente da ordem recebida', () => {
+    const left = allocatedAmounts(100, [{ id: 'z', duration_minutes: 30 }, { id: 'a', duration_minutes: 15 }])
+    const right = allocatedAmounts(100, [{ id: 'a', duration_minutes: 15 }, { id: 'z', duration_minutes: 30 }])
+    expect([...left]).toEqual([...right])
+    expect(left.get('a')).toBe(33.33)
+    expect(left.get('z')).toBe(66.67)
+  })
 })

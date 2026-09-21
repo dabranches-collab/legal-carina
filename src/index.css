@@ -126,7 +126,7 @@ button:disabled { cursor: not-allowed; }
 .financial-value { display: inline-block; min-width: 4ch; }
 .metric-card-value, .metric-card-detail { display: block; }
 html[data-financial-values="hidden"] .financial-value { color: transparent !important; font-size: 0 !important; letter-spacing: 0 !important; text-shadow: none !important; user-select: none; }
-html[data-financial-values="hidden"] .financial-value::after { content: "••••"; color: var(--color-text-primary); font-size: .875rem; font-weight: 700; letter-spacing: .08em; }
+html[data-financial-values="hidden"] .financial-value::after { content: "*****"; color: var(--color-text-primary); font-size: .875rem; font-weight: 700; letter-spacing: .08em; }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-qa-theme="light"]):not([data-theme="light"]) {

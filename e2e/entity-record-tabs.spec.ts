@@ -36,7 +36,10 @@ test('os registos abrem na ficha e fechar repõe a lista de origem', async ({ pa
     const filterKey = entity === 'clients' ? 'p_client_id' : entity === 'billing_entities' ? 'p_billing_entity_id' : 'p_professional_id'
     const expectedId = `00000000-0000-4000-8000-${String(entity === 'clients' ? 20 : entity === 'billing_entities' ? 2 : 10).padStart(12, '0')}`
     await expect.poll(() => attentionRequests.some(args => args.p_kind === 'uninvoiced' && args[filterKey] === expectedId)).toBe(true)
-    await expect(page).toHaveURL(origin)
+    const openedUrl = new URL(page.url())
+    expect(openedUrl.searchParams.get('record')).toBe(expectedId)
+    expect(openedUrl.searchParams.get('recordFilter')).toBe('uninvoiced')
+    if (entity === 'clients') expect(openedUrl.searchParams.get('clientPage')).toBe('general')
     await dialog.getByRole('button', { name: 'Ficha', exact: true }).click()
     await expect(dialog.getByLabel('Nome')).toBeVisible()
     await dialog.locator('[data-close-record]').first().click()

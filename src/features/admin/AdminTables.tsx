@@ -8,11 +8,11 @@ const roles:Record<string,string>={owner:'Proprietário',admin:'Administrador',m
 
 export function AdminUsersTable({rows,loading,onConfigure}:{rows:UserRow[];loading:boolean;onConfigure:(row:UserRow)=>void}){
   const columns:TableColumn<UserRow>[]=[
-    {id:'name',label:'Nome',essential:true,sticky:true,value:row=>row.displayName||'Sem nome'},
-    {id:'username',label:'Utilizador',value:row=>row.username||'Por configurar',render:row=><><span className="block">{row.username||'Por configurar'}</span>{!row.pinConfigured&&<span className="text-xs text-warning">PIN por configurar</span>}</>},
-    {id:'role',label:'Perfil',filterOptions:Object.values(roles).map(label=>({value:label,label})),value:row=>roles[row.role]??row.role},
-    {id:'active',label:'Estado',kind:'boolean',value:row=>row.active,render:row=><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${row.active?'bg-success-soft text-success':'bg-surface-subtle text-text-secondary'}`}>{row.active?'Activo':'Inactivo'}</span>},
-    {id:'last',label:'Último acesso',kind:'date',value:row=>row.lastSignInAt,render:row=>row.lastSignInAt?formatDateTime(row.lastSignInAt):'Ainda não entrou'},
+    {id:'name',label:'Nome',essential:true,sticky:true,filterable:false,value:row=>row.displayName||'Sem nome'},
+    {id:'username',label:'Utilizador',filterable:false,value:row=>row.username||'Por configurar',render:row=><><span className="block">{row.username||'Por configurar'}</span>{!row.pinConfigured&&<span className="text-xs text-warning">PIN por configurar</span>}</>},
+    {id:'role',label:'Perfil',filterable:false,filterOptions:Object.values(roles).map(label=>({value:label,label})),value:row=>roles[row.role]??row.role},
+    {id:'active',label:'Estado',kind:'boolean',filterable:false,value:row=>row.active,render:row=><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${row.active?'bg-success-soft text-success':'bg-surface-subtle text-text-secondary'}`}>{row.active?'Activo':'Inactivo'}</span>},
+    {id:'last',label:'Último acesso',kind:'date',filterable:false,value:row=>row.lastSignInAt,render:row=>row.lastSignInAt?formatDateTime(row.lastSignInAt):'Ainda não entrou'},
     {id:'actions',label:'Acções',sortable:false,searchable:false,exportable:false,value:()=>null,render:row=><button type="button" onClick={()=>onConfigure(row)} className="rounded-lg border border-border px-3 py-2 font-semibold text-primary">Configurar</button>},
   ]
   return <StandardDataTable id="admin-users" label="Utilizadores existentes" rows={rows} columns={columns} rowKey={row=>row.userId} loading={loading} onRowDoubleClick={onConfigure} defaultPageSize={20}/>

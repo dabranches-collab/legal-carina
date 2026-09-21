@@ -84,7 +84,7 @@ export function AuthenticatedApplication() {
     if(nextEntity) url.searchParams.set('entity',nextEntity); else url.searchParams.delete('entity')
     if(nextProfessional) url.searchParams.set('professional',nextProfessional); else url.searchParams.delete('professional')
     for(const param of workPrefilterParams)url.searchParams.delete(param)
-    url.searchParams.delete('clientMode'); url.searchParams.delete('record'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
+    url.searchParams.delete('clientMode'); url.searchParams.delete('record'); url.searchParams.delete('recordSection'); url.searchParams.delete('recordPage'); url.searchParams.delete('clientPage'); url.searchParams.delete('recordFilter'); url.searchParams.delete('clientSearch'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
   }
   function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
   let content: React.ReactNode
