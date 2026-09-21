@@ -19,6 +19,18 @@ export default defineConfig({
     react(),
     tailwindcss(),
     {
+      name: 'release-notes-module',
+      resolveId(id) {
+        if (id === 'virtual:release-notes') return '\0virtual:release-notes'
+      },
+      load(id) {
+        if (id !== '\0virtual:release-notes') return
+        const notesPath = resolve('public/release-notes.json')
+        this.addWatchFile(notesPath)
+        return `export default ${readFileSync(notesPath, 'utf8')}`
+      },
+    },
+    {
       name: 'version-service-worker',
       apply: 'build',
       configResolved(config) {
