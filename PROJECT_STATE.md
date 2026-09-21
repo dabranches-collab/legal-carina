@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 21-09-2026 — produção 0.12.1 confirmada
+
+- GitHub `main` `df51c1ec7b00538b987e3d0bc4a90d71f2ad6c98`, PRs #53 e #54, CI `35649634700` e `35651505703` verdes. Produção Cloudflare `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, Version ID `de8bf232-2385-4f47-bed3-770632beb757`, 100% desde `2026-09-21 20:37:41 UTC`. O deployment ID não foi exposto pelo Wrangler; o Version ID e a hora foram confirmados em `deployments status`.
+- Rota `/` HTTP 200 com `/assets/index-hAIOlvg8.js` e `Cache-Control: no-store`; notas de versão HTTP 200/0.12.1; browser integrado online mostrou versão 0.12.1. O cache antigo da rota raiz foi corrigido pelo PR #54. Nenhuma alteração de base de dados adicional nesse hotfix. A versão local permanece aberta para consulta.
+
 ## 21-09-2026 — correcção de cache da rota principal em validação
 
 - A 0.12.1 foi integrada pelo PR #53 em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` verde. Deployment Cloudflare `2026-09-21 20:22:40 UTC`, version ID `e0af9ee7-7e5c-44d1-86e6-3a7b6457314f` a 100%.
