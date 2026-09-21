@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 21-09-2026 — versão 0.12.1 publicada e verificada
+
+- Código funcional integrado pelo PR #53 em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` aprovada com 235 testes unitários e 125 cenários E2E (omissões condicionais previstas). O hotfix da rota principal foi integrado pelo PR #54 em `main` `df51c1ec7b00538b987e3d0bc4a90d71f2ad6c98`; CI `35651505703` aprovada.
+- Produção `https://legal-carina.dabranches.workers.dev` na versão 0.12.1 desde `2026-09-21 20:37:41 UTC`: Cloudflare Version ID `de8bf232-2385-4f47-bed3-770632beb757`, 100% do tráfego. O Wrangler não expôs o deployment ID distinto do Version ID nesta consulta. O deploy anterior `e0af9ee7-7e5c-44d1-86e6-3a7b6457314f` tinha deixado HTML antigo em cache na rota `/`; é a versão de rollback do frontend, não a versão a promover.
+- Verificação após o hotfix: `/` devolveu HTTP 200, o asset novo `/assets/index-hAIOlvg8.js` e `Cache-Control: no-store`; `/release-notes.json` devolveu HTTP 200 e `0.12.1`. O browser integrado abriu a página online e mostrou “Versão 0.12.1” e o resumo das alterações desde 0.12.0. Não se introduziram credenciais na sessão de verificação da produção. A versão local continua aberta no browser integrado.
+- Migrations remotas e ensaio sintético do preço fixo descritos abaixo permanecem válidos; nenhuma migration adicional foi aplicada no hotfix de cache. Checkout canónico `C:\Projetos\legal-carina`, `main` no commit acima antes deste commit de handover; este registo será centralizado por PR documental.
+
 ## 21-09-2026 — cache da rota principal após a 0.12.1
 
 - PR #53 integrado em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` verde. Deploy 0.12.1 em `2026-09-21 20:22:40 UTC`, version ID `e0af9ee7-7e5c-44d1-86e6-3a7b6457314f` a 100%. `/release-notes.json` devolveu 0.12.1 e o novo JavaScript está acessível, mas a rota `/` ainda serviu um HTML antigo em cache no ponto LAD. O deploy não fica considerado verificado até a rota principal servir o novo asset.
