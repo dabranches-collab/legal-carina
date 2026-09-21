@@ -24,4 +24,13 @@ describe('resumos de registos a preço fixo',()=>{
  test('não transforma um trabalho sem registos numa linha de registo',()=>{
   expect(mergeFixedFeeAttentionSummaries({},[line({entryId:null,minutes:0})])).toEqual({})
  })
+ test('trabalho já pago fica fora de facturados não pagos',()=>{
+  expect(mergeFixedFeeAttentionSummaries({},[line({isInvoiced:true,isPaid:true,invoiced:100,paid:100,unpaid:0,uninvoiced:0})])).toEqual({})
+ })
+ test('pesquisa usa os mesmos campos dos contadores e da lista SQL',()=>{
+  const rows=[line({activityDescription:'Pedido de residência'}),line({entryId:'two',clientCode:'CL-29',activityDescription:'Outro'}),line({entryId:'three',observations:'Documento entregue'}),line({entryId:'four',professionalName:'Residência',billingEntityName:'Residência'})]
+  expect(mergeFixedFeeAttentionSummaries({},rows,{search:'residência'}).uninvoiced?.count).toBe(1)
+  expect(mergeFixedFeeAttentionSummaries({},rows,{search:'CL-29'}).uninvoiced?.count).toBe(1)
+  expect(mergeFixedFeeAttentionSummaries({},rows,{search:'documento'}).uninvoiced?.count).toBe(1)
+ })
 })

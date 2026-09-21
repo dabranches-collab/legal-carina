@@ -14,7 +14,8 @@ export function mergeFixedFeeAttentionSummaries(base:Record<string,FilterSummary
   if(filters.archive&&line.archiveStatus!==filters.archive)continue
   if(filters.clientId&&line.clientId!==filters.clientId)continue
   if(filters.clientType&&(filters.clientType==='mixed'?!line.mixedClient:line.clientType!==filters.clientType))continue
-  if(query&&![line.title,line.clientName,line.professionalName,line.billingEntityName].some(value=>value?.toLocaleLowerCase('pt-PT').includes(query)))continue
+  if(query&&![line.title,line.clientName,line.clientCode,line.activityDescription,line.observations].some(value=>value?.toLocaleLowerCase('pt-PT').includes(query)))continue
+  if(line.isInvoiced&&line.isPaid)continue
   const key=line.isInvoiced?'unpaid':'uninvoiced',amount=line.isInvoiced?line.unpaid:line.uninvoiced
   const current=result[key]??{minutes:0,amount:0,priced:0,count:0}
   result[key]={minutes:current.minutes+line.minutes,amount:current.amount+amount,priced:current.priced+(line.amount>0?1:0),count:current.count+1}
