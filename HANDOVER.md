@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## 21-09-2026 — cache da rota principal após a 0.12.1
+
+- PR #53 integrado em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` verde. Deploy 0.12.1 em `2026-09-21 20:22:40 UTC`, version ID `e0af9ee7-7e5c-44d1-86e6-3a7b6457314f` a 100%. `/release-notes.json` devolveu 0.12.1 e o novo JavaScript está acessível, mas a rota `/` ainda serviu um HTML antigo em cache no ponto LAD. O deploy não fica considerado verificado até a rota principal servir o novo asset.
+- A branch `codex/fix-root-asset-cache-0.12.1` desactiva o cache de resposta do Worker e devolve `no-store` para HTML. Confirmar CI, voltar a publicar e validar `/` e a ficha de cliente no browser antes de encerrar.
+
 ## 21-09-2026 — versão 0.12.1 validada; publicação autorizada
 
 - Checkout canónico `C:\\Projetos\\legal-carina`, branch `codex/fix-login-client-workflow-0.12.1`, base `origin/main` `e1d5ce4e1376b916e891283fb625dc48e58e8c5c`. A produção permanece na 0.12.0 enquanto este lote é centralizado e publicado. O utilizador deu ordem expressa para testar integralmente e publicar.

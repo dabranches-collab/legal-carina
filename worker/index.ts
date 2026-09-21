@@ -18,7 +18,7 @@ export default {
     const asset=await env.ASSETS.fetch(request),response=new Response(asset.body,asset)
     for(const [name,value]of Object.entries(securityHeaders))response.headers.set(name,value)
     const path=new URL(request.url).pathname
-    if(path==='/'||response.headers.get('content-type')?.includes('text/html'))response.headers.set('Cache-Control','no-cache')
+    if(path==='/'||response.headers.get('content-type')?.includes('text/html'))response.headers.set('Cache-Control','no-store')
     if(path==='/sw.js')response.headers.set('Cache-Control','no-cache, no-store, must-revalidate')
     return response
   },

@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 21-09-2026 — correcção de cache da rota principal em validação
+
+- A 0.12.1 foi integrada pelo PR #53 em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` verde. Deployment Cloudflare `2026-09-21 20:22:40 UTC`, version ID `e0af9ee7-7e5c-44d1-86e6-3a7b6457314f` a 100%.
+- A rota `/` ainda apresentou HTML da 0.12.0 em cache, apesar de `/release-notes.json` e os novos assets da 0.12.1 estarem acessíveis. A branch `codex/fix-root-asset-cache-0.12.1` desactiva o cache do Worker e define `no-store` para HTML; falta integrar, publicar e confirmar a rota principal.
+
 ## 21-09-2026 — versão 0.12.1 validada e pronta para publicação
 
 - Branch `codex/fix-login-client-workflow-0.12.1`, baseada em `origin/main` `e1d5ce4e1376b916e891283fb625dc48e58e8c5c`. Produção continua confirmada na 0.12.0 até ao deploy autorizado deste lote.
