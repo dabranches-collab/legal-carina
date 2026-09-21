@@ -231,7 +231,7 @@ export function MasterDataPage({
       ? "cards"
       : "table",
   );
-  const [cardSearch, setCardSearch] = useState("");
+  const [cardSearch, setCardSearch] = useState(() => new URLSearchParams(window.location.search).get("clientSearch") ?? "");
   const clientToolbarRef = useRef<HTMLDivElement>(null);
   const [tableToolbarOffset, setTableToolbarOffset] = useState<number>();
   useEffect(() => {
@@ -304,6 +304,20 @@ export function MasterDataPage({
   const loadSequenceRef = useRef(0);
   const creatorOpenedRef = useRef(false);
   const openedRecordRef = useRef<string | null>(null);
+  const updateRecordLocation = useCallback((record:Row|null,page?:typeof clientPage,filter?:FilterKey|null) => {
+    if(focusedRecordId||createOnMount)return
+    const url=new URL(window.location.href)
+    if(record){url.searchParams.set("record",record.id);url.searchParams.set("clientPage",page??"general");if(filter)url.searchParams.set("recordFilter",filter);else url.searchParams.delete("recordFilter")}
+    else{url.searchParams.delete("record");url.searchParams.delete("clientPage");url.searchParams.delete("recordFilter")}
+    window.history.replaceState(window.history.state,"",url)
+  },[focusedRecordId,createOnMount]);
+  useEffect(()=>{
+    if(section!=="clients"||focusedRecordId||createOnMount)return
+    const url=new URL(window.location.href)
+    if(cardSearch)url.searchParams.set("clientSearch",cardSearch);else url.searchParams.delete("clientSearch")
+    window.history.replaceState(window.history.state,"",url)
+  },[cardSearch,section,focusedRecordId,createOnMount]);
+  useEffect(()=>{if(editing)updateRecordLocation(editing,clientPage,activeWorkFilter)},[editing,clientPage,activeWorkFilter,updateRecordLocation]);
   useEffect(() => setSection(initialSection), [initialSection]);
   const load = useCallback(async () => {
     const db = supabase;
@@ -410,14 +424,18 @@ export function MasterDataPage({
     };
   }, [load]);
   async function openEditor(row: Row) {
-    setActiveWorkFilter(null);
+    const params=new URLSearchParams(window.location.search)
+    const savedFilter=params.get("record")===row.id?params.get("recordFilter"):null
+    const savedPage=params.get("record")===row.id?params.get("clientPage"):null
+    const restoredPage=initialClientPage??(['general','contacts','billing','retainer','fixedFees','provisions','credentials','documents'].includes(savedPage??'')?savedPage as typeof clientPage:"general")
+    setActiveWorkFilter(restoredPage==='general'&&(['all','uninvoiced','unpaid','missingPrice','missingSociety'] as string[]).includes(savedFilter??'')?savedFilter as FilterKey:null);
     setCreating(false);
     setClientDetailsReady(false);
     setEditing(row);
     setMode("edit");
     setShowOtherProfile(false);
     setDirty(false);
-    setClientPage(initialClientPage??"general");
+    setClientPage(restoredPage);
     setEditName(row.display_name ?? row.name ?? "");
     setError("");
     setDetails(emptyDetails());
@@ -673,6 +691,7 @@ export function MasterDataPage({
     setActiveWorkFilter(null);
     setCreating(false);
     setError("");
+    updateRecordLocation(null);
   }
   async function cancelChanges() {
     setError("");

@@ -4,6 +4,19 @@ import { createPortal } from 'react-dom'
 const MasterDataPage=lazy(()=>import('./MasterDataPage').then(module=>({default:module.MasterDataPage})))
 type RecordTarget={section:'clients'|'billing_entities'|'professionals';id:string;clientPage?:'fixedFees'}
 
+function targetFromLocation():RecordTarget|null{
+ const params=new URLSearchParams(window.location.search),section=params.get('recordSection'),id=params.get('record')
+ if(!id||!section||!['clients','billing_entities','professionals'].includes(section))return null
+ return {section:section as RecordTarget['section'],id,clientPage:params.get('recordPage')==='fixedFees'?'fixedFees':undefined}
+}
+
+function writeTarget(target:RecordTarget|null){
+ const url=new URL(window.location.href)
+ if(target){url.searchParams.set('record',target.id);url.searchParams.set('recordSection',target.section);if(target.clientPage)url.searchParams.set('recordPage',target.clientPage);else url.searchParams.delete('recordPage')}
+ else{url.searchParams.delete('record');url.searchParams.delete('recordSection');url.searchParams.delete('recordPage')}
+ window.history.replaceState(window.history.state,'',url)
+}
+
 function RecordOverlay({target,onClose}:{target:RecordTarget;onClose:()=>void}){
  const saved=useRef(false)
  useEffect(()=>{
@@ -32,16 +45,16 @@ function RecordOverlay({target,onClose}:{target:RecordTarget;onClose:()=>void}){
 }
 
 export function RecordDialogHost(){
- const [target,setTarget]=useState<RecordTarget|null>(null)
+ const [target,setTarget]=useState<RecordTarget|null>(()=>targetFromLocation())
  useEffect(()=>{
   const open=(event:Event)=>{
    const next=(event as CustomEvent<RecordTarget>).detail
-   if(next&&['clients','billing_entities','professionals'].includes(next.section)&&typeof next.id==='string'&&next.id)setTarget(next)
+   if(next&&['clients','billing_entities','professionals'].includes(next.section)&&typeof next.id==='string'&&next.id){writeTarget(next);setTarget(next)}
   }
-  const navigate=()=>setTarget(null)
+  const navigate=()=>setTarget(targetFromLocation())
   window.addEventListener('open-entity-record',open)
   window.addEventListener('popstate',navigate)
   return()=>{window.removeEventListener('open-entity-record',open);window.removeEventListener('popstate',navigate)}
  },[])
- return target?<RecordOverlay target={target} onClose={()=>setTarget(null)}/>:null
+ return target?<RecordOverlay target={target} onClose={()=>{writeTarget(null);setTarget(null)}}/>:null
 }

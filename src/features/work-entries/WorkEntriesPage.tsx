@@ -9,6 +9,9 @@ import { withTransientRetry } from "../../lib/transientRetry";
 import { readIdBatches } from "../../lib/readBatches";
 import { CreateWorkEntryModal } from "./CreateWorkEntryModal";
 import { EditWorkEntryModal } from "./EditWorkEntryModal";
+import { allocatedAmounts } from "../clients/fixedFeeAllocation";
+import { loadFixedFeeLines } from "../clients/fixedFeeAnalytics";
+import { mergeFixedFeeAttentionSummaries } from "./fixedFeeAttention";
 
 type Entry = {
   id: string;
@@ -40,6 +43,7 @@ type Entry = {
   expense_notes?: string[];
   expense_details?: string[];
   billing_scope?: 'standard'|'retainer'|'fixed_fee';
+  fixed_fee_job_id?: string|null;
 };
 const attentionCountsCache=new Map<string,Record<string,number>>();
 type FilterSummary={minutes:number;amount:number;priced:number;count:number};
@@ -155,12 +159,25 @@ function invalidateWorkUniverse(){cacheGeneration++;workUniverseCache.clear();wo
 async function hydrateExpenseSummaryChunk(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
   const db=supabase;
-  const scopeRows=await readIdBatches(entries.filter(row=>!row.billing_scope).map(row=>row.id),(ids,from,to)=>db.from('work_entries').select('id,billing_scope').in('id',ids).order('id').range(from,to));
+  const scopeRows=await readIdBatches(entries.map(row=>row.id),(ids,from,to)=>db.from('work_entries').select('id,billing_scope,fixed_fee_job_id').in('id',ids).order('id').range(from,to));
   const scopes=new Map(scopeRows.map(item=>[item.id,(item.billing_scope??'standard') as 'standard'|'retainer'|'fixed_fee']));
+  const jobByEntry=new Map(scopeRows.map(item=>[item.id,item.fixed_fee_job_id as string|null]));
+  const jobIds=[...new Set(scopeRows.map(item=>item.fixed_fee_job_id as string|null).filter((id):id is string=>Boolean(id)))];
+  const fixedAmounts=new Map<string,{amount:number;rate:number|null}>();
+  if(jobIds.length){
+    const [jobs,jobEntries]=await Promise.all([
+      readIdBatches(jobIds,(ids,from,to)=>db.from('fixed_fee_jobs').select('id,agreed_amount').in('id',ids).order('id').range(from,to)),
+      readIdBatches(jobIds,(ids,from,to)=>db.from('work_entries').select('id,fixed_fee_job_id,duration_minutes').in('fixed_fee_job_id',ids).order('id').range(from,to)),
+    ]);
+    for(const job of jobs){
+      const linked=jobEntries.filter(item=>item.fixed_fee_job_id===job.id),allocated=allocatedAmounts(Number(job.agreed_amount),linked);
+      for(const item of linked){const amount=allocated.get(item.id)??0;fixedAmounts.set(item.id,{amount,rate:item.duration_minutes>0?amount*60/item.duration_minutes:null})}
+    }
+  }
   const summaries=new Map<string,{amount:number;count:number;notes:string[];details:string[]}>();
   const expenses=await readIdBatches(entries.map(row=>row.id),(ids,from,to)=>db.from('work_entry_expenses').select('work_entry_id,amount,observations').in('work_entry_id',ids).eq('status','active').order('id').range(from,to));
   for(const item of expenses){const current=summaries.get(item.work_entry_id)??{amount:0,count:0,notes:[],details:[]},amount=Number(item.amount)||0;current.amount+=amount;current.count++;if(item.observations)current.notes.push(item.observations);current.details.push(money.format(amount)+' — '+(item.observations||'Sem observação'));summaries.set(item.work_entry_id,current)}
-  return entries.map(row=>{const summary=summaries.get(row.id),billing_scope=row.billing_scope??scopes.get(row.id)??'standard';return summary?{...row,billing_scope,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...row,billing_scope,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
+  return entries.map(row=>{const summary=summaries.get(row.id),billing_scope=row.billing_scope??scopes.get(row.id)??'standard',fixed=fixedAmounts.get(row.id),base={...row,billing_scope,fixed_fee_job_id:row.fixed_fee_job_id??jobByEntry.get(row.id)??null,...(billing_scope==='fixed_fee'&&fixed?{effective_amount:fixed.amount,effective_hourly_rate:fixed.rate}:{})};return summary?{...base,expense_amount:summary.amount,expense_count:summary.count,expense_notes:summary.notes,expense_details:summary.details}:{...base,expense_amount:0,expense_count:0,expense_notes:[],expense_details:[]}})
 }
 async function hydrateExpenseSummaries(entries:Entry[],onProgress?: (loaded:number,total:number,rows?:Entry[])=>void){
   if(!onProgress)return hydrateExpenseSummaryChunk(entries);
@@ -369,9 +386,10 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     const key=JSON.stringify(common),cached=attentionSummariesCache.get(key);
     if(cached){setReviewSummaries(cached);return()=>{active=false}};
     const kinds=['missing_price','uninvoiced','unpaid','historical','retainer'] as const;
-    void Promise.resolve(supabase.rpc('get_work_attention_summaries',common)).then(async fast=>{
+    void Promise.all([Promise.resolve(supabase.rpc('get_work_attention_summaries',common)),loadFixedFeeLines()]).then(async ([fast,fixedFeeLines])=>{
       if(!active)return;
-      if(!fast.error){const summaries=fast.data as Record<string,FilterSummary>;attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);return}
+      const fixedFilters={search:query||null,year:year?Number(year):null,professionalId:professional||null,billingEntityId:billing||null,archive:archive||null,clientType:clientType||null,clientId:clientId||null};
+      if(!fast.error){const summaries=mergeFixedFeeAttentionSummaries(fast.data as Record<string,FilterSummary>,fixedFeeLines,fixedFilters);attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);return}
       if(fast.error.code!=='PGRST202')return;
       const results=await Promise.all([...kinds.map(kind=>supabase!.rpc('get_attention_work_entries',{...common,p_kind:kind})),supabase!.rpc('search_work_entries',{...common,p_page:1,p_page_size:10000,p_missing_society:true})]);
       if(!active||results.some(result=>result.error))return;
@@ -380,7 +398,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
         const rows=(results[index].data as {items?:Entry[]}|null)?.items??[];
         summaries[kind]=rows.reduce((total,row)=>({minutes:total.minutes+Number(row.duration_minutes||0),amount:total.amount+Number(row.effective_amount||0),priced:total.priced+(row.effective_amount==null?0:1),count:total.count+1}),{minutes:0,amount:0,priced:0,count:0});
       });
-      attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);
+      const merged=mergeFixedFeeAttentionSummaries(summaries,fixedFeeLines,fixedFilters);
+      attentionSummariesCache.set(key,merged);setReviewSummaries(merged);
     }).catch(()=>undefined);
     return()=>{active=false};
   },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
@@ -630,7 +649,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
                 onClick={() => selectReviewIssue(value)}
                 className={`flex min-h-12 items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left text-xs font-semibold leading-tight transition ${active ? "border-danger bg-danger text-surface shadow-sm" : "border-danger/35 bg-surface text-text-primary hover:border-danger hover:bg-danger-soft"}`}
               >
-                <span><span className="block">{label}</span>{summary&&<span className="mt-1 block text-[11px] font-medium tabular-nums opacity-85">{Math.floor(summary.minutes/60)} h{summary.minutes%60?` ${summary.minutes%60} min`:''}{showMoney?` · ${money.format(summary.amount)}${summary.priced<summary.count?' parcial':''}`:''}</span>}</span>
+                <span><span className="block">{label}</span>{summary&&<span className="mt-1 block text-[11px] font-medium tabular-nums opacity-85">{Math.floor(summary.minutes/60)} h{summary.minutes%60?` ${summary.minutes%60} min`:''}{showMoney&&<><span> · </span><span className="financial-value">{money.format(summary.amount)}</span>{summary.priced<summary.count?' parcial':''}</>}</span>}</span>
                 <span className={`inline-flex min-w-10 shrink-0 justify-center rounded-md px-2 py-1 text-sm font-bold tabular-nums ${active?'bg-surface text-danger':'bg-danger text-surface'}`} aria-label={`${reviewCounts[value]??'a calcular'} registos`}>
                   {reviewCounts[value]??"—"}
                 </span>

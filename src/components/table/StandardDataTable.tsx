@@ -1271,8 +1271,8 @@ export function StandardDataTable<Row>({
                           className={`border-b border-border px-3 py-0.5 ${column.align==="left"?"text-left":column.align==="right"||column.kind==="money"?"text-right tabular-nums":"text-center"} ${sticky ? "sticky z-10 bg-inherit shadow-[2px_0_3px_-3px_rgba(0,0,0,.35)]" : "bg-inherit"}`}
                         >
                           <div
-                            className="overflow-hidden text-ellipsis whitespace-nowrap"
-                            title={tooltip}
+                            className={`overflow-hidden text-ellipsis whitespace-nowrap ${column.kind === "money" ? "financial-value" : ""}`}
+                            title={column.kind === "money" ? undefined : tooltip}
                           >
                             {column.render
                               ? column.render(row)

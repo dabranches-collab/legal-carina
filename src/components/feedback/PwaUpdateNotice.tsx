@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import installedNotes from '../../../public/release-notes.json'
+import installedNotes from 'virtual:release-notes'
 import { changesSince,type ReleaseNotes } from './releaseNotes'
 
 export function PwaUpdateNotice() {

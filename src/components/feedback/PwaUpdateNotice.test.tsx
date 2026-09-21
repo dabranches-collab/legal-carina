@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach,expect,test,vi } from 'vitest'
 import { PwaUpdateNotice } from './PwaUpdateNotice'
 import { changesSince } from './releaseNotes'
-import installedNotes from '../../../public/release-notes.json'
+import installedNotes from 'virtual:release-notes'
 
 const original=Object.getOwnPropertyDescriptor(navigator,'serviceWorker')
 afterEach(()=>{cleanup();localStorage.clear();if(original)Object.defineProperty(navigator,'serviceWorker',original);else Reflect.deleteProperty(navigator,'serviceWorker')})
@@ -28,7 +28,7 @@ test('selecciona apenas as alterações posteriores à versão instalada',()=>{
  expect(changesSince(release,'0.10.1')).toEqual(['Alteração 0.10.2'])
 })
 test('o aviso identifica a versão em espera e as suas alterações antes de actualizar',async()=>{
- const nextVersion=installedNotes.version.replace(/\d+$/,patch=>String(Number(patch)+1))
+ const nextVersion=installedNotes.version.replace(/\d+$/,(patch:string)=>String(Number(patch)+1))
  const service=new EventTarget(),waiting={postMessage:vi.fn((message:{type:string})=>{
   if(message.type==='GET_RELEASE_NOTES')queueMicrotask(()=>{
    const event=new MessageEvent('message',{data:{type:'RELEASE_NOTES',release:{version:nextVersion,changes:['Correcção sintética dos saldos','Melhoria sintética da navegação'],releases:[
@@ -73,7 +73,7 @@ test('usa a versão do worker activo quando o HTML já é novo e descarta a orig
  for(const change of installedNotes.changes)expect(screen.getByText(change)).toBeInTheDocument()
  expect(screen.getByText(installedNotes.releases[1].changes[0])).toBeInTheDocument()
  expect(screen.getByText(installedNotes.releases[2].changes[0])).toBeInTheDocument()
- expect(screen.queryByText(installedNotes.releases.find(release=>release.version==='0.10.20')!.changes[0])).not.toBeInTheDocument()
+ expect(screen.queryByText(installedNotes.releases.find((release:{version:string})=>release.version==='0.10.20')!.changes[0])).not.toBeInTheDocument()
  await userEvent.click(screen.getByRole('button',{name:'Actualizar aplicação'}))
  expect(localStorage.getItem('carina-release-notes-from')).toBe('0.10.20')
  expect(waiting.postMessage).toHaveBeenCalledWith({type:'SKIP_WAITING'})

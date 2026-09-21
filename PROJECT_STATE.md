@@ -1,5 +1,14 @@
 # Estado do projecto
 
+## 21-09-2026 — versão 0.12.1 validada e pronta para publicação
+
+- Branch `codex/fix-login-client-workflow-0.12.1`, baseada em `origin/main` `e1d5ce4e1376b916e891283fb625dc48e58e8c5c`. Produção continua confirmada na 0.12.0 até ao deploy autorizado deste lote.
+- Corrigida a gravação de trabalhos a preço fixo dentro da ficha do cliente: o trabalho criado fica persistido e aparece na lista. A associação e desassociação de registos preserva e repõe exactamente o tratamento, valor/hora, valor do registo e indicadores de facturação anteriores. A repartição do preço é determinística ao cêntimo.
+- Os totais e filtros de cliente, sociedade, responsável, Registos e Por receber incluem o preço fixo uma única vez. Pesquisa, cliente aberto, separador e filtro de registos sobrevivem à actualização da página e regressam ao ponto de origem ao fechar. O modo financeiro oculto mascara as células monetárias com `*****`; o estado escolhido pelo utilizador não é alterado pela aplicação. A tabela de utilizadores deixa de ficar sob a fila de filtros.
+- Supabase de produção recebeu isoladamente as migrations `20260921182446_preserve_fixed_fee_pricing`, `20260921182804_restore_legacy_fixed_fee_pricing` e `20260921183113_allow_audited_fixed_fee_restore`. Um ciclo sintético real criou um trabalho, associou dois registos (45 minutos, 100 €, 133,33 €/h), confirmou os totais globais, desassociou ambos, verificou a reposição exacta dos valores anteriores e apagou o trabalho. Contagem final de trabalhos sintéticos: zero.
+- Gate local aprovado: segurança de ficheiros, lint, TypeScript, 44 ficheiros/233 testes unitários, build de produção e dry-run Cloudflare. A suite E2E totalizou 122 aprovações e três omissões condicionais; três expectativas antigas sobre o URL foram actualizadas e aprovadas numa repetição dirigida. A saída do Playwright foi concluída e o processo foi interrompido apenas depois dos resultados, devido ao encerramento pendente já conhecido do runner.
+- Na CI do PR #53, Vite 8 recusou a importação directa de notas de versão a partir de `public` durante o E2E. O aviso PWA usa agora um módulo virtual que lê o ficheiro canónico; o TypeScript, o teste unitário do aviso e a resposta HTTP do módulo em modo `serve` passaram. A CI será repetida no commit seguinte.
+
 ## 18-09-2026 — produção 0.12.0 confirmada
 
 - GitHub `main` `0c07b3a69465cf1720409d0f44267882d44b0bff`, PR #44, CI pós-merge `35382799995` verde. Cloudflare `legal-carina`, `https://legal-carina.dabranches.workers.dev`, deployment `79c904bb-d22a-4186-8100-a92d3f037381`, version ID `e883ea13-7987-4c49-8e76-9914f4a21c36`, 100% desde `2026-09-18 19:48:25 UTC`. Notas de versão HTTP 200/0.12.0 e browser integrado online confirmados.
