@@ -57,7 +57,7 @@ for(const viewport of [{width:320,height:568},{width:390,height:844},{width:768,
   const dialog=page.getByRole('dialog',{name:'Provisões · Cliente Sintético'})
   await dialog.getByRole('button',{name:'Registar provisão'}).click()
   await dialog.getByRole('combobox',{name:'Sociedade',exact:true}).selectOption('00000000-0000-4000-8000-000000000030')
-  await dialog.getByLabel('Montante').fill('100,50');await dialog.getByLabel('Origem / referência').fill('Reforço sintético')
+  await dialog.getByLabel('Montante da provisão',{exact:true}).fill('100,50');await dialog.getByLabel('Origem / referência da factura e do pagamento',{exact:true}).fill('Reforço sintético')
   await dialog.getByRole('button',{name:'Confirmar provisão'}).click()
   await expect(dialog).toContainText('731,50')
   expect(await dialog.evaluate(element=>element.scrollWidth<=element.clientWidth+1)).toBe(true)

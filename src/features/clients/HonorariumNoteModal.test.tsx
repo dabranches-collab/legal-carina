@@ -36,7 +36,7 @@ describe('HonorariumNoteModal',()=>{
   await act(async()=>fail(new Error('Tradução incompleta')));expect(await screen.findByRole('alert')).toHaveTextContent('Tradução incompleta');expect(documentRpc).not.toHaveBeenCalled();expect(downloads).toHaveLength(0)
   expect(screen.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeEnabled()
  })
- beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,items:(rpc.mock.results.at(-1)?.value? (await rpc.mock.results.at(-1)!.value).data.items:[]).filter((row:any)=>args.p_work_entry_ids.includes(row.id)),vat_rate:args.p_vat_rate,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:args.p_expected_total-args.p_expected_deduction,balance_after:0}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockImplementation((table:string)=>query(table==='billing_entities'?testIssuer:null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
+ beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,items:(rpc.mock.results.at(-1)?.value? (await rpc.mock.results.at(-1)!.value).data.items:[]).filter((row:any)=>args.p_work_entry_ids.includes(row.id)),vat_rate:args.p_vat_rate,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:Math.max(0,args.p_expected_total-args.p_expected_deduction-Number(args.p_document_options.direct_payment?.amount??0)),balance_after:0,document_options:args.p_document_options}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockImplementation((table:string)=>query(table==='billing_entities'?testIssuer:null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
   {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade'},
   {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
  ]}})})
@@ -90,7 +90,7 @@ describe('HonorariumNoteModal',()=>{
  it('não apresenta qualquer referência a provisões quando o desconto é zero',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente neutro" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
-  expect(screen.queryByText(/provis/i)).not.toBeInTheDocument()
+  expect(screen.queryByRole('region',{name:'Provisão para honorários'})).not.toBeInTheDocument()
   await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
   await waitFor(()=>expect(downloads).toHaveLength(1))
   expect(pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[value]).join(' ')).not.toMatch(/provis|advance deducted|provision déduite/i)
@@ -301,5 +301,20 @@ describe('HonorariumNoteModal',()=>{
   expect(headings).toEqual(['Mês/Ano','Tempo','Descrição do movimento'])
   await user.click(screen.getByLabelText('Total de tempo'))
   expect(document.querySelector('.honorarium-print-area tfoot')).toBeNull()
+ })
+ it('regista um pagamento directo na nota sem o transformar em provisão e apresenta o excedente',async()=>{
+  provisionRpc.mockResolvedValue({data:[{id:'account',client_id:'client',society_name:'Sociedade',currency:'EUR',balance:50}],error:null})
+  rpc.mockResolvedValue({data:{total:1,items:[{id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:60,billing_entity_name:'Sociedade',effective_amount:100}]},error:null})
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+  await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
+  await user.type(screen.getByRole('textbox',{name:'Pagamento directo da nota'}),'100')
+  expect(screen.getByText(/Excedente a regularizar fora das provisões: 27,00/)).toBeInTheDocument()
+  await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
+  await screen.findByRole('button',{name:'Guardar novamente em PDF'})
+  expect(documentRpc).toHaveBeenCalledWith('save_honorarium_document',expect.objectContaining({p_expected_total:123,p_expected_deduction:50,p_document_options:expect.objectContaining({direct_payment:expect.objectContaining({amount:100})})}))
+  const text=pdfText.mock.calls.flatMap(([value])=>Array.isArray(value)?value:[value]).join(' ')
+  expect(text).toContain('Pagamento directo recebido: 100,00 EUR')
+  expect(text).toContain('Valor a pagar: 0,00 EUR')
+  expect(text).toContain('Excedente a regularizar fora das provisões: 27,00 EUR')
  })
 })
