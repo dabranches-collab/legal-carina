@@ -399,6 +399,7 @@ export function StandardDataTable<Row>({
 }: Props<Row>) {
   const { user } = useAuth();
   const [appHeaderHeight,setAppHeaderHeight]=useState(156);
+  const [fixedHeaderHeight,setFixedHeaderHeight]=useState(0);
   useLayoutEffect(()=>{
     const header=document.querySelector('.app-shell-header');if(!header)return;
     const update=()=>setAppHeaderHeight(header.getBoundingClientRect().height);
@@ -585,7 +586,7 @@ export function StandardDataTable<Row>({
       header.style.clipPath="";
       header.style.display="";
       header.style.tableLayout="";
-      table.style.paddingTop="";
+      setFixedHeaderHeight(0);
       headerCells.forEach((cell,index)=>{cell.style.width=originalCellStyles[index].width;cell.style.minWidth=originalCellStyles[index].minWidth;cell.style.maxWidth=originalCellStyles[index].maxWidth});
       tableColumns.forEach((column,index)=>{column.style.width=originalColumnStyles[index].width;column.style.minWidth=originalColumnStyles[index].minWidth});
       for(const cell of stickyHeaderCells)cell.style.left=`${cell.dataset.stickyOffset??0}px`;
@@ -593,12 +594,14 @@ export function StandardDataTable<Row>({
     const update=()=>{
       const tableRect=table.getBoundingClientRect(),headerHeight=header.offsetHeight;
       const targetTop=tools.getBoundingClientRect().bottom;
-      const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop+headerHeight;
+      const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop;
       if(!shouldFix){if(fixed)reset();return}
       if(!fixed){
         const renderedWidths=headerCells.map(cell=>cell.offsetWidth);
         fixed=true;
-        table.style.paddingTop=`${headerHeight}px`;
+        // Ao fixar o cabeçalho sob a barra de pesquisa, reservar também o
+        // espaço entre o início da tabela e a base dessa barra.
+        setFixedHeaderHeight(headerHeight+Math.min(window.innerHeight/2,Math.max(0,targetTop-tableRect.top)));
         header.style.position="fixed";
         header.style.transform="none";
         header.style.display="table";
@@ -1193,6 +1196,7 @@ export function StandardDataTable<Row>({
             </tr>
           </thead>
           <tbody>
+            {fixedHeaderHeight>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:fixedHeaderHeight,padding:0,border:0}}/></tr>}
             {virtualTop>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:virtualTop,padding:0,border:0}}/></tr>}
             {!loading &&
               rendered.map((row) => {

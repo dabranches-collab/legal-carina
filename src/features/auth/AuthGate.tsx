@@ -102,7 +102,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       data=result.data;invokeError=result.error
     }
     if (invokeError || data?.error || !data?.session?.access_token || !data?.session?.refresh_token) {
-      setError(data?.error ?? 'Nome de utilizador ou PIN inválido.')
+      setError(data?.error ?? 'Não foi possível contactar o serviço de acesso. Verifique a ligação e tente novamente.')
       setBusy(false)
       return
     }
