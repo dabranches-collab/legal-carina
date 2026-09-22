@@ -1,11 +1,19 @@
 {
-  "version": "0.12.2",
+  "version": "0.12.3",
   "changes": [
-    "A versão local deixa de bloquear a abertura da página na pesquisa automática de dependências.",
-    "Quando não é possível contactar o serviço de acesso, a mensagem deixa de indicar falsamente um PIN inválido.",
-    "Na lista de utilizadores, os nomes e restantes dados aparecem inteiramente abaixo do cabeçalho e dos botões de ordenação."
+    "Os painéis de entrada aproveitam a altura útil do desktop quando o conteúdo cabe no ecrã.",
+    "A Visão Geral organiza os indicadores em linhas compactas, sem caixas demasiado altas ou espaços vazios entre grupos.",
+    "As tabelas mantêm a pesquisa, os filtros e os cabeçalhos visíveis sem saltos ao começar a deslocação."
   ],
   "releases": [
+    {
+      "version": "0.12.3",
+      "changes": [
+        "Os painéis de entrada aproveitam a altura útil do desktop quando o conteúdo cabe no ecrã.",
+        "A Visão Geral organiza os indicadores em linhas compactas, sem caixas demasiado altas ou espaços vazios entre grupos.",
+        "As tabelas mantêm a pesquisa, os filtros e os cabeçalhos visíveis sem saltos ao começar a deslocação."
+      ]
+    },
     {
       "version": "0.12.2",
       "changes": [

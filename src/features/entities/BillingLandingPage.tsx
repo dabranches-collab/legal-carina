@@ -81,7 +81,7 @@ export function BillingLandingPage({
   if (error) return <DashboardProcessingGrid error={error} label="Erro ao calcular o dashboard de sociedades" cards={(processingNames.length?processingNames:['Sociedade 1','Sociedade 2','Sociedade 3']).map((name,index)=>({key:`${name}-${index}`,title:name,subtitle:'Resumo da sociedade',icon:'building',metrics:['Clientes','Horas','Facturado','Por receber']}))}/>;
 
   return (
-    <div className="space-y-5">
+    <div className="dashboard-landing space-y-5">
       <header>
         <p className="text-sm text-text-secondary">
           Resumo operacional e acesso aos dashboards de cada sociedade.

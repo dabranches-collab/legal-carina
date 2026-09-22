@@ -399,7 +399,6 @@ export function StandardDataTable<Row>({
 }: Props<Row>) {
   const { user } = useAuth();
   const [appHeaderHeight,setAppHeaderHeight]=useState(156);
-  const [fixedHeaderHeight,setFixedHeaderHeight]=useState(0);
   useLayoutEffect(()=>{
     const header=document.querySelector('.app-shell-header');if(!header)return;
     const update=()=>setAppHeaderHeight(header.getBoundingClientRect().height);
@@ -453,6 +452,7 @@ export function StandardDataTable<Row>({
     scrollContainer = useRef<HTMLDivElement>(null),
     tableElement = useRef<HTMLTableElement>(null),
     headerElement = useRef<HTMLTableSectionElement>(null),
+    headerSpacer = useRef<HTMLTableRowElement>(null),
     filterButtons = useRef<Record<string, HTMLButtonElement | null>>({}),
     draggedColumn = useRef<string | null>(null);
   const ordered = [...columns].sort((a, b) => {
@@ -568,8 +568,8 @@ export function StandardDataTable<Row>({
     return()=>{window.removeEventListener("scroll",updateVirtualWindow);window.removeEventListener("resize",updateVirtualWindow)};
   },[virtualized,shown.length,rowHeight]);
   useEffect(() => {
-    const header=headerElement.current,table=tableElement.current,tools=toolsElement.current,scroller=scrollContainer.current;
-    if(!header||!table||!tools||!scroller)return;
+    const header=headerElement.current,table=tableElement.current,tools=toolsElement.current,scroller=scrollContainer.current,spacer=headerSpacer.current;
+    if(!header||!table||!tools||!scroller||!spacer)return;
     const headerCells=[...header.querySelectorAll<HTMLElement>('th')];
     const tableColumns=[...table.querySelectorAll<HTMLElement>('colgroup col')];
     const stickyHeaderCells=[...header.querySelectorAll<HTMLElement>('[data-sticky-column="true"]')];
@@ -586,7 +586,7 @@ export function StandardDataTable<Row>({
       header.style.clipPath="";
       header.style.display="";
       header.style.tableLayout="";
-      setFixedHeaderHeight(0);
+      spacer.style.height="0px";
       headerCells.forEach((cell,index)=>{cell.style.width=originalCellStyles[index].width;cell.style.minWidth=originalCellStyles[index].minWidth;cell.style.maxWidth=originalCellStyles[index].maxWidth});
       tableColumns.forEach((column,index)=>{column.style.width=originalColumnStyles[index].width;column.style.minWidth=originalColumnStyles[index].minWidth});
       for(const cell of stickyHeaderCells)cell.style.left=`${cell.dataset.stickyOffset??0}px`;
@@ -599,9 +599,12 @@ export function StandardDataTable<Row>({
       if(!fixed){
         const renderedWidths=headerCells.map(cell=>cell.offsetWidth);
         fixed=true;
-        // Ao fixar o cabeçalho sob a barra de pesquisa, reservar também o
-        // espaço entre o início da tabela e a base dessa barra.
-        setFixedHeaderHeight(headerHeight+Math.min(window.innerHeight/2,Math.max(0,targetTop-tableRect.top)));
+        // A barra pode terminar alguns píxeis abaixo do início da tabela.
+        // Compensar apenas essa pequena diferença evita tapar a primeira linha.
+        // Actualizar no mesmo evento evita o salto causado por um render posterior.
+        const gap=Math.max(0,targetTop-tableRect.top);
+        const leadingGap=window.scrollY<1?gap:Math.min(24,gap);
+        spacer.style.height=`${headerHeight+leadingGap}px`;
         header.style.position="fixed";
         header.style.transform="none";
         header.style.display="table";
@@ -1196,7 +1199,7 @@ export function StandardDataTable<Row>({
             </tr>
           </thead>
           <tbody>
-            {fixedHeaderHeight>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:fixedHeaderHeight,padding:0,border:0}}/></tr>}
+            <tr ref={headerSpacer} aria-hidden="true" style={{height:0}}><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:0,padding:0,border:0,lineHeight:0}}/></tr>
             {virtualTop>0&&<tr aria-hidden="true"><td colSpan={visible.length+(onSelectionChange?1:0)} style={{height:virtualTop,padding:0,border:0}}/></tr>}
             {!loading &&
               rendered.map((row) => {

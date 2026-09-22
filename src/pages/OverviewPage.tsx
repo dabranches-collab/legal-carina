@@ -328,7 +328,7 @@ export function OverviewPage() {
     data.clientTypes.find((p) => p.label === "company")?.value ?? 0;
   return (
     <div className="space-y-6">
-      <div className="grid dashboard-summary-pair gap-6 lg:grid-cols-2">
+      <div className="grid dashboard-summary-pair gap-6">
         <section aria-labelledby="summary-title">
           <div className="mb-4">
             <h2 id="summary-title" className="font-semibold">
@@ -338,7 +338,7 @@ export function OverviewPage() {
               Dados reais acessíveis através das políticas RLS
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {generalMetrics.map(([label, value, detail, icon, tone]) => (
               <MetricCard
                 key={label}
@@ -362,7 +362,7 @@ export function OverviewPage() {
               Indicadores com acesso directo aos movimentos contabilizados
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="dashboard-overview-followup grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {followUpMetrics.map(([label, value, detail, icon, tone]) => (
               <MetricCard
                 key={label}

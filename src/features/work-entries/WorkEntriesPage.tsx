@@ -251,7 +251,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     const update=()=>{
       const appHeader=document.querySelector<HTMLElement>('.app-shell-header');
       const headerHeight=Math.ceil(appHeader?.getBoundingClientRect().height??64);
-      const keepFiltersSticky = !!bar && window.innerWidth >= 1024 && window.innerHeight > 760;
+      const keepFiltersSticky = !!bar && window.innerWidth >= 1024 && window.innerHeight > 900;
       setTableStickyOffset(headerHeight+(keepFiltersSticky?Math.ceil(bar!.getBoundingClientRect().height):0));
     };
     update();
