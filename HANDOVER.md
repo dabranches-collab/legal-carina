@@ -1,5 +1,13 @@
 # Legal Carina — handover
 
+## 22-09-2026 — correcção local 0.12.2 em validação
+
+- Checkout `C:\Projetos\legal-carina`, branch `codex/fix-local-login-users-table-0.12.2`, criada sobre `main`/`origin/main` `b35c5fbb286ac11e5f341a4b2660e0809855383b` após `git fetch --all --prune` e confirmação de checkout limpo. Produção confirmada directamente pelas notas online na versão 0.12.1; esta correcção ainda não foi publicada.
+- O browser integrado apresentava uma página vazia porque o servidor local na porta 5173 estava parado. Ao reiniciá-lo, a pesquisa automática de dependências do Vite atrasava a resposta. A optimização explícita de React com `noDiscovery` evitou essa pesquisa; depois da optimização inicial das dependências, a rota `/` devolveu HTTP 200 em 0,004 s e a sessão existente voltou a abrir.
+- O acesso local por PIN atravessa um proxy Vite para o Supabase. No processo isolado, o proxy falhou com `EACCES`, mas a interface apresentava erradamente «Nome de utilizador ou PIN inválido». O servidor foi reiniciado com acesso à rede permitido; uma chamada sem credenciais ao endpoint devolveu HTTP 405, confirmando conectividade. A interface passa a distinguir falha de ligação de rejeição de PIN. Não foram introduzidos nem alterados PIN reais.
+- Na tabela de utilizadores, o cabeçalho fixo saía do fluxo e tapava a primeira linha. Foi reservado o espaço efectivo abaixo da barra da tabela, incluindo tabelas curtas. Inspecção no browser integrado: primeira linha no mesmo limite inferior do cabeçalho, sem sobreposição. Três E2E sintéticos passaram em desktop claro, tablet escuro e iPhone escuro; mais 21 cenários E2E de login, tabela, zoom e iPhone passaram. Segurança de ficheiros, lint, TypeScript, build e 235 testes unitários passaram. O acesso com PIN real não foi repetido.
+- A primeira tentativa de actualização local de `node_modules` ficou presa a remover a pasta anterior. As dependências antigas foram isoladas, foi executado `pnpm install --frozen-lockfile --offline` com sucesso, e a cópia temporária foi removida. O servidor local ficou a executar com acesso de rede permitido. Nenhuma alteração remota de Auth, base de dados ou produção foi feita.
+
 ## 21-09-2026 — versão 0.12.1 publicada e verificada
 
 - Código funcional integrado pelo PR #53 em `main` `b5b94ebd20e688c33534f60811204e9c5fa610a0`; CI `35649634700` aprovada com 235 testes unitários e 125 cenários E2E (omissões condicionais previstas). O hotfix da rota principal foi integrado pelo PR #54 em `main` `df51c1ec7b00538b987e3d0bc4a90d71f2ad6c98`; CI `35651505703` aprovada.

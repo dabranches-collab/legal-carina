@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 22-09-2026 — próxima versão local 0.12.2
+
+- Local: branch `codex/fix-local-login-users-table-0.12.2`, base `b35c5fbb286ac11e5f341a4b2660e0809855383b`; corrige o arranque local, a mensagem de falha de ligação no login e a sobreposição da primeira linha da tabela de utilizadores. GitHub `main` e produção continuam na 0.12.1; notas online da versão 0.12.1 confirmadas directamente.
+- Browser integrado com sessão existente abriu a aplicação e a lista de utilizadores. Geometria medida: a primeira linha começa no limite inferior do cabeçalho. O proxy local para a função `pin-auth` respondeu HTTP 405 a GET com chave pública, demonstrando ligação; o login completo com PIN não foi repetido para não pedir nem alterar credenciais reais.
+- Validação concluída: segurança de ficheiros, lint, TypeScript, build, 235 testes unitários, três E2E novos de utilizadores em desktop claro, tablet escuro e iPhone escuro, e 21 cenários E2E existentes. O servidor local foi reposto após `pnpm install --frozen-lockfile --offline`; a pasta temporária de dependências antigas foi removida. O login com PIN real ainda não foi submetido neste lote.
+
 ## 21-09-2026 — produção 0.12.1 confirmada
 
 - GitHub `main` `df51c1ec7b00538b987e3d0bc4a90d71f2ad6c98`, PRs #53 e #54, CI `35649634700` e `35651505703` verdes. Produção Cloudflare `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, Version ID `de8bf232-2385-4f47-bed3-770632beb757`, 100% desde `2026-09-21 20:37:41 UTC`. O deployment ID não foi exposto pelo Wrangler; o Version ID e a hora foram confirmados em `deployments status`.

@@ -1,13 +1,19 @@
 {
-  "version": "0.12.1",
+  "version": "0.12.2",
   "changes": [
-    "Os trabalhos a preço fixo ficam guardados e aparecem imediatamente na lista do cliente, onde é possível associar ou retirar registos.",
-    "Associar registos reparte o preço acordado pelas horas; retirar um registo repõe exactamente o tratamento, o valor/hora e o valor anteriores.",
-    "As fichas de clientes conservam a pesquisa, o cliente aberto e o separador seleccionado quando a página é actualizada.",
-    "Os totais de clientes, sociedades, responsáveis, Registos e Por receber incluem o preço fixo uma única vez e apresentam a repartição e o valor/hora correctos.",
-    "Ao ocultar valores financeiros, as colunas monetárias apresentam ***** sem revelar os valores ao passar o rato; a tabela de utilizadores fica alinhada sem filtros sobrepostos."
+    "A versão local deixa de bloquear a abertura da página na pesquisa automática de dependências.",
+    "Quando não é possível contactar o serviço de acesso, a mensagem deixa de indicar falsamente um PIN inválido.",
+    "Na lista de utilizadores, os nomes e restantes dados aparecem inteiramente abaixo do cabeçalho e dos botões de ordenação."
   ],
   "releases": [
+    {
+      "version": "0.12.2",
+      "changes": [
+        "A versão local deixa de bloquear a abertura da página na pesquisa automática de dependências.",
+        "Quando não é possível contactar o serviço de acesso, a mensagem deixa de indicar falsamente um PIN inválido.",
+        "Na lista de utilizadores, os nomes e restantes dados aparecem inteiramente abaixo do cabeçalho e dos botões de ordenação."
+      ]
+    },
     {
       "version": "0.12.1",
       "changes": [
