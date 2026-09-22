@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 22-09-2026 — produção 0.12.2 confirmada
+
+- GitHub `main` `17c54644a007d7c4e2558c9da5c856a1761d61ec` (PR #56); CI `35698848774` e scan de segredos `35698848776` aprovados. Produção Cloudflare Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: versão 0.12.2, Deployment ID `aff1e1ea-fd68-471c-b7c3-dae8f375c2fd`, Version ID `387035a2-080f-4ce0-bdb0-f2f4b378f8f4`, 100% desde `2026-09-22 07:24:56 UTC`.
+- Rota `/` HTTP 200 com `/assets/index-uv1kJDmn.js` e `Cache-Control: no-store`; notas online 0.12.2 e ecrã de entrada no browser integrado confirmados. O PIN real não foi submetido na verificação após publicação. A versão 0.12.1 (`de8bf232-2385-4f47-bed3-770632beb757`) permanece para rollback do frontend.
+
 ## 22-09-2026 — próxima versão local 0.12.2
 
 - Local: branch `codex/fix-local-login-users-table-0.12.2`, base `b35c5fbb286ac11e5f341a4b2660e0809855383b`; corrige o arranque local, a mensagem de falha de ligação no login e a sobreposição da primeira linha da tabela de utilizadores. GitHub `main` e produção continuam na 0.12.1; notas online da versão 0.12.1 confirmadas directamente.
