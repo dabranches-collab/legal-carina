@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 22-09-2026 — versão 0.12.4 publicada e verificada
+
+- PR #60 integrado em GitHub `main` `691682dc912a8392d0c685136bb014526382f063`; CI `35751655143` verde, incluindo E2E, auditoria e scan. O checkout local ficou no mesmo commit antes da publicação. Segurança de ficheiros, lint, tipos, runtime, 46 ficheiros/242 testes unitários, build e dry-run Cloudflare aprovados.
+- Cloudflare Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: versão 0.12.4 a 100% desde `2026-09-22 16:18:28 UTC`, deployment ID `ca36332b-c92e-4ccc-a5b4-9af65fb60a5b`, Version ID `36030aaf-a1cb-473f-87f3-06ee875ad10b`. `/release-notes.json` e o browser integrado confirmaram 0.12.4. Rollback frontend: Version ID `d65c26cf-5b72-4e14-810a-01f6d603db89` (0.12.3).
+- Na ficha online, leitura após actualizar confirmou a aplicação de 1 968,00 € da provisão na nota actual, saldo disponível de provisões 0,00 € e valor por pagar na nota 0,00 €. O pagamento directo é independente das provisões, e o excedente não foi lançado como nova provisão. A migration de produção e a revisão auditada da nota encontram-se documentadas na secção seguinte. Os registos de trabalho permanecem não facturados até haver confirmação dos respectivos documentos fiscais.
+
 ## 22-09-2026 — revisão de pagamentos de notas 0.12.4
 
 - Branch local `codex/provision-vat-gross-0.12.4` sobre `main`/`origin/main` `a656a593`. O frontend de produção continua na 0.12.3 até à publicação do artefacto. O código local distingue valor base e valor efectivamente recebido com IVA ao registar uma provisão, separa pagamentos directos de notas do saldo de provisões, calcula o excedente fora dessa conta e reutiliza a tradução guardada ao rever uma nota sem alterar os textos.
