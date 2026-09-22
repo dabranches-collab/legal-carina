@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 22-09-2026 — produção 0.12.3 confirmada
+
+- GitHub `main` `6270ce1509a46fdabe9d10b8d078da5b0f744040`, PR #58 e CI `35737483779` verde. A suite unitária, antes inconclusiva, passou isoladamente: 44 ficheiros/235 testes. Segurança, lint, tipos, runtime do Worker, build, E2E e dry-run Cloudflare aprovados.
+- Cloudflare Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: versão 0.12.3 a 100% desde `2026-09-22 14:16:55 UTC`, Version ID `d65c26cf-5b72-4e14-810a-01f6d603db89`. O deployment ID distinto não foi exposto pelo Wrangler. Notas online HTTP 200/0.12.3 e página HTTP 200 com asset `/assets/index-Dl2MdUOE.js` e `Cache-Control: no-store` confirmados. Não houve alterações ao Supabase nem a dados reais. A secção seguinte descreve a fase local já concluída.
+
 ## 22-09-2026 — 0.12.3 local em validação visual
 
 - A suite unitária anteriormente inconclusiva foi repetida isoladamente: 44 ficheiros/235 testes aprovados. Os E2E em preview passaram 132 cenários; dois testes PDF foram corrigidos para não depender do Vite de desenvolvimento e passaram após a alteração. Os três testes PWA de produção também passaram. A matriz QA do iPhone usa uma página exclusiva do servidor Vite de desenvolvimento e será verificada pela CI. Segurança de ficheiros, lint, tipos, runtime do Worker e build passaram. Publicação ainda depende da CI, dry-run e confirmação online.
