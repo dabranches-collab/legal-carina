@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 22-09-2026 — versão 0.12.2 publicada e verificada
+
+- Código funcional integrado em `main` pelo PR #56, commit `17c54644a007d7c4e2558c9da5c856a1761d61ec`. CI `35698848774` e scan de segredos `35698848776` aprovados; o job E2E da CI terminou com sucesso. Localmente, a suite de 128 cenários percorreu todos os testes sem indicação de falha, mas o runner não encerrou após o último cenário e foi interrompido. O dry-run Wrangler passou.
+- Produção Cloudflare Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, versão 0.12.2 a 100% desde `2026-09-22 07:24:56 UTC`. Deployment ID `aff1e1ea-fd68-471c-b7c3-dae8f375c2fd`; Version ID `387035a2-080f-4ce0-bdb0-f2f4b378f8f4`. A rota `/` devolveu HTTP 200, `Cache-Control: no-store` e o novo asset `/assets/index-uv1kJDmn.js`; `/release-notes.json` devolveu 0.12.2. O browser integrado abriu o ecrã de entrada online com indicação «Versão 0.12.2». Não foi submetido um PIN real nesta verificação.
+- O deployment anterior 0.12.1, Version ID `de8bf232-2385-4f47-bed3-770632beb757`, permanece como ponto de rollback do frontend. O servidor local 0.12.2 continua em `http://127.0.0.1:5173/` com a lista de utilizadores corrigida. Nenhuma migration, alteração de Auth, Storage ou dados reais foi feita neste lote.
+
 ## 22-09-2026 — correcção local 0.12.2 em validação
 
 - Checkout `C:\Projetos\legal-carina`, branch `codex/fix-local-login-users-table-0.12.2`, criada sobre `main`/`origin/main` `b35c5fbb286ac11e5f341a4b2660e0809855383b` após `git fetch --all --prune` e confirmação de checkout limpo. Produção confirmada directamente pelas notas online na versão 0.12.1; esta correcção ainda não foi publicada.
