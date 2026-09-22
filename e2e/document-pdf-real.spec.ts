@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 import path from 'node:path'
 import {readFile} from 'node:fs/promises'
 import {parseEnv} from 'node:util'
+import {getDocument} from 'pdfjs-dist/legacy/build/pdf.mjs'
 import {translateTexts} from '../worker/documentTranslation'
 
 const liveAzure=process.env.AZURE_TRANSLATION_LIVE_QA==='1'
@@ -89,18 +90,17 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   }
   const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click();const download=await pending
   const file=path.resolve(`.tmp/translation-${language}.pdf`);await download.saveAs(file)
-  const bytes=Array.from(await readFile(file))
-  const {text,descriptions}=await page.evaluate(async data=>{
-    const modulePath='/node_modules/pdfjs-dist/build/pdf.mjs'
-    const pdfjs=await import(/* @vite-ignore */modulePath);pdfjs.GlobalWorkerOptions.workerSrc='/node_modules/pdfjs-dist/build/pdf.worker.mjs'
-    const pdf=await pdfjs.getDocument({data:new Uint8Array(data)}).promise
-    const result=[],descriptionLines=[];for(let number=1;number<=pdf.numPages;number++){
-      const page=await pdf.getPage(number),items=(await page.getTextContent()).items as Array<{str?:string;transform?:number[]}>
+  const bytes=await readFile(file)
+  const pdf=await getDocument({data:new Uint8Array(bytes)}).promise
+  const result:string[]=[],descriptionLines:string[]=[]
+  for(let number=1;number<=pdf.numPages;number++){
+      const pdfPage=await pdf.getPage(number),items=(await pdfPage.getTextContent()).items as Array<{str?:string;transform?:number[]}>
       result.push(items.map(item=>item.str??'').join(' '))
       // A coluna de descrição começa em 42 mm; excluir cabeçalhos e rodapés.
       descriptionLines.push(...items.filter(item=>item.transform&&Math.abs(item.transform[4]-42*72/25.4)<1&&item.transform[5]>54&&!['Work description','Description des prestations'].includes(item.str??'')).map(item=>item.str??''))
-    }return {text:result.join(' '),descriptions:descriptionLines.join(' ')}
-  },bytes)
+  }
+  await pdf.destroy()
+  const text=result.join(' '),descriptions=descriptionLines.join(' ')
   if(liveAzure){expect(actualTranslations).toHaveLength(rows.length+1);for(const translatedText of actualTranslations.slice(0,rows.length))expect(descriptions.replace(/\s/g,'')).toContain(translatedText.replace(/\s/g,''));expect(text).toContain(actualTranslations.at(-1))}
   else {expect(text).toContain(translated);expect(text).toContain(expense)}
   expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')

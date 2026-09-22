@@ -2,10 +2,12 @@
 
 ## 22-09-2026 — 0.12.3 local em validação visual
 
+- A suite unitária anteriormente inconclusiva foi repetida isoladamente: 44 ficheiros/235 testes aprovados. Os E2E em preview passaram 132 cenários; dois testes PDF foram corrigidos para não depender do Vite de desenvolvimento e passaram após a alteração. Os três testes PWA de produção também passaram. A matriz QA do iPhone usa uma página exclusiva do servidor Vite de desenvolvimento e será verificada pela CI. Segurança de ficheiros, lint, tipos, runtime do Worker e build passaram. Publicação ainda depende da CI, dry-run e confirmação online.
+
 - Código local em `codex/desktop-layout-0.12.3`, base `main`/`origin/main` `f96c762cde8c7e00ed278cf295a3d5c4c6603338`. GitHub `main` e Cloudflare permanecem na 0.12.2; URL `https://legal-carina.dabranches.workers.dev`, deployment `aff1e1ea-fd68-471c-b7c3-dae8f375c2fd`, Version ID `387035a2-080f-4ce0-bdb0-f2f4b378f8f4`, conforme confirmação anterior e notas online desta sessão. Ainda não há deployment da 0.12.3.
 - Revisão dos 19 menus em 1920×1240 e 1920×1080 a 100% e 150%, com dados sintéticos; dois cenários adicionais em modo escuro. Corrigidos painéis com espaço desperdiçado, preservada a primeira linha sob o cabeçalho fixo e removido o salto provocado pelo render posterior ao início do scroll. Os painéis de entrada usam a altura útil quando cabem no ecrã.
 - Alterações apenas de interface e testes; nenhuma alteração de Auth, base de dados, Storage ou dados reais. A validação final da branch e a disponibilidade do servidor local devem ser confirmadas antes de publicar.
-- Matriz visual de 19 menus × quatro combinações desktop concluída com dados sintéticos, mais dois cenários em modo escuro. Os testes de scroll passaram de 80% a 200% de zoom; o caso de alinhamento do acompanhamento foi corrigido e repetido com sucesso. Segurança de ficheiros, lint, TypeScript, build, 18 testes unitários da tabela e testes E2E dirigidos passaram. A suite unitária completa ficou inconclusiva neste lote após demora do runner; repetir antes de qualquer publicação.
+- Matriz visual de 19 menus × quatro combinações desktop concluída com dados sintéticos, mais dois cenários em modo escuro. Os testes de scroll passaram de 80% a 200% de zoom; o caso de alinhamento do acompanhamento foi corrigido e repetido com sucesso. A suite unitária completa passou na repetição isolada, conforme registado acima.
 - Pré-visualização local 0.12.3 aberta no browser integrado em `http://127.0.0.1:5173/?view=overview`, servida pela compilação local com proxy para o login; HTTP 200 na página e resposta do endpoint de acesso sem credenciais confirmados. Nenhum PIN real foi introduzido.
 
 ## 22-09-2026 — produção 0.12.2 confirmada
