@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 22-09-2026 — produção 0.12.4 confirmada
+
+- GitHub `main` `691682dc912a8392d0c685136bb014526382f063` (PR #60), CI `35751655143` verde com E2E; 46 ficheiros/242 testes unitários e gates locais aprovados.
+- Cloudflare Worker `legal-carina`, `https://legal-carina.dabranches.workers.dev`: versão 0.12.4 a 100% desde `2026-09-22 16:18:28 UTC`, deployment `ca36332b-c92e-4ccc-a5b4-9af65fb60a5b`, Version ID `36030aaf-a1cb-473f-87f3-06ee875ad10b`. Notas online e versão no browser integrado confirmadas. Rollback frontend para `d65c26cf-5b72-4e14-810a-01f6d603db89` (0.12.3).
+- A ficha online confirmou saldo da nota e saldo da provisão ambos 0,00 € depois da revisão, conservando o histórico. O excedente é identificado para regularização fora das provisões. A facturação dos registos de trabalho carece de confirmação documental separada.
+
 ## 22-09-2026 — 0.12.4 local; reconciliação da nota no backend
 
 - Branch local `codex/provision-vat-gross-0.12.4`, base `a656a593`. Frontend de produção permanece na 0.12.3; a próxima versão está em validação. Código local separa provisão com IVA, pagamento directo da nota, saldo por pagar e excedente a regularizar fora das provisões.
