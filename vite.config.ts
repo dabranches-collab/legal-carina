@@ -10,6 +10,14 @@ import { localTranslation } from './worker/localTranslation.ts'
 // versão durante o desenvolvimento, o servidor reinicia e actualiza a indicação local.
 const packageVersion = packageJson.version
 let buildDirectory = resolve('dist')
+const supabaseFunctionProxy = {
+  '/supabase-functions': {
+    target: 'https://vtvvqyebigflgqccbqsw.supabase.co',
+    changeOrigin: true,
+    rewrite: (path: string) => path.replace(/^\/supabase-functions/, '/functions'),
+    headers: { Origin: 'https://legal-carina.dabranches.workers.dev' },
+  },
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -62,16 +70,8 @@ export default defineConfig({
       },
     },
   ],
-  server: {
-    proxy: {
-      '/supabase-functions': {
-        target: 'https://vtvvqyebigflgqccbqsw.supabase.co',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/supabase-functions/, '/functions'),
-        headers: { Origin: 'https://legal-carina.dabranches.workers.dev' },
-      },
-    },
-  },
+  server: { proxy: supabaseFunctionProxy },
+  preview: { proxy: supabaseFunctionProxy },
   optimizeDeps: { noDiscovery: true, include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'] },
   test: {
     environment: 'jsdom',

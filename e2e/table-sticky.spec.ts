@@ -87,6 +87,39 @@ test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) =
   await page.screenshot({ path: 'test-results/table-sticky-desktop.png', fullPage: false })
 })
 
+for (const { height, zoom } of [
+  { height: 1240, zoom: 1 }, { height: 1080, zoom: 1 },
+  { height: 1240, zoom: 1.5 }, { height: 1080, zoom: 1.5 },
+]) test(`desktop 1920×${height} a ${zoom * 100}% conserva altura e filtros no início do scroll`, async ({ page }) => {
+  await page.setViewportSize({ width: Math.round(1920 / zoom), height: Math.round(height / zoom) })
+  await page.goto('/?qa-iphone=1&view=work')
+  const table = page.getByRole('region', { name: 'Registos de trabalho' })
+  await expect(table.getByText('180 registos de 180')).toBeVisible()
+  const tools = table.locator('.table-tools')
+  const header = table.locator('thead')
+  const start = await table.evaluate(element => {
+    const tableTop = element.querySelector('table')!.getBoundingClientRect().top + window.scrollY
+    const fixedHeight = document.querySelector('.app-shell-header')!.getBoundingClientRect().height
+    const toolsHeight = element.querySelector('.table-tools')!.getBoundingClientRect().height
+    return tableTop - fixedHeight - toolsHeight
+  })
+  const heights: number[] = []
+  for (const delta of [-12, -2, 2, 12, 28, 2, -2]) {
+    await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), start + delta)
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())))
+    heights.push(await page.evaluate(() => document.documentElement.scrollHeight))
+  }
+  expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(2)
+  await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), start + 120)
+  await expect(tools).toBeInViewport()
+  await expect(header).toBeInViewport()
+  await expect.poll(() => header.evaluate(element => getComputedStyle(element).position)).toBe('fixed')
+  const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
+  expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y + toolsBox!.height - 1)
+  expect(headerBox!.y + headerBox!.height).toBeLessThanOrEqual(Math.round(height / zoom))
+  await page.screenshot({ path: `test-results/desktop-table-${height}-${zoom}.png` })
+})
+
 test('cabeçalho e filtros mantêm o centro exacto das células com larguras persistidas após sticky',async({page})=>{
   await page.setViewportSize({width:1440,height:800})
   await page.addInitScript(()=>localStorage.setItem('carina.table.anonymous.work-entries',JSON.stringify({widths:{date:113,client:287,clientCode:121,activity:419,responsible:173,duration:137,rate:151,amount:149,expenses:207,society:193}})))

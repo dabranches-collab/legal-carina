@@ -211,7 +211,8 @@ describe('StandardDataTable',()=>{
     render(<StandardDataTable id="virtual-all" label="Universo virtual" rows={manyRows} columns={columns} rowKey={row=>row.id}/>)
     expect(screen.getByText('1–7200 de 7200')).toBeInTheDocument()
     const body=screen.getByRole('table').querySelector('tbody')!
-    expect(body.querySelectorAll('tr[aria-hidden="true"]')).toHaveLength(1)
+    expect(body.querySelectorAll('tr[aria-hidden="true"]')).toHaveLength(2)
+    expect((body.querySelector('tr[aria-hidden="true"]') as HTMLTableRowElement).style.height).toBe('0px')
     expect(within(body).getAllByRole('row')).toHaveLength(40)
   })
 })
