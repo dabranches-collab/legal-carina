@@ -3,7 +3,7 @@
   "changes": [
     "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
     "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
-    "O separador Notas de Honorários consulta todas as versões criadas pela plataforma e resume provisões, pagamentos e valores por pagar."
+    "O separador Notas de Honorários consulta todas as versões criadas pela plataforma, resume provisões e pagamentos e mostra uma miniatura da disposição final do documento."
   ],
   "releases": [
     {
@@ -11,7 +11,7 @@
       "changes": [
         "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
         "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
-        "O separador Notas de Honorários consulta todas as versões criadas pela plataforma e resume provisões, pagamentos e valores por pagar."
+        "O separador Notas de Honorários consulta todas as versões criadas pela plataforma, resume provisões e pagamentos e mostra uma miniatura da disposição final do documento."
       ]
     },
     {

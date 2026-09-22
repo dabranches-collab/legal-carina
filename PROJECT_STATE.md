@@ -4,6 +4,7 @@
 
 - Branch `codex/client-invoices-foundation-0.12.5`, base `main`/`origin/main` `9e3dfa68f94b0318b00282e14f5905f04bdaae91`; produção continua 0.12.4. Sem alterações de base de dados ou publicação.
 - Novos separadores destacados **Facturas** e **Notas de Honorários**. O primeiro prepara carregamento por drag and drop, leitura PDF/imagem, dados de facturação/pagamento e múltiplas afectações. O segundo lista as versões criadas pela plataforma e reutiliza a gestão existente.
+- Os dois separadores especiais estão isolados à direita da segunda linha e usam o mesmo azul. A configuração do conteúdo das notas mostra a ordem numerada das colunas, permite arrastar ou escolher a posição, explica os totais e apresenta miniatura actualizada em tempo real.
 - Regra confirmada: a gravação futura será transaccional e actualizará automaticamente Facturado/Pago nos elementos escolhidos, respeitando o tratamento próprio de preço fixo, avença, provisões e notas. A gravação está inactiva enquanto faltam os campos de interpretação e o backend transaccional.
 - Segurança, lint, tipos, build e a suite completa passaram: 48 ficheiros e 246 testes, incluindo os quatro testes novos das facturas. Versão local aberta no browser integrado.
 

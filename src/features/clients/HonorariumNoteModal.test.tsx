@@ -291,15 +291,18 @@ describe('HonorariumNoteModal',()=>{
   expect(pdfText.mock.calls.filter(([value])=>value==='Mês/Ano').length).toBe(pdfState.pages)
   expect(downloads).toEqual([expect.stringMatching(filePattern)])
  })
- it('permite reordenar as colunas admitidas e nunca oferece responsável nem valor por linha',async()=>{
+ it('mostra a ordem final, permite reposicionar colunas e actualiza a miniatura',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-order" clientName="Cliente Ordem" onClose={()=>{}}/> )
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
   expect(screen.queryByLabelText('Responsável')).not.toBeInTheDocument()
   expect(screen.queryByLabelText('Valor')).not.toBeInTheDocument()
-  await user.click(screen.getByRole('button',{name:'Mover Tempo para a esquerda'}))
+  expect(screen.getByLabelText('Pré-visualização do resultado')).toHaveTextContent('Mês/AnoDescrição do movimentoTempo')
+  const position=screen.getByLabelText('Posição de Tempo')
+  await user.selectOptions(position,position.querySelector('option[value="1"]')!)
   const headings=[...document.querySelectorAll('.honorarium-print-area thead th')].map(node=>node.textContent)
   expect(headings).toEqual(['Mês/Ano','Tempo','Descrição do movimento'])
   await user.click(screen.getByLabelText('Total de tempo'))
+  expect(screen.getByLabelText('Pré-visualização do resultado')).not.toHaveTextContent('Tempo total: 0:00:00')
   expect(document.querySelector('.honorarium-print-area tfoot')).toBeNull()
  })
  it('regista um pagamento directo na nota sem o transformar em provisão e apresenta o excedente',async()=>{
