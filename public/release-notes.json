@@ -1,12 +1,19 @@
 {
-  "version": "0.12.4",
+  "version": "0.12.5",
   "changes": [
-    "As provisões distinguem a base sem IVA do total efectivamente recebido e registam o crédito pelo total pago.",
-    "A revisão de uma Nota de Honorários aplica crédito recebido posteriormente mesmo quando os registos se mantêm iguais.",
-    "O formulário confirma base, IVA e total antes de guardar a provisão e os abatimentos.",
-    "A nota distingue provisão e pagamento directo, apresenta zero por pagar quando liquidada e identifica excedentes fora das provisões."
+    "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
+    "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
+    "O separador Notas de Honorários consulta todas as versões criadas pela plataforma e resume provisões, pagamentos e valores por pagar."
   ],
   "releases": [
+    {
+      "version": "0.12.5",
+      "changes": [
+        "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
+        "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
+        "O separador Notas de Honorários consulta todas as versões criadas pela plataforma e resume provisões, pagamentos e valores por pagar."
+      ]
+    },
     {
       "version": "0.12.4",
       "changes": [
