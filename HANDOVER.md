@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 22-09-2026 — versão 0.12.3 publicada e verificada
+
+- Código integrado pelo PR #58 em GitHub `main` `6270ce1509a46fdabe9d10b8d078da5b0f744040`; CI `35737483779` verde. A suite unitária completa foi repetida isoladamente: 44 ficheiros e 235 testes aprovados. Segurança de ficheiros, lint, tipos, runtime do Worker, build, E2E e dry-run Cloudflare aprovados. Os dois testes PDF foram corrigidos para ler os PDF produzidos em Node; a CI confirmou também a matriz E2E com servidor de desenvolvimento.
+- Produção Cloudflare Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, versão 0.12.3 a 100% desde `2026-09-22 14:16:55 UTC`. Version ID `d65c26cf-5b72-4e14-810a-01f6d603db89`; o Wrangler não expôs um deployment ID distinto nesta consulta. `/release-notes.json` devolveu HTTP 200 e versão 0.12.3; a rota principal devolveu HTTP 200, `Cache-Control: no-store` e `/assets/index-Dl2MdUOE.js`. O código de produção veio do mesmo `main` após dry-run aprovado.
+- Nenhuma migration, alteração de Auth, Storage ou dados reais foi feita neste lote. A versão 0.12.2 (`387035a2-080f-4ce0-bdb0-f2f4b378f8f4`) é o ponto anterior para rollback do frontend. A entrada seguinte documenta o trabalho local anterior à publicação.
+
 ## 22-09-2026 — revisão desktop 0.12.3 local
 
 - Validação para publicação em 22-09-2026: a suite unitária completa passou isoladamente (44 ficheiros, 235 testes). Segurança de ficheiros, lint, TypeScript, runtime de tradução do Worker e build aprovados. Os E2E em preview estático tiveram 132 aprovações, três omissões condicionais e três falhas de infraestrutura de teste: dois testes PDF importavam um módulo exclusivo do Vite de desenvolvimento e a matriz QA do iPhone exige esse servidor. Os PDF foram alterados para ler o ficheiro produzido directamente em Node e passaram novamente (EN/FR). Os três testes específicos do PWA em preview passaram. A matriz QA do iPhone fica para a CI, que arranca o servidor de desenvolvimento. Nenhuma falha funcional foi observada nesta repetição; aguardar CI verde e dry-run antes do deploy.
