@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 22-09-2026 — 0.12.4 local; reconciliação da nota no backend
+
+- Branch local `codex/provision-vat-gross-0.12.4`, base `a656a593`. Frontend de produção permanece na 0.12.3; a próxima versão está em validação. Código local separa provisão com IVA, pagamento directo da nota, saldo por pagar e excedente a regularizar fora das provisões.
+- Supabase de produção recebeu isoladamente a migration `20260922153227_reapply_new_credit_on_honorarium_revision` após confirmação do histórico e da cópia diária de `2026-09-22 05:50:33 UTC`. A revisão real autorizada conservou o histórico e foi confirmada com saldo da nota e saldo de provisões zero, sem reforço de provisão para o excedente. PITR permanece inactivo; a cópia independente do Storage permanece a de 18-09-2026.
+- Segurança de ficheiros, lint, TypeScript, runtime do Worker, build, dry-run Cloudflare e 46 ficheiros/242 testes unitários aprovados. E2E dirigido da revisão da nota passou em preview sintético; o runner E2E local continuou pendente no encerramento após os cenários e a CI deverá confirmar a suite completa. A confirmação fiscal da facturação e dos pagamentos dos registos é separada da Nota de Honorários.
+
 ## 22-09-2026 — produção 0.12.3 confirmada
 
 - GitHub `main` `6270ce1509a46fdabe9d10b8d078da5b0f744040`, PR #58 e CI `35737483779` verde. A suite unitária, antes inconclusiva, passou isoladamente: 44 ficheiros/235 testes. Segurança, lint, tipos, runtime do Worker, build, E2E e dry-run Cloudflare aprovados.

@@ -1,11 +1,21 @@
 {
-  "version": "0.12.3",
+  "version": "0.12.4",
   "changes": [
-    "Os painéis de entrada aproveitam a altura útil do desktop quando o conteúdo cabe no ecrã.",
-    "A Visão Geral organiza os indicadores em linhas compactas, sem caixas demasiado altas ou espaços vazios entre grupos.",
-    "As tabelas mantêm a pesquisa, os filtros e os cabeçalhos visíveis sem saltos ao começar a deslocação."
+    "As provisões distinguem a base sem IVA do total efectivamente recebido e registam o crédito pelo total pago.",
+    "A revisão de uma Nota de Honorários aplica crédito recebido posteriormente mesmo quando os registos se mantêm iguais.",
+    "O formulário confirma base, IVA e total antes de guardar a provisão e os abatimentos.",
+    "A nota distingue provisão e pagamento directo, apresenta zero por pagar quando liquidada e identifica excedentes fora das provisões."
   ],
   "releases": [
+    {
+      "version": "0.12.4",
+      "changes": [
+        "As provisões distinguem a base sem IVA do total efectivamente recebido e registam o crédito pelo total pago.",
+        "A revisão de uma Nota de Honorários aplica crédito recebido posteriormente mesmo quando os registos se mantêm iguais.",
+        "O formulário confirma base, IVA e total antes de guardar a provisão e os abatimentos.",
+        "A nota distingue provisão e pagamento directo, apresenta zero por pagar quando liquidada e identifica excedentes fora das provisões."
+      ]
+    },
     {
       "version": "0.12.3",
       "changes": [

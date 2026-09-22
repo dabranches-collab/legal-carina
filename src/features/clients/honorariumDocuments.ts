@@ -14,7 +14,7 @@ export function noteCreditPreview(rows:Array<{id:string;effective_amount:number|
  const credits=[...new Map(history.filter(n=>n.credit_active&&n.credit_note&&n.billing_entity_id===account?.billing_entity_id).map(n=>[n.credit_note_id,n.credit_note!])).values()]
  const own=credits.find(n=>n.id===revision?.credit_note_id)
  const activeDeduction=round(credits.reduce((sum,n)=>sum+round(Number(n.deducted)*n.items.filter(item=>rows.some(row=>row.id===item.id)).reduce((v,item)=>v+Number(item.effective_amount),0)/Number(n.subtotal||1)),0))
- const sameWork=Boolean(own&&revision&&revision.deducted===Math.min(total,activeDeduction)&&revision.total===total&&revision.vat_rate===vatRate&&revision.items.length===rows.length&&revision.items.every(item=>rows.some(row=>row.id===item.id)))
+ const sameWork=Boolean(own&&revision&&Number(account?.balance??0)<=0&&revision.deducted===Math.min(total,activeDeduction)&&revision.total===total&&revision.vat_rate===vatRate&&revision.items.length===rows.length&&revision.items.every(item=>rows.some(row=>row.id===item.id)))
  const held=Number(own?.deducted??0),available=round(Number(account?.balance??0)+held)
  const others=credits.filter(n=>n.id!==own?.id)
  const ids=new Set(rows.map(row=>row.id)),covered=new Set(others.flatMap(n=>n.items.map(item=>item.id)))

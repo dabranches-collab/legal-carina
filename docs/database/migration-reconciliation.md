@@ -1,5 +1,11 @@
 # Reconciliação do histórico de migrations
 
+## Revisão da nota com pagamento directo — 22-09-2026
+
+- Histórico remoto confirmado antes da execução: última entrada `20260921183113_allow_audited_fixed_fee_restore`. Backup físico recuperável de `2026-09-22 05:50:33 UTC` no painel Supabase; PITR inactivo e Storage não incluído no backup da base.
+- Aplicada isoladamente a migration local `20260922153227_reapply_new_credit_on_honorarium_revision.sql` com o mesmo carimbo confirmado pela lista remota após a operação. Substitui `save_honorarium_document` e `issue_provision_honorarium_note` sem DML nem alterações de RLS ou permissões. O limite de opções do documento é 60 kB em ambas as funções; o pagamento directo guardado na versão da nota reduz o valor por pagar sem mexer na conta de provisões. O excedente permanece identificado nas opções da nota para regularização própria.
+- As definições instaladas das duas funções foram confirmadas por consulta read-only. Um ciclo autorizado de revisão real confirmou a aplicação do crédito corrigido, pagamento directo separado e saldos da nota e da provisão em zero. Nenhum `db push`, `migration repair` ou limpeza do histórico foi executado.
+
 ## Resumos de recebimentos — 16-09-2026
 
 - O histórico remoto foi lido pela integração Supabase antes da alteração; a última migration anterior era `20260916104110_filter_paid_work_without_invoice_evidence`.
