@@ -12,6 +12,7 @@ import { createPortal, flushSync } from "react-dom";
 import { useAuth } from "../../features/auth/AuthContext";
 import {CalendarDateInput} from '../CalendarDateInput'
 import {formatDate,formatDateTime} from '../../utils/date'
+import {safeViewportBounds} from '../../lib/safeViewport'
 
 type Scalar = string | number | boolean | Date | null | undefined;
 type FilterValue = {
@@ -182,28 +183,26 @@ function FilterPanel<Row>({
       if (!anchor || !panel.current) return;
       const rect = anchor.getBoundingClientRect(),
         panelRect = panel.current.getBoundingClientRect(),
-        margin = 8;
-      const width = Math.min(256, window.innerWidth - margin * 2),
-        height = Math.min(
-          panelRect.height || 320,
-          window.innerHeight - margin * 2,
-        );
-      const left = Math.max(
-        margin,
-        Math.min(rect.left, window.innerWidth - width - margin),
-      );
-      const below = window.innerHeight - rect.bottom >= height + margin;
+        bounds = safeViewportBounds();
+      const width = Math.min(256, bounds.right - bounds.left),
+        height = Math.min(panelRect.height || 320, bounds.bottom - bounds.top);
+      const left = Math.max(bounds.left, Math.min(rect.left, bounds.right - width));
+      const below = bounds.bottom - rect.bottom >= height + 6;
       const top = below
-        ? Math.min(rect.bottom + 6, window.innerHeight - height - margin)
-        : Math.max(margin, rect.top - height - 6);
-      setStyle({ left, top, width, visibility: "visible" });
+        ? Math.min(rect.bottom + 6, bounds.bottom - height)
+        : Math.max(bounds.top, rect.top - height - 6);
+      setStyle({ left, top, width, maxHeight: bounds.bottom - bounds.top, visibility: "visible" });
     };
     update();
     window.addEventListener("resize", update);
     window.addEventListener("scroll", update, true);
+    window.visualViewport?.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("scroll", update);
     return () => {
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
+      window.visualViewport?.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("scroll", update);
     };
   }, [anchor]);
   const options =
@@ -250,7 +249,7 @@ function FilterPanel<Row>({
       role="dialog"
       aria-label={`Filtro ${column.label}`}
       style={style}
-      className="fixed z-[120] max-h-[calc(100dvh-1rem)] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
+      className="app-safe-popover fixed z-[120] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
       onKeyDown={(event) => {
         if (event.key === "Escape") {
           event.stopPropagation();
@@ -717,28 +716,26 @@ export function StandardDataTable<Row>({
       if (!anchor || !panel) return;
       const rect = anchor.getBoundingClientRect(),
         panelRect = panel.getBoundingClientRect(),
-        margin = 8,
-        width = Math.min(256, window.innerWidth - margin * 2),
-        height = Math.min(
-          panelRect.height || 320,
-          window.innerHeight - margin * 2,
-        ),
-        left = Math.max(
-          margin,
-          Math.min(rect.right - width, window.innerWidth - width - margin),
-        ),
-        below = window.innerHeight - rect.bottom >= height + margin,
+        bounds = safeViewportBounds(),
+        width = Math.min(256, bounds.right - bounds.left),
+        height = Math.min(panelRect.height || 320, bounds.bottom - bounds.top),
+        left = Math.max(bounds.left, Math.min(rect.right - width, bounds.right - width)),
+        below = bounds.bottom - rect.bottom >= height + 6,
         top = below
-          ? Math.min(rect.bottom + 6, window.innerHeight - height - margin)
-          : Math.max(margin, rect.top - height - 6);
-      setColumnsStyle({ left, top, width, visibility: "visible" });
+          ? Math.min(rect.bottom + 6, bounds.bottom - height)
+          : Math.max(bounds.top, rect.top - height - 6);
+      setColumnsStyle({ left, top, width, maxHeight: bounds.bottom - bounds.top, visibility: "visible" });
     };
     update();
     window.addEventListener("resize", update);
     window.addEventListener("scroll", update, true);
+    window.visualViewport?.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("scroll", update);
     return () => {
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
+      window.visualViewport?.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("scroll", update);
     };
   }, [columnsOpen]);
   useEffect(() => {
@@ -945,7 +942,7 @@ export function StandardDataTable<Row>({
               aria-label={`Colunas visíveis em ${label}`}
               style={columnsStyle}
               onKeyDown={cyclePanelFocus}
-              className="fixed z-[120] max-h-[min(20rem,calc(100dvh-1rem))] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
+              className="app-safe-popover fixed z-[120] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
             >
               <div className="mb-2 flex gap-3">
                 <button

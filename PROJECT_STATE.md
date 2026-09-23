@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 23-09-2026 — safe area iOS local
+
+- Versão 0.12.5 continua em preparação na branch `codex/client-invoices-foundation-0.12.5`; produção continua 0.12.4.
+- `viewport-fit=cover` confirmado. Header, menu e overlays partilham os insets existentes; popovers das tabelas usam agora os limites seguros e o viewport visual. Modais altos respeitam a altura utilizável, e o scroll de foco compensa o header.
+- Validado com dados sintéticos em iPhone portrait e landscape, claro/escuro; segurança de ficheiros, lint, build e E2E dirigido aprovados. Sem migration ou publicação.
+
 ## 22-09-2026 — 0.12.5 local; facturas e notas na ficha
 
 - Branch `codex/client-invoices-foundation-0.12.5`, base `main`/`origin/main` `9e3dfa68f94b0318b00282e14f5905f04bdaae91`; produção continua 0.12.4. Sem alterações de base de dados ou publicação.

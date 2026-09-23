@@ -93,7 +93,7 @@
 html[data-qa-iphone="true"] { --safe-top: var(--qa-safe-top, 0px); --safe-right: var(--qa-safe-right, 0px); --safe-bottom: var(--qa-safe-bottom, 34px); --safe-left: var(--qa-safe-left, 0px); }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; min-height: 100%; scroll-behavior: smooth; background: var(--color-background); }
+html { min-width: 320px; min-height: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--app-header-height, 9.75rem) + .5rem); background: var(--color-background); }
 body { margin: 0; min-width: 320px; min-height: 100%; min-height: 100dvh; overflow-x: clip; background: var(--color-background); }
 @media (min-width: 768px) {
   figure[data-chart-title="Valor por mês"] > div > .overflow-x-auto { overflow-x: visible; }
@@ -115,7 +115,10 @@ button:disabled { cursor: not-allowed; }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
 .table-row-active, .table-row-active > td { background: var(--color-row-selected) !important; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
-.app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+.app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); overflow-y: auto; }
+.app-safe-fixed.grid { align-items: safe center; }
+.app-safe-fixed.grid > * { max-height: 100%; }
+.app-safe-popover { max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 1rem); }
 .app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
 .app-shell-header { min-height: calc(9.75rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }

@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 23-09-2026 — safe area mobile/iOS, versão 0.12.5 local
+
+- Branch `codex/client-invoices-foundation-0.12.5`; produção permanece 0.12.4. O `viewport-fit=cover` já estava em `index.html` e foi confirmado. O header partilhado, a navegação lateral, os ecrãs de autenticação e os overlays já usam os insets CSS; esta revisão corrigiu os painéis flutuantes das tabelas e a altura útil dos modais.
+- Os filtros e o selector de colunas das tabelas posicionam-se agora dentro dos limites seguros do viewport visual, incluindo os recortes laterais em landscape e as alterações do teclado. Os modais altos ficam contidos na área útil e permitem scroll; o foco por scroll respeita a altura do header.
+- Testes sintéticos de iPhone portrait (390×844, topo 47px) e landscape (844×390, laterais 62px) verificaram header, menu, filtros e modal. Build, lint, verificação de ficheiros sensíveis e E2E dirigido passaram. Nenhuma alteração de base de dados ou publicação neste lote.
+
 ## 22-09-2026 — versão 0.12.5 local em preparação
 
 - Branch `codex/client-invoices-foundation-0.12.5`, criada sobre `main`/`origin/main` `9e3dfa68f94b0318b00282e14f5905f04bdaae91`. Produção permanece na 0.12.4. Nenhuma migration, escrita remota ou publicação neste lote.
