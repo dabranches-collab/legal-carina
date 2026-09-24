@@ -3,6 +3,8 @@
   "changes": [
     "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
     "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar.",
+    "As despesas dos registos seleccionados entram no total da Nota de Honorários pelo valor introduzido, sem novo IVA sobre elas; pode pré-visualizar o PDF e o Word sem emitir nem guardar.",
+    "As Notas de Honorários e as Cobranças apresentam descrições justificadas, dados bancários mais próximos dos rótulos e documentos paginados com clareza nos três idiomas.",
     "Ao criar um cliente, a sugestão de código preenche a primeira lacuna livre na série de Particulares ou Empresas."
   ],
   "releases": [
@@ -11,6 +13,8 @@
       "changes": [
         "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
         "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar.",
+        "As despesas dos registos seleccionados entram no total da Nota de Honorários pelo valor introduzido, sem novo IVA sobre elas; pode pré-visualizar o PDF e o Word sem emitir nem guardar.",
+        "As Notas de Honorários e as Cobranças apresentam descrições justificadas, dados bancários mais próximos dos rótulos e documentos paginados com clareza nos três idiomas.",
         "Ao criar um cliente, a sugestão de código preenche a primeira lacuna livre na série de Particulares ou Empresas."
       ]
     },
