@@ -37,8 +37,8 @@ describe('HonorariumNoteModal',()=>{
   expect(screen.getByRole('button',{name:'Emitir nota e guardar PDF'})).toBeEnabled()
  })
  beforeEach(()=>{historyRpc.mockReset();historyRpc.mockResolvedValue({data:[],error:null});documentRpc.mockReset();documentRpc.mockImplementation(async(_name:string,args:any)=>({error:null,data:{id:'note',number:'NH-00000001',document_id:'doc',revision:1,items:(rpc.mock.results.at(-1)?.value? (await rpc.mock.results.at(-1)!.value).data.items:[]).filter((row:any)=>args.p_work_entry_ids.includes(row.id)),vat_rate:args.p_vat_rate,issued_at:'2026-09-03T12:00:00Z',subtotal:args.p_expected_total/(1+args.p_vat_rate/100),vat:args.p_expected_total-args.p_expected_total/(1+args.p_vat_rate/100),total:args.p_expected_total,deducted:args.p_expected_deduction,remaining:Math.max(0,args.p_expected_total-args.p_expected_deduction-Number(args.p_document_options.direct_payment?.amount??0)),balance_after:0,document_options:args.p_document_options}}));provisionRpc.mockReset();provisionRpc.mockResolvedValue({data:[],error:null});vi.restoreAllMocks();downloads.length=0;vi.spyOn(HTMLAnchorElement.prototype,'click').mockImplementation(function(this:HTMLAnchorElement){downloads.push(this.download)});rpc.mockReset();from.mockReset();pdfRect.mockReset();pdfText.mockReset();pdfAddPage.mockReset();pdfSetPage.mockReset();pdfState.pages=1;URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();from.mockImplementation((table:string)=>query(table==='billing_entities'?testIssuer:null));rpc.mockResolvedValue({error:null,data:{total:2,items:[
-  {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade'},
-  {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
+  {id:'one',work_date:'2026-07-03',activity_description:'Análise documental',duration_minutes:75,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_hourly_rate:80,effective_amount:100,is_paid:false},
+  {id:'two',work_date:'2026-06-30',activity_description:'Reunião',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_hourly_rate:80,effective_amount:40,is_paid:false},
  ]}})})
  it('consulta todos os movimentos independentemente da facturação e prepara só os seleccionados',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-1" clientName="Cliente Teste" onClose={()=>{}}/> )
@@ -65,6 +65,32 @@ describe('HonorariumNoteModal',()=>{
   expect(downloads).toEqual([expect.stringMatching(/^nota-honorarios-cliente-teste-\d{2}-\d{2}-\d{4}\.pdf$/)])
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='07-2026'&&options?.align==='center')).toBe(true)
   expect(pdfText.mock.calls.some(([value,,,options])=>value==='1:15:00'&&options?.align==='center')).toBe(true)
+ })
+ it('avisa logo sobre valor/hora em falta e emite apenas os registos não pagos com preço',async()=>{
+  rpc.mockResolvedValueOnce({error:null,data:{total:3,items:[
+   {id:'pago',work_date:'2026-07-01',activity_description:'Trabalho pago',duration_minutes:60,billing_entity_name:'Sociedade',effective_hourly_rate:100,effective_amount:100,is_paid:true},
+   {id:'pronto',work_date:'2026-07-02',activity_description:'Trabalho por pagar',duration_minutes:60,billing_entity_name:'Sociedade',effective_hourly_rate:100,effective_amount:100,is_paid:false},
+   {id:'sem-preco',work_date:'2026-07-03',activity_description:'Trabalho por valorizar',duration_minutes:30,billing_entity_name:'Sociedade',effective_hourly_rate:null,effective_amount:null,is_paid:false},
+  ]}})
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+  expect(await screen.findByRole('alert',{name:'Registos sem preço'})).toHaveTextContent('1 registo sem valor/hora e sem montante')
+  expect(screen.getByLabelText('Filtrar registos por nota')).toHaveValue('unpaid')
+  expect(screen.queryByText('Trabalho pago')).not.toBeInTheDocument()
+  expect(screen.getByLabelText('Seleccionar movimento de 2026-07-03')).toBeDisabled()
+  await user.click(screen.getByLabelText('Seleccionar todos os 1 movimento com preço'))
+  expect(screen.getByLabelText('Seleccionar movimento de 2026-07-02')).toBeChecked()
+  await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
+  await waitFor(()=>expect(documentRpc).toHaveBeenCalledWith('save_honorarium_document',expect.objectContaining({p_work_entry_ids:['pronto']})))
+  expect(downloads).toHaveLength(1)
+ })
+ it('mantém a lista e os filtros visíveis após uma recusa do backend',async()=>{
+  documentRpc.mockResolvedValueOnce({data:null,error:{message:'Confirme o montante e o estado de cada registo.'}})
+  const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+  await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))
+  await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}))
+  expect(await screen.findByText(/Não foi possível gerar o documento: Confirme o montante/)).toBeInTheDocument()
+  expect(screen.getByLabelText('Filtrar registos por nota')).toBeInTheDocument()
+  expect(screen.getByLabelText('Seleccionar movimento de 2026-07-03')).toBeChecked()
  })
  it('emite uma nota, desconta a provisão uma vez e permite repetir o download',async()=>{
   provisionRpc.mockResolvedValue({data:[{id:'account',client_id:'client',society_name:'Sociedade',currency:'EUR',balance:1000}],error:null})
@@ -124,7 +150,7 @@ describe('HonorariumNoteModal',()=>{
  it('mantém todos os movimentos disponíveis mesmo com saldo esgotado e nota anterior',async()=>{
   provisionRpc.mockResolvedValue({data:[{id:'account',society_name:'Sociedade',currency:'EUR',balance:0,noted_work_ids:['one','two']}],error:null})
   render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
-  expect(await screen.findByLabelText('Seleccionar todos os 2 movimentos')).toBeInTheDocument()
+  expect(await screen.findByLabelText('Seleccionar todos os 2 movimentos com preço')).toBeInTheDocument()
   expect(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/})).toBeDisabled()
  })
  it('não volta a cobrar os registos de uma nota com provisão',async()=>{
@@ -170,15 +196,15 @@ describe('HonorariumNoteModal',()=>{
  })
  it('carrega todas as páginas quando o cliente ultrapassa o limite da primeira resposta',async()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:3,pageSize:2,items:[
-   {id:'p1-a',work_date:'2026-07-03',activity_description:'Primeira página A',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade'},
-   {id:'p1-b',work_date:'2026-07-04',activity_description:'Primeira página B',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade'},
+   {id:'p1-a',work_date:'2026-07-03',activity_description:'Primeira página A',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:100},
+   {id:'p1-b',work_date:'2026-07-04',activity_description:'Primeira página B',duration_minutes:30,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:50},
   ]}}).mockResolvedValueOnce({error:null,data:{total:3,pageSize:2,items:[
-   {id:'p2',work_date:'2026-07-05',activity_description:'Segunda página',duration_minutes:15,professional_name:'Responsável',billing_entity_name:'Sociedade'},
+   {id:'p2',work_date:'2026-07-05',activity_description:'Segunda página',duration_minutes:15,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:25},
   ]}})
   render(<HonorariumNoteModal clientId="client-pages" clientName="Cliente Paginado" onClose={()=>{}}/> )
   expect(await screen.findByText('Segunda página')).toBeInTheDocument()
   expect(rpc).toHaveBeenNthCalledWith(2,'search_work_entries',expect.objectContaining({p_client_id:'client-pages',p_page:2,p_page_size:10000}))
-  expect(screen.getByText('Seleccionar todos os 3 movimentos')).toBeInTheDocument()
+  expect(screen.getByText('Seleccionar todos os 3 movimentos com preço')).toBeInTheDocument()
  })
  it('prepara a cobrança apenas com movimentos facturados e não pagos',async()=>{
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-2" clientName="Cliente Cobrança" documentKind="collection" onClose={()=>{}}/> )
@@ -283,7 +309,7 @@ describe('HonorariumNoteModal',()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:manyRows.length,items:manyRows}})
   from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Açores Teste',address:'Ponta Delgada',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:null,honorarium_salutation:'exmos_senhores',default_billing_entity_id:'sociedade-1'}:table==='billing_entities'?{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}:[]))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-many" clientName="Cliente Açores / Teste" documentKind={documentKind} onClose={()=>{}}/> )
-  await user.click(await screen.findByLabelText(`Seleccionar todos os ${manyRows.length} movimentos`))
+  await user.click(await screen.findByLabelText(`Seleccionar todos os ${manyRows.length} movimentos com preço`))
   await user.click(screen.getByRole('button',{name:/^(Emitir nota e guardar PDF|Guardar PDF)$/}))
   expect(pdfAddPage).toHaveBeenCalled()
   expect(pdfState.pages).toBeGreaterThan(1)

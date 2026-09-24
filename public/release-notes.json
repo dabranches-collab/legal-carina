@@ -1,11 +1,17 @@
 {
-  "version": "0.12.6",
+  "version": "0.12.7",
   "changes": [
-    "A apresentação desktop fica protegida por testes em 1920×1080 e 1920×1240, com zoom de 100%, 125% e 150%, aplicáveis a ecrãs de 14, 24 e 27 polegadas.",
-    "Os testes impedem regressões em que o cabeçalho ou o conteúdo invadam a barra lateral ou ultrapassem a largura visível.",
-    "As tabelas validam também o início do scroll e os cabeçalhos fixos nas seis combinações, mantendo a cobertura de iPhone."
+    "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
+    "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar."
   ],
   "releases": [
+    {
+      "version": "0.12.7",
+      "changes": [
+        "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
+        "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar."
+      ]
+    },
     {
       "version": "0.12.6",
       "changes": [

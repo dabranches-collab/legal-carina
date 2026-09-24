@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 24-09-2026 — versão 0.12.7 local: preparação de Notas de Honorários
+
+- Branch `codex/honorarium-unpaid-filter-0.12.7`, criada sobre `origin/main` `6d39247`; GitHub `main` e produção permanecem na 0.12.6. Produção confirmada directamente por `/release-notes.json`; Worker `legal-carina`, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. Não houve publicação, migration nem escrita em dados reais.
+- Na preparação de uma nova Nota de Honorários, o filtro abre em **Não pagos**. Os registos sem valor/hora e sem montante são assinalados de imediato, com orientação para corrigir a ficha; não podem ser seleccionados até terem montante válido. A lista e os filtros mantêm-se visíveis mesmo que o backend recuse a emissão.
+- Diagnóstico apenas de leitura do caso comunicado: três registos não pagos têm valor/hora e montante nulos. O erro genérico da função de gravação era causado por seleccionar esses registos. Não foram alterados valores ou estados da cliente.
+- Validação local concluída: segurança de ficheiros, lint, TypeScript, 48 ficheiros/250 testes unitários e build aprovados. Dois E2E sintéticos da Nota de Honorários passaram na pré-visualização compilada, incluindo aviso imediato, filtro, exclusão do registo sem preço, emissão, histórico e revisão. O servidor Vite de desenvolvimento não concluiu o carregamento nos testes iniciais; a repetição no servidor de pré-visualização passou. A suite E2E integral, CI e dry-run Cloudflare ficam pendentes antes de eventual publicação.
+
 ## 24-09-2026 — versão 0.12.6 publicada e verificada
 
 - PR #63 integrado em GitHub `main` no commit `add8bc40ced58adfabd97e54474c59a6c56e419c`. CI `35980853629` e scan de segredos `35980853594` verdes, incluindo auditoria de dependências, segurança de ficheiros, lint, TypeScript, 48 ficheiros/248 testes unitários, runtime do Worker, build e E2E.
