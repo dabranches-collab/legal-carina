@@ -8,9 +8,9 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Em preparação local: `0.10.22` na branch `codex/pwa-update-delta-0.10.22`, com resumo de actualização calculado desde a versão instalada em cada equipamento. Ainda não publicada.
-- Versão publicada: `0.10.21`. As fichas mostram registos em separadores; os pré-filtros de clientes apresentam horas e montantes, e as listas de clientes abrem em tabela.
-- Fonte canónica no GitHub: `main`; o commit funcional publicado é `d135ad82a287881e964732e2f8b133b175cda22c`.
+- Em preparação local: `0.12.6` na branch `codex/responsive-desktop-matrix-0.12.6`, com matriz de 1920×1080 e 1920×1240 a 100%, 125% e 150%. Ainda não publicada.
+- Versão publicada: `0.12.5`, com os separadores Facturas e Notas de Honorários e correcções globais de safe area iOS.
+- Fonte canónica no GitHub: `main`; a versão publicada foi integrada pelo PR #62 e o estado exacto está registado em `HANDOVER.md`.
 - A branch `codex/legalteam-distribution` fica preservada apenas como histórico da linha anteriormente publicada.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
 - As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).

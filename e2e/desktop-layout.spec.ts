@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test'
 import { createQaAllocationData } from '../src/lib/qaAllocationData'
+import packageJson from '../package.json' with { type: 'json' }
+
+test.describe.configure({ timeout: 120_000 })
 
 const routes = [
   ['overview', 'overview'], ['work', 'work'], ['debtors', 'debtors'],
@@ -12,17 +15,21 @@ const routes = [
   ['master-data', 'master-data'], ['imports', 'imports'], ['import-review', 'import-review'],
 ] as const
 
-for (const { height, zoom, theme } of [
-  { height: 1240, zoom: 1, theme: 'light' }, { height: 1080, zoom: 1, theme: 'light' },
-  { height: 1240, zoom: 1.5, theme: 'light' }, { height: 1080, zoom: 1.5, theme: 'light' },
+const physicalScreens = '14, 24 e 27 polegadas'
+const desktopProfiles = [
+  { height: 1080, zoom: 1, theme: 'light' }, { height: 1080, zoom: 1.25, theme: 'light' },
+  { height: 1080, zoom: 1.5, theme: 'light' }, { height: 1240, zoom: 1, theme: 'light' },
+  { height: 1240, zoom: 1.25, theme: 'light' }, { height: 1240, zoom: 1.5, theme: 'light' },
   { height: 1240, zoom: 1, theme: 'dark' }, { height: 1080, zoom: 1.5, theme: 'dark' },
-]) test(`menus desktop 1920×${height} a ${zoom * 100}% em modo ${theme}`, async ({ browser }) => {
+] as const
+
+for (const { height, zoom, theme } of desktopProfiles) test(`menus desktop 1920×${height} a ${zoom * 100}% em modo ${theme} (${physicalScreens})`, async ({ browser }) => {
   const context = await browser.newContext({
     viewport: { width: Math.round(1920 / zoom), height: Math.round(height / zoom) },
     deviceScaleFactor: zoom,
   })
   const page = await context.newPage()
-  await page.addInitScript(() => localStorage.setItem('carina-release-notes-seen', '0.12.3'))
+  await page.addInitScript(version => localStorage.setItem('carina-release-notes-seen', version), packageJson.version)
   const fixture = createQaAllocationData()
   await page.route('**/rest/v1/**', async route => {
     const request = route.request(), url = new URL(request.url())
@@ -52,6 +59,7 @@ for (const { height, zoom, theme } of [
     if (process.env.DESKTOP_LAYOUT_ROUTES && !process.env.DESKTOP_LAYOUT_ROUTES.split(',').includes(name)) continue
     const demo = ['notes', 'provisions', 'retainers'].includes(name) ? '&qa-demo=1' : ''
     await page.goto(`/?qa-iphone=1&qa-role=owner&theme=${theme}${demo}&view=${view}`)
+    await page.evaluate(() => window.scrollTo(0, 0))
     await expect(page.locator('.app-shell-header')).toBeVisible()
     await expect(page.locator('main')).toBeVisible()
     await expect(page).toHaveURL(new RegExp(`view=${view.split('&')[0]}(?:&|$)`))
@@ -69,9 +77,19 @@ for (const { height, zoom, theme } of [
     const geometry = await page.evaluate(() => {
       const header = document.querySelector('.app-shell-header')!.getBoundingClientRect()
       const main = document.querySelector('main')!.getBoundingClientRect()
-      return { headerBottom: header.bottom, mainTop: main.top, documentWidth: document.documentElement.scrollWidth, viewportWidth: innerWidth }
+      const sidebar = document.querySelector('.app-shell-sidebar')!.getBoundingClientRect()
+      return {
+        headerBottom: header.bottom, headerLeft: header.left, headerRight: header.right,
+        mainTop: main.top, mainLeft: main.left, mainRight: main.right,
+        sidebarRight: sidebar.right, documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: innerWidth,
+      }
     })
     expect(geometry.mainTop).toBeGreaterThanOrEqual(geometry.headerBottom - 1)
+    expect(geometry.headerLeft, `${name}: cabeçalho sobre a sidebar`).toBeGreaterThanOrEqual(geometry.sidebarRight - 1)
+    expect(geometry.mainLeft, `${name}: conteúdo sobre a sidebar`).toBeGreaterThanOrEqual(geometry.sidebarRight - 1)
+    expect(geometry.headerRight, `${name}: cabeçalho fora do ecrã`).toBeLessThanOrEqual(geometry.viewportWidth + 1)
+    expect(geometry.mainRight, `${name}: conteúdo fora do ecrã`).toBeLessThanOrEqual(geometry.viewportWidth + 1)
     expect(geometry.documentWidth, name).toBeLessThanOrEqual(geometry.viewportWidth + 1)
     await page.screenshot({ path: `test-results/desktop-${name}-${height}-${zoom}-${theme}.png` })
   }

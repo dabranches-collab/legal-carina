@@ -89,6 +89,7 @@ test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) =
 
 for (const { height, zoom } of [
   { height: 1240, zoom: 1 }, { height: 1080, zoom: 1 },
+  { height: 1240, zoom: 1.25 }, { height: 1080, zoom: 1.25 },
   { height: 1240, zoom: 1.5 }, { height: 1080, zoom: 1.5 },
 ]) test(`desktop 1920×${height} a ${zoom * 100}% conserva altura e filtros no início do scroll`, async ({ page }) => {
   await page.setViewportSize({ width: Math.round(1920 / zoom), height: Math.round(height / zoom) })
