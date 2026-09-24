@@ -20,7 +20,7 @@ select function_privs_are('public','create_work_entry_expense',array['uuid','num
 select function_privs_are('public','update_work_entry_expense',array['uuid','numeric','text','text'],'authenticated',array['EXECUTE'],'authenticated users may update permitted expenses');
 select function_privs_are('public','remove_work_entry_expense',array['uuid','text'],'authenticated',array['EXECUTE'],'authenticated users may remove permitted expenses');
 select function_privs_are('public','create_work_entry_with_expenses',array['date','uuid','uuid','uuid','uuid','text','integer','text','numeric','jsonb'],'authenticated',array['EXECUTE'],'authenticated users may create movement and expenses atomically');
-select ok(position('facturação' in obj_description('public.work_entry_expenses'::regclass))>0,'schema documents that expenses are excluded from billing');
+select ok(position('valor total introduzido' in obj_description('public.work_entry_expenses'::regclass))>0,'schema documents that expenses are billed at their entered total');
 
 insert into auth.users(id,email) values
  ('00000000-0000-0000-0000-000000000151','expense-admin@example.test'),

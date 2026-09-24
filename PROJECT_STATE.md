@@ -1,5 +1,39 @@
 # Estado do projecto
 
+## 24-09-2026 — 0.12.7 local: apresentação de notas e cobranças
+
+- Valores bancários aproximados dos rótulos em PDF com largura calculada por idioma. A mesma apresentação é usada por todas as sociedades e pelas Cobranças. O mês francês passou a iniciar com maiúscula; o rascunho de Cobrança tem nome próprio. Valores financeiros de Cobranças sem alteração.
+- Ensaios visuais sintéticos de nota e cobrança com 15 registos e três línguas; PDF e Word gerados em todas as combinações de língua, sociedade e tipo de documento. Pré-visualização local 5178 recompilada, sessão preservada. Produção mantém a última versão confirmada 0.12.6.
+- Segurança, lint, tipos, build, 49 ficheiros/262 testes unitários e cinco E2E de documentos reais no Chromium aprovados. O mock de jsPDF usado pelo modal foi actualizado para medir os rótulos; a suite integral foi repetida e passou.
+
+## 24-09-2026 — 0.12.7 local: teste de 15 registos e reparação do preview
+
+- PDF sintético de duas páginas em `output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf`, sem gravação na base: 15 registos, três despesas, 3 000,00 € de honorários + 690,00 € de IVA + 300,00 € de despesas = 3 990,00 €. Descrições justificadas no PDF e no Word; paginação de registos curtos corrigida.
+- O preview local 5178 serve agora Supabase por proxy da mesma origem. A ligação à função de login e ao serviço Auth foi confirmada pela resposta 401 esperada sem credenciais; a página de acesso já não apresenta o erro de ligação após recarregar. O login real aguarda nova tentativa do operador. Produção mantém a última versão confirmada 0.12.6.
+- Segurança de ficheiros, lint, TypeScript, build, 49 ficheiros/255 testes unitários e dois E2E dirigidos da nota passaram na pré-visualização compilada. A tentativa E2E inicial no servidor de desenvolvimento excedeu o tempo de carregamento e foi repetida na compilação isolada.
+
+## 24-09-2026 — 0.12.7 local: Notas de Honorários com despesas
+
+- Branch `codex/honorarium-unpaid-filter-0.12.7`; `origin/main` em `6d39247` após `fetch`. Produção permanece na 0.12.6, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318` conforme última confirmação. Sem deploy ou escrita em dados reais.
+- Data com mês em maiúscula inicial, texto e células de descrição justificados, despesas numa tabela de Montante/Observações e total da nota igual a honorários + IVA dos honorários + despesas introduzidas pelo valor final. Notas antigas mantêm os totais guardados. Rascunho PDF/Word pode ser visto sem gravar nem consumir número.
+- Migration da função de gravação preparada localmente, por aplicar só depois de ensaio em staging e gates. Validação: segurança, lint, tipos, 49 ficheiros/254 testes unitários, build, 47 testes dirigidos, visualização do PDF sintético e cenário E2E de pré-visualização aprovados; a repetição E2E isolada terminou com `1 passed (7.5s)`. E2E integral, CI e dry-run faltam antes de publicar.
+
+## 24-09-2026 — 0.12.7 local: preencher lacunas na numeração
+
+- A criação de fichas passa a sugerir o menor código livre por vertente, consultando códigos de fichas e perfis. A unicidade da base continua a proteger contra criação simultânea com o mesmo código. Validado no browser integrado para as duas vertentes sem guardar dados; dois testes dirigidos, lint, TypeScript e build aprovados. Apenas código local; produção continua na 0.12.6 até ordem de publicação.
+
+## 24-09-2026 — correcção directa de dados de clientes
+
+- Base Supabase de produção: uma ficha duplicada de particular foi fundida na principal, com três registos transferidos e a ficha duplicada removida; uma segunda ficha foi alinhada com a sua vertente particular por correcção do código. Alterações transaccionais com auditoria e verificação SQL posterior. Nenhuma migration, alteração de código ou deploy.
+- Totais verificados: a ficha fundida conserva quatro registos, 150 minutos e 375,00 € e a grafia do nome foi corrigida; a outra conserva os seus 62 registos, todos associados ao código e à vertente particulares. O código libertado pode ser usado manualmente numa nova ficha; a regra de sugestão automática é corrigida no lote local acima. Dados brutos da importação e histórico de auditoria preservados.
+- Código local na branch `codex/honorarium-unpaid-filter-0.12.7`; GitHub `main` em `6d39247` após `fetch`. Frontend de produção não foi publicado neste lote; última versão confirmada no handover anterior: 0.12.6.
+
+## 24-09-2026 — 0.12.7 local; aviso de registos sem preço
+
+- Branch `codex/honorarium-unpaid-filter-0.12.7` sobre `origin/main` `6d39247`. GitHub `main` e Cloudflare continuam na 0.12.6; deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. Sem publicação ou alteração à base de dados.
+- Nova Nota de Honorários abre nos registos não pagos. Os que não têm valor/hora ou montante mostram aviso imediato e não entram na selecção; o erro do backend deixa a lista acessível. Na primeira leitura do caso comunicado havia três registos não pagos sem esses valores. Na segunda leitura, após a validação, os 20 registos não pagos já estavam valorizados; nenhuma alteração de dados foi feita neste lote.
+- Segurança de ficheiros, lint, TypeScript, 48 ficheiros/250 testes unitários e build aprovados. Dois E2E sintéticos passaram em pré-visualização compilada, incluindo emissão após excluir o registo sem preço. O browser integrado confirmou a versão local 0.12.7 em `http://127.0.0.1:5173/` e o filtro real «Não pagos». A suite E2E integral, CI e dry-run Cloudflare ainda faltam para uma publicação.
+
 ## 24-09-2026 — produção 0.12.6 confirmada
 
 - GitHub `main` `add8bc40ced58adfabd97e54474c59a6c56e419c`, PR #63, CI `35980853629` e scan de segredos `35980853594` verdes. Gates locais completos: segurança, lint, tipos, runtime, 48 ficheiros/248 testes unitários, build, dry-run e 140 E2E aprovados com três omissões condicionais.

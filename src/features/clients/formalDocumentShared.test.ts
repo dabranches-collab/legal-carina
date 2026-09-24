@@ -6,7 +6,11 @@ const issuer={name:'CARINA SANTOS',legal_name:'Carina Santos, Advogada',tax_numb
 
 describe('apresentação formal dos documentos',()=>{
  it('escreve a data portuguesa com o mês por extenso',()=>{
-  expect(formalDate(new Date(2026,8,15),'pt')).toBe('Alfragide, 15 de setembro de 2026')
+  expect(formalDate(new Date(2026,8,15),'pt')).toBe('Alfragide, 15 de Setembro de 2026')
+ })
+ it('inicia o mês com maiúscula também nas outras línguas das notas e cobranças',()=>{
+  expect(formalDate(new Date(2026,8,15),'en')).toBe('Alfragide, 15 September 2026')
+  expect(formalDate(new Date(2026,8,15),'fr')).toBe('Alfragide, 15 Septembre 2026')
  })
  it('usa no rodapé da Carina Santos o texto integral da imagem fornecida',()=>{
   expect(issuerFooterLines(issuer,'pt')).toEqual([

@@ -170,8 +170,10 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
   .honorarium-print-area .honorarium-client-name { margin: 0 0 7mm; font-size: 12pt; font-weight: 700; }
   .honorarium-print-area table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .honorarium-print-area th,.honorarium-print-area td { border: 1px solid #777; padding: 2.5mm; vertical-align: top; color: #000 !important; }
-  .honorarium-print-area th:first-child,.honorarium-print-area td:first-child { width: 22mm; text-align: center; }
-  .honorarium-print-area th:last-child,.honorarium-print-area td:last-child { width: 30mm; text-align: center; }
+  .honorarium-work-table th:first-child,.honorarium-work-table td:first-child { width: 22mm; text-align: center; }
+  .honorarium-work-table th:last-child,.honorarium-work-table td:last-child { width: 30mm; text-align: center; }
+  .honorarium-expense-table th:first-child,.honorarium-expense-table td:first-child { width: 35mm; text-align: center; }
+  .honorarium-expense-table th:last-child,.honorarium-expense-table td:last-child { text-align: justify; }
   .honorarium-print-area tfoot th { font-weight: 700; }
   body { background: #fff !important; color: #000 !important; }
   body:has(.table-standard) * { visibility: hidden !important; }

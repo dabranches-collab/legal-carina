@@ -7,6 +7,10 @@ test('reemissão igual conserva o abate sem novo movimento',()=>{
  const result=noteCreditPreview([{id:'a',effective_amount:100},{id:'b',effective_amount:200}],0,account,[note],note,true)
  expect(result).toMatchObject({deducted:200,balance_after:0,newDeduction:0,returned:0})
 })
+test('despesas aumentam o valor da nota sem aumentar a provisão aplicada aos honorários',()=>{
+ const result=noteCreditPreview([{id:'nova',effective_amount:6600}],23,{...account,balance:10000},[],null,true,399)
+ expect(result).toMatchObject({subtotal:6600,vat:1518,total:8517,deducted:8118,remaining:399,newDeduction:8118})
+})
 test('revisão inclui IVA de uma provisão já recebida quando o crédito foi corrigido',()=>{
  const original={...note,total:5166,vat_rate:23,deducted:1600,items:[{id:'a',effective_amount:4200}],credit_note:{...credit,deducted:1600,subtotal:4200,items:[{id:'a',effective_amount:4200}]}} as HonorariumDocument
  const result=noteCreditPreview([{id:'a',effective_amount:4200}],23,{...account,balance:368,received:1968,consumed:1600},[original],original,true)

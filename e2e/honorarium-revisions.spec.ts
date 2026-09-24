@@ -17,9 +17,9 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
  const dialog=page.getByRole('dialog',{name:'Nota de Honorários · Cliente Sintético'})
- await expect(dialog.getByLabel('Seleccionar todos os 2 movimentos')).toBeVisible()
+ await expect(dialog.getByLabel('Seleccionar todos os 2 movimentos com preço')).toBeVisible()
  await dialog.getByLabel('Filtrar registos por nota').selectOption('with')
- await expect(dialog.getByLabel('Seleccionar todos os 1 movimentos')).toBeVisible()
+ await expect(dialog.getByLabel('Seleccionar todos os 1 movimento com preço')).toBeVisible()
  await dialog.getByLabel('Filtrar registos por nota').selectOption('without')
  await expect(dialog.getByText('Preparação de requerimento e análise documental',{exact:true})).toBeVisible()
  await dialog.getByRole('button',{name:/Histórico de notas/}).click()
@@ -32,7 +32,7 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await expect(dialog.getByText('Consulta jurídica inicial',{exact:true})).toBeVisible()
  await dialog.getByRole('button',{name:'Rever e reemitir'}).click()
  await expect(dialog.getByLabel('Seleccionar movimento de 2026-09-01').first()).toBeChecked()
- await dialog.getByLabel('Seleccionar todos os 2 movimentos').check()
+ await dialog.getByLabel('Seleccionar todos os 2 movimentos com preço').check()
  const download=page.waitForEvent('download')
  await dialog.getByRole('button',{name:'Guardar revisão e PDF'}).click()
  const original=await download;expect(original.suggestedFilename()).toMatch(/nota-honorarios/);await original.saveAs('.tmp/reprint-pt-original.pdf')
@@ -42,5 +42,33 @@ test('histórico, filtros, revisão, estorno e reemissão da nota',async({page})
  await expect(dialog.getByRole('button',{name:'Guardar novamente em PDF'})).toBeEnabled()
  await dialog.getByRole('button',{name:'Rever esta nota'}).click()
  await expect(dialog.getByRole('button',{name:'Guardar revisão e PDF'})).toBeEnabled()
- await expect(dialog.getByLabel('Seleccionar todos os 2 movimentos')).toBeChecked()
+ await expect(dialog.getByLabel('Seleccionar todos os 2 movimentos com preço')).toBeChecked()
+})
+
+test('avisa de imediato sobre falta de valor/hora e exclui esse registo da emissão',async({page})=>{
+ const data=createQaProvisionData(),client='00000000-0000-4000-8000-000000000020'
+ let savedIds:string[]|null=null
+ await page.route('**/rest/v1/**',async route=>{
+  const request=route.request(),url=new URL(request.url()),rpc=url.pathname.includes('/rpc/')?url.pathname.split('/').at(-1):undefined,table=url.pathname.split('/').at(-1)!,args=request.postDataJSON()??{}
+  let body:unknown
+  if(table==='clients'&&url.searchParams.get('select')?.includes('id,firm_id,display_name'))body=[{id:client,firm_id:'firm-qa',display_name:'Cliente Sintético',client_code:'02.001',client_type:'individual',honorarium_salutation:'exmo_senhor',active:true}]
+  else if(table==='firm_members')body={firm_id:'firm-qa'}
+  else if(table==='client_profiles')body=[{client_id:client,client_type:'individual'}]
+  else if(rpc==='get_client_document_action_flags')body=[{client_id:client,has_uninvoiced:true,has_unpaid:false}]
+  else if(rpc==='search_work_entries'){
+   const result=data(rpc,table,args) as {items:Array<Record<string,unknown>>;total:number;pageSize:number}
+   body={...result,items:result.items.map((row,index)=>index===0?{...row,effective_hourly_rate:null,effective_amount:null}:row)}
+  }
+  else {if(rpc==='save_honorarium_document')savedIds=args.p_work_entry_ids as string[];body=data(rpc,table,args);if(table==='billing_entities'&&url.searchParams.get('select')!=='id,name')body=(body as unknown[])[0]}
+  await route.fulfill({contentType:'application/json',body:JSON.stringify(body)})
+ })
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
+ await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
+ const dialog=page.getByRole('dialog',{name:'Nota de Honorários · Cliente Sintético'})
+ await expect(dialog.getByRole('alert',{name:'Registos sem preço'})).toContainText('1 registo sem valor/hora e sem montante')
+ await expect(dialog.getByLabel('Filtrar registos por nota')).toHaveValue('unpaid')
+ await expect(dialog.getByLabel('Seleccionar movimento de 2026-09-01').first()).toBeDisabled()
+ await dialog.getByLabel('Seleccionar todos os 1 movimento com preço').check()
+ await dialog.getByRole('button',{name:'Emitir nota e guardar PDF'}).click()
+ await expect.poll(()=>savedIds).toEqual(['00000000-0000-4000-8000-000000000040'])
 })

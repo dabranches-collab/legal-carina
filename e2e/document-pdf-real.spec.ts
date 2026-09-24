@@ -32,7 +32,8 @@ test.beforeEach(async({page})=>{
     }
     if(pathname.endsWith('/rpc/save_honorarium_document')){
       const args=request.postDataJSON(),items=rows.filter(row=>args.p_work_entry_ids.includes(row.id)),subtotal=items.reduce((sum,row)=>sum+row.effective_amount,0),vat=Math.round(subtotal*args.p_vat_rate)/100
-      saved={id:'note-qa',document_id:'note-qa',revision:1,number:'NH-QA-1',issued_at:'2026-09-04T12:00:00Z',subtotal,vat,vat_rate:args.p_vat_rate,total:subtotal+vat,deducted:0,remaining:subtotal+vat,balance_after:0,items,document_options:args.p_document_options,is_current:true,billing_entity_id:'society-pdf-qa',society_name:'LEGALTEAM',currency:'EUR'};await route.fulfill({contentType:'application/json',body:JSON.stringify(saved)});return
+      const expenseTotal=args.p_document_options.expenses_included?(args.p_document_options.expenses??[]).reduce((sum:number,expense:{amount:number})=>sum+expense.amount,0):0,total=subtotal+vat+expenseTotal
+      saved={id:'note-qa',document_id:'note-qa',revision:1,number:'NH-QA-1',issued_at:'2026-09-04T12:00:00Z',subtotal,vat,vat_rate:args.p_vat_rate,total,deducted:0,remaining:total,balance_after:0,items,document_options:args.p_document_options,is_current:true,billing_entity_id:'society-pdf-qa',society_name:'LEGALTEAM',currency:'EUR'};await route.fulfill({contentType:'application/json',body:JSON.stringify(saved)});return
     }
     if(pathname.endsWith('/firm_members')){
       await route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'firm-pdf-qa'})});return
@@ -56,6 +57,22 @@ test.beforeEach(async({page})=>{
     }
     await route.fulfill({contentType:'application/json',body:'[]'})
   })
+})
+
+test('pré-visualiza um rascunho sem criar nota nem gastar numeração',async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('legal-carina-auth',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:4102444800,token_type:'bearer',user:{id:'synthetic-user'}})))
+  let saves=0
+  page.on('request',request=>{if(request.url().includes('/rpc/save_honorarium_document'))saves++})
+  await page.route('**/rest/v1/work_entry_expenses?*',route=>route.fulfill({json:[{id:'expense-qa',work_entry_id:rows[0].id,amount:399,currency:'EUR',observations:'Custas e certidões'}]}))
+  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table')
+  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
+  await page.getByLabel('Seleccionar movimento de 2026-01-15').first().check()
+  await page.getByRole('button',{name:'Pré-visualizar sem guardar'}).click()
+  const preview=page.getByRole('dialog',{name:'Pré-visualização da nota de honorários'})
+  await expect(preview).toBeVisible()
+  await expect(preview).toContainText('Rascunho sem gravação')
+  await expect(preview.getByRole('img',{name:'Página 1 da Nota de Honorários'})).toBeVisible()
+  expect(saves).toBe(0)
 })
 
 for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: registos, despesas e totais`,async({page})=>{
@@ -106,7 +123,7 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
   for(const row of rows)expect(text).toContain(row.id)
   expect(text.replace(/\s/g,'')).toContain(language==='en'?'VAT':'TVA')
-  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, 4 septembre 2026')
+  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, 4 Septembre 2026')
   const mutations:string[]=[];page.on('request',request=>{if(request.url().includes('/rest/v1/')&&request.method()==='POST'&&!/get_|search_/.test(request.url()))mutations.push(request.url())})
   await expect(page.getByLabel('Idioma do documento')).toBeDisabled()
   const repeat=page.waitForEvent('download');await page.getByRole('button',{name:'Guardar novamente em PDF'}).click();await (await repeat).saveAs(path.resolve(`.tmp/reprint-${language}-repeat.pdf`))

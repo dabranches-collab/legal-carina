@@ -24,6 +24,7 @@ import { ClientCredentialsPanel } from "./ClientCredentialsPanel";
 import { withTransientRetry } from "../../lib/transientRetry";
 import {CalendarDateInput} from '../../components/CalendarDateInput'
 import { formatFilterHours, formatFilterMoney, invalidateClientFilterSummaries, loadClientFilterSummaries, type ClientFilterSummaries, type FilterKey } from './clientFilterSummaries'
+import { suggestedClientCodes } from './clientCodes'
 
 const HonorariumNoteModal = lazy(() =>
   import("../clients/HonorariumNoteModal").then((module) => ({
@@ -183,23 +184,6 @@ const identifierLabels: Record<Identifier["identifier_type"], string> = {
   company_registration: "Registo comercial",
   tax: "Identificação fiscal",
   other: "Outro",
-};
-
-const suggestedClientCodes = (
-  rows: Array<{ client_type?: string | null; client_code?: string | null }>,
-) => {
-  const next = (type: "individual" | "company") => {
-    const prefix = type === "company" ? "01" : "02";
-    const highest = rows
-      .filter((item) => item.client_type === type)
-      .map((item) =>
-        new RegExp(`^${prefix}\\.(\\d+)$`).exec(item.client_code ?? ""),
-      )
-      .filter((match): match is RegExpExecArray => Boolean(match))
-      .reduce((maximum, match) => Math.max(maximum, Number(match[1])), 0);
-    return `${prefix}.${String(highest + 1).padStart(4, "0")}`;
-  };
-  return { individual: next("individual"), company: next("company") };
 };
 
 export function MasterDataPage({
@@ -527,7 +511,7 @@ export function MasterDataPage({
       setProfiles([]);
       return;
     }
-    const [clientResult, profileResult, identifierResult, referrersResult, codesResult] = await Promise.all([
+    const [clientResult, profileResult, identifierResult, referrersResult, codesResult, clientCodesResult] = await Promise.all([
       supabase!
         .from("clients")
         .select(
@@ -549,15 +533,19 @@ export function MasterDataPage({
       supabase!.from("client_referrers").select("id,name").order("name"),
       supabase!
         .from("client_profiles")
-        .select("client_type,client_code")
+        .select("client_code")
+        .eq("firm_id", firmId),
+      supabase!
+        .from("clients")
+        .select("client_code")
         .eq("firm_id", firmId),
     ]);
     setReferrerOptions(referrersResult.data??[]);
     if(clientResult.error||profileResult.error){setError(clientResult.error?.message??profileResult.error!.message);return;}
-    if (codesResult.error) {
-      setError(`Não foi possível calcular os próximos códigos: ${codesResult.error.message}`);
+    if (codesResult.error || clientCodesResult.error) {
+      setError(`Não foi possível calcular os próximos códigos: ${codesResult.error?.message ?? clientCodesResult.error?.message}`);
     } else {
-      setSuggestedCodes(suggestedClientCodes(codesResult.data ?? []));
+      setSuggestedCodes(suggestedClientCodes([...(codesResult.data ?? []), ...(clientCodesResult.data ?? [])]));
     }
     setClientDetailsReady(true);
     if (clientResult.data) {
@@ -656,17 +644,17 @@ export function MasterDataPage({
     setNotice("");
     setSuggestedCodes({ individual: "", company: "" });
     if (!supabase || !firmId) return;
-    const { data, error: codeError } = await supabase
-      .from("client_profiles")
-      .select("client_type,client_code")
-      .eq("firm_id", firmId);
-    if (codeError) {
+    const [profileCodesResult, clientCodesResult] = await Promise.all([
+      supabase.from("client_profiles").select("client_code").eq("firm_id", firmId),
+      supabase.from("clients").select("client_code").eq("firm_id", firmId),
+    ]);
+    if (profileCodesResult.error || clientCodesResult.error) {
       setError(
-        `Não foi possível calcular os próximos códigos: ${codeError.message}`,
+        `Não foi possível calcular os próximos códigos: ${profileCodesResult.error?.message ?? clientCodesResult.error?.message}`,
       );
       return;
     }
-    setSuggestedCodes(suggestedClientCodes(data ?? []));
+    setSuggestedCodes(suggestedClientCodes([...(profileCodesResult.data ?? []), ...(clientCodesResult.data ?? [])]));
   }
   useEffect(() => {
     if (!supabase) return;
