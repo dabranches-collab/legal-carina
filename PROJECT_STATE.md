@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — produção 0.12.7 confirmada
+
+- GitHub `main` `882ff216721fbafd6bb2163fa0bef854b5ae6ff7` (PR #65, CI `36043823935` e scan `36043823957` verdes). Segurança, lint, tipos, runtime, 262 testes unitários, build, dry-run e 144 E2E aprovados; uma matriz exclusiva do servidor Vite de desenvolvimento foi omitida no ensaio compilado.
+- Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: deployment `08e1ef5c-380d-4725-b7fd-96df2e5512b7`, Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e`, 100% desde `2026-09-24 19:01:06 UTC`; notas online 0.12.7. Rollback frontend 0.12.6: `5102698c-cd33-4111-a6ce-19780b0dc318`.
+- Supabase: migration isolada `20260924185918_include_expenses_in_honorarium_totals` aplicada; a função incorpora despesas activas no total da nova nota após o IVA dos honorários. Treze versões anteriores mantiveram os mesmos totais agregados. Backup físico `2026-09-24 05:44:16 UTC`; 5 utilizadores/5 pertenças, 7 concessões, 6 permissões financeiras, zero órfãos e 48/48 tabelas públicas com RLS. Branch temporária de teste eliminada após falha nas migrations antigas; staging/pgTAP não concluído. Cópia independente dos 26 objectos privados do Storage não comprovada; a migration não alterou Storage nem registos existentes.
+
 ## 24-09-2026 — 0.12.7 local: apresentação de notas e cobranças
 
 - Valores bancários aproximados dos rótulos em PDF com largura calculada por idioma. A mesma apresentação é usada por todas as sociedades e pelas Cobranças. O mês francês passou a iniciar com maiúscula; o rascunho de Cobrança tem nome próprio. Valores financeiros de Cobranças sem alteração.
