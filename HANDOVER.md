@@ -1,9 +1,14 @@
 # Legal Carina — handover
 
+## 24-09-2026 — 0.12.7 local: sugestão de códigos por lacuna
+
+- A criação de clientes sugere agora o menor número livre nas séries de Particulares (`02`) e Empresas (`01`). A consulta considera códigos existentes em `clients` e `client_profiles`, incluindo vertentes inactivas e fichas sem perfil, para evitar sugestões de códigos ocupados. O operador continua a poder editar o código antes de guardar; a restrição única da base continua a impedir duplicados se duas pessoas criarem fichas ao mesmo tempo.
+- Validação: lint, TypeScript, compilação e dois testes dirigidos passaram. No browser integrado, a criação local apresentou os primeiros códigos livres nas duas vertentes; a ficha de teste foi fechada sem guardar. Produção mantém a versão 0.12.6 e a regra anterior até publicação expressa da 0.12.7.
+
 ## 24-09-2026 — correcção operacional de fichas na base de produção
 
 - Alteração de dados, sem alteração de código, migration ou publicação do frontend. Numa transacção auditada, foi fundida uma ficha particular duplicada na ficha principal: três registos de trabalho foram transferidos, mantendo IDs, duração, preço e estados. A grafia do nome principal foi conciliada com a ficha removida. A ficha principal ficou com quatro registos, 150 minutos e 375,00 €; o código duplicado ficou livre nas fichas e perfis activos.
-- Outra ficha já tinha a vertente particular activa, mas conservava um código com prefixo empresarial. O código da ficha e do perfil foi corrigido para o próximo código particular livre; os 62 registos de trabalho mantiveram os mesmos IDs e ligações. Verificação por junção das tabelas: 62/62 registos resolvem agora o código e tipo particulares, nenhum resolve o antigo código empresarial. A numeração sugerida na criação continua a avançar pelo maior número existente; um código libertado pode ser introduzido manualmente.
+- Outra ficha já tinha a vertente particular activa, mas conservava um código com prefixo empresarial. O código da ficha e do perfil foi corrigido para o próximo código particular livre; os 62 registos de trabalho mantiveram os mesmos IDs e ligações. Verificação por junção das tabelas: 62/62 registos resolvem agora o código e tipo particulares, nenhum resolve o antigo código empresarial. O código libertado podia ser introduzido manualmente; a sugestão automática é revista no lote local acima.
 - As linhas de importação e a auditoria histórica foram preservadas, incluindo os códigos de origem. A fusão guardou um retrato anterior no `audit_log` e os três registos transferidos têm a auditoria normal de alteração. Verificação SQL posterior: uma única ficha principal, zero referências operacionais à ficha removida, quatro registos no destino, código libertado sem atribuição e 62 registos na segunda ficha.
 - O código local mantém-se em `codex/honorarium-unpaid-filter-0.12.7` (`eaf1838` antes desta entrada); `origin/main` permaneceu em `6d39247` após `fetch`. A última confirmação registada do frontend de produção é a 0.12.6; a versão online não foi alterada neste lote.
 

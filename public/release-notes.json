@@ -2,14 +2,16 @@
   "version": "0.12.7",
   "changes": [
     "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
-    "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar."
+    "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar.",
+    "Ao criar um cliente, a sugestão de código preenche a primeira lacuna livre na série de Particulares ou Empresas."
   ],
   "releases": [
     {
       "version": "0.12.7",
       "changes": [
         "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
-        "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar."
+        "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar.",
+        "Ao criar um cliente, a sugestão de código preenche a primeira lacuna livre na série de Particulares ou Empresas."
       ]
     },
     {
