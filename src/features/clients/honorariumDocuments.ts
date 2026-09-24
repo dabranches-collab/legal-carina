@@ -8,9 +8,9 @@ export type HonorariumDocument=ProvisionNote&{
  document_options:Record<string,unknown>;
 }
 export const documentIsVoided=(note:HonorariumDocument)=>note.voided||Boolean(note.credit_note_id&&!note.credit_active)
-export function noteCreditPreview(rows:Array<{id:string;effective_amount:number|null;is_invoiced?:boolean;is_paid?:boolean}>,vatRate:number,account:CreditAccount|undefined,history:HonorariumDocument[],revision:HonorariumDocument|null,apply:boolean){
+export function noteCreditPreview(rows:Array<{id:string;effective_amount:number|null;is_invoiced?:boolean;is_paid?:boolean}>,vatRate:number,account:CreditAccount|undefined,history:HonorariumDocument[],revision:HonorariumDocument|null,apply:boolean,expenses=0){
  const round=(v:number)=>Math.round((v+Number.EPSILON)*100)/100
- const subtotal=round(rows.reduce((sum,row)=>sum+Number(row.effective_amount??0),0)),vat=round(subtotal*vatRate/100),total=round(subtotal+vat)
+ const subtotal=round(rows.reduce((sum,row)=>sum+Number(row.effective_amount??0),0)),vat=round(subtotal*vatRate/100),total=round(subtotal+vat+expenses)
  const credits=[...new Map(history.filter(n=>n.credit_active&&n.credit_note&&n.billing_entity_id===account?.billing_entity_id).map(n=>[n.credit_note_id,n.credit_note!])).values()]
  const own=credits.find(n=>n.id===revision?.credit_note_id)
  const activeDeduction=round(credits.reduce((sum,n)=>sum+round(Number(n.deducted)*n.items.filter(item=>rows.some(row=>row.id===item.id)).reduce((v,item)=>v+Number(item.effective_amount),0)/Number(n.subtotal||1)),0))

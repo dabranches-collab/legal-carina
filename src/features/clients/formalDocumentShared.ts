@@ -19,7 +19,7 @@ export function formalDate(value:Date,language:DocumentLanguage){
  const day=value.getDate(),month=value.getMonth(),year=value.getFullYear()
  if(language==='en')return `Alfragide, ${day} ${enMonths[month]} ${year}`
  if(language==='fr')return `Alfragide, ${day} ${frMonths[month]} ${year}`
- return `Alfragide, ${day} de ${ptMonths[month]} de ${year}`
+ return `Alfragide, ${day} de ${ptMonths[month][0].toLocaleUpperCase('pt-PT')}${ptMonths[month].slice(1)} de ${year}`
 }
 
 const normalized=(value:string|null|undefined)=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase()

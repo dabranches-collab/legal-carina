@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — 0.12.7 local: Notas de Honorários com despesas
+
+- Branch `codex/honorarium-unpaid-filter-0.12.7`; `origin/main` em `6d39247` após `fetch`. Produção permanece na 0.12.6, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318` conforme última confirmação. Sem deploy ou escrita em dados reais.
+- Data com mês em maiúscula inicial, texto e células de descrição justificados, despesas numa tabela de Montante/Observações e total da nota igual a honorários + IVA dos honorários + despesas introduzidas pelo valor final. Notas antigas mantêm os totais guardados. Rascunho PDF/Word pode ser visto sem gravar nem consumir número.
+- Migration da função de gravação preparada localmente, por aplicar só depois de ensaio em staging e gates. Validação: segurança, lint, tipos, 49 ficheiros/254 testes unitários, build, 47 testes dirigidos, visualização do PDF sintético e cenário E2E de pré-visualização aprovados; a repetição E2E isolada terminou com `1 passed (7.5s)`. E2E integral, CI e dry-run faltam antes de publicar.
+
 ## 24-09-2026 — 0.12.7 local: preencher lacunas na numeração
 
 - A criação de fichas passa a sugerir o menor código livre por vertente, consultando códigos de fichas e perfis. A unicidade da base continua a proteger contra criação simultânea com o mesmo código. Validado no browser integrado para as duas vertentes sem guardar dados; dois testes dirigidos, lint, TypeScript e build aprovados. Apenas código local; produção continua na 0.12.6 até ordem de publicação.
