@@ -252,6 +252,7 @@ function FilterPanel<Row>({
       className="app-safe-popover fixed z-[120] overflow-auto rounded-xl border border-border bg-surface p-3 shadow-raised"
       onKeyDown={(event) => {
         if (event.key === "Escape") {
+          event.preventDefault();
           event.stopPropagation();
           onClose();
         } else cyclePanelFocus(event);
@@ -752,8 +753,18 @@ export function StandardDataTable<Row>({
         filterButtons.current[openFilter]?.focus();
       }
     };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      event.preventDefault();
+      setOpenFilter(null);
+      filterButtons.current[openFilter]?.focus();
+    };
     document.addEventListener("mousedown", outside);
-    return () => document.removeEventListener("mousedown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("mousedown", outside);
+      document.removeEventListener("keydown", escape);
+    };
   }, [openFilter]);
   const toggleSort = (column: TableColumn<Row>, multiple: boolean) => {
     if (column.sortable === false) return;
