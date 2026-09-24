@@ -4,7 +4,8 @@
     "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
     "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
     "O separador Notas de Honorários consulta todas as versões criadas pela plataforma, resume provisões e pagamentos e mostra uma miniatura da disposição final do documento.",
-    "Os documentos emitidos deixam de repetir o resumo financeiro no fim e usam cumprimentos mais simples em português e inglês."
+    "Os documentos emitidos deixam de repetir o resumo financeiro no fim e usam cumprimentos mais simples em português e inglês.",
+    "No iPhone, os cabeçalhos, menus, filtros e janelas respeitam a área segura do ecrã em vertical e horizontal."
   ],
   "releases": [
     {
@@ -13,7 +14,8 @@
         "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
         "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
         "O separador Notas de Honorários consulta todas as versões criadas pela plataforma, resume provisões e pagamentos e mostra uma miniatura da disposição final do documento.",
-        "Os documentos emitidos deixam de repetir o resumo financeiro no fim e usam cumprimentos mais simples em português e inglês."
+        "Os documentos emitidos deixam de repetir o resumo financeiro no fim e usam cumprimentos mais simples em português e inglês.",
+        "No iPhone, os cabeçalhos, menus, filtros e janelas respeitam a área segura do ecrã em vertical e horizontal."
       ]
     },
     {
