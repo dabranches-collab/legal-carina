@@ -1,13 +1,19 @@
 {
-  "version": "0.12.5",
+  "version": "0.12.6",
   "changes": [
-    "A ficha do cliente passa a distinguir Facturas, Notas de Honorários e o arquivo geral de Documentos.",
-    "As facturas entram por arrastar e largar e ficam preparadas para leitura e afectação a diferentes movimentos financeiros.",
-    "O separador Notas de Honorários consulta todas as versões criadas pela plataforma, resume provisões e pagamentos e mostra uma miniatura da disposição final do documento.",
-    "Os documentos emitidos deixam de repetir o resumo financeiro no fim e usam cumprimentos mais simples em português e inglês.",
-    "No iPhone, os cabeçalhos, menus, filtros e janelas respeitam a área segura do ecrã em vertical e horizontal."
+    "A apresentação desktop fica protegida por testes em 1920×1080 e 1920×1240, com zoom de 100%, 125% e 150%, aplicáveis a ecrãs de 14, 24 e 27 polegadas.",
+    "Os testes impedem regressões em que o cabeçalho ou o conteúdo invadam a barra lateral ou ultrapassem a largura visível.",
+    "As tabelas validam também o início do scroll e os cabeçalhos fixos nas seis combinações, mantendo a cobertura de iPhone."
   ],
   "releases": [
+    {
+      "version": "0.12.6",
+      "changes": [
+        "A apresentação desktop fica protegida por testes em 1920×1080 e 1920×1240, com zoom de 100%, 125% e 150%, aplicáveis a ecrãs de 14, 24 e 27 polegadas.",
+        "Os testes impedem regressões em que o cabeçalho ou o conteúdo invadam a barra lateral ou ultrapassem a largura visível.",
+        "As tabelas validam também o início do scroll e os cabeçalhos fixos nas seis combinações, mantendo a cobertura de iPhone."
+      ]
+    },
     {
       "version": "0.12.5",
       "changes": [

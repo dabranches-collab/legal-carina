@@ -1,5 +1,12 @@
 # Estado do projecto
 
+## 24-09-2026 — 0.12.6 local; matriz desktop completa
+
+- Branch `codex/responsive-desktop-matrix-0.12.6` sobre `origin/main` `b1f5be9612f5ad05fed55b799552dc4bc7d45c7d`; produção continua 0.12.5.
+- Os 19 menus passaram em 1920×1080 e 1920×1240 com zoom 100%, 125% e 150%, incluindo limites da sidebar, largura do conteúdo e tabelas fixas. A geometria é a mesma em ecrãs de 14, 24 e 27 polegadas quando resolução e zoom coincidem.
+- 34 E2E dirigidos aprovados; suite integral com 140 aprovações e três omissões condicionais. Segurança, lint, tipos, runtime, 48 ficheiros/248 testes unitários, build e dry-run Cloudflare aprovados. O teste de scroll mede agora o trabalho real de layout sem contar throttling de frames do browser sem foco.
+- Cobertura iPhone preservada. Sem alterações ao Supabase, Auth, dados, utilizadores, permissões ou produção.
+
 ## 24-09-2026 — produção 0.12.5 confirmada
 
 - GitHub `main` `9c3471db143ff4d8137e1c4d2ad03a9157b36f43`, PR #62, CI `35962929263` verde. Segurança, lint, tipos, 48 ficheiros/248 testes unitários, runtime do Worker, build, E2E e dry-run Cloudflare validados.

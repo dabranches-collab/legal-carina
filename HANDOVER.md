@@ -1,5 +1,14 @@
 # Legal Carina — handover
 
+## 24-09-2026 — versão 0.12.6 local em validação responsiva
+
+- Branch `codex/responsive-desktop-matrix-0.12.6`, criada sobre `origin/main` `b1f5be9612f5ad05fed55b799552dc4bc7d45c7d`. Produção permanece na 0.12.5; não houve deploy, migration, alteração de Auth, dados, utilizadores ou permissões.
+- A matriz desktop cobre os 19 menus em 1920×1080 e 1920×1240 a 100%, 125% e 150%. Estas seis áreas úteis cobrem a mesma geometria web em monitores de 14, 24 e 27 polegadas; o tamanho físico não é exposto ao CSS quando resolução e zoom são iguais.
+- As verificações medem ausência de overflow global, separação entre sidebar/cabeçalho/conteúdo, carregamento dos módulos e estabilidade de cabeçalhos e ferramentas das tabelas. Dois cenários escuros e a regressão iPhone mantêm-se.
+- Resultado dirigido: 34 E2E aprovados em 8,2 minutos. A suite integral concluiu com 140 aprovações e três omissões condicionais. Segurança de ficheiros, lint, TypeScript, runtime do Worker, 48 ficheiros/248 testes unitários, build e dry-run Cloudflare também passaram.
+- O teste de desempenho deixou de incluir esperas de `requestAnimationFrame`, sujeitas a limitação quando o browser não tem foco, e mede directamente os 72 movimentos e recálculos de layout. Na passagem integral: 0,6 ms, desvio do cabeçalho 0 px e pesquisa remota em 467 ms, com orçamento máximo de 3 s.
+- Inspecção visual efectuada em Visão Geral, lista de clientes, Registos e Provisões. A versão local no browser integrado voltou a funcionar na porta 5198 depois de repor o servidor; o proxy de autenticação respondeu, e a sessão existente abriu sem pedir nem alterar PIN.
+
 ## 24-09-2026 — versão 0.12.5 publicada e verificada
 
 - PR #62 integrado em GitHub `main` no commit `9c3471db143ff4d8137e1c4d2ad03a9157b36f43`. CI do PR `35962929263` verde, incluindo 139 cenários E2E, testes unitários, auditoria e scan de segredos. O dry-run Cloudflare e os gates locais passaram: 48 ficheiros/248 testes unitários; E2E em build de teste 138 aprovados e uma omissão exclusiva do servidor de desenvolvimento.
