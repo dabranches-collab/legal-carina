@@ -28,6 +28,45 @@ async function wordXml(blob:Blob){
 }
 
 describe('createFormalDocumentDocx',()=>{
+ it('apresenta 15 registos e 3 despesas num rascunho demonstrativo, com descrições justificadas',async()=>{
+  const activities=[
+   'Consulta inicial e levantamento dos elementos necessários',
+   'Análise dos documentos de identificação e representação',
+   'Reunião para definição da estratégia e dos prazos',
+   'Pesquisa de legislação e jurisprudência aplicável',
+   'Preparação do mandato e da documentação de suporte',
+   'Revisão das declarações e dos comprovativos recebidos',
+   'Elaboração da primeira versão do requerimento',
+   'Conferência do requerimento com os documentos anexos',
+   'Contacto com a entidade competente para esclarecimentos',
+   'Submissão do requerimento e confirmação da recepção',
+   'Acompanhamento do processo e verificação dos prazos',
+   'Preparação da resposta ao pedido de elementos adicionais',
+   'Revisão da resposta e organização dos anexos finais',
+   'Reunião de actualização com o cliente sobre o processo',
+   'Conferência final e comunicação das próximas diligências',
+  ]
+  const demoRows=activities.map((activity,index)=>({...rows[0],id:`demo-work-${index+1}`,work_date:`2026-${String(1+Math.floor(index/2)).padStart(2,'0')}-15`,activity_description:`${activity}. Foram analisados os elementos disponíveis e registadas as diligências necessárias para a fase seguinte do assunto.`,duration_minutes:30+15*(index%4),effective_amount:200}))
+  const demoExpenses=[
+   {id:'demo-expense-1',work_entry_id:demoRows[2].id,amount:120,currency:'EUR',observations:'Custas de apresentação e tramitação do requerimento, pelo valor total suportado.'},
+   {id:'demo-expense-2',work_entry_id:demoRows[7].id,amount:95,currency:'EUR',observations:'Certidões e cópias necessárias à instrução do processo, pelo valor total suportado.'},
+   {id:'demo-expense-3',work_entry_id:demoRows[12].id,amount:85,currency:'EUR',observations:'Deslocação relacionada com a diligência, pelo valor total acordado com o cliente.'},
+  ]
+  const amounts=formalDocumentAmounts(demoRows,demoExpenses,null,23)
+  expect(amounts).toMatchObject({subtotal:3000,vat:690,expenseTotal:300,total:3990})
+  const demoNote={...note,number:'RASCUNHO',subtotal:amounts.subtotal,vat:amounts.vat,total:amounts.total,remaining:amounts.total,document_options:{expenses_included:true,expenses:demoExpenses}}
+  const pdf=createFormalDocumentPdf(snapshot,demoRows,demoExpenses,demoNote)
+  expect(pdf.getNumberOfPages()).toBeGreaterThanOrEqual(2)
+  const word=await wordXml(await createFormalDocumentDocx(snapshot,demoRows,demoExpenses,demoNote))
+  expect(word).toContain('€3.990,00')
+  expect((word.match(/w:val="both"/g)??[]).length).toBeGreaterThanOrEqual(16)
+  for(const activity of activities)expect(word).toContain(activity)
+  for(const expense of demoExpenses)expect(word).toContain(expense.observations)
+  if(process.env.WRITE_DOCUMENT_QA==='1'){
+   await mkdir('output/pdf',{recursive:true})
+   await writeFile('output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf',Buffer.from(pdf.output('arraybuffer')))
+  }
+ })
  it('soma despesas apenas nas novas notas e mantém as versões antigas com o total guardado',async()=>{
   const expenses=[{id:'expense-1',work_entry_id:'row-0',amount:399,currency:'EUR',observations:'Custas e certidões'}]
   const amountRows=[{...rows[0],effective_amount:6600,activity_description:'Análise detalhada da documentação apresentada, preparação de requerimento e conferência com o cliente sobre os passos seguintes do processo.'}]

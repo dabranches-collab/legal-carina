@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — 0.12.7 local: teste de 15 registos e reparação do preview
+
+- PDF sintético de duas páginas em `output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf`, sem gravação na base: 15 registos, três despesas, 3 000,00 € de honorários + 690,00 € de IVA + 300,00 € de despesas = 3 990,00 €. Descrições justificadas no PDF e no Word; paginação de registos curtos corrigida.
+- O preview local 5178 serve agora Supabase por proxy da mesma origem. A ligação à função de login e ao serviço Auth foi confirmada pela resposta 401 esperada sem credenciais; a página de acesso já não apresenta o erro de ligação após recarregar. O login real aguarda nova tentativa do operador. Produção mantém a última versão confirmada 0.12.6.
+- Segurança de ficheiros, lint, TypeScript, build, 49 ficheiros/255 testes unitários e dois E2E dirigidos da nota passaram na pré-visualização compilada. A tentativa E2E inicial no servidor de desenvolvimento excedeu o tempo de carregamento e foi repetida na compilação isolada.
+
 ## 24-09-2026 — 0.12.7 local: Notas de Honorários com despesas
 
 - Branch `codex/honorarium-unpaid-filter-0.12.7`; `origin/main` em `6d39247` após `fetch`. Produção permanece na 0.12.6, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318` conforme última confirmação. Sem deploy ou escrita em dados reais.

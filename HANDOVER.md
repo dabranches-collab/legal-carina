@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 24-09-2026 — 0.12.7 local: ensaio da nota e acesso ao preview
+
+- Branch `codex/honorarium-unpaid-filter-0.12.7`; produção mantém a última versão confirmada 0.12.6. Não houve publicação, emissão de nota ou escrita de dados de clientes.
+- Criado um PDF demonstrativo, com dados exclusivamente fictícios, em `output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf`: 15 registos, três despesas (120,00 €, 95,00 € e 85,00 €), honorários de 3 000,00 €, IVA de 690,00 € e total de 3 990,00 €. As duas páginas foram inspeccionadas; os 15 registos e os três montantes foram confirmados no texto extraído. O texto das descrições dos movimentos está justificado no PDF e no Word. A paginação foi ajustada para não cortar os registos curtos entre páginas.
+- O browser integrado bloqueou chamadas directas à origem Supabase no preview local. A versão local usa agora um proxy Vite na mesma origem para as chamadas Supabase. O servidor de preview em `http://127.0.0.1:5178/` foi reiniciado com acesso de rede; os caminhos da função de login e de Auth respondem com 401 sem credenciais, em vez do erro de ligação anterior. A página de login abriu sem o aviso após recarregar. Ainda é necessária uma tentativa do operador com as próprias credenciais para confirmar o login completo.
+- Validação: segurança de ficheiros, lint, TypeScript e build aprovados; 49 ficheiros/255 testes unitários passaram. Os dois E2E dirigidos da nota passaram numa compilação isolada de pré-visualização (`2 passed`). Uma tentativa E2E anterior no servidor Vite de desenvolvimento excedeu o tempo limite ao carregar a página, antes de executar o cenário; foi repetida com êxito na pré-visualização compilada.
+
 ## 24-09-2026 — 0.12.7 local: apresentação e contas das Notas de Honorários
 
 - Branch `codex/honorarium-unpaid-filter-0.12.7`; GitHub `main` em `6d39247` após `fetch`. A última produção confirmada mantém-se na 0.12.6, Worker `legal-carina`, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. Este lote ainda não foi publicado.

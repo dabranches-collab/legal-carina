@@ -56,6 +56,7 @@ export function createFormalDocumentPdf(snapshot:FormalSnapshot,pdfRows:Entry[],
    heading();doc.setFont('helvetica','normal');doc.setFontSize(9)
    for(const row of pdfRows){
     const descriptionIndex=pdfColumns.indexOf('description'),descriptionWidth=descriptionIndex>=0?columnWidths[descriptionIndex]-4:0,lines=descriptionIndex>=0?doc.splitTextToSize(row.activity_description,descriptionWidth) as string[]:['']
+    if(lines.length*4+2<=200)nextPage(Math.max(6,lines.length*4+2))
     let offset=0
     do{nextPage(6);const capacity=Math.max(1,Math.floor((contentBottom-y-2)/4)),part=lines.slice(offset,offset+capacity),height=Math.max(6,part.length*4+2);doc.rect(margin,y,contentWidth,height);let x=margin
      pdfColumns.forEach((column,index)=>{const align=column==='period'||column==='duration'?'center':'left',value=column==='description'?part:column==='duration'&&offset>0?'':rowValue(row,column);doc.text(value,align==='center'?x+columnWidths[index]/2:x+2,y+4.2,{align:column==='description'?'justify':align,maxWidth:column==='description'?columnWidths[index]-4:undefined});x+=columnWidths[index]});y+=height;offset+=Math.max(1,part.length)

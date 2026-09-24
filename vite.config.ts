@@ -11,6 +11,12 @@ import { localTranslation } from './worker/localTranslation.ts'
 const packageVersion = packageJson.version
 let buildDirectory = resolve('dist')
 const supabaseFunctionProxy = {
+  '/supabase-api': {
+    target: 'https://vtvvqyebigflgqccbqsw.supabase.co',
+    changeOrigin: true,
+    rewrite: (path: string) => path.replace(/^\/supabase-api/, ''),
+    headers: { Origin: 'https://legal-carina.dabranches.workers.dev' },
+  },
   '/supabase-functions': {
     target: 'https://vtvvqyebigflgqccbqsw.supabase.co',
     changeOrigin: true,
