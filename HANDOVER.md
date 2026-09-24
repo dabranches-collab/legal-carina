@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 24-09-2026 — versão 0.12.5 publicada e verificada
+
+- PR #62 integrado em GitHub `main` no commit `9c3471db143ff4d8137e1c4d2ad03a9157b36f43`. CI do PR `35962929263` verde, incluindo 139 cenários E2E, testes unitários, auditoria e scan de segredos. O dry-run Cloudflare e os gates locais passaram: 48 ficheiros/248 testes unitários; E2E em build de teste 138 aprovados e uma omissão exclusiva do servidor de desenvolvimento.
+- Cloudflare Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: versão 0.12.5 a 100% desde `2026-09-24 06:16:10 UTC`, deployment ID `0522c148-650d-485b-9c48-c695cd24301f`, Version ID `512c2b6c-4de7-4a03-8354-6ee7d1a907c8`. `/release-notes.json` devolveu 0.12.5; a página principal e o asset `/assets/index-CEtr49fQ.js` devolveram HTTP 200, com `Cache-Control: no-store` na página. A versão anterior `36030aaf-a1cb-473f-87f3-06ee875ad10b` permanece disponível para rollback do frontend.
+- A correcção final removeu o deslocamento duplicado dos resultados da repartição e assegura que Escape fecha o filtro da tabela mesmo quando o foco sai do painel. O teste do filtro no iPhone passou cinco vezes seguidas. Não houve migration nem escrita em dados reais neste lote. O separador Facturas continua em preparação: ainda não grava nem altera automaticamente os estados financeiros.
+
 ## 23-09-2026 — safe area mobile/iOS, versão 0.12.5 local
 
 - Branch `codex/client-invoices-foundation-0.12.5`; produção permanece 0.12.4. O `viewport-fit=cover` já estava em `index.html` e foi confirmado. O header partilhado, a navegação lateral, os ecrãs de autenticação e os overlays já usam os insets CSS; esta revisão corrigiu os painéis flutuantes das tabelas e a altura útil dos modais.

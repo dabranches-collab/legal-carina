@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — produção 0.12.5 confirmada
+
+- GitHub `main` `9c3471db143ff4d8137e1c4d2ad03a9157b36f43`, PR #62, CI `35962929263` verde. Segurança, lint, tipos, 48 ficheiros/248 testes unitários, runtime do Worker, build, E2E e dry-run Cloudflare validados.
+- Worker `legal-carina`: `https://legal-carina.dabranches.workers.dev`, deployment `0522c148-650d-485b-9c48-c695cd24301f`, Version ID `512c2b6c-4de7-4a03-8354-6ee7d1a907c8`, 100% desde `2026-09-24 06:16:10 UTC`. Notas online 0.12.5, raiz HTTP 200 sem cache e asset principal HTTP 200 confirmados. Rollback frontend: `36030aaf-a1cb-473f-87f3-06ee875ad10b` (0.12.4).
+- Separadores Facturas e Notas de Honorários, composição simplificada dos documentos e correcções globais de safe area iOS publicados. A gravação de Facturas permanece inactiva até definir a leitura e concluir a transacção de backend. Nenhuma migration ou escrita em dados reais nesta publicação.
+
 ## 23-09-2026 — safe area iOS local
 
 - Versão 0.12.5 continua em preparação na branch `codex/client-invoices-foundation-0.12.5`; produção continua 0.12.4.
