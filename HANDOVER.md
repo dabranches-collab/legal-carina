@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 24-09-2026 — versão 0.12.6 publicada e verificada
+
+- PR #63 integrado em GitHub `main` no commit `add8bc40ced58adfabd97e54474c59a6c56e419c`. CI `35980853629` e scan de segredos `35980853594` verdes, incluindo auditoria de dependências, segurança de ficheiros, lint, TypeScript, 48 ficheiros/248 testes unitários, runtime do Worker, build e E2E.
+- Localmente passaram o dry-run Cloudflare, 34 E2E dirigidos e a suite integral com 140 aprovações e três omissões condicionais. A matriz cobre os 19 menus em 1920×1080 e 1920×1240 a 100%, 125% e 150%, aplicável à mesma geometria web em ecrãs de 14, 24 e 27 polegadas, além da regressão iPhone.
+- Cloudflare Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: versão 0.12.6 a 100% desde `2026-09-24 09:34:13 UTC`, deployment ID `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. `/release-notes.json` devolveu 0.12.6; a página principal e o asset `/assets/index-DVADy4vc.js` devolveram HTTP 200, com `Cache-Control: no-store` na página. O browser integrado confirmou visualmente a versão e as alterações. A versão 0.12.5 (`512c2b6c-4de7-4a03-8354-6ee7d1a907c8`) permanece disponível para rollback do frontend.
+- Não houve migration nem alteração de Supabase, Auth, dados, utilizadores ou permissões neste lote.
+
 ## 24-09-2026 — versão 0.12.6 local em validação responsiva
 
 - Branch `codex/responsive-desktop-matrix-0.12.6`, criada sobre `origin/main` `b1f5be9612f5ad05fed55b799552dc4bc7d45c7d`. Produção permanece na 0.12.5; não houve deploy, migration, alteração de Auth, dados, utilizadores ou permissões.

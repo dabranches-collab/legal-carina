@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — produção 0.12.6 confirmada
+
+- GitHub `main` `add8bc40ced58adfabd97e54474c59a6c56e419c`, PR #63, CI `35980853629` e scan de segredos `35980853594` verdes. Gates locais completos: segurança, lint, tipos, runtime, 48 ficheiros/248 testes unitários, build, dry-run e 140 E2E aprovados com três omissões condicionais.
+- Worker `legal-carina`: `https://legal-carina.dabranches.workers.dev`, deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`, 100% desde `2026-09-24 09:34:13 UTC`. Notas online 0.12.6, raiz HTTP 200 sem cache, asset principal HTTP 200 e versão no browser integrado confirmados. Rollback frontend: `512c2b6c-4de7-4a03-8354-6ee7d1a907c8` (0.12.5).
+- A matriz de regressão cobre os 19 menus nas seis combinações 1920×1080/1920×1240 a 100%/125%/150%, tabelas sticky e iPhone. Nenhuma migration ou alteração a Auth, dados, utilizadores ou permissões.
+
 ## 24-09-2026 — 0.12.6 local; matriz desktop completa
 
 - Branch `codex/responsive-desktop-matrix-0.12.6` sobre `origin/main` `b1f5be9612f5ad05fed55b799552dc4bc7d45c7d`; produção continua 0.12.5.
