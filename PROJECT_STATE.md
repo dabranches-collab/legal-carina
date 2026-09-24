@@ -1,5 +1,20 @@
 # Estado do projecto
 
+## 23-09-2026 — safe area iOS local
+
+- Versão 0.12.5 continua em preparação na branch `codex/client-invoices-foundation-0.12.5`; produção continua 0.12.4.
+- `viewport-fit=cover` confirmado. Header, menu e overlays partilham os insets existentes; popovers das tabelas usam agora os limites seguros e o viewport visual. Modais altos respeitam a altura utilizável, e o scroll de foco compensa o header.
+- Validado com dados sintéticos em iPhone portrait e landscape, claro/escuro; segurança de ficheiros, lint, build e E2E dirigido aprovados. Sem migration ou publicação.
+
+## 22-09-2026 — 0.12.5 local; facturas e notas na ficha
+
+- Branch `codex/client-invoices-foundation-0.12.5`, base `main`/`origin/main` `9e3dfa68f94b0318b00282e14f5905f04bdaae91`; produção continua 0.12.4. Sem alterações de base de dados ou publicação.
+- Novos separadores destacados **Facturas** e **Notas de Honorários**. O primeiro prepara carregamento por drag and drop, leitura PDF/imagem, dados de facturação/pagamento e múltiplas afectações. O segundo lista as versões criadas pela plataforma e reutiliza a gestão existente.
+- Os dois separadores especiais estão isolados à direita da segunda linha e usam o mesmo azul. A configuração do conteúdo das notas mostra a ordem numerada das colunas, permite arrastar ou escolher a posição, explica os totais e apresenta miniatura actualizada em tempo real.
+- A emissão/reimpressão em PDF, Word e impressão já não acrescenta o resumo financeiro repetido no fim. O fecho é «Melhores cumprimentos» em português e «Kind regards,» em inglês. A contabilidade e a consulta dos valores na ficha mantêm-se.
+- Regra confirmada: a gravação futura será transaccional e actualizará automaticamente Facturado/Pago nos elementos escolhidos, respeitando o tratamento próprio de preço fixo, avença, provisões e notas. A gravação está inactiva enquanto faltam os campos de interpretação e o backend transaccional.
+- Segurança, lint, tipos, build e a suite completa passaram: 48 ficheiros e 246 testes, incluindo os quatro testes novos das facturas. Versão local aberta no browser integrado.
+
 ## 22-09-2026 — produção 0.12.4 confirmada
 
 - GitHub `main` `691682dc912a8392d0c685136bb014526382f063` (PR #60), CI `35751655143` verde com E2E; 46 ficheiros/242 testes unitários e gates locais aprovados.

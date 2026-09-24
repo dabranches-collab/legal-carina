@@ -1,5 +1,21 @@
 # Legal Carina — handover
 
+## 23-09-2026 — safe area mobile/iOS, versão 0.12.5 local
+
+- Branch `codex/client-invoices-foundation-0.12.5`; produção permanece 0.12.4. O `viewport-fit=cover` já estava em `index.html` e foi confirmado. O header partilhado, a navegação lateral, os ecrãs de autenticação e os overlays já usam os insets CSS; esta revisão corrigiu os painéis flutuantes das tabelas e a altura útil dos modais.
+- Os filtros e o selector de colunas das tabelas posicionam-se agora dentro dos limites seguros do viewport visual, incluindo os recortes laterais em landscape e as alterações do teclado. Os modais altos ficam contidos na área útil e permitem scroll; o foco por scroll respeita a altura do header.
+- Testes sintéticos de iPhone portrait (390×844, topo 47px) e landscape (844×390, laterais 62px) verificaram header, menu, filtros e modal. Build, lint, verificação de ficheiros sensíveis e E2E dirigido passaram. Nenhuma alteração de base de dados ou publicação neste lote.
+
+## 22-09-2026 — versão 0.12.5 local em preparação
+
+- Branch `codex/client-invoices-foundation-0.12.5`, criada sobre `main`/`origin/main` `9e3dfa68f94b0318b00282e14f5905f04bdaae91`. Produção permanece na 0.12.4. Nenhuma migration, escrita remota ou publicação neste lote.
+- A ficha do cliente tem dois separadores novos e destacados: **Facturas** e **Notas de Honorários**, ambos em azul e isolados à direita da segunda linha. Notas lista todas as versões produzidas pelo fluxo próprio, distingue vigentes, anteriores e anuladas, resume provisão, pagamento directo e saldo e abre a gestão existente para consulta, reimpressão ou revisão. O arquivo **Documentos** mantém-se separado; a nota ali encontrada tinha sido carregada manualmente por um utilizador autenticado.
+- A escolha das colunas da Nota de Honorários deixou de usar setas: apresenta ordem numerada, arrastar e largar, posição directa, legendas dos totais e uma miniatura que reflecte imediatamente cada alteração.
+- Nos documentos formais emitidos, o bloco financeiro repetido no fim (número da nota, provisão, pagamento directo, valor por pagar, excedente e saldo) foi retirado do PDF, Word e impressão. O fecho é apenas «Melhores cumprimentos» em português e «Kind regards,» em inglês. Os valores e estados continuam guardados e consultáveis na ficha; o total do documento permanece no corpo. Foram verificados o PDF e o conteúdo interno do Word com dados sintéticos nos dois idiomas.
+- Facturas aceita PDF/JPG/PNG por arrastar e largar ou selecção, valida conteúdo e tamanho, extrai texto de PDF e identifica documentos que precisam de reconhecimento visual. A preparação permite várias afectações por factura: provisão, preço fixo, Nota de Honorários, avença, registos ou outro. Número, data, pagamento e data do pagamento ficam sujeitos a confirmação. O botão de gravação permanece deliberadamente inactivo até serem definidos os campos exactos da leitura e implementada a transacção de persistência.
+- Decisão funcional: confirmar uma factura deve marcar automaticamente os elementos escolhidos como facturados; quando paga, deve também registar o recebimento e actualizar os estados pagos. Preço fixo e avença actualizam as entidades financeiras próprias sem duplicar valores das horas internas. Arquitectura registada em `docs/invoice-ingestion.md`.
+- Segurança de ficheiros, lint, tipos, build e a suite unitária completa aprovados: 48 ficheiros e 246 testes, incluindo os quatro testes novos das facturas. Pré-visualização autenticada aberta em `http://127.0.0.1:5173/`, mostrando os dois separadores e o histórico real de notas. Falta receber do utilizador a lista de campos a interpretar antes de fechar o modelo, a migration e os testes transaccionais.
+
 ## 22-09-2026 — versão 0.12.4 publicada e verificada
 
 - PR #60 integrado em GitHub `main` `691682dc912a8392d0c685136bb014526382f063`; CI `35751655143` verde, incluindo E2E, auditoria e scan. O checkout local ficou no mesmo commit antes da publicação. Segurança de ficheiros, lint, tipos, runtime, 46 ficheiros/242 testes unitários, build e dry-run Cloudflare aprovados.

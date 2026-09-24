@@ -33,8 +33,7 @@ export function LegalteamAllocation({societyId,refreshKey=0,onSaved}:{societyId:
  const showResults=()=>setResultsRequest(n=>n+1)
  useLayoutEffect(()=>{
   if(!resultsRequest||!resultsRef.current)return
-  const target=resultsRef.current,header=document.querySelector('.app-shell-header')
-  target.style.scrollMarginTop=`${(header?.getBoundingClientRect().height??0)+16}px`
+  const target=resultsRef.current
   target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'instant'})
  },[resultsRequest])
  const [payment,setPayment]=useState<'all'|'paid'|'unpaid'>('all'),[work,setWork]=useState<AllocationWork[]>([]),[loading,setLoading]=useState(true),[error,setError]=useState(''),[refresh,setRefresh]=useState(0)
