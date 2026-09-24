@@ -1,5 +1,11 @@
 # Reconciliação do histórico de migrations
 
+## 24-09-2026 — despesas nas Notas de Honorários
+
+- A migration `20260924185918_include_expenses_in_honorarium_totals` foi aplicada isoladamente em produção após confirmar o histórico remoto, a função instalada anterior e o backup físico recuperável de `2026-09-24 05:44:16 UTC`. Substitui apenas `save_honorarium_document` e actualiza o comentário da tabela de despesas; não contém DML nem altera RLS, Auth ou permissões. As 13 versões de notas existentes conservaram os totais agregados antes e depois.
+- Uma branch Supabase de ensaio falhou ao reconstruir migrations históricas após as primeiras oito; foi eliminada de imediato e a lista de branches voltou a mostrar apenas `main`. Por essa razão, o ensaio em staging/pgTAP não foi concluído. Não foi usado `db push`, `migration repair`, reset remoto ou merge da branch.
+- O painel confirmou PITR inactivo e 26 objectos privados de Storage; a cópia independente desses objectos não foi comprovada. Esta migration não toca no Storage e o rollback da função é a definição anterior da migration `20260922153227_reapply_new_credit_on_honorarium_revision.sql`.
+
 ## Revisão da nota com pagamento directo — 22-09-2026
 
 - Histórico remoto confirmado antes da execução: última entrada `20260921183113_allow_audited_fixed_fee_restore`. Backup físico recuperável de `2026-09-22 05:50:33 UTC` no painel Supabase; PITR inactivo e Storage não incluído no backup da base.
