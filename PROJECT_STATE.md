@@ -3,8 +3,8 @@
 ## 24-09-2026 — 0.12.7 local; aviso de registos sem preço
 
 - Branch `codex/honorarium-unpaid-filter-0.12.7` sobre `origin/main` `6d39247`. GitHub `main` e Cloudflare continuam na 0.12.6; deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. Sem publicação ou alteração à base de dados.
-- Nova Nota de Honorários abre nos registos não pagos. Os que não têm valor/hora ou montante mostram aviso imediato e não entram na selecção; o erro do backend deixa a lista acessível. No caso comunicado, a verificação de leitura identificou três registos não pagos sem esses valores.
-- Segurança de ficheiros, lint, TypeScript, 48 ficheiros/250 testes unitários e build aprovados. Dois E2E sintéticos passaram em pré-visualização compilada, incluindo emissão após excluir o registo sem preço. A suite E2E integral, CI e dry-run Cloudflare ainda faltam para uma publicação.
+- Nova Nota de Honorários abre nos registos não pagos. Os que não têm valor/hora ou montante mostram aviso imediato e não entram na selecção; o erro do backend deixa a lista acessível. Na primeira leitura do caso comunicado havia três registos não pagos sem esses valores. Na segunda leitura, após a validação, os 20 registos não pagos já estavam valorizados; nenhuma alteração de dados foi feita neste lote.
+- Segurança de ficheiros, lint, TypeScript, 48 ficheiros/250 testes unitários e build aprovados. Dois E2E sintéticos passaram em pré-visualização compilada, incluindo emissão após excluir o registo sem preço. O browser integrado confirmou a versão local 0.12.7 em `http://127.0.0.1:5173/` e o filtro real «Não pagos». A suite E2E integral, CI e dry-run Cloudflare ainda faltam para uma publicação.
 
 ## 24-09-2026 — produção 0.12.6 confirmada
 
