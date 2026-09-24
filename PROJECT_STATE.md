@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — correcção directa de dados de clientes
+
+- Base Supabase de produção: uma ficha duplicada de particular foi fundida na principal, com três registos transferidos e a ficha duplicada removida; uma segunda ficha foi alinhada com a sua vertente particular por correcção do código. Alterações transaccionais com auditoria e verificação SQL posterior. Nenhuma migration, alteração de código ou deploy.
+- Totais verificados: a ficha fundida conserva quatro registos, 150 minutos e 375,00 €; a outra conserva os seus 62 registos. O código libertado pode ser usado manualmente numa nova ficha; a sugestão automática continua a usar o número seguinte ao maior existente. Dados brutos da importação e histórico de auditoria preservados.
+- Código local na branch `codex/honorarium-unpaid-filter-0.12.7`; GitHub `main` em `6d39247` após `fetch`. Frontend de produção não foi publicado neste lote; última versão confirmada no handover anterior: 0.12.6.
+
 ## 24-09-2026 — 0.12.7 local; aviso de registos sem preço
 
 - Branch `codex/honorarium-unpaid-filter-0.12.7` sobre `origin/main` `6d39247`. GitHub `main` e Cloudflare continuam na 0.12.6; deployment `941f444a-856b-4c5b-b650-917a62e925f1`, Version ID `5102698c-cd33-4111-a6ce-19780b0dc318`. Sem publicação ou alteração à base de dados.
