@@ -123,7 +123,7 @@ for(const language of ['en','fr'] as const)test(`PDF integral em ${language}: re
   expect(text).not.toContain('intervenção documental');expect(text).not.toContain('Correio registado')
   for(const row of rows)expect(text).toContain(row.id)
   expect(text.replace(/\s/g,'')).toContain(language==='en'?'VAT':'TVA')
-  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, 4 septembre 2026')
+  expect(text).toContain(language==='en'?'Alfragide, 4 September 2026':'Alfragide, 4 Septembre 2026')
   const mutations:string[]=[];page.on('request',request=>{if(request.url().includes('/rest/v1/')&&request.method()==='POST'&&!/get_|search_/.test(request.url()))mutations.push(request.url())})
   await expect(page.getByLabel('Idioma do documento')).toBeDisabled()
   const repeat=page.waitForEvent('download');await page.getByRole('button',{name:'Guardar novamente em PDF'}).click();await (await repeat).saveAs(path.resolve(`.tmp/reprint-${language}-repeat.pdf`))

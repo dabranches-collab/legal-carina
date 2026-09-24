@@ -28,6 +28,27 @@ async function wordXml(blob:Blob){
 }
 
 describe('createFormalDocumentDocx',()=>{
+ it.each([
+  ['pt','SOCIEDADE A QA',false],['en','SOCIEDADE B QA',false],['fr','SOCIEDADE C QA',false],
+  ['pt','SOCIEDADE A QA',true],['en','SOCIEDADE B QA',true],['fr','SOCIEDADE C QA',true],
+ ] as const)('apresenta contas próximas dos rótulos em %s, %s, cobrança=%s',async(language,societyName,isCollection)=>{
+  const accounts=[
+   {...snapshot.bankAccounts[0],account_holder:'Titular QA',iban:'PT50000000000000000000001'},
+   {...snapshot.bankAccounts[0],account_holder:'Segundo titular QA',iban:'PT50000000000000000000002'},
+  ]
+  const presentation:FormalSnapshot={...snapshot,language,societyName,issuer:{...snapshot.issuer!,name:societyName},bankAccounts:accounts}
+  const sampleRows=[{...rows[0],billing_entity_name:societyName}]
+  const pdf=createFormalDocumentPdf(presentation,sampleRows,[],null,isCollection)
+  const word=await wordXml(await createFormalDocumentDocx(presentation,sampleRows,[],null,isCollection))
+  for(const account of accounts){
+   expect(pdf.output()).toContain(account.iban)
+   expect(word).toContain(account.iban)
+  }
+  if(process.env.WRITE_DOCUMENT_QA==='1'){
+   await mkdir('output/pdf',{recursive:true})
+   await writeFile(`output/pdf/${isCollection?'cobranca':'nota-honorarios'}-banco-${language}.pdf`,Buffer.from(pdf.output('arraybuffer')))
+  }
+ })
  it('apresenta 15 registos e 3 despesas num rascunho demonstrativo, com descrições justificadas',async()=>{
   const activities=[
    'Consulta inicial e levantamento dos elementos necessários',
@@ -62,9 +83,16 @@ describe('createFormalDocumentDocx',()=>{
   expect((word.match(/w:val="both"/g)??[]).length).toBeGreaterThanOrEqual(16)
   for(const activity of activities)expect(word).toContain(activity)
   for(const expense of demoExpenses)expect(word).toContain(expense.observations)
+  const collection=createFormalDocumentPdf(snapshot,demoRows,[],null,true)
+  const collectionWord=await wordXml(await createFormalDocumentDocx(snapshot,demoRows,[],null,true))
+  expect(collection.getNumberOfPages()).toBeGreaterThanOrEqual(2)
+  expect(collectionWord).toContain('ASSUNTO: COBRANÇA')
+  for(const activity of activities)expect(collectionWord).toContain(activity)
+  expect(collectionWord).not.toContain(demoExpenses[0].observations)
   if(process.env.WRITE_DOCUMENT_QA==='1'){
    await mkdir('output/pdf',{recursive:true})
    await writeFile('output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf',Buffer.from(pdf.output('arraybuffer')))
+   await writeFile('output/pdf/cobranca-demo-15-registos.pdf',Buffer.from(collection.output('arraybuffer')))
   }
  })
  it('soma despesas apenas nas novas notas e mantém as versões antigas com o total guardado',async()=>{

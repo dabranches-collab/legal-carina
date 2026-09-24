@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 24-09-2026 — 0.12.7 local: apresentação de notas e cobranças
+
+- Valores bancários aproximados dos rótulos em PDF com largura calculada por idioma. A mesma apresentação é usada por todas as sociedades e pelas Cobranças. O mês francês passou a iniciar com maiúscula; o rascunho de Cobrança tem nome próprio. Valores financeiros de Cobranças sem alteração.
+- Ensaios visuais sintéticos de nota e cobrança com 15 registos e três línguas; PDF e Word gerados em todas as combinações de língua, sociedade e tipo de documento. Pré-visualização local 5178 recompilada, sessão preservada. Produção mantém a última versão confirmada 0.12.6.
+- Segurança, lint, tipos, build, 49 ficheiros/262 testes unitários e cinco E2E de documentos reais no Chromium aprovados. O mock de jsPDF usado pelo modal foi actualizado para medir os rótulos; a suite integral foi repetida e passou.
+
 ## 24-09-2026 — 0.12.7 local: teste de 15 registos e reparação do preview
 
 - PDF sintético de duas páginas em `output/pdf/nota-honorarios-demo-15-registos-3-despesas.pdf`, sem gravação na base: 15 registos, três despesas, 3 000,00 € de honorários + 690,00 € de IVA + 300,00 € de despesas = 3 990,00 €. Descrições justificadas no PDF e no Word; paginação de registos curtos corrigida.

@@ -181,8 +181,9 @@ export function HonorariumNoteModal({clientId,clientName,onClose,documentKind='h
    const pdfJs=await import('pdfjs-dist');pdfJs.GlobalWorkerOptions.workerSrc=pdfWorkerUrl
    const pdf=await pdfJs.getDocument({data:bytes.slice().buffer}).promise,pages:string[]=[]
    for(let index=1;index<=pdf.numPages;index++){const page=await pdf.getPage(index),viewport=page.getViewport({scale:1.5}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);const context=canvas.getContext('2d');if(!context)throw new Error('Não foi possível desenhar a página.');await page.render({canvas,canvasContext:context,viewport}).promise;pages.push(canvas.toDataURL('image/png'))}
-   setPreviewPdf({bytes,fileName:'rascunho-nota-honorarios.pdf'});setPreviewDocx({bytes:docxBytes,fileName:'rascunho-nota-honorarios.docx'});setPreviewPages(pages)
-  }catch(cause){setError(cause instanceof Error?cause.message:'Não foi possível pré-visualizar a nota.')}finally{setGenerating(false);setTranslationBusy(false)}
+   const draftFileBase=`rascunho-${isCollection?copy.collectionFile:copy.honorariumFile}`
+   setPreviewPdf({bytes,fileName:`${draftFileBase}.pdf`});setPreviewDocx({bytes:docxBytes,fileName:`${draftFileBase}.docx`});setPreviewPages(pages)
+  }catch(cause){setError(cause instanceof Error?cause.message:`Não foi possível pré-visualizar ${isCollection?'a cobrança':'a nota'}.`)}finally{setGenerating(false);setTranslationBusy(false)}
  }
  async function savePdf(){
   if(!chosen.length||generating||savingLock.current)return

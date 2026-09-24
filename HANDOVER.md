@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 24-09-2026 — 0.12.7 local: contas bancárias e cobranças
+
+- A coluna dos valores bancários no PDF é agora posicionada a seguir ao rótulo mais largo no idioma do documento, com 4 mm de separação. A regra é comum a todas as sociedades, contas escolhidas, Notas de Honorários e Cobranças; no Word os rótulos e valores já estavam juntos na mesma linha.
+- A data por extenso inicia o mês com maiúscula também em francês, além de português e inglês. As Cobranças usam a mesma justificação do texto e das descrições, a mesma paginação das tabelas e o mesmo fecho por idioma. O rascunho de uma Cobrança recebe o nome de ficheiro correspondente à Cobrança. O cálculo e o conteúdo financeiro próprio das Cobranças não foram alterados.
+- Exemplos sintéticos em `output/pdf/`: nota de 15 registos com três despesas, cobrança de 15 registos, e nota/cobrança em português, inglês e francês para três sociedades de teste com duas contas. As páginas dos exemplos foram renderizadas e inspeccionadas; o browser local em `http://127.0.0.1:5178/?view=clients` foi recompilado e recarregado, mantendo a sessão activa. Nenhum documento real foi emitido ou gravado.
+- Segurança de ficheiros, lint, TypeScript, build, 49 ficheiros/262 testes unitários e cinco E2E de documentos reais no Chromium aprovados, incluindo PDFs multipágina de Nota e Cobrança. A primeira passagem da suite completa encontrou 12 falhas causadas pelo mock de jsPDF sem `getTextWidth`; o mock foi corrigido, os 29 testes do módulo de preparação passaram e a suite completa voltou a passar.
+
 ## 24-09-2026 — 0.12.7 local: ensaio da nota e acesso ao preview
 
 - Branch `codex/honorarium-unpaid-filter-0.12.7`; produção mantém a última versão confirmada 0.12.6. Não houve publicação, emissão de nota ou escrita de dados de clientes.
