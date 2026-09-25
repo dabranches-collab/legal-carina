@@ -33,7 +33,14 @@ jobs:
       - run: pnpm test:worker-runtime
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+        env:
+          VITE_SUPABASE_URL: http://127.0.0.1:54321
+          VITE_SUPABASE_PUBLISHABLE_KEY: test-publishable-key-not-a-secret
+          VITE_APP_ENV: test
       - run: pnpm exec playwright test
+        env:
+          PWA_PRODUCTION_QA: '1'
 
   dependency-audit:
     runs-on: ubuntu-latest
