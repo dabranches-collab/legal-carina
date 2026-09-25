@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 25-09-2026 — correcção de código empresarial em produção
+
+- Uma ficha empresarial foi movida da série de códigos de particulares para a primeira lacuna livre da série `01`, de acordo com a sugestão automática da aplicação. Ficha e perfil ficaram coerentes; 40 registos mantiveram a associação pelo identificador interno. O código anterior ficou disponível.
+- Só foram actualizados os dois campos de código na base; versão online 0.12.8, sem deploy ou alteração de código.
+
 ## 25-09-2026 — 0.12.8 publicada e verificada
 
 - Nota de Honorários: o PDF inclui os anexos das despesas seleccionadas, com páginas para PDF e imagens e incorporação do original para Word/Excel. Os anexos de outras despesas ficam excluídos. Pré-visualização, emissão e reimpressão usam a mesma selecção guardada; anexo indisponível impede PDF incompleto.
