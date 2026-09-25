@@ -1,10 +1,11 @@
 # Legal Carina — handover
 
-## 25-09-2026 — versão 0.12.8: comprovativos na Nota de Honorários
+## 25-09-2026 — versão 0.12.8 publicada: comprovativos na Nota de Honorários
 
-- Branch `codex/honorarium-expense-attachments-0.12.8` sobre a árvore funcional de `origin/main` `2e0642b8a3baca06a0439ef3ab3e7a5152ad6e73`. Antes do deploy, a produção foi confirmada directamente em 0.12.7, deployment `08e1ef5c-380d-4725-b7fd-96df2e5512b7`, Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e`.
+- PR #67 integrado em GitHub `main` no commit `8ec12655f64c2bc7dde2dd0f2bd215c65f2b0161`. CI `36135560462` e secret scan `36135560480` verdes. Antes do deploy, a produção foi confirmada directamente em 0.12.7, deployment `08e1ef5c-380d-4725-b7fd-96df2e5512b7`, Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e`.
 - O PDF da Nota de Honorários junta apenas os anexos das despesas incluídas. PDFs preservam todas as páginas, JPEG/PNG ganham uma página própria, DOCX/XLSX ficam incorporados com uma página de identificação. A ordem é a das despesas; a versão da nota guarda os IDs dos anexos para reimpressão. A geração pára com erro claro se faltar um comprovativo, antes de gravar uma nota nova.
-- Sem migration, alteração de dados de clientes ou escrita remota no Supabase. Testes sintéticos: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare aprovados. O ensaio E2E gerou uma nota com PDF e JPEG de uma despesa seleccionada e excluiu um anexo alheio. A primeira CI falhou só neste teste de emissão sob Vite de desenvolvimento; o mesmo fluxo passou na compilação QA. A CI foi ajustada para ensaiar a compilação, mantendo também o build de produção; aguardar a sua repetição antes de publicar.
+- Sem migration, alteração de dados de clientes ou escrita remota no Supabase. Testes sintéticos: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare aprovados. O ensaio E2E gerou uma nota com PDF e JPEG de uma despesa seleccionada e excluiu um anexo alheio. A CI final testou o build QA, além do build de produção, após um ensaio inicial falhar no modo Vite de desenvolvimento.
+- Worker `legal-carina` publicado em `https://legal-carina.dabranches.workers.dev`: versão 0.12.8, deployment `e592b705-b4a0-40d2-a6f1-6f171d58e883`, Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182`, 100% desde `2026-09-25 12:44:52 UTC`. `/release-notes.json` respondeu HTTP 200 e versão 0.12.8. Rollback frontend imediato: Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e` (0.12.7).
 
 ## 24-09-2026 — versão 0.12.7 publicada e verificada
 

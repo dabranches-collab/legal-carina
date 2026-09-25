@@ -1,16 +1,16 @@
 # Deployment seguro
 
-## Produção confirmada em 2026-09-24
+## Produção confirmada em 2026-09-25
 
 - Plataforma: Cloudflare Workers Static Assets.
 - Serviço: `legal-carina`.
 - Ambiente: produção.
 - URL: `https://legal-carina.dabranches.workers.dev`.
-- Versão visível: `0.12.7` (notas online confirmadas por HTTP 200).
-- Deployment activo: `08e1ef5c-380d-4725-b7fd-96df2e5512b7`.
-- Version ID activo: `ee689cb4-9c11-4a15-ac22-2e662c4b148e` (100% do tráfego desde `2026-09-24 19:01:06 UTC`).
-- Commit funcional publicado e fonte canónica no GitHub: `main` em `882ff216721fbafd6bb2163fa0bef854b5ae6ff7` (PR #65; CI verde).
-- Rollback imediato do frontend: `5102698c-cd33-4111-a6ce-19780b0dc318` (0.12.6). A migration isolada `20260924185918` foi aplicada e confirmada antes do deploy frontend.
+- Versão visível: `0.12.8` (notas online confirmadas por HTTP 200).
+- Deployment activo: `e592b705-b4a0-40d2-a6f1-6f171d58e883`.
+- Version ID activo: `18587752-c567-4818-ae0f-7a2a1ca5e182` (100% do tráfego desde `2026-09-25 12:44:52 UTC`).
+- Commit funcional publicado e fonte canónica no GitHub: `main` em `8ec12655f64c2bc7dde2dd0f2bd215c65f2b0161` (PR #67; CI verde).
+- Rollback imediato do frontend: `ee689cb4-9c11-4a15-ac22-2e662c4b148e` (0.12.7). A versão 0.12.8 não exigiu nova migration.
 
 Estes identificadores devem ser novamente consultados antes de cada publicação; não assumir que permanecem activos.
 
