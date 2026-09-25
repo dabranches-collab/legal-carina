@@ -3,6 +3,7 @@ import path from 'node:path'
 import {readFile} from 'node:fs/promises'
 import {parseEnv} from 'node:util'
 import {getDocument} from 'pdfjs-dist/legacy/build/pdf.mjs'
+import {PDFDocument,StandardFonts} from 'pdf-lib'
 import {translateTexts} from '../worker/documentTranslation'
 
 const liveAzure=process.env.AZURE_TRANSLATION_LIVE_QA==='1'
@@ -57,6 +58,38 @@ test.beforeEach(async({page})=>{
     }
     await route.fulfill({contentType:'application/json',body:'[]'})
   })
+})
+
+test('anexa ao PDF o comprovativo PDF e a imagem JPEG apenas da despesa incluída',async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('legal-carina-auth',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:4102444800,token_type:'bearer',user:{id:'synthetic-user'}})))
+  const attachment=await PDFDocument.create(),font=await attachment.embedFont(StandardFonts.Helvetica)
+  attachment.addPage().drawText('COMPROVATIVO SINTETICO SELECCIONADO',{x:40,y:750,font,size:12})
+  const attachmentBytes=Buffer.from(await attachment.save())
+  const jpegData=await page.evaluate(()=>{const canvas=document.createElement('canvas');canvas.width=20;canvas.height=20;const context=canvas.getContext('2d')!;context.fillStyle='#225588';context.fillRect(0,0,20,20);return canvas.toDataURL('image/jpeg')})
+  const jpegBytes=Buffer.from(jpegData.split(',')[1],'base64')
+  await page.route('**/rest/v1/work_entry_expenses?*',route=>route.fulfill({json:[{id:'expense-selected',work_entry_id:rows[0].id,amount:5,currency:'EUR',observations:'Despesa de teste'}]}))
+  await page.route('**/rest/v1/work_entry_expense_documents?*',route=>route.fulfill({json:[
+    {id:'document-selected',expense_id:'expense-selected',original_filename:'comprovativo.pdf',storage_path:'synthetic/selected.pdf',mime_type:'application/pdf'},
+    {id:'document-photo',expense_id:'expense-selected',original_filename:'fotografia.jpeg',storage_path:'synthetic/photo.jpeg',mime_type:'image/jpeg'},
+    {id:'document-other',expense_id:'expense-other',original_filename:'outro.pdf',storage_path:'synthetic/other.pdf',mime_type:'application/pdf'},
+  ]}))
+  const downloaded:string[]=[]
+  await page.route('**/storage/v1/object/**',route=>{const url=route.request().url();downloaded.push(url);return route.fulfill({contentType:url.includes('photo.jpeg')?'image/jpeg':'application/pdf',body:url.includes('photo.jpeg')?jpegBytes:attachmentBytes})})
+  await page.goto('/?qa-iphone=1&qa-role=admin&view=master-data&entity=clients&clientLayout=table',{waitUntil:'domcontentloaded'})
+  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').click()
+  await page.getByLabel('Seleccionar movimento de 2026-01-15').first().check()
+  const pending=page.waitForEvent('download')
+  await page.getByRole('button',{name:'Emitir nota e guardar PDF'}).click()
+  const output=await pending
+  const pathToPdf=path.resolve('.tmp/nota-com-anexo-sintetico.pdf')
+  await output.saveAs(pathToPdf)
+  const pdf=await getDocument({data:new Uint8Array(await readFile(pathToPdf))}).promise
+  expect(pdf.numPages).toBeGreaterThanOrEqual(3)
+  const last=await pdf.getPage(pdf.numPages-1),content=await last.getTextContent()
+  expect(content.items.map(item=>'str' in item?item.str:'').join(' ')).toContain('COMPROVATIVO SINTETICO SELECCIONADO')
+  await pdf.destroy()
+  expect(new Set(downloaded.map(url=>url.split('/').at(-1)))).toEqual(new Set(['selected.pdf','photo.jpeg']))
+  expect(downloaded.every(url=>!url.includes('other.pdf'))).toBe(true)
 })
 
 test('pré-visualiza um rascunho sem criar nota nem gastar numeração',async({page})=>{

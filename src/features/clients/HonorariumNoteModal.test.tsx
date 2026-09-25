@@ -18,7 +18,7 @@ describe('HonorariumNoteModal',()=>{
  it.each(['en','fr'] as const)('traduz registos e despesas antes de guardar a nota em %s e conserva a tradução no histórico',async(language)=>{
   const description=language==='en'?'Document review':'Analyse documentaire',expense=language==='en'?'Registered post':'Courrier recommandé'
   translateDocument.mockImplementation(async(_client,lang,items)=>({language:lang,items:items.map((item:any)=>({...item,text:item.kind==='work'?description:expense}))}))
-  from.mockImplementation((table:string)=>query(table==='work_entry_expenses'?[{id:'expense',work_entry_id:'one',amount:5,currency:'EUR',observations:'Correio registado'}]:table==='billing_entities'?testIssuer:null))
+  from.mockImplementation((table:string)=>query(table==='work_entry_expenses'?[{id:'expense',work_entry_id:'one',amount:5,currency:'EUR',observations:'Correio registado'}]:table==='work_entry_expense_documents'?[]:table==='billing_entities'?testIssuer:null))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'));await user.selectOptions(screen.getByLabelText('Idioma do documento'),language)
   await user.click(screen.getByRole('button',{name:'Emitir nota e guardar PDF'}));await waitFor(()=>expect(downloads).toHaveLength(1))
@@ -234,7 +234,7 @@ describe('HonorariumNoteModal',()=>{
  })
  it('soma as despesas ao total da Nota de Honorários e mostra apenas montante e observações',async()=>{
   rpc.mockResolvedValueOnce({error:null,data:{total:1,items:[{id:'fee',work_date:'2026-07-03',activity_description:'Serviço com despesas',duration_minutes:60,professional_name:'Responsável',billing_entity_name:'Sociedade',effective_amount:100}]}})
-  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Legal',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário',honorarium_salutation:'exmos_senhores',default_billing_entity_id:'sociedade-1'}:table==='billing_entities'?{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}:[{id:'expense-1',work_entry_id:'fee',amount:25,currency:'EUR',observations:'Certidões'}]))
+  from.mockImplementation((table:string)=>query(table==='clients'?{legal_name:'Cliente Legal',address:'Lisboa',honorarium_language:'pt',honorarium_delivery_method:'email',honorarium_recipient_name:'Destinatário',honorarium_salutation:'exmos_senhores',default_billing_entity_id:'sociedade-1'}:table==='billing_entities'?{name:'Sociedade',legal_name:'Sociedade Legal',tax_number:'500000000',address:'Lisboa',phone:'210000000',bank_account_holder:'Sociedade Legal',bank_name:'Banco',bank_account_number:'1',iban:'PT50000000000000000000000',bic_swift:'BICPT',default_vat_rate:23,default_currency:'EUR'}:table==='work_entry_expense_documents'?[]:[{id:'expense-1',work_entry_id:'fee',amount:25,currency:'EUR',observations:'Certidões'}]))
   const user=userEvent.setup();render(<HonorariumNoteModal clientId="client-fees" clientName="Cliente Legal" onClose={()=>{}}/> )
   await user.selectOptions(await screen.findByLabelText('Idioma do documento'),'fr')
   await user.click(await screen.findByLabelText('Seleccionar movimento de 2026-07-03'))

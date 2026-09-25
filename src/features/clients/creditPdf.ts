@@ -5,6 +5,7 @@ import { creditDate, creditKind, creditMoney, creditStatement, type CreditAccoun
 import type { CreditUsage } from './creditUsage'
 import {formatDate,todayIso} from '../../utils/date'
 import {assertIssuerMatchesSociety,issuerLogoPath} from './societyBranding'
+import {appendExpenseAttachments,downloadCombinedPdf,loadExpenseAttachments} from './honorariumExpenseAttachments'
 
 export function saveCreditUsagePdf(account:CreditAccount,usage:CreditUsage){
  const doc=new jsPDF();let y=20
@@ -99,5 +100,9 @@ export async function saveProvisionNotePdf(account:CreditAccount,note:ProvisionN
   const bankAccounts=Array.isArray(opts.bankAccounts)?opts.bankAccounts as FormalSnapshot['bankAccounts']:issuer?.bank_accounts?.length?issuer.bank_accounts:issuer?.iban?[{account_holder:issuer.bank_account_holder??'',bank_name:issuer.bank_name??'',account_number:issuer.bank_account_number??'',iban:issuer.iban,bic_swift:issuer.bic_swift??'',currency:account.currency}]:[]
   snapshot={version:1,societyName:account.society_name,clientName:note.document_options?.client_name??account.client_name,clientDocument:clientDocument?{...clientDocument,honorarium_recipient_name:typeof opts.recipient==='string'?opts.recipient:clientDocument.honorarium_recipient_name}:null,issuer:issuer?{...issuer,default_currency:account.currency}:null,issuerLogo,language:opts.language==='en'?'en':opts.language==='fr'?'fr':'pt',columns:Array.isArray(opts.columns)&&opts.columns.length?opts.columns.filter(c=>['period','description','duration'].includes(String(c))) as FormalSnapshot['columns']:['period','description','duration'],showTimeTotal:opts.showTimeTotal!==false,showAmountTotal:opts.showAmountTotal===true,bankAccounts}
  }
- downloadPdf(formalCopyPdf(note,snapshot,reversed,legacy),`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`)
+ const pdf=formalCopyPdf(note,snapshot,reversed,legacy),fileName=`${note.number}${note.revision?`-v${note.revision}`:''}${reversed?'-estornada':''}.pdf`
+ const expenseIds=note.document_options?.expenses?.map(expense=>expense.id)??[],attachmentIds=note.document_options?.expense_attachment_ids??[]
+ const attachments=await loadExpenseAttachments(expenseIds,attachmentIds)
+ if(attachments.length)downloadCombinedPdf(await appendExpenseAttachments(pdf.output('arraybuffer'),attachments,snapshot.language),fileName)
+ else downloadPdf(pdf,fileName)
 }
