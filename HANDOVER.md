@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 25-09-2026 — correcção operacional de código de cliente
+
+- Uma ficha empresarial com código indevidamente na série `02` foi transferida, numa operação atómica, para a primeira lacuna livre da série `01`. A ficha e o único perfil activo ficaram com o mesmo código empresarial; o código antigo ficou livre. O tipo `company` e os identificadores internos mantiveram-se.
+- Os 40 registos de trabalho continuaram associados à mesma ficha e ao mesmo perfil, sem perfis divergentes. Não houve alteração dos registos, dos valores financeiros, de esquema, de Storage nem de Auth. A pesquisa de auditoria disponível não encontrou referência anterior ao código de destino; isto não substitui um arquivo histórico integral.
+- Operação de dados em produção, sem novo deploy: Worker confirmado na versão 0.12.8; código funcional em GitHub `main` `c0a8350b30775c02895e39266e473058ab3a9dcc` antes deste registo documental.
+
 ## 25-09-2026 — versão 0.12.8 publicada: comprovativos na Nota de Honorários
 
 - PR #67 integrado em GitHub `main` no commit `8ec12655f64c2bc7dde2dd0f2bd215c65f2b0161`. CI `36135560462` e secret scan `36135560480` verdes. Antes do deploy, a produção foi confirmada directamente em 0.12.7, deployment `08e1ef5c-380d-4725-b7fd-96df2e5512b7`, Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e`.
