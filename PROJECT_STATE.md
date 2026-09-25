@@ -1,10 +1,11 @@
 # Estado do projecto
 
-## 25-09-2026 — 0.12.8 em preparação
+## 25-09-2026 — 0.12.8 publicada e verificada
 
 - Nota de Honorários: o PDF inclui os anexos das despesas seleccionadas, com páginas para PDF e imagens e incorporação do original para Word/Excel. Os anexos de outras despesas ficam excluídos. Pré-visualização, emissão e reimpressão usam a mesma selecção guardada; anexo indisponível impede PDF incompleto.
-- Branch local `codex/honorarium-expense-attachments-0.12.8`; `origin/main` `2e0642b8a3baca06a0439ef3ab3e7a5152ad6e73`. Produção confirmada em 0.12.7 antes do novo deploy. Sem alteração de esquema nem dados no Supabase.
-- Validação local: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare. A primeira CI falhou no ensaio de emissão sob Vite de desenvolvimento; repetição configurada para executar os E2E sobre o build QA, como no ensaio local. Publicação pendente da CI verde.
+- PR #67 integrado em GitHub `main` no commit `8ec12655f64c2bc7dde2dd0f2bd215c65f2b0161`. CI `36135560462` e secret scan `36135560480` verdes. Sem alteração de esquema nem dados no Supabase.
+- Validação local: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare. O ensaio de emissão com PDF e JPEG passou no build QA; após falha no Vite de desenvolvimento, a CI final ensaiou o mesmo build QA com sucesso.
+- Cloudflare Worker `legal-carina`, `https://legal-carina.dabranches.workers.dev`: deployment `e592b705-b4a0-40d2-a6f1-6f171d58e883`, Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182`, 100% desde `2026-09-25 12:44:52 UTC`. Notas online HTTP 200/0.12.8. Rollback frontend: `ee689cb4-9c11-4a15-ac22-2e662c4b148e` (0.12.7).
 
 ## 24-09-2026 — produção 0.12.7 confirmada
 
