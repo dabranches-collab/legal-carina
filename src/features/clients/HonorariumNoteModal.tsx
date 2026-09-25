@@ -7,6 +7,7 @@ import { creditMoney, type CreditAccount, type ProvisionNote } from './credit'
 import { honorariumSettlement } from './honorariumSettlement'
 import {issuerLogoPath,issuerMatchesSociety} from './societyBranding'
 import {createFormalDocumentPdf, downloadPdf, filePart, fileDate, type FormalSnapshot} from './formalDocumentPdf'
+import {appendExpenseAttachments,downloadCombinedPdf,loadExpenseAttachments} from './honorariumExpenseAttachments'
 import {createFormalDocumentDocx,downloadDocx} from './formalDocumentDocx'
 import { translateDocument, translationKey, validateTranslations, type DocumentTranslation, type TranslationItem } from './documentTranslation'
 import {formatDate} from '../../utils/date'
@@ -140,7 +141,7 @@ export function HonorariumNoteModal({clientId,clientName,onClose,documentKind='h
    const baseClient=stored.clientDocument??clientDocument??{legal_name:null,address:null,honorarium_language:'pt' as const,honorarium_delivery_method:'email' as const,honorarium_recipient_name:null,default_billing_entity_id:null}
    const currentAccounts=bankAccountsFor(noteIssuer)
    const presentation:FormalSnapshot={...stored,societyName:note.society_name,clientName,clientDocument:{...baseClient,honorarium_salutation:clientDocument?.honorarium_salutation??'exma_senhora'},issuer:noteIssuer,issuerLogo:await compactLogo(currentLogo)??storedLogo,bankAccounts:currentAccounts.length?currentAccounts:stored.bankAccounts}
-   const previewRows=note.items.map(row=>({...row,professional_name:'',billing_entity_name:note.society_name})),previewExpenses=(note.document_options.expenses as EntryExpense[]|undefined)??[],pdfDocument=createFormalDocumentPdf(presentation,previewRows,previewExpenses,note),bytes=new Uint8Array(pdfDocument.output('arraybuffer')),docxBlob=await createFormalDocumentDocx(presentation,previewRows,previewExpenses,note),docxBytes=new Uint8Array(await docxBlob.arrayBuffer()),baseName=`nota-honorarios-${filePart(clientName)}-${fileDate(new Date(note.issued_at))}`,pdfJs=await import('pdfjs-dist')
+   const previewRows=note.items.map(row=>({...row,professional_name:'',billing_entity_name:note.society_name})),previewExpenses=(note.document_options.expenses as EntryExpense[]|undefined)??[],pdfDocument=createFormalDocumentPdf(presentation,previewRows,previewExpenses,note),attachmentIds=Array.isArray(note.document_options.expense_attachment_ids)?note.document_options.expense_attachment_ids as string[]:[],attachments=await loadExpenseAttachments(previewExpenses.map(row=>row.id),attachmentIds),bytes=new Uint8Array(await appendExpenseAttachments(pdfDocument.output('arraybuffer'),attachments,presentation.language)),docxBlob=await createFormalDocumentDocx(presentation,previewRows,previewExpenses,note),docxBytes=new Uint8Array(await docxBlob.arrayBuffer()),baseName=`nota-honorarios-${filePart(clientName)}-${fileDate(new Date(note.issued_at))}`,pdfJs=await import('pdfjs-dist')
    pdfJs.GlobalWorkerOptions.workerSrc=pdfWorkerUrl
    const pdf=await pdfJs.getDocument({data:bytes.slice().buffer}).promise,pages:string[]=[]
    for(let index=1;index<=pdf.numPages;index++){const page=await pdf.getPage(index),viewport=page.getViewport({scale:1.5}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);const context=canvas.getContext('2d');if(!context)throw new Error('Não foi possível desenhar a página.');await page.render({canvas,canvasContext:context,viewport}).promise;pages.push(canvas.toDataURL('image/png'))}
@@ -176,7 +177,7 @@ export function HonorariumNoteModal({clientId,clientName,onClose,documentKind='h
    const logo=await logoData(issuerLogoPath(issuer,selectedSociety))
    const presentation:FormalSnapshot={version:1,societyName:selectedSociety,clientName,clientDocument,issuer,issuerLogo:await compactLogo(logo),language:documentLanguage,columns:pdfColumns,showTimeTotal,showAmountTotal,bankAccounts:chosenBankAccounts}
    const draft={id:'rascunho',number:'RASCUNHO',issued_at:new Date().toISOString(),subtotal:provisionPreview.subtotal,vat_rate:documentVatRate,vat:provisionPreview.vat,total:provisionPreview.total,deducted:provisionPreview.deducted,remaining:settlement.remaining,balance_after:provisionPreview.balance_after,items:draftRows,document_options:{expenses_included:true,expenses:draftExpenses}} as ProvisionNote
-   const pdfDocument=createFormalDocumentPdf(presentation,draftRows,draftExpenses,draft,isCollection),bytes=new Uint8Array(pdfDocument.output('arraybuffer'))
+   const pdfDocument=createFormalDocumentPdf(presentation,draftRows,draftExpenses,draft,isCollection),attachments=!isCollection?await loadExpenseAttachments(draftExpenses.map(row=>row.id)):[],bytes=new Uint8Array(await appendExpenseAttachments(pdfDocument.output('arraybuffer'),attachments,documentLanguage))
    const docx=await createFormalDocumentDocx(presentation,draftRows,draftExpenses,draft,isCollection),docxBytes=new Uint8Array(await docx.arrayBuffer())
    const pdfJs=await import('pdfjs-dist');pdfJs.GlobalWorkerOptions.workerSrc=pdfWorkerUrl
    const pdf=await pdfJs.getDocument({data:bytes.slice().buffer}).promise,pages:string[]=[]
@@ -212,10 +213,12 @@ export function HonorariumNoteModal({clientId,clientName,onClose,documentKind='h
    const translatedText=(kind:'work'|'expense',id:string,original:string)=>documentLanguage==='pt'?original:textById.get(`${kind}:${id}`)??original
    const pdfRows=chosen.map(row=>({...row,activity_description:translatedText('work',row.id,row.activity_description)}))
    const pdfExpenses=chosenExpenses.map(row=>({...row,observations:translatedText('expense',row.id,row.observations??'')}))
+   const attachments=!isCollection?await loadExpenseAttachments(pdfExpenses.map(row=>row.id)):[]
    const issuerLogo=await logoData(issuerLogoPath(issuer,selectedSociety))
    const presentation:FormalSnapshot={version:1,societyName:selectedSociety,clientName,clientDocument,issuer,issuerLogo:await compactLogo(issuerLogo),language:documentLanguage,columns:pdfColumns,showTimeTotal,showAmountTotal,bankAccounts:chosenBankAccounts}
-    const documentOptions={language:documentLanguage,outputFormat,recipient:clientDocument?.honorarium_recipient_name||clientDocument?.legal_name||clientName,client_name:clientName,society_name:selectedSociety,columns:pdfColumns,showTimeTotal,showAmountTotal,bankAccounts:chosenBankAccounts,translation:translated,expenses:pdfExpenses,expenses_included:true,presentation,...(directPaid>0?{direct_payment:{amount:directPaid,reference:revisionBase?.number??'Pagamento directo confirmado pelo operador'}}:{})}
+    const documentOptions={language:documentLanguage,outputFormat,recipient:clientDocument?.honorarium_recipient_name||clientDocument?.legal_name||clientName,client_name:clientName,society_name:selectedSociety,columns:pdfColumns,showTimeTotal,showAmountTotal,bankAccounts:chosenBankAccounts,translation:translated,expenses:pdfExpenses,expense_attachment_ids:attachments.map(item=>item.id),expenses_included:true,presentation,...(directPaid>0?{direct_payment:{amount:directPaid,reference:revisionBase?.number??'Pagamento directo confirmado pelo operador'}}:{})}
    if(new TextEncoder().encode(JSON.stringify(documentOptions)).length>55000)throw new Error('O conteúdo traduzido excede o limite desta nota. Divida os registos por duas notas.')
+   if(attachments.length)await appendExpenseAttachments(createFormalDocumentPdf(presentation,pdfRows,pdfExpenses,null,isCollection).output('arraybuffer'),attachments,documentLanguage)
    let provisionNote:ProvisionNote|null=null
    if(!isCollection&&!provisionNote){
      const response=await supabase!.rpc('save_honorarium_document',{p_client_id:clientId,p_billing_entity_id:issuer?.id??chosen[0]?.billing_entity_id,p_work_entry_ids:chosen.map(row=>row.id),p_vat_rate:documentVatRate,p_document_options:documentOptions,p_document_id:revisionBase?.document_id??null,p_expected_revision:revisionBase?.revision??null,p_apply_provision:Boolean(provisionAccount)&&useProvision,p_expected_total:provisionPreview.total,p_expected_deduction:provisionPreview.deducted,p_request_id:provisionRequest.current})
@@ -225,7 +228,7 @@ export function HonorariumNoteModal({clientId,clientName,onClose,documentKind='h
    const savedRows=provisionNote?provisionNote.items.map(row=>({...row,professional_name:'',billing_entity_name:selectedSociety,activity_description:translatedText('work',row.id,row.activity_description)})):pdfRows
     const fileBase=`${isCollection?copy.collectionFile:copy.honorariumFile}-${filePart(clientName)}-${fileDate(provisionNote?new Date(provisionNote.issued_at):new Date())}`
     if(outputFormat==='docx')downloadDocx(await createFormalDocumentDocx(presentation,savedRows,pdfExpenses,provisionNote,isCollection),`${fileBase}.docx`)
-    else downloadPdf(createFormalDocumentPdf(presentation,savedRows,pdfExpenses,provisionNote,isCollection),`${fileBase}.pdf`)
+    else {const pdf=createFormalDocumentPdf(presentation,savedRows,pdfExpenses,provisionNote,isCollection);if(attachments.length)downloadCombinedPdf(await appendExpenseAttachments(pdf.output('arraybuffer'),attachments,documentLanguage),`${fileBase}.pdf`);else downloadPdf(pdf,`${fileBase}.pdf`)}
    }catch(cause){const detail=cause&&typeof cause==='object'&&'message' in cause?String(cause.message):'';setError(detail?`Não foi possível gerar o documento: ${detail}`:'Não foi possível gerar o documento.')}
   finally{setGenerating(false);setTranslationBusy(false);savingLock.current=false}
  }

@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 25-09-2026 — versão 0.12.8: comprovativos na Nota de Honorários
+
+- Branch `codex/honorarium-expense-attachments-0.12.8` sobre a árvore funcional de `origin/main` `2e0642b8a3baca06a0439ef3ab3e7a5152ad6e73`. Antes do deploy, a produção foi confirmada directamente em 0.12.7, deployment `08e1ef5c-380d-4725-b7fd-96df2e5512b7`, Version ID `ee689cb4-9c11-4a15-ac22-2e662c4b148e`.
+- O PDF da Nota de Honorários junta apenas os anexos das despesas incluídas. PDFs preservam todas as páginas, JPEG/PNG ganham uma página própria, DOCX/XLSX ficam incorporados com uma página de identificação. A ordem é a das despesas; a versão da nota guarda os IDs dos anexos para reimpressão. A geração pára com erro claro se faltar um comprovativo, antes de gravar uma nota nova.
+- Sem migration, alteração de dados de clientes ou escrita remota no Supabase. Testes sintéticos: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare aprovados. O ensaio E2E gerou uma nota com PDF e JPEG de uma despesa seleccionada e excluiu um anexo alheio. A primeira CI falhou só neste teste de emissão sob Vite de desenvolvimento; o mesmo fluxo passou na compilação QA. A CI foi ajustada para ensaiar a compilação, mantendo também o build de produção; aguardar a sua repetição antes de publicar.
+
 ## 24-09-2026 — versão 0.12.7 publicada e verificada
 
 - PR #65 integrado em GitHub `main` no commit `882ff216721fbafd6bb2163fa0bef854b5ae6ff7`. CI `36043823935` verde (validação e auditoria); secret scan `36043823957` verde. Localmente passaram segurança de ficheiros, lint, tipos, runtime do Worker, 49 ficheiros/262 testes unitários, build, dry-run Cloudflare e 144 E2E em Chromium, com uma omissão condicional da matriz exclusiva do servidor Vite de desenvolvimento.

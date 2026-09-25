@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 25-09-2026 — 0.12.8 em preparação
+
+- Nota de Honorários: o PDF inclui os anexos das despesas seleccionadas, com páginas para PDF e imagens e incorporação do original para Word/Excel. Os anexos de outras despesas ficam excluídos. Pré-visualização, emissão e reimpressão usam a mesma selecção guardada; anexo indisponível impede PDF incompleto.
+- Branch local `codex/honorarium-expense-attachments-0.12.8`; `origin/main` `2e0642b8a3baca06a0439ef3ab3e7a5152ad6e73`. Produção confirmada em 0.12.7 antes do novo deploy. Sem alteração de esquema nem dados no Supabase.
+- Validação local: 50 ficheiros/268 testes unitários, 145 E2E aprovados e uma omissão condicional, build de produção e dry-run Cloudflare. A primeira CI falhou no ensaio de emissão sob Vite de desenvolvimento; repetição configurada para executar os E2E sobre o build QA, como no ensaio local. Publicação pendente da CI verde.
+
 ## 24-09-2026 — produção 0.12.7 confirmada
 
 - GitHub `main` `882ff216721fbafd6bb2163fa0bef854b5ae6ff7` (PR #65, CI `36043823935` e scan `36043823957` verdes). Segurança, lint, tipos, runtime, 262 testes unitários, build, dry-run e 144 E2E aprovados; uma matriz exclusiva do servidor Vite de desenvolvimento foi omitida no ensaio compilado.

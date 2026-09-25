@@ -1,13 +1,19 @@
 {
-  "version": "0.12.7",
+  "version": "0.12.8",
   "changes": [
-    "A preparação da Nota de Honorários abre nos registos não pagos e avisa de imediato quando falta valor/hora ou montante.",
-    "Registos sem preço ficam identificados e não podem ser incluídos até serem corrigidos; a lista continua visível se a emissão falhar.",
-    "As despesas dos registos seleccionados entram no total da Nota de Honorários pelo valor introduzido, sem novo IVA sobre elas; pode pré-visualizar o PDF e o Word sem emitir nem guardar.",
-    "As Notas de Honorários e as Cobranças apresentam descrições justificadas, dados bancários mais próximos dos rótulos e documentos paginados com clareza nos três idiomas.",
-    "Ao criar um cliente, a sugestão de código preenche a primeira lacuna livre na série de Particulares ou Empresas."
+    "O PDF da Nota de Honorários inclui a seguir os comprovativos anexados às despesas dos registos seleccionados.",
+    "As fotografias ocupam páginas próprias; os PDFs mantêm todas as suas páginas. Os ficheiros Word e Excel ficam incorporados com uma página de identificação.",
+    "A pré-visualização e as reimpressões usam os anexos guardados na versão da nota e avisam se algum comprovativo estiver indisponível."
   ],
   "releases": [
+    {
+      "version": "0.12.8",
+      "changes": [
+        "O PDF da Nota de Honorários inclui a seguir os comprovativos anexados às despesas dos registos seleccionados.",
+        "As fotografias ocupam páginas próprias; os PDFs mantêm todas as suas páginas. Os ficheiros Word e Excel ficam incorporados com uma página de identificação.",
+        "A pré-visualização e as reimpressões usam os anexos guardados na versão da nota e avisam se algum comprovativo estiver indisponível."
+      ]
+    },
     {
       "version": "0.12.7",
       "changes": [
