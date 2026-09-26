@@ -21,7 +21,7 @@
     "@supabase/supabase-js": "2.112.1",
     "docx": "^9.7.1",
     "jspdf": "4.2.1",
-    "papaparse": "^5.5.4",
+    "papaparse": "^5.7.0",
     "pdf-lib": "1.17.1",
     "pdfjs-dist": "5.4.149",
     "react": "^19.2.8",
