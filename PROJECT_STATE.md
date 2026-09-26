@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 26-09-2026 — 0.12.9 em produção
+
+- GitHub `main`: `bf552c101ee7a148d93bc8b12775f2b48df328f6` (PR #70, CI `36227485825` e secret scan `36227485823` verdes). A presente actualização documental segue na branch `codex/deployment-record-0.12.9`.
+- Cloudflare Worker `legal-carina`: `https://legal-carina.dabranches.workers.dev`, Version ID `b4c985a0-5ced-4da6-8c57-dd8b3849e006`, 100% do tráfego; deployment ID não apresentado no painel consultado. Confirmado em `2026-09-26 07:58:15 UTC` por HTTP 200 em `/release-notes.json` (0.12.9), pelo painel e pelo browser integrado. Versão anterior para rollback: `18587752-c567-4818-ae0f-7a2a1ca5e182` (0.12.8).
+- Ajuste independente de colunas em tabelas de listagem e da ficha do cliente. Testes locais e E2E completos, build e dry-run aprovados conforme o handover. Autorização temporária do Wrangler revogada e sessão local terminada. A CI do GitHub está verde; o build automático da Cloudflare continua com falha própria e não foi usado para esta publicação.
+
 ## 26-09-2026 — 0.12.9 em preparação
 
 - Código local: branch `codex/resizable-columns-0.12.9`, base `d35101299a0891a8c56455447e370d45e951fc01`, ajuste de largura independente nas tabelas principais e nas tabelas interactivas da ficha do cliente.
