@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 26-09-2026 — 0.12.9 preparada: ajuste de colunas
+
+- Branch local `codex/resizable-columns-0.12.9` sobre GitHub `main` `d35101299a0891a8c56455447e370d45e951fc01`. A produção confirmada anteriormente mantém a versão 0.12.8, deployment `e592b705-b4a0-40d2-a6f1-6f171d58e883`, Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182`. Publicação da 0.12.9 pendente.
+- As tabelas de listagem e as tabelas interactivas das fichas dos clientes têm divisórias visíveis para ajustar colunas com rato, toque ou teclado. A tabela usa a soma explícita das larguras, de modo que o ajuste de uma coluna não redimensiona as restantes. Preferências guardadas localmente. O cabeçalho fixo deixou de repor larguras antigas ao iniciar o scroll.
+- Validação local: segurança de ficheiros, lint, tipos e build aprovados; 50 ficheiros/269 testes unitários aprovados e teste novo do ajuste nas tabelas da ficha aprovado isoladamente. E2E compilado: 146 aprovados, 1 omissão condicional, incluindo arrasto real, refresh, desktop e iPhone. Sem migrations, alterações de dados ou emissão de documentos reais.
+- O CLI Cloudflare sem escalada não tem token de deploy local; a consulta autenticada com escalada não foi executada porque o sistema de aprovação automática respondeu com erro de autenticação. Confirmar acesso Cloudflare e novo deployment antes de declarar a versão publicada.
+
 ## 25-09-2026 — correcção operacional de código de cliente
 
 - Uma ficha empresarial com código indevidamente na série `02` foi transferida, numa operação atómica, para a primeira lacuna livre da série `01`. A ficha e o único perfil activo ficaram com o mesmo código empresarial; o código antigo ficou livre. O tipo `company` e os identificadores internos mantiveram-se.

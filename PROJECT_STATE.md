@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 26-09-2026 — 0.12.9 em preparação
+
+- Código local: branch `codex/resizable-columns-0.12.9`, base `d35101299a0891a8c56455447e370d45e951fc01`, ajuste de largura independente nas tabelas principais e nas tabelas interactivas da ficha do cliente.
+- GitHub: `main` em `d35101299a0891a8c56455447e370d45e951fc01` antes da entrega deste lote. Produção: última confirmação 0.12.8, Worker `legal-carina`, `https://legal-carina.dabranches.workers.dev`, deployment `e592b705-b4a0-40d2-a6f1-6f171d58e883`, Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182`. Reconfirmar directamente antes do deploy.
+- Testes locais: segurança, lint, tipos, build e E2E compilado (146 aprovados/1 omissão) concluídos; suite unitária completa 269 testes mais um teste novo dirigido aprovado. Deploy pendente de autenticação Cloudflare e gate de publicação.
+
 ## 25-09-2026 — correcção de código empresarial em produção
 
 - Uma ficha empresarial foi movida da série de códigos de particulares para a primeira lacuna livre da série `01`, de acordo com a sugestão automática da aplicação. Ficha e perfil ficaram coerentes; 40 registos mantiveram a associação pelo identificador interno. O código anterior ficou disponível.
