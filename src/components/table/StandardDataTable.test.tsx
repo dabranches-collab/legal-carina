@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { StandardDataTable, type TableColumn } from './StandardDataTable'
@@ -196,6 +196,19 @@ describe('StandardDataTable',()=>{
     const cols=table.querySelectorAll('colgroup col')
     expect(cols).toHaveLength(columns.length)
     expect(Array.from(cols).map(col=>(col as HTMLElement).style.width)).toEqual(['160px','160px','160px'])
+  })
+
+  test('altera apenas a coluna escolhida e conserva a largura das restantes',()=>{
+    render(<StandardDataTable id="resize-table" label="Tabela ajustável" rows={rows} columns={columns} rowKey={row=>row.id}/> )
+    const table=screen.getByRole('table')
+    const handle=screen.getByRole('separator',{name:'Ajustar largura de Nome'})
+    fireEvent.keyDown(handle,{key:'ArrowRight'})
+    expect(localStorage.getItem('carina.table.anonymous.resize-table')).toContain('"name":170')
+    expect(Array.from(table.querySelectorAll('colgroup col')).map(col=>(col as HTMLElement).style.width)).toEqual(['170px','160px','160px'])
+    expect(table).toHaveStyle({width:'490px'})
+    expect(table).toHaveClass('table-fixed')
+    fireEvent.keyDown(handle,{key:'ArrowLeft'})
+    expect(Array.from(table.querySelectorAll('colgroup col')).map(col=>(col as HTMLElement).style.width)).toEqual(['160px','160px','160px'])
   })
 
   test('respeita o alinhamento funcional indicado por cada coluna',()=>{

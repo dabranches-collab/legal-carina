@@ -11,6 +11,7 @@ import {
 import { supabase } from "../../lib/supabase";
 import {CalendarDateInput} from '../../components/CalendarDateInput'
 import {formatDate} from '../../utils/date'
+import {useResizablePlainTable} from '../../components/table/useResizablePlainTable'
 
 type Retainer = {
   id: string;
@@ -86,6 +87,8 @@ export function ClientRetainerPanel({
   readOnly: boolean;
   onRequestEdit?: () => void;
 }) {
+  const termsColumns=useResizablePlainTable('client-retainer-terms',[200,150,150,190,120,190]);
+  const chargeColumns=useResizablePlainTable('client-retainer-charges',[170,130,120,170,140,140,230]);
   const [editingCharge,setEditingCharge]=useState<Charge|null>(null);
   const [dirty,setDirty]=useState(false);
   const [retainers, setRetainers] = useState<Retainer[]>([]),
@@ -394,8 +397,8 @@ export function ClientRetainerPanel({
         <div className="border-t border-border p-4">
       {retainers.length > 0 && (
         <div className="mt-4 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full min-w-[48rem] text-sm">
-            <thead className="bg-surface-subtle"><tr><th className="p-2 text-left">Vigência</th><th className="p-2 text-right">Valor mensal</th><th className="p-2 text-right">Horas incluídas</th><th className="p-2 text-left">Sociedade</th><th className="p-2 text-center">Estado</th><th className="p-2"></th></tr></thead>
+          <table style={{width:termsColumns.width}} className="table-fixed text-sm">
+            {termsColumns.colgroup}<thead className="bg-surface-subtle"><tr>{termsColumns.header(0,'Vigência')}{termsColumns.header(1,'Valor mensal','p-2 text-right')}{termsColumns.header(2,'Horas incluídas','p-2 text-right')}{termsColumns.header(3,'Sociedade')}{termsColumns.header(4,'Estado','p-2 text-center')}{termsColumns.header(5,'Acções')}</tr></thead>
             <tbody>{retainers.map(item=><tr key={item.id} tabIndex={0} onDoubleClick={()=>editTerms(item)} onKeyDown={event=>{if(event.key==='Enter'&&event.target===event.currentTarget){event.preventDefault();editTerms(item)}}} className={retainer?.id===item.id?'bg-secondary-soft':''}>
               <td className="border-t border-border p-2">{formatDate(item.starts_on)} — {item.ends_on?formatDate(item.ends_on):'sem fim'}</td>
               <td className="border-t border-border p-2 text-right">{money(item.monthly_amount,item.currency)}</td>
@@ -601,16 +604,17 @@ export function ClientRetainerPanel({
             )}
             <p className="mt-2 text-xs text-text-secondary">Cada período permite registar o valor, o número e a data da factura, o vencimento, a liquidação e o respectivo estado.</p>
           </div><div className="overflow-x-auto border-t border-border">
-            <table className="w-full min-w-[68rem] text-sm">
+            <table style={{width:chargeColumns.width}} className="table-fixed text-sm">
+              {chargeColumns.colgroup}
               <thead className="bg-surface-subtle">
                 <tr>
-                  <th className="p-2 text-left">Período</th>
-                  <th className="p-2 text-right">Valor</th>
-                  <th className="p-2 text-center">Estado</th>
-                  <th className="p-2 text-left">N.º factura</th>
-                  <th className="p-2 text-center">Data factura</th>
-                  <th className="p-2 text-center">Vencimento</th>
-                  <th className="p-2 text-center">Liquidação</th>
+                  {chargeColumns.header(0,'Período')}
+                  {chargeColumns.header(1,'Valor','p-2 text-right')}
+                  {chargeColumns.header(2,'Estado','p-2 text-center')}
+                  {chargeColumns.header(3,'N.º factura')}
+                  {chargeColumns.header(4,'Data factura','p-2 text-center')}
+                  {chargeColumns.header(5,'Vencimento','p-2 text-center')}
+                  {chargeColumns.header(6,'Liquidação','p-2 text-center')}
                 </tr>
               </thead>
               <tbody>

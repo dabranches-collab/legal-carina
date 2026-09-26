@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import {formatDateTime} from '../../utils/date'
+import {useResizablePlainTable} from '../../components/table/useResizablePlainTable'
 type Credential = {
   id: string;
   platform_name: string;
@@ -31,6 +32,7 @@ export function ClientCredentialsPanel({
   clientId: string;
   readOnly: boolean;
 }) {
+  const historyColumns=useResizablePlainTable('client-credential-history',[300,180,180]);
   const [dirty,setDirty]=useState(false);
   const [items, setItems] = useState<Credential[]>([]),
     [editing, setEditing] = useState(empty),
@@ -238,14 +240,13 @@ export function ClientCredentialsPanel({
               </div>
               {history[item.id] && (
                 <div className="mt-3 overflow-x-auto">
-                  <table className="w-full min-w-[34rem] text-xs">
+                  <table style={{width:historyColumns.width}} className="table-fixed text-xs">
+                    {historyColumns.colgroup}
                     <thead>
                       <tr>
-                        <th className="p-2 text-left">
-                          Palavra-passe utilizada
-                        </th>
-                        <th className="p-2 text-left">Desde</th>
-                        <th className="p-2 text-left">Até</th>
+                        {historyColumns.header(0,'Palavra-passe utilizada')}
+                        {historyColumns.header(1,'Desde')}
+                        {historyColumns.header(2,'Até')}
                       </tr>
                     </thead>
                     <tbody>

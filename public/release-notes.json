@@ -1,11 +1,19 @@
 {
-  "version": "0.12.8",
+  "version": "0.12.9",
   "changes": [
-    "O PDF da Nota de Honorários inclui a seguir os comprovativos anexados às despesas dos registos seleccionados.",
-    "As fotografias ocupam páginas próprias; os PDFs mantêm todas as suas páginas. Os ficheiros Word e Excel ficam incorporados com uma página de identificação.",
-    "A pré-visualização e as reimpressões usam os anexos guardados na versão da nota e avisam se algum comprovativo estiver indisponível."
+    "As colunas das tabelas podem ser ajustadas arrastando a divisória visível no cabeçalho, incluindo as tabelas das fichas dos clientes.",
+    "Ao ajustar uma coluna, as restantes mantêm a largura; a preferência fica guardada para a próxima visita.",
+    "As divisórias também podem ser ajustadas pelo teclado com as setas esquerda e direita."
   ],
   "releases": [
+    {
+      "version": "0.12.9",
+      "changes": [
+        "As colunas das tabelas podem ser ajustadas arrastando a divisória visível no cabeçalho, incluindo as tabelas das fichas dos clientes.",
+        "Ao ajustar uma coluna, as restantes mantêm a largura; a preferência fica guardada para a próxima visita.",
+        "As divisórias também podem ser ajustadas pelo teclado com as setas esquerda e direita."
+      ]
+    },
     {
       "version": "0.12.8",
       "changes": [

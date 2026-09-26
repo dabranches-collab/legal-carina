@@ -13,6 +13,7 @@ import { useAuth } from "../../features/auth/AuthContext";
 import {CalendarDateInput} from '../CalendarDateInput'
 import {formatDate,formatDateTime} from '../../utils/date'
 import {safeViewportBounds} from '../../lib/safeViewport'
+import {ColumnResizeHandle} from './ColumnResizeHandle'
 
 type Scalar = string | number | boolean | Date | null | undefined;
 type FilterValue = {
@@ -464,6 +465,7 @@ export function StandardDataTable<Row>({
     (column) => column.essential || !hidden.includes(column.id),
   );
   const stickyLayoutKey=visible.map(column=>`${column.id}:${widths[column.id]??column.width??160}`).join('|');
+  const tableWidth=visible.reduce((total,column)=>total+(widths[column.id]??column.width??160),onSelectionChange?48:0);
   const optionsFor = (column: TableColumn<Row>): TableColumn<Row> => {
     if(column.filterOptions||column.kind==="boolean"||column.kind==="number"||column.kind==="money"||column.kind==="date")return column;
     const values = new Map<string,string>();
@@ -573,8 +575,6 @@ export function StandardDataTable<Row>({
     const headerCells=[...header.querySelectorAll<HTMLElement>('th')];
     const tableColumns=[...table.querySelectorAll<HTMLElement>('colgroup col')];
     const stickyHeaderCells=[...header.querySelectorAll<HTMLElement>('[data-sticky-column="true"]')];
-    const originalCellStyles=headerCells.map(cell=>({width:cell.style.width,minWidth:cell.style.minWidth,maxWidth:cell.style.maxWidth}));
-    const originalColumnStyles=tableColumns.map(column=>({width:column.style.width,minWidth:column.style.minWidth}));
     let fixed=false;
     const reset=()=>{
       fixed=false;
@@ -587,8 +587,7 @@ export function StandardDataTable<Row>({
       header.style.display="";
       header.style.tableLayout="";
       spacer.style.height="0px";
-      headerCells.forEach((cell,index)=>{cell.style.width=originalCellStyles[index].width;cell.style.minWidth=originalCellStyles[index].minWidth;cell.style.maxWidth=originalCellStyles[index].maxWidth});
-      tableColumns.forEach((column,index)=>{column.style.width=originalColumnStyles[index].width;column.style.minWidth=originalColumnStyles[index].minWidth});
+      headerCells.forEach((cell,index)=>{const width=tableColumns[index]?.style.width??'';cell.style.width=width;cell.style.minWidth=width;cell.style.maxWidth=width});
       for(const cell of stickyHeaderCells)cell.style.left=`${cell.dataset.stickyOffset??0}px`;
     };
     const update=()=>{
@@ -610,7 +609,6 @@ export function StandardDataTable<Row>({
         header.style.display="table";
         header.style.tableLayout="fixed";
         headerCells.forEach((cell,index)=>{const width=`${renderedWidths[index]}px`;cell.style.width=width;cell.style.minWidth=width;cell.style.maxWidth=width});
-        tableColumns.forEach((column,index)=>{const width=`${renderedWidths[index]}px`;column.style.width=width;column.style.minWidth=width});
       }
       const scrollerRect=scroller.getBoundingClientRect();
       const scale=table.offsetWidth>0?tableRect.width/table.offsetWidth:1;
@@ -806,23 +804,6 @@ export function StandardDataTable<Row>({
       return next;
     });
     draggedColumn.current = null;
-  };
-  const resize = (event: React.MouseEvent, column: TableColumn<Row>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const start = event.clientX,
-      initial = widths[column.id] ?? column.width ?? 160;
-    const move = (next: MouseEvent) =>
-      setWidths((value) => ({
-        ...value,
-        [column.id]: Math.max(88, initial + next.clientX - start),
-      }));
-    const stop = () => {
-      document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", stop);
-    };
-    document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", stop);
   };
   const autoFit = (column: TableColumn<Row>) => {
     const longest = Math.max(
@@ -1034,7 +1015,7 @@ export function StandardDataTable<Row>({
         {universeLoading&&<progress aria-label="Progresso do carregamento da tabela" className="mt-2 block h-2 w-full accent-secondary" value={universeProgress?.loaded??rows.length} max={Math.max(1,universeProgress?.total??reportedTotal)}/>}
       </div>
       <div ref={scrollContainer} className="scrollbar-thin overflow-x-auto">
-        <table ref={tableElement} className="w-full min-w-max border-separate border-spacing-0 text-left text-sm">
+        <table ref={tableElement} style={{width:tableWidth,minWidth:tableWidth}} className="table-fixed border-separate border-spacing-0 text-left text-sm">
           <caption className="sr-only">{label}</caption>
           <colgroup>
             {onSelectionChange && <col style={{ width: 48, minWidth: 48 }} />}
@@ -1194,13 +1175,7 @@ export function StandardDataTable<Row>({
                         </span>
                       )}
                     </div>
-                    <span
-                      role="separator"
-                      aria-label={`Redimensionar ${column.label}`}
-                      onMouseDown={(event) => resize(event, column)}
-                      onDoubleClick={() => autoFit(column)}
-                      className="absolute inset-y-0 right-0 w-2 cursor-col-resize hover:bg-secondary/20"
-                    />
+                    <ColumnResizeHandle label={column.label} width={width} onWidthChange={next=>setWidths(current=>({...current,[column.id]:next}))} onAutoFit={()=>autoFit(column)}/>
                   </th>
                 );
               })}
