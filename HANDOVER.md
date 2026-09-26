@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 26-09-2026 — versão 0.12.9 publicada e verificada
+
+- PR #70 integrada em GitHub `main` no commit `bf552c101ee7a148d93bc8b12775f2b48df328f6`; CI `36227485825` e secret scan `36227485823` verdes. O checkout local foi alinhado com esse commit antes do deploy.
+- Worker `legal-carina` publicado manualmente por Wrangler em `https://legal-carina.dabranches.workers.dev`: Version ID `b4c985a0-5ced-4da6-8c57-dd8b3849e006`, 100% do tráfego no painel Cloudflare. Deployment ID não exposto pela vista consultada; não inferido. `/release-notes.json` respondeu HTTP 200 com versão 0.12.9 às `2026-09-26 07:58:15 UTC`; o browser integrado mostrou «Aplicação actualizada · 0.12.9». Rollback frontend: Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182` (0.12.8).
+- O OAuth do Wrangler foi limitado a `Workers Scripts Write` mais `User Read` e `Background Access` obrigatórios. Após o deploy, a autorização foi revogada em «Aplicativos conectados», a sessão local terminou e os logs temporários foram apagados. Sem migration, alteração de dados ou emissão de documentos reais.
+- A integração de builds automáticos da Cloudflare mostrou uma falha separada para `bf552c1`; o deploy manual acima ficou activo e a CI do GitHub passou. Investigar a configuração desse build antes de depender dele em publicações futuras.
+
 ## 26-09-2026 — 0.12.9 preparada: ajuste de colunas
 
 - Branch local `codex/resizable-columns-0.12.9` sobre GitHub `main` `d35101299a0891a8c56455447e370d45e951fc01`. A produção confirmada anteriormente mantém a versão 0.12.8, deployment `e592b705-b4a0-40d2-a6f1-6f171d58e883`, Version ID `18587752-c567-4818-ae0f-7a2a1ca5e182`. Publicação da 0.12.9 pendente.
