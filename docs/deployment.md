@@ -3,7 +3,7 @@
 ## Produção confirmada em 2026-09-28
 
 - Plataforma: Cloudflare Workers Static Assets; serviço `legal-carina`; URL `https://legal-carina.dabranches.workers.dev`.
-- Versão 0.12.11: GitHub `main` `f55e83163c1564a76c1e0b9a0020652cb01ba042` (PR #74 e #75), deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% do tráfego desde `2026-09-28T17:21:13Z`. Notas online 0.12.11/HTTP 200 em `2026-09-28 17:23:39 UTC`.
+- Versão 0.12.11: commit funcional publicado `f55e83163c1564a76c1e0b9a0020652cb01ba042` em GitHub `main` (PR #74 e #75), deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% do tráfego desde `2026-09-28T17:21:13Z`. Notas online 0.12.11/HTTP 200 em `2026-09-28 17:23:39 UTC`.
 - Supabase: migrations remotas `20260928165827` e `20260928165929` aplicadas; ver correspondência local em `docs/database/migration-reconciliation.md`. A versão anterior do Worker para rollback é `db8dded3-c4d6-4555-874d-02e641a17f50` (0.12.10). O rollback do Worker não reverte as funções de leitura da base.
 
 ## Produção confirmada em 2026-09-25
