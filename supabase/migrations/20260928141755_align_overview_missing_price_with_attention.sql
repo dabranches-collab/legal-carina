@@ -11,6 +11,7 @@ with scope_access as materialized(
  from(select distinct w.firm_id,w.billing_entity_id from public.work_entries w)targets
 ),entries as materialized(
  select w.work_date,w.duration_minutes,w.status,w.is_invoiced,w.is_paid,w.archive_status,w.has_manual_override,w.billing_scope,w.client_id,w.billing_entity_id,
+  (w.billing_scope='standard' and w.effective_hourly_rate is null) missing_price_alert,
   case when fa.can_view then w.effective_hourly_rate end effective_hourly_rate,case when fa.can_view then w.effective_amount end effective_amount,
   c.display_name client_name,c.client_type,b.name billing_name,p.display_name professional_name
  from public.work_entries w join public.clients c on c.id=w.client_id join public.professionals p on p.id=w.professional_id left join public.billing_entities b on b.id=w.billing_entity_id
@@ -23,7 +24,7 @@ with scope_access as materialized(
  count(*)filter(where is_invoiced and not is_paid and status<>'uncollectible_invoiced')unpaid_count,
  count(*)filter(where status in('uncollectible_uninvoiced','uncollectible_invoiced'))uncollectible_count,
  sum(effective_amount)filter(where status in('uncollectible_uninvoiced','uncollectible_invoiced'))uncollectible_value,
- count(*)filter(where billing_scope='standard' and effective_hourly_rate is null)missing_price,count(*)filter(where has_manual_override)overrides,count(distinct client_id)active_clients from entries
+ count(*)filter(where missing_price_alert)missing_price,count(*)filter(where has_manual_override)overrides,count(distinct client_id)active_clients from entries
 ),missing_billing as(select count(*)value from entries where billing_entity_id is null),annual_totals as(select extract(year from work_date)::int label,round(sum(effective_amount),2)value,sum(duration_minutes)minutes from entries group by 1),
 annual as(select a.label,a.value,a.minutes,coalesce((select jsonb_object_agg(s.society,s.value)from(select coalesce(e2.billing_name,'Sem sociedade')society,round(sum(e2.effective_amount),2)value from entries e2 where extract(year from e2.work_date)::int=a.label group by 1)s),'{}'::jsonb)societies from annual_totals a order by a.label),
 latest_year as(select max(extract(year from work_date)::int)value from entries),latest_month as(select date_trunc('month',max(work_date))::date value from entries),rolling_months as(select generate_series((select value from latest_month)-interval'11 months',(select value from latest_month),interval'1 month')::date month_start where(select value from latest_month)is not null),
@@ -54,6 +55,7 @@ with scope_access as materialized (
   from (select distinct w.firm_id,w.billing_entity_id from public.work_entries w) targets
 ), entries as materialized (
   select w.duration_minutes,w.is_invoiced,w.is_paid,w.billing_scope,w.client_id,w.billing_entity_id,
+    (w.billing_scope='standard' and w.effective_hourly_rate is null) missing_price_alert,
     case when fa.can_view then w.effective_hourly_rate end effective_hourly_rate,
     case when fa.can_view then w.effective_amount end effective_amount,
     coalesce(b.name,'Sem sociedade') society
@@ -78,7 +80,7 @@ with scope_access as materialized (
     case when coalesce(sum(duration_minutes),0)=0 or sum(effective_amount) is null then null
       else round(sum(effective_amount)*60/sum(duration_minutes),2) end "averageRate",
     count(distinct client_id) "activeClients",
-    count(*) filter(where billing_scope='standard' and effective_hourly_rate is null) "missingPrice",
+    count(*) filter(where missing_price_alert) "missingPrice",
     count(*) filter(where billing_entity_id is null) "missingBilling"
   from entries group by society order by society
 )

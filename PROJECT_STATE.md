@@ -4,6 +4,7 @@
 
 - Local: branch `codex/overview-navigation-0.12.11` sobre `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`. Navegação dos dashboards em Visão Geral e das listas em Clientes, resumo de Clientes em quatro caixas 2×2 incluindo Provisões, descrições dos indicadores, filtragem dos alertas sem preço e indicação `(POR DEFINIR)` em movimentos recentes preparados localmente.
 - Migrations `20260928141755` e `20260928153000` por aplicar; última migration remota confirmada `20260924185918`. Nenhum dado real ou ambiente remoto alterado neste lote. Segurança de ficheiros, lint, tipos, 51 ficheiros/275 testes e build aprovados; navegação e grelha 2×2 ensaiadas em 8 combinações de browser compilado. Ensaio das migrations em staging, CI e publicação pendentes.
+- PR #74 com validação, auditoria e scan aprovados. Por instrução do utilizador, ensaio das migrations efectuado em transacção na produção e revertido: quatro funções compiladas e hashes originais preservados. Backup físico de `2026-09-28 05:43:49 UTC`; PITR inactivo e ficheiros de Storage não incluídos. Dry-run Cloudflare aprovado. A alteração das funções e o deploy continuam pendentes.
 
 ## 28-09-2026 — 0.12.10 em produção
 
