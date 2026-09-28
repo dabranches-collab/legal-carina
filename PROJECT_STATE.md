@@ -2,7 +2,7 @@
 
 ## 28-09-2026 — 0.12.12 local em preparação
 
-- Branch `codex/client-list-columns-0.12.12` sobre GitHub `main` `a2875e40f321b9f83f9deb81dba280b4f32b6f95`. Listas de Particulares e Empresas com angariador, sociedade, NIF, contactos, morada e estado; 0.12.11 continua em produção no deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc` / Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6` desde `2026-09-28T17:21:13Z`.
+- Branch `codex/client-list-columns-0.12.12`, commit funcional `28dbbd4` no PR #78 em rascunho, sobre GitHub `main` `a2875e40f321b9f83f9deb81dba280b4f32b6f95`. Listas de Particulares e Empresas com angariador, sociedade, NIF, contactos, morada e estado; 0.12.11 continua em produção no deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc` / Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6` desde `2026-09-28T17:21:13Z`.
 - Apenas frontend; sem migrations, DML, Auth, Storage ou alterações em Supabase/Cloudflare. Segurança de ficheiros, lint, tipos, 52 ficheiros/276 testes e build aprovados. Browser local confirmou 134 Particulares e 66 Empresas; 15 cenários E2E dirigidos passaram em desktop, iPhone/PWA e acções de cliente. Não publicar até nova ordem «publica».
 
 ## 28-09-2026 — 0.12.11 em produção
