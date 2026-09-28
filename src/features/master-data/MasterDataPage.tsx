@@ -44,6 +44,14 @@ type Row = {
   client_code?: string;
   client_type?: "individual" | "company";
   profile_types?: Array<"individual" | "company">;
+  tax_number?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  client_referrer?: string | null;
+  client_referrer_other?: string | null;
+  primary_billing_entity_id?: string | null;
+  billing_entity_name?: string;
   active: boolean;
 };
 type Profile = {
@@ -331,7 +339,7 @@ export function MasterDataPage({
       section === "billing_entities"
         ? "id,firm_id,name,active"
         : section === "clients"
-          ? "id,firm_id,display_name,client_code,client_type,active"
+          ? "id,firm_id,display_name,client_code,client_type,tax_number,email,phone,address,client_referrer,client_referrer_other,primary_billing_entity_id,active"
           : "id,firm_id,display_name,active";
     const { data, error: failure } = await withTransientRetry(() => {
       const query=db.from(section).select(fields).order(section === "billing_entities" ? "name" : "display_name");
@@ -341,7 +349,7 @@ export function MasterDataPage({
     if (failure) setError(failure.message);
     else if (focusedRecordId) setRows((data??[]) as unknown as Row[]);
     else if (section === "clients") {
-      const [profileResult, flagsResult, retainerResult] = await Promise.all([
+      const [profileResult, flagsResult, retainerResult, billingResult] = await Promise.all([
         withTransientRetry(() =>
           db
             .from("client_profiles")
@@ -357,11 +365,15 @@ export function MasterDataPage({
             .select("client_id")
             .eq("active", true),
         ),
+        withTransientRetry(() =>
+          db.from("billing_entities").select("id,name").eq("firm_id", targetFirm),
+        ),
       ]);
       if (!isCurrent()) return;
-      if (profileResult.error) setError(profileResult.error.message);
+      if (profileResult.error || billingResult.error) setError(profileResult.error?.message ?? billingResult.error!.message);
       else {
         const types = new Map<string, Array<"individual" | "company">>();
+        const billingNames = new Map((billingResult.data ?? []).map((item) => [item.id, item.name]));
         for (const profile of profileResult.data ?? []) {
           const type = profile.client_type as "individual" | "company";
           types.set(profile.client_id, [
@@ -377,6 +389,7 @@ export function MasterDataPage({
                 types.get(row.id) ?? [row.client_type ?? "individual"],
               ),
             ],
+            billing_entity_name: billingNames.get(row.primary_billing_entity_id ?? "") ?? "",
           })),
         );
       }
@@ -1069,12 +1082,32 @@ export function MasterDataPage({
       setShowOtherProfile(false);
     }
   }
+  const actionColumn: TableColumn<Row> = {
+    id: clientTypeFilter ? "client_actions" : "actions",
+    label: "Acções",
+    width: section === "clients" ? 265 : 120,
+    sortable: false,
+    searchable: false,
+    filterable: false,
+    exportable: false,
+    value: () => null,
+    render: (row) => section === "clients" ? (
+      <div className="flex items-center justify-center gap-1 text-xs font-semibold">
+        <button type="button" aria-label="Abrir ficha" title="Abrir ficha do cliente." onClick={() => void openEditor(row)} className="min-h-9 shrink-0 rounded-lg border border-border px-2 text-primary">Ficha</button>
+        <button type="button" aria-label="Nota de Honorários" title="Preparar, consultar ou rever notas de honorários deste cliente." onClick={() => setDocumentClient({ row, kind: "honorarium" })} className="min-h-9 shrink-0 rounded-lg bg-primary px-2 text-surface">Nota</button>
+        <button type="button" disabled={!unpaidClientIds.has(row.id)} title={unpaidClientIds.has(row.id) ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."} onClick={() => setDocumentClient({ row, kind: "collection" })} className="min-h-9 shrink-0 rounded-lg bg-danger px-2 text-white disabled:border disabled:border-success/30 disabled:bg-success-soft disabled:text-success">Cobrança</button>
+      </div>
+    ) : (
+      <button type="button" title="Abrir ficha." onClick={() => void openEditor(row)} className="min-h-9 shrink-0 whitespace-nowrap rounded-lg border border-border px-3 py-1.5 font-semibold text-primary">Abrir ficha</button>
+    ),
+  };
   const columns: TableColumn<Row>[] = [
     {
       id: "name",
       label: "Nome",
       essential: true,
       sticky: true,
+      width: section === "clients" ? 240 : 160,
       value: (row) => row.display_name ?? row.name ?? "",
     },
     ...(section === "clients"
@@ -1082,11 +1115,62 @@ export function MasterDataPage({
           {
             id: "code",
             label: "Código",
+            width: 110,
             value: (row: Row) => row.client_code ?? "",
+          },
+          {
+            id: "referrer",
+            label: "Angariador",
+            width: 175,
+            value: (row: Row) => row.client_referrer === "other"
+              ? row.client_referrer_other ?? ""
+              : referrerNames[row.client_referrer as keyof typeof referrerNames] ?? "",
+          },
+          {
+            id: "billing_entity",
+            label: "Sociedade do cliente",
+            width: 190,
+            value: (row: Row) => row.billing_entity_name ?? "",
+          },
+          {
+            id: "tax_number",
+            label: "NIF",
+            width: 145,
+            value: (row: Row) => row.tax_number ?? "",
+          },
+          actionColumn,
+          {
+            id: "email",
+            label: "Email",
+            width: 230,
+            value: (row: Row) => row.email ?? "",
+          },
+          {
+            id: "phone",
+            label: "Telefone",
+            width: 165,
+            value: (row: Row) => row.phone ?? "",
+          },
+          {
+            id: "address",
+            label: "Morada",
+            width: 260,
+            value: (row: Row) => row.address ?? "",
+          },
+          {
+            id: "active",
+            label: "Estado",
+            width: 115,
+            filterOptions: [
+              { value: "Activo", label: "Activo" },
+              { value: "Inactivo", label: "Inactivo" },
+            ],
+            value: (row: Row) => row.active ? "Activo" : "Inactivo",
           },
           {
             id: "retainer",
             label: "Avença",
+            width: 115,
             kind: "boolean" as const,
             value: (row: Row) => retainerClientIds.has(row.id),
             render: (row: Row) =>
@@ -1129,73 +1213,7 @@ export function MasterDataPage({
             : []),
         ] as TableColumn<Row>[])
       : []),
-    {
-      id: clientTypeFilter ? "client_actions" : "actions",
-      label: "Acções",
-      width: 120,
-      sortable: false,
-      searchable: false,
-      filterable: false,
-      exportable: false,
-      value: () => null,
-      render: (row) => (
-        <button
-          type="button"
-          title="Abrir ficha do cliente."
-          onClick={() => void openEditor(row)}
-          className="min-h-9 shrink-0 whitespace-nowrap rounded-lg border border-border px-3 py-1.5 font-semibold text-primary"
-        >
-          Abrir ficha
-        </button>
-      ),
-    },
-    ...(section === "clients"
-      ? ([
-          {
-            id: "honorarium_available",
-            label: "Nota de Honorários",
-            sortable: false,
-            filterable: false,
-            width: 190,
-            value: () => '',
-            render: (row: Row) => {
-              return (
-                <button
-                  type="button"
-                  title="Preparar, consultar ou rever notas de honorários deste cliente."
-                  onClick={() => setDocumentClient({ row, kind: "honorarium" })}
-                  className="min-h-9 whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 font-semibold text-surface disabled:cursor-not-allowed disabled:border disabled:border-border disabled:bg-surface-subtle disabled:text-text-secondary"
-                >
-                  Nota de Honorários
-                </button>
-              );
-            },
-          },
-          {
-            id: "collection_available",
-            label: "Cobrança",
-            kind: "boolean" as const,
-            width: 135,
-            value: (row: Row) => unpaidClientIds.has(row.id),
-            render: (row: Row) => {
-              const available = unpaidClientIds.has(row.id);
-              return (
-                <span title={available ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."}>
-                <button
-                  type="button"
-                  disabled={!available}
-                  title={available ? "Há movimentos facturados e não pagos para cobrar." : "Não há movimentos facturados e não pagos para este cliente."}
-                  onClick={() => setDocumentClient({ row, kind: "collection" })}
-                  className="min-h-9 whitespace-nowrap rounded-lg bg-danger px-3 py-1.5 font-semibold text-white disabled:cursor-not-allowed disabled:border disabled:border-success/30 disabled:bg-success-soft disabled:text-success"
-                >
-                  Cobrança
-                </button>
-                </span>
-              );
-            },
-          },
-        ] as TableColumn<Row>[])
-      : []),
+    ...(section === "clients" ? [] : [actionColumn]),
   ];
   const profile = (type: "individual" | "company") =>
     profiles.find((item) => item.client_type === type) ?? {
@@ -1260,6 +1278,7 @@ export function MasterDataPage({
           </button>
         </div>}
         {section === "clients" && <div ref={clientToolbarRef} style={{top:"var(--app-header-height, 9.75rem)"}} className="sticky z-50 -mx-4 -mt-4 mb-3 flex min-w-0 items-center gap-2 rounded-t-xl border-b border-border bg-surface px-4 py-2 shadow-sm max-[359px]:gap-1 max-[359px]:px-2"><input aria-label="Pesquisar clientes" type="search" value={cardSearch} onChange={event => setCardSearch(event.target.value)} placeholder="Pesquisar nome ou código…" className="control min-w-0 flex-1 px-3"/><div role="group" aria-label="Apresentação dos clientes" className="flex shrink-0 rounded-lg border border-border bg-surface-subtle p-0.5 max-[359px]:p-0"><button type="button" aria-pressed={clientLayout === "cards"} onClick={() => setClientLayout("cards")} className={`min-h-9 rounded-md px-2 text-xs font-semibold sm:px-3 max-[359px]:px-1.5 ${clientLayout === "cards" ? "bg-secondary text-surface" : "text-text-secondary"}`}>Caixas</button><button type="button" aria-pressed={clientLayout === "table"} onClick={() => setClientLayout("table")} className={`min-h-9 rounded-md px-2 text-xs font-semibold sm:px-3 max-[359px]:px-1.5 ${clientLayout === "table" ? "bg-secondary text-surface" : "text-text-secondary"}`}>Tabela</button></div><button type="button" onClick={() => void openCreator()} className="min-h-10 shrink-0 rounded-lg bg-primary px-2 text-xs font-semibold text-surface sm:px-3 max-[359px]:px-1.5">Criar cliente</button></div>}
+        {section === "clients" && clientLayout === "table" && <p className="mb-2 text-xs text-text-secondary">Desloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.</p>}
         {section === "clients" && clientLayout === "cards" ? (
           <div className="space-y-3">
             {loading ? <p role="status">A carregar clientes…</p> : error ? <div role="alert" className="text-danger">{error}<button type="button" onClick={() => void load()} className="control ml-2 px-3">Tentar novamente</button></div> : (
