@@ -1,11 +1,17 @@
 {
-  "version": "0.12.9",
+  "version": "0.12.10",
   "changes": [
-    "As colunas das tabelas podem ser ajustadas arrastando a divisória visível no cabeçalho, incluindo as tabelas das fichas dos clientes.",
-    "Ao ajustar uma coluna, as restantes mantêm a largura; a preferência fica guardada para a próxima visita.",
-    "As divisórias também podem ser ajustadas pelo teclado com as setas esquerda e direita."
+    "As Notas de Honorários com IVA de 0% deixam de mencionar IVA no texto e na linha do total do PDF e do Word, em português, inglês e francês.",
+    "Os montantes e as despesas mantêm o cálculo existente."
   ],
   "releases": [
+    {
+      "version": "0.12.10",
+      "changes": [
+        "As Notas de Honorários com IVA de 0% deixam de mencionar IVA no texto e na linha do total do PDF e do Word, em português, inglês e francês.",
+        "Os montantes e as despesas mantêm o cálculo existente."
+      ]
+    },
     {
       "version": "0.12.9",
       "changes": [

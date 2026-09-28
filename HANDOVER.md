@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 28-09-2026 — 0.12.10 em preparação: Notas de Honorários com IVA zero
+
+- Código local na branch `codex/honorarium-zero-vat-copy-0.12.10`, sobre GitHub `main` `044eddbd4d894813ca11c2de2846f19e92d6adbf`. Produção confirmada directamente em 28-09-2026: versão 0.12.9, Worker `legal-carina`, `https://legal-carina.dabranches.workers.dev`, deployment ID `176a6950-e80e-46b1-8b07-276a130b1162`, Version ID `b4c985a0-5ced-4da6-8c57-dd8b3849e006`, 100% do tráfego desde `2026-09-26T07:57:50Z`.
+- Com IVA de 0%, o PDF e o Word da Nota de Honorários omitem as referências a IVA/TVA/VAT no parágrafo inicial e na linha do total. Mantêm os honorários, as despesas e o total. A regra cobre português, inglês e francês, pré-visualização, emissão e reimpressão; as notas com IVA positivo mantêm o texto anterior.
+- Alteração apenas de apresentação no frontend, sem migration ou escrita de dados. Testes dirigidos PDF/Word: 18 aprovados; testes da aplicação e dos documentos: 28 aprovados. `pnpm security:files`, `pnpm lint`, `pnpm typecheck`, `pnpm test` (51 ficheiros/273 testes), `pnpm build` e dry-run Wrangler aprovados. Suite E2E no preview QA compilado: 146 aprovados e 1 omissão condicional, incluindo o anexo PDF. CI e publicação ainda em curso.
+
 ## 26-09-2026 — versão 0.12.9 publicada e verificada
 
 - PR #70 integrada em GitHub `main` no commit `bf552c101ee7a148d93bc8b12775f2b48df328f6`; CI `36227485825` e secret scan `36227485823` verdes. O checkout local foi alinhado com esse commit antes do deploy.

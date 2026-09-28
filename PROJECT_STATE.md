@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 28-09-2026 — 0.12.10 em preparação: Nota de Honorários sem menção a IVA quando é zero
+
+- Local: branch `codex/honorarium-zero-vat-copy-0.12.10` sobre `main` `044eddbd4d894813ca11c2de2846f19e92d6adbf`; PDF e Word omitem IVA/TVA/VAT quando a nota tem IVA zero, nas três línguas, sem alterar o cálculo. Segurança de ficheiros, lint, tipos, 51 ficheiros/273 testes unitários, build e dry-run Wrangler aprovados. Suite E2E no preview QA compilado: 146 aprovados e 1 omissão condicional, incluindo o anexo PDF. CI e publicação em curso.
+- GitHub: `main` `044eddbd4d894813ca11c2de2846f19e92d6adbf` após `fetch`. Produção confirmada directamente em 28-09-2026: versão 0.12.9 em `https://legal-carina.dabranches.workers.dev`, deployment ID `176a6950-e80e-46b1-8b07-276a130b1162`, Version ID `b4c985a0-5ced-4da6-8c57-dd8b3849e006`, 100% do tráfego. Sem migration nem alteração a dados reais neste lote.
+
 ## 26-09-2026 — 0.12.9 em produção
 
 - GitHub `main`: `bf552c101ee7a148d93bc8b12775f2b48df328f6` (PR #70, CI `36227485825` e secret scan `36227485823` verdes). A presente actualização documental segue na branch `codex/deployment-record-0.12.9`.
