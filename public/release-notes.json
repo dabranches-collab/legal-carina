@@ -1,10 +1,21 @@
 {
-  "version": "0.12.10",
+  "version": "0.12.11",
   "changes": [
-    "As Notas de Honorários com IVA de 0% deixam de mencionar IVA no texto e na linha do total do PDF e do Word, em português, inglês e francês.",
-    "Os montantes e as despesas mantêm o cálculo existente."
+    "Os dashboards de Particulares e Empresas aparecem em Visão Geral; em Clientes, os mesmos submenus e as caixas de resumo abrem directamente as listas.",
+    "O resumo de Clientes apresenta Particulares, Empresas, Avenças e Provisões numa grelha 2×2.",
+    "Os alertas de movimentos sem preço excluem avenças e trabalhos de preço fixo.",
+    "Os movimentos recentes sem valor definido mostram (POR DEFINIR) quando o utilizador tem acesso aos valores."
   ],
   "releases": [
+    {
+      "version": "0.12.11",
+      "changes": [
+        "Os dashboards de Particulares e Empresas aparecem em Visão Geral; em Clientes, os mesmos submenus e as caixas de resumo abrem directamente as listas.",
+        "O resumo de Clientes apresenta Particulares, Empresas, Avenças e Provisões numa grelha 2×2.",
+        "Os alertas de movimentos sem preço excluem avenças e trabalhos de preço fixo.",
+        "Os movimentos recentes sem valor definido mostram (POR DEFINIR) quando o utilizador tem acesso aos valores."
+      ]
+    },
     {
       "version": "0.12.10",
       "changes": [

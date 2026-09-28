@@ -203,7 +203,7 @@ export function OverviewPage() {
     [
       "Facturado por receber",
       receiving?financial(receiving.billed):financial(m.receivable),
-      "Facturado e ainda não pago",
+      "Montante em dívida (€): trabalho, avenças e preço fixo",
       "payment",
       "warning",
     ],
@@ -217,7 +217,7 @@ export function OverviewPage() {
     [
       "Facturados não pagos",
       number.format(m.unpaidCount),
-      "Requer acompanhamento",
+      "Número de movimentos de trabalho por pagar",
       "payment",
       "warning",
     ],
@@ -245,7 +245,7 @@ export function OverviewPage() {
     [
       "Movimentos sem preço",
       number.format(m.missingPrice),
-      "Necessitam de revisão",
+      "Só movimentos de cobrança normal sem valor/hora",
       "warning",
       m.missingPrice ? "danger" : "default",
     ],

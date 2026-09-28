@@ -1,5 +1,11 @@
 # Reconciliação do histórico de migrations
 
+## 28-09-2026 — alertas sem preço e movimentos recentes (preparação)
+
+- `supabase migration list --linked` foi executado com o CLI temporário após checkout limpo; confirmou as divergências históricas documentadas e que `20260928141755` e `20260928153000` estão apenas no repositório. A integração confirmou que a última migration remota é `20260924185918_include_expenses_in_honorarium_totals`.
+- Por pedido explícito do utilizador, foi dispensada a branch de staging paga. As duas migrations foram ensaiadas juntas na base de produção dentro de `BEGIN`/`ROLLBACK`, sem dados sintéticos persistidos. As quatro funções compilaram, e os hashes das definições instaladas após o rollback coincidiram com os anteriores. O cálculo do alerta usa a taxa real do movimento antes da ocultação financeira, evitando falsos positivos para perfis sem acesso.
+- Antes da aplicação, havia 426 movimentos de cobrança normal sem taxa e 284 de avença sem taxa. O painel confirmou backup físico de `2026-09-28 05:43:49 UTC`; PITR inactivo e objectos privados de Storage fora do backup da base. Estas migrations substituem apenas funções de leitura e não alteram tabelas, registos, Auth ou Storage.
+
 ## 24-09-2026 — despesas nas Notas de Honorários
 
 - A migration `20260924185918_include_expenses_in_honorarium_totals` foi aplicada isoladamente em produção após confirmar o histórico remoto, a função instalada anterior e o backup físico recuperável de `2026-09-24 05:44:16 UTC`. Substitui apenas `save_honorarium_document` e actualiza o comentário da tabela de despesas; não contém DML nem altera RLS, Auth ou permissões. As 13 versões de notas existentes conservaram os totais agregados antes e depois.

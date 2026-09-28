@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 vi.stubGlobal('ResizeObserver',class { observe(){} unobserve(){} disconnect(){} })
+vi.mock('./features/clients/ProvisionsPage',()=>({ProvisionsPage:()=>null}))
+vi.mock('./features/clients/invoiceReading',()=>({readInvoiceFile:vi.fn(),invoiceFileLimit:20*1024*1024}))
+vi.mock('pdfjs-dist',()=>({GlobalWorkerOptions:{},getDocument:vi.fn()}))
 
 vi.mock('./lib/supabase', () => ({
   supabase: {
@@ -13,6 +16,7 @@ vi.mock('./lib/supabase', () => ({
     if (name === 'get_dashboard_overview') return { error:null, data:{ metrics:{minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,overrides:0,importErrors:1}, annual:[{label:2026,value:200,minutes:120}],monthly:[{label:4,value:200}],latestYear:2026,byClient:[{label:'Cliente Atlas',value:200}],byBilling:[{label:'Carina Santos',value:200}],byProfessional:[{label:'Carina',value:200}],byArchive:[{label:'dossier',value:1}],clientTypes:[{label:'company',value:1}] } }
     if (name === 'get_dashboard_metric_breakdowns') return { error:null,data:[{society:'Carina Santos',minutes:120,worked:200,invoiced:150,paid:100,receivable:50,uninvoicedCount:1,unpaidCount:1,averageRate:100,activeClients:1,missingPrice:0,missingBilling:0},{society:'Sem sociedade',minutes:30,worked:40,invoiced:null,paid:null,receivable:null,uninvoicedCount:1,unpaidCount:0,averageRate:80,activeClients:1,missingPrice:0,missingBilling:1}] }
     if (name === 'get_client_category_summaries') return { error:null,data:[{category:'individual',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'company',clients:1,movements:1,minutes:120,total:200,invoiced:150},{category:'mixed',clients:0,movements:0,minutes:0,total:0,invoiced:0}] }
+    if (name === 'get_client_document_action_flags') return { error:null,data:[] }
     if (name === 'get_professional_landing_summaries') return { error:null,data:[{id:'1',name:'Carina',minutes:120,total:200,invoiced:150,clients:1,uninvoiced:1,unpaid:1,missingPrice:0}] }
     if (name === 'search_work_entries') return { error:null,data:{items:[{id:'LC-1048',work_date:'2026-04-07',client_name:'Cliente Atlas',client_code:'C-0142',activity_description:'Consulta',professional_name:'Carina',duration_minutes:90,effective_hourly_rate:120,effective_amount:180,billing_entity_name:'Carina Santos',is_invoiced:false,invoice_date:null,is_paid:false,archive_status:'dossier',source_type:'xlsx',has_manual_override:false,has_historical_state_exception:false,validation_warnings:[]}],total:1,page:1,pageSize:25,professionals:[],billingEntities:[]} }
     if (name === 'get_work_attention_counts') return { error:null,data:{missing_society:47,missing_price:665,uninvoiced:796,unpaid:487,historical:248,retainer:3} }
@@ -89,14 +93,29 @@ describe('interface principal', () => {
 
   it('abre os dashboards de entrada de clientes, sociedades e responsáveis', async () => {
     renderApp()
-    await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
-    expect(await screen.findByRole('heading',{name:'Particulares'})).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button',{name:'Particulares'}))
+    await userEvent.click(screen.getByRole('button',{name:'Visão Geral'}))
+    await userEvent.click(within(screen.getByRole('list',{name:'Dashboards de clientes'})).getByRole('button',{name:'Particulares'}))
     expect(await screen.findByRole('region',{name:'Resumo do Cliente'})).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Sociedades' })[0])
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Sociedades')).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Responsáveis' })[0])
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Responsáveis')).toBeInTheDocument()
+  })
+
+  it('mostra quatro resumos em Clientes e abre Provisões',async()=>{
+    renderApp()
+    await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
+    expect(await screen.findByText('Clientes com provisões')).toBeInTheDocument()
+    for(const title of ['Particulares','Empresas','Avenças','Provisões'])expect(screen.getByRole('heading',{name:title})).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button',{name:'Abrir provisões'}))
+    expect(window.location.search).toBe('?view=provisions')
+  })
+
+  it('abre a lista a partir do resumo de Particulares',async()=>{
+    renderApp()
+    await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
+    await userEvent.click(await screen.findByRole('button',{name:'Abrir lista de Particulares'}))
+    expect(window.location.search).toBe('?view=clients&clientType=individual&clientMode=list')
   })
 
   it('mantém utilizadores dentro da Administração', async () => {
@@ -139,7 +158,8 @@ describe('interface principal', () => {
     renderApp('operator')
     expect(screen.getByRole('button',{name:'Definições'})).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Administração'})).not.toBeInTheDocument()
-    expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
+    await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
+    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'Empresas'})).toBeInTheDocument()
   })
 
   it('preserva a secção e o submenu indicados no URL após refresh, também em modo PWA', async()=>{
@@ -147,7 +167,7 @@ describe('interface principal', () => {
     window.history.replaceState({},'', '/?view=clients&clientType=company&clientMode=list')
     renderApp('owner')
     expect(window.location.search).toBe('?view=clients&clientType=company&clientMode=list')
-    expect((await screen.findAllByRole('button',{name:'Lista'})).length).toBeGreaterThan(0)
+    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'Empresas'})).toHaveAttribute('aria-current','page')
   })
 
   it('bloqueia URLs administrativas ao Operador e mantém os Registos operacionais disponíveis', async()=>{

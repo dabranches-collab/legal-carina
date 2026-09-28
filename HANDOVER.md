@@ -1,5 +1,17 @@
 # Legal Carina — handover
 
+## 28-09-2026 — 0.12.11 em preparação: dashboards, listas e alertas
+
+- Código local na branch `codex/overview-navigation-0.12.11`, sobre GitHub `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`. Produção permanece na 0.12.10; este lote não foi publicado.
+- Os submenus Particulares e Empresas de Visão Geral abrem os dashboards respectivos; em Clientes abrem directamente as listas. O resumo de Clientes mostra Particulares, Empresas, Avenças e Provisões numa grelha 2×2, com acesso às áreas correspondentes. A descrição dos indicadores “Facturado por receber” e “Facturados não pagos” foi esclarecida.
+- Migrations locais por aplicar: `20260928141755_align_overview_missing_price_with_attention.sql` e `20260928153000_distinguish_unpriced_recent_movements.sql`. A primeira restringe “Movimentos sem preço” aos movimentos de cobrança normal; a segunda aplica a mesma regra aos dashboards por cliente/sociedade/responsável e distingue montante por definir de falta de permissão nos movimentos recentes. A lista remota de migrations foi consultada: a última aplicada continua a ser `20260924185918_include_expenses_in_honorarium_totals`. Segurança de ficheiros, lint, tipos, 51 ficheiros/275 testes e build passaram; navegação e grelha 2×2 foram ensaiadas no browser compilado (8 combinações de claro/escuro e viewport). Ensaio das migrations em staging, CI e publicação pendentes.
+- PR #74: CI `36448955756` (validação e auditoria) e scan `36448955662` aprovados. O utilizador dispensou a branch de staging paga e pediu ensaio transaccional na base de produção com `ROLLBACK`; as quatro funções foram criadas nesse ensaio sem erro e os hashes anteriores foram reconfirmados após a reversão. A revisão corrigiu ainda o alerta quando a taxa está oculta por permissões. Antes da aplicação definitiva, a base tinha 426 movimentos normais sem taxa e 284 movimentos de avença sem taxa. Backup físico de `2026-09-28 05:43:49 UTC` confirmado no painel; PITR inactivo e objectos de Storage fora desse backup. Dry-run Wrangler aprovado. Publicação pendente.
+
+## 28-09-2026 — versão 0.12.10 publicada e verificada
+
+- PR #73 integrado em GitHub `main` no commit `5317f0ca4f66be9198195aa37010c196f9a4d22c`; CI `36439939704` e scan de segredos verdes. Segurança de ficheiros, lint, tipos, 51 ficheiros/273 testes unitários, build, dry-run Cloudflare e E2E locais (146 aprovados, 1 omissão condicional) concluídos. Sem migration nesta publicação.
+- Worker `legal-carina` publicado por Wrangler em `https://legal-carina.dabranches.workers.dev`: deployment ID `c956d2a7-f77d-434f-a668-880e5b281af6`, Version ID `db8dded3-c4d6-4555-874d-02e641a17f50`, 100% do tráfego desde `2026-09-28T15:08:35Z`. `/release-notes.json` respondeu HTTP 200 com versão 0.12.10 em `2026-09-28 15:09:06 UTC`. Versão anterior para rollback: `b4c985a0-5ced-4da6-8c57-dd8b3849e006` (0.12.9).
+
 ## 28-09-2026 — 0.12.10 em preparação: Notas de Honorários com IVA zero
 
 - Código local na branch `codex/honorarium-zero-vat-copy-0.12.10`, sobre GitHub `main` `044eddbd4d894813ca11c2de2846f19e92d6adbf`. Produção confirmada directamente em 28-09-2026: versão 0.12.9, Worker `legal-carina`, `https://legal-carina.dabranches.workers.dev`, deployment ID `176a6950-e80e-46b1-8b07-276a130b1162`, Version ID `b4c985a0-5ced-4da6-8c57-dd8b3849e006`, 100% do tráfego desde `2026-09-26T07:57:50Z`.

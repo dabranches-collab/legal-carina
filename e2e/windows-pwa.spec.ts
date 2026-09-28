@@ -29,6 +29,20 @@ test('browser normal preserva o submenu de Clientes num refresh directo',async({
   await expect(page.getByRole('button',{name:'Tabela',exact:true})).toHaveAttribute('aria-pressed','true')
 })
 
+test('Visão Geral abre dashboards e Clientes abre directamente as listas',async({page})=>{
+  await page.goto('/?qa-iphone=1&view=overview')
+  const sidebar=page.getByRole('complementary',{name:'Navegação principal'})
+  await sidebar.getByRole('button',{name:'Visão Geral'}).click()
+  await sidebar.getByRole('list',{name:'Dashboards de clientes'}).getByRole('button',{name:'Particulares'}).click()
+  await expect(page).toHaveURL(/view=clients&clientType=individual$/)
+  await expect(page.getByRole('navigation',{name:'Localização'})).toContainText('Visão Geral')
+  await sidebar.getByRole('button',{name:'Clientes',exact:true}).click()
+  await sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'Empresas'}).click()
+  await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list$/)
+  await expect(page.getByRole('navigation',{name:'Localização'})).toContainText('Clientes')
+  await expect(sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'Empresas'})).toHaveAttribute('aria-current','page')
+})
+
 for (const viewport of windowsViewports) {
   test(`${viewport.name}: sidebar, versão e overflow`, async ({ page }) => {
     await page.setViewportSize(viewport)
