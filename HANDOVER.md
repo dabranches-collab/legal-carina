@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 28-09-2026 — 0.12.12 em preparação: listagens de clientes
+
+- Checkout oficial `C:\Projetos\legal-carina`, branch `codex/client-list-columns-0.12.12` criada sobre GitHub `main` `a2875e40f321b9f83f9deb81dba280b4f32b6f95`. Produção permanece na versão 0.12.11, Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% desde `2026-09-28T17:21:13Z`; `/release-notes.json` confirmou 0.12.11 em `2026-09-28`.
+- As listas de Particulares e Empresas passam a apresentar angariador, sociedade do cliente, NIF, email, telefone, morada e estado, com nomes mais largos e indicação de deslocação horizontal. Os dados são lidos das fichas existentes, sem alterações à base, permissões ou migrations. As novas colunas suportam pesquisa, filtros, ordenação e exportação; os botões de ficha, nota e cobrança ficam reunidos numa só coluna.
+- Segurança de ficheiros, lint, tipos, 52 ficheiros/276 testes e build aprovados. Listas reais carregadas no browser local com os totais de 134 Particulares e 66 Empresas; 15 cenários E2E dirigidos passaram, incluindo desktop em claro/escuro, iPhone/PWA e as acções de ficha, nota e cobrança. Lote preservado no GitHub pela branch `codex/client-list-columns-0.12.12`, commit `28dbbd4`, PR #78 em rascunho; não há ordem de publicação para 0.12.12.
+
 ## 28-09-2026 — versão 0.12.11 publicada e verificada
 
 - O código funcional publicado foi integrado pelos PR #74 e #75; o registo de publicação foi integrado pelo PR #76. Esta actualização documental não altera o artefacto publicado.

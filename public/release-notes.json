@@ -1,12 +1,17 @@
 {
-  "version": "0.12.11",
+  "version": "0.12.12",
   "changes": [
-    "Os dashboards de Particulares e Empresas aparecem em Visão Geral; em Clientes, os mesmos submenus e as caixas de resumo abrem directamente as listas.",
-    "O resumo de Clientes apresenta Particulares, Empresas, Avenças e Provisões numa grelha 2×2.",
-    "Os alertas de movimentos sem preço excluem avenças e trabalhos de preço fixo.",
-    "Os movimentos recentes sem valor definido mostram (POR DEFINIR) quando o utilizador tem acesso aos valores."
+    "As listas de Particulares e Empresas mostram angariador, sociedade do cliente, NIF, contactos, morada e estado, além dos campos existentes.",
+    "As novas colunas podem ser pesquisadas, filtradas, ordenadas e incluídas na exportação da tabela."
   ],
   "releases": [
+    {
+      "version": "0.12.12",
+      "changes": [
+        "As listas de Particulares e Empresas mostram angariador, sociedade do cliente, NIF, contactos, morada e estado, além dos campos existentes.",
+        "As novas colunas podem ser pesquisadas, filtradas, ordenadas e incluídas na exportação da tabela."
+      ]
+    },
     {
       "version": "0.12.11",
       "changes": [
