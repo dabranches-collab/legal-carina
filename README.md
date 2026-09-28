@@ -8,9 +8,9 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Em preparação local: `0.12.10` na branch `codex/honorarium-zero-vat-copy-0.12.10`, com texto da Nota de Honorários ajustado para IVA zero. Ainda não publicada.
-- Versão publicada: `0.12.9`, conforme a última confirmação registada em `HANDOVER.md`.
-- Fonte canónica no GitHub: `main`; a versão publicada foi integrada pelo PR #70 e o registo de publicação consta de `HANDOVER.md`.
+- Em preparação local: `0.12.11` na branch `codex/overview-navigation-0.12.11`, com os submenus de dashboards e listas, alertas sem preço e rótulos dos movimentos recentes. Ainda não publicada.
+- Versão publicada: `0.12.10`, confirmada directamente em `HANDOVER.md`.
+- Fonte canónica no GitHub: `main`; a versão publicada foi integrada pelo PR #73 e o registo de publicação consta de `HANDOVER.md`.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
 - As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).
 

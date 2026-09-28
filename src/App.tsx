@@ -92,7 +92,7 @@ export function AuthenticatedApplication() {
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
   else if (view === 'debtors') content = <DebtorsPage />
   else if (view === 'notes') content = <NotesPage />
-  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'dashboard')} onRetainers={()=>navigate('retainers')}/>
+  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
   else if (view === 'provisions') content = <ProvisionsPage />
   else if (view === 'retainers') content = <RetainersPage />
   else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>

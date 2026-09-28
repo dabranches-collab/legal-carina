@@ -64,7 +64,10 @@ for (const { height, zoom, theme } of desktopProfiles) test(`menus desktop 1920�
     await expect(page.locator('main')).toBeVisible()
     await expect(page).toHaveURL(new RegExp(`view=${view.split('&')[0]}(?:&|$)`))
     await expect(page.getByText('A abrir ecrã')).toHaveCount(0)
-    if (name === 'clients') await expect(page.getByRole('heading', { name: 'Particulares', exact: true })).toBeVisible()
+    if (name === 'clients') {
+      for(const title of ['Particulares','Empresas','Avenças','Provisões'])await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible()
+      expect(await page.locator('.dashboard-landing > div.grid').evaluate(element=>getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(2)
+    }
     if (name === 'billing') await expect(page.getByRole('heading', { name: 'LEGALTEAM', exact: true })).toBeVisible()
     if (name === 'professionals') await expect(page.getByRole('heading', { name: 'Carina Santos', exact: true })).toBeVisible()
     if (name === 'admin-users') {

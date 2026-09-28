@@ -1,5 +1,15 @@
 # Estado do projecto
 
+## 28-09-2026 — 0.12.11 em preparação
+
+- Local: branch `codex/overview-navigation-0.12.11` sobre `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`. Navegação dos dashboards em Visão Geral e das listas em Clientes, resumo de Clientes em quatro caixas 2×2 incluindo Provisões, descrições dos indicadores, filtragem dos alertas sem preço e indicação `(POR DEFINIR)` em movimentos recentes preparados localmente.
+- Migrations `20260928141755` e `20260928153000` por aplicar; última migration remota confirmada `20260924185918`. Nenhum dado real ou ambiente remoto alterado neste lote. Segurança de ficheiros, lint, tipos, 51 ficheiros/275 testes e build aprovados; navegação e grelha 2×2 ensaiadas em 8 combinações de browser compilado. Ensaio das migrations em staging, CI e publicação pendentes.
+
+## 28-09-2026 — 0.12.10 em produção
+
+- GitHub `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`, PR #73, CI `36439939704` e scan de segredos verdes. Cloudflare `legal-carina` em `https://legal-carina.dabranches.workers.dev`, deployment ID `c956d2a7-f77d-434f-a668-880e5b281af6`, Version ID `db8dded3-c4d6-4555-874d-02e641a17f50`, 100% desde `2026-09-28T15:08:35Z`. `/release-notes.json` confirmou 0.12.10 com HTTP 200 em `2026-09-28 15:09:06 UTC`.
+- Notas de Honorários com IVA zero sem menção ao imposto em PDF e Word, nas três línguas. Segurança, lint, tipos, 51 ficheiros/273 testes, build, dry-run e 146 E2E locais aprovados com 1 omissão condicional. Sem migration ou alteração de dados.
+
 ## 28-09-2026 — 0.12.10 em preparação: Nota de Honorários sem menção a IVA quando é zero
 
 - Local: branch `codex/honorarium-zero-vat-copy-0.12.10` sobre `main` `044eddbd4d894813ca11c2de2846f19e92d6adbf`; PDF e Word omitem IVA/TVA/VAT quando a nota tem IVA zero, nas três línguas, sem alterar o cálculo. Segurança de ficheiros, lint, tipos, 51 ficheiros/273 testes unitários, build e dry-run Wrangler aprovados. Suite E2E no preview QA compilado: 146 aprovados e 1 omissão condicional, incluindo o anexo PDF. CI e publicação em curso.
