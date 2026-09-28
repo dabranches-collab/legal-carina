@@ -1,5 +1,15 @@
 # Reconciliação do histórico de migrations
 
+## 28-09-2026 — alertas sem preço e movimentos recentes (aplicadas)
+
+| Ficheiro local | Registo remoto da integração Supabase |
+| --- | --- |
+| `20260928141755_align_overview_missing_price_with_attention.sql` | `20260928165827` — nome `20260928141755_align_overview_missing_price_with_attention` |
+| `20260928153000_distinguish_unpriced_recent_movements.sql` | `20260928165929` — nome `distinguish_unpriced_recent_movements` |
+
+- As funções foram ensaiadas numa transacção com `ROLLBACK` na produção por instrução do utilizador, sem deixar alterações; depois, as duas migrations foram aplicadas isoladamente. A lista remota e as definições das quatro funções foram verificadas. Não executar `db push` global nem `migration repair` para alinhar os carimbos; preservar esta correspondência.
+- O alerta global passou de 710 para 426 movimentos sem preço, excluindo 284 de avença. No browser de produção, as caixas de Clientes apresentaram 131 em Particulares e 294 em Empresas; estas categorias não são uma partição exaustiva do total global. Auditoria de continuidade antes e depois: 5 utilizadores, 5 pertenças, 7 concessões, 6 permissões financeiras, 48/48 tabelas públicas com RLS e zero órfãos. Backup físico anterior `2026-09-28 05:43:49 UTC`; PITR inactivo, Storage fora do backup, sem alteração de objectos.
+
 ## 28-09-2026 — alertas sem preço e movimentos recentes (preparação)
 
 - `supabase migration list --linked` foi executado com o CLI temporário após checkout limpo; confirmou as divergências históricas documentadas e que `20260928141755` e `20260928153000` estão apenas no repositório. A integração confirmou que a última migration remota é `20260924185918_include_expenses_in_honorarium_totals`.
