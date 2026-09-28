@@ -25,7 +25,7 @@ export function formalDocumentAmounts(rows:Entry[],expenses:EntryExpense[],note:
 
 export function formalDocumentNarrative(language:DocumentLanguage,amounts:ReturnType<typeof formalDocumentAmounts>,note:ProvisionNote|null,money:(value:number)=>string){
  const copy=formalCopy[language]
- let intro=copy.intro(money(amounts.subtotal),moneyInWords(amounts.subtotal,language),money(amounts.vat),moneyInWords(amounts.vat,language),amounts.expenseTotal?money(amounts.expenseTotal):'',amounts.expenseTotal?moneyInWords(amounts.expenseTotal,language):'',money(amounts.total),moneyInWords(amounts.total,language))
+ let intro=copy.intro(money(amounts.subtotal),moneyInWords(amounts.subtotal,language),amounts.vat?money(amounts.vat):'',amounts.vat?moneyInWords(amounts.vat,language):'',amounts.expenseTotal?money(amounts.expenseTotal):'',amounts.expenseTotal?moneyInWords(amounts.expenseTotal,language):'',money(amounts.total),moneyInWords(amounts.total,language))
  if(note&&Number(note.deducted)>0){
   const paid=Number(note.deducted),remaining=Number(note.remaining)
   const external=Number(note.document_options?.fixed_fee_payment?.external??0)>0
@@ -37,7 +37,7 @@ export function formalDocumentNarrative(language:DocumentLanguage,amounts:Return
 export function formalDocumentTotalLine(language:DocumentLanguage,amounts:ReturnType<typeof formalDocumentAmounts>,money:(value:number)=>string){
  const tax=language==='en'?'VAT':language==='fr'?'TVA':'IVA'
  const expenses=amounts.expenseTotal?` + ${language==='en'?'Expenses':language==='fr'?'Frais':'Despesas'}`:''
- return `${formalCopy[language].total}: ${money(amounts.subtotal)} + ${tax}${expenses} = ${money(amounts.total)} (${moneyInWords(amounts.total,language)}).`
+ return `${formalCopy[language].total}: ${money(amounts.subtotal)}${amounts.vat?` + ${tax}`:''}${expenses} = ${money(amounts.total)} (${moneyInWords(amounts.total,language)}).`
 }
 
 export function formalDocumentExpenseHeading(language:DocumentLanguage,expensesIncluded:boolean){

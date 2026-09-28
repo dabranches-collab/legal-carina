@@ -28,6 +28,23 @@ async function wordXml(blob:Blob){
 }
 
 describe('createFormalDocumentDocx',()=>{
+ it.each(['pt','en','fr'] as const)('omite a referência ao imposto na nota com IVA zero em %s, PDF e Word',async(language)=>{
+  const presentation={...snapshot,language}
+  const expenses=[{id:'expense-zero',work_entry_id:rows[0].id,amount:25,currency:'EUR',observations:'Despesa de teste'}]
+  const zeroNote={...note,subtotal:100,vat:0,vat_rate:0,total:125,remaining:125,document_options:{expenses_included:true,expenses}}
+  const pdf=createFormalDocumentPdf(presentation,[rows[0]],expenses,zeroNote).output()
+  const word=await wordXml(await createFormalDocumentDocx(presentation,[rows[0]],expenses,zeroNote))
+  const tax=language==='pt'?'IVA':language==='en'?'VAT':'TVA'
+  for(const document of [pdf,word]){
+   expect(document).not.toContain(tax)
+   expect(document).toContain(language==='en'?'125.00':'125,00')
+  }
+  const withoutExpenses={...zeroNote,total:100,remaining:100,document_options:{expenses_included:true,expenses:[]}}
+  const plainPdf=createFormalDocumentPdf(presentation,[rows[0]],[],withoutExpenses).output()
+  const plainWord=await wordXml(await createFormalDocumentDocx(presentation,[rows[0]],[],withoutExpenses))
+  expect(plainPdf).not.toContain(tax)
+  expect(plainWord).not.toContain(tax)
+ })
  it.each([
   ['pt','SOCIEDADE A QA',false],['en','SOCIEDADE B QA',false],['fr','SOCIEDADE C QA',false],
   ['pt','SOCIEDADE A QA',true],['en','SOCIEDADE B QA',true],['fr','SOCIEDADE C QA',true],
