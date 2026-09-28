@@ -1,5 +1,12 @@
 # Legal Carina — handover
 
+## 28-09-2026 — versão 0.12.11 publicada e verificada
+
+- Este registo documental está em preparação na branch `codex/deployment-record-0.12.11`, criada sobre o `main` funcional abaixo; não altera o artefacto publicado.
+- GitHub `main` `f55e83163c1564a76c1e0b9a0020652cb01ba042`: PR #74 (`fbb6a72`) e PR #75 (`f55e831`) integrados. CI `36453681944` e `36456525090`, auditorias de dependências e scans `36453682075`/`36456525142` aprovados. Segurança de ficheiros, lint, tipos, 52 ficheiros/276 testes, build e dry-run Cloudflare aprovados; E2E da CI verde.
+- Supabase: as migrations locais `20260928141755_align_overview_missing_price_with_attention.sql` e `20260928153000_distinguish_unpriced_recent_movements.sql` foram aplicadas isoladamente. A integração registou os carimbos remotos `20260928165827` (nome remoto `20260928141755_align_overview_missing_price_with_attention`) e `20260928165929` (nome remoto `distinguish_unpriced_recent_movements`). Quatro funções de leitura confirmadas, executáveis por `authenticated` e não por `anon`; advisors sem findings críticos novos. A auditoria de continuidade permaneceu em 5 utilizadores/5 pertenças, 7 concessões, 6 permissões financeiras, 48/48 tabelas públicas com RLS e zero órfãos. Nenhum registo de cliente ou objecto de Storage alterado.
+- Worker `legal-carina` em `https://legal-carina.dabranches.workers.dev`: deployment ID `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% do tráfego desde `2026-09-28T17:21:13Z`. `/release-notes.json` respondeu HTTP 200 com 0.12.11 em `2026-09-28 17:23:39 UTC`. No browser de produção foram confirmados o alerta global de 426 movimentos sem preço (78/303/45 por sociedade), quatro resumos de Clientes, a contagem empresarial sem avenças (294) e um movimento recente com `(POR DEFINIR)`. Versão anterior para rollback do Worker: `db8dded3-c4d6-4555-874d-02e641a17f50` (0.12.10). Backup físico anterior à alteração: `2026-09-28 05:43:49 UTC`; PITR inactivo e ficheiros de Storage fora desse backup.
+
 ## 28-09-2026 — 0.12.11 em preparação: dashboards, listas e alertas
 
 - Código local na branch `codex/overview-navigation-0.12.11`, sobre GitHub `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`. Produção permanece na 0.12.10; este lote não foi publicado.

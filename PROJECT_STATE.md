@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 28-09-2026 — 0.12.11 em produção
+
+- GitHub `main` `f55e83163c1564a76c1e0b9a0020652cb01ba042`, PR #74 e #75 integrados; CI, scans e auditorias verdes. Cloudflare `legal-carina` em `https://legal-carina.dabranches.workers.dev`, deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% desde `2026-09-28T17:21:13Z`; HTTP 200/0.12.11 às `17:23:39 UTC`.
+- Migrations aplicadas com carimbos remotos `20260928165827` e `20260928165929`; correspondências locais em `docs/database/migration-reconciliation.md`. Auditoria de continuidade antes/depois sem diferenças e sem órfãos. Visão Geral, dashboards, quatro resumos de Clientes e rótulo `(POR DEFINIR)` confirmados no browser de produção. Segurança, lint, tipos, 52 ficheiros/276 testes, build, dry-run e E2E de CI aprovados. Backup físico de `2026-09-28 05:43:49 UTC`; PITR inactivo e Storage não incluído.
+
 ## 28-09-2026 — 0.12.11 em preparação
 
 - Local: branch `codex/overview-navigation-0.12.11` sobre `main` `5317f0ca4f66be9198195aa37010c196f9a4d22c`. Navegação dos dashboards em Visão Geral e das listas em Clientes, resumo de Clientes em quatro caixas 2×2 incluindo Provisões, descrições dos indicadores, filtragem dos alertas sem preço e indicação `(POR DEFINIR)` em movimentos recentes preparados localmente.
