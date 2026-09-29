@@ -23,7 +23,7 @@ if (import.meta.env.DEV || import.meta.env.VITE_APP_ENV === 'test') {
   }
 }
 
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+if ('serviceWorker' in navigator && import.meta.env.PROD && import.meta.env.VITE_APP_ENV !== 'test') {
   window.addEventListener('load', () => void navigator.serviceWorker.register('/sw.js'))
 } else if ('serviceWorker' in navigator) {
   void navigator.serviceWorker.getRegistrations().then(registrations => Promise.all(registrations.map(registration => registration.unregister())))

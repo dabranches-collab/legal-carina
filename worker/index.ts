@@ -4,7 +4,7 @@ const securityHeaders:Record<string,string>={
   'Content-Security-Policy':"default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://vtvvqyebigflgqccbqsw.supabase.co wss://vtvvqyebigflgqccbqsw.supabase.co; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests",
   'Cross-Origin-Opener-Policy':'same-origin',
   'Cross-Origin-Resource-Policy':'same-origin',
-  'Permissions-Policy':'camera=(), geolocation=(), microphone=(), payment=(), usb=()',
+  'Permissions-Policy':'camera=(self), geolocation=(), microphone=(), payment=(), usb=()',
   'Referrer-Policy':'strict-origin-when-cross-origin',
   'Strict-Transport-Security':'max-age=31536000; includeSubDomains',
   'X-Content-Type-Options':'nosniff',

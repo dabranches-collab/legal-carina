@@ -1,10 +1,17 @@
 {
-  "version": "0.12.12",
+  "version": "0.13.0",
   "changes": [
-    "As listas de Particulares e Empresas mostram angariador, sociedade do cliente, NIF, contactos, morada e estado, além dos campos existentes.",
-    "As novas colunas podem ser pesquisadas, filtradas, ordenadas e incluídas na exportação da tabela."
+    "O botão Nova despesa na barra superior permite escolher um cliente e associar a despesa a um registo existente ou criar um registo novo com os dados essenciais.",
+    "É possível juntar um comprovativo pela câmara ou escolher ficheiros do telefone. No iPhone, os três atalhos principais aparecem lado a lado numa linha própria."
   ],
   "releases": [
+    {
+      "version": "0.13.0",
+      "changes": [
+        "O botão Nova despesa na barra superior permite escolher um cliente e associar a despesa a um registo existente ou criar um registo novo com os dados essenciais.",
+        "É possível juntar um comprovativo pela câmara ou escolher ficheiros do telefone. No iPhone, os três atalhos principais aparecem lado a lado numa linha própria."
+      ]
+    },
     {
       "version": "0.12.12",
       "changes": [

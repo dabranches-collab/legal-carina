@@ -31,8 +31,8 @@ for (const [name,width,height,safeTop] of models) {
     const createShortcut=page.getByRole('button',{name:'Criar novo registo'})
     await expect(createShortcut).toBeVisible()
     const createShortcutBox=await createShortcut.boundingBox()
-    expect(createShortcutBox?.width).toBeGreaterThanOrEqual(75)
-    expect(createShortcutBox?.height).toBeGreaterThanOrEqual(75)
+    expect(createShortcutBox?.width).toBeGreaterThanOrEqual(44)
+    expect(createShortcutBox?.height).toBeGreaterThanOrEqual(44)
     const metrics = await page.evaluate(() => {
       const header=document.querySelector<HTMLElement>('header')!
       const title=document.querySelector<HTMLElement>('header nav[aria-label="Localização"]')!
@@ -122,14 +122,14 @@ test('rotação, tema escuro, texto ampliado e teclado não criam overflow horiz
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).not.toBe('rgb(246, 245, 241)')
 })
 
-test('atalhos de registo e cliente ficam lado a lado e abrem as fichas a partir de qualquer página',async({page})=>{
+test('atalhos de registo, cliente e despesa ficam lado a lado e abrem as fichas a partir de qualquer página',async({page})=>{
  for(const width of [320,390,768,1440])for(const theme of ['light','dark']){
   await page.setViewportSize({width,height:900})
   await page.goto(`/?qa-iphone=1&qa-demo=1&qa-allocation=1&safe-top=47&safe-bottom=34&theme=${theme}&view=billing&society=LEGALTEAM`)
-  const work=page.getByRole('button',{name:'Criar novo registo'}),client=page.getByRole('button',{name:'Criar novo cliente'})
-  const left=await work.boundingBox(),right=await client.boundingBox()
-  expect(left&&right&&left.x+left.width<=right.x&&left.y===right.y).toBeTruthy()
-  expect(right?.width).toBe(80)
+  const work=page.getByRole('button',{name:'Criar novo registo'}),client=page.getByRole('button',{name:'Criar novo cliente'}),expense=page.getByRole('button',{name:'Criar nova despesa'})
+  const [left,middle,right]=await Promise.all([work.boundingBox(),client.boundingBox(),expense.boundingBox()])
+  expect(left&&middle&&right&&left.x+left.width<=middle.x&&middle.x+middle.width<=right.x&&left.y===middle.y&&middle.y===right.y).toBeTruthy()
+  expect([left,middle,right].every(box=>box&&box.width>=44&&box.height>=44)).toBe(true)
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await page.screenshot({path:`.tmp/client-shortcut-${width}-${theme}.png`})
   await client.click()

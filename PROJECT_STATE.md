@@ -1,5 +1,16 @@
 # Estado do projecto
 
+## 29-09-2026 — 0.13.0 local: câmara da despesa
+
+- O atalho «Nova despesa» no commit funcional `5933b889bd2b2cfcb33b08e5405cecbb36d74cb7` da branch `codex/quick-expense-0.13.0` abre agora a câmara por botão e mostra a captura dentro do formulário; «Escolher a partir de ficheiro» usa o selector normal, incluindo a Fototeca quando o iOS a apresentar. O ficheiro captado é JPEG e passa pelo fluxo de anexos existente. Sem alterações remotas, migrations ou publicação.
+- Lint, tipos, build e quatro testes dirigidos aprovados. Falta verificar câmara/Fototeca num iPhone físico. A pré-visualização sintética foi recompilada e mantida em `127.0.0.1:4178`, mas os cliques deixaram de produzir acções na sessão do browser integrado após o reload; a validação visual final está pendente.
+
+## 29-09-2026 — 0.13.0 local em preparação: atalho de despesas
+
+- Checkout `C:\Projetos\legal-carina`, branch `codex/quick-expense-0.13.0`, commit funcional `570328a9527eebab963dfc5aa761641e1bee9941` confirmado no GitHub; `main` `48bf021570fb3134f07f5fc639c0e32dc079122d` (CONFIRMADO por `ls-remote`). Produção mostrou directamente 0.12.12 no browser integrado em `2026-09-29 10:43 UTC`, em `https://legal-carina.dabranches.workers.dev` (CONFIRMADO); deployment ID, Version ID e commit exacto servido não foram novamente comprovados. Não houve publicação.
+- O cabeçalho apresenta «Nova despesa» junto dos atalhos de registo e cliente. No iPhone, os três ocupam uma linha própria. O fluxo escolhe cliente e registo existente ou cria um registo com data, responsável, actividade, duração, sociedade e angariador quando exigido; pede montante, observações e permite usar a câmara ou escolher ficheiros do telefone. Usa as RPC e a Edge Function de anexos existentes, sem migration.
+- Preview sintético aberto no browser integrado em `http://127.0.0.1:4178/?qa-iphone=1&qa-demo=1&view=overview`, a 390 × 844, com gravação desactivada. Este build local de teste não consulta dados de clientes reais. Segurança de ficheiros, lint, tipos, build de produção e build QA aprovados; 2 testes dirigidos do atalho e 12 testes da interface principal passaram. A suite completa foi interrompida após ficar sem progresso visível; será repetida antes de publicar. Barra e formulário inspeccionados no iPhone em claro e escuro.
+
 ## 28-09-2026 — 0.12.12 local em preparação
 
 - Branch `codex/client-list-columns-0.12.12`, commit funcional `28dbbd4` no PR #78 em rascunho, sobre GitHub `main` `a2875e40f321b9f83f9deb81dba280b4f32b6f95`. Listas de Particulares e Empresas com angariador, sociedade, NIF, contactos, morada e estado; 0.12.11 continua em produção no deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc` / Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6` desde `2026-09-28T17:21:13Z`.
