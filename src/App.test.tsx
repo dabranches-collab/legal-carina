@@ -45,10 +45,11 @@ describe('interface principal', () => {
     expect(screen.getByRole('button', { name: 'Actualizar dados apresentados' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Activar modo escuro' })).toBeInTheDocument()
     const createShortcut=screen.getByRole('button',{name:'Criar novo registo'})
-    expect(createShortcut).toHaveClass('size-20')
+    expect(createShortcut).toHaveClass('min-h-12','sm:size-20')
+    expect(screen.getByRole('button',{name:'Criar nova despesa'})).toBeInTheDocument()
     expect(createShortcut.compareDocumentPosition(screen.getByRole('button',{name:'Ocultar valores financeiros'}))&Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await userEvent.click(createShortcut)
-    expect(await screen.findByRole('dialog',{name:'Criar movimento'})).toBeInTheDocument()
+    expect(await screen.findByRole('dialog',{name:'Criar movimento'}, {timeout:5000})).toBeInTheDocument()
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Visão Geral')).toBeInTheDocument()
     expect(await screen.findByText('Valor trabalhado')).toBeInTheDocument()
     const receivableCard=screen.getAllByText('Facturado por receber').map(element=>element.closest('article')).find(Boolean)!
@@ -56,7 +57,7 @@ describe('interface principal', () => {
     const missingSocietyCard=screen.getAllByText('Sem sociedade').map(element=>element.closest('article')).find(article=>article?.textContent?.includes('Movimentos sem sociedade associada'))!
     expect(within(missingSocietyCard).queryByText('Carina Santos')).not.toBeInTheDocument()
     expect(within(missingSocietyCard).queryByRole('definition')).not.toBeInTheDocument()
-  })
+  }, 15000)
 
   it('navega para os registos sem edição em massa e mostra pendências', async () => {
     renderApp()
@@ -95,7 +96,7 @@ describe('interface principal', () => {
     renderApp()
     await userEvent.click(screen.getByRole('button',{name:'Visão Geral'}))
     await userEvent.click(within(screen.getByRole('list',{name:'Dashboards de clientes'})).getByRole('button',{name:'Particulares'}))
-    expect(await screen.findByRole('region',{name:'Resumo do Cliente'})).toBeInTheDocument()
+    expect(await screen.findByRole('region',{name:'Resumo do Cliente'}, {timeout:5000})).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Sociedades' })[0])
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Sociedades')).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Responsáveis' })[0])

@@ -12,7 +12,7 @@ const demoRpc:Record<string,unknown>={
  get_uncollectible_work_entries:{items:[],total:0,page:1,pageSize:100,professionals:[],billingEntities:[]},
  get_work_attention_counts:{missing_society:0,missing_price:0,uninvoiced:0,unpaid:0,uncollectible:0,retainer:0},
  get_work_attention_summaries:{},get_receivable_client_summary:[],
- get_work_entry_form_options:{societies:[],clientProfiles:[],responsibles:[],processes:[]},
+ get_work_entry_form_options:{societies:[],clientProfiles:[{id:'qa-profile',client_id:'qa-client',client_type:'individual',client_code:'02-QA',display_name:'Cliente de demonstração'}],responsibles:[{id:'qa-professional',display_name:'Responsável de demonstração'}],processes:[]},
  get_client_category_summaries:[],get_retainer_management:[],get_professional_landing_summaries:[],get_dashboard_metric_breakdowns:[],get_client_document_action_flags:[],
 }
 
@@ -25,11 +25,12 @@ export function installQaDemoFetch(){
  const configuredOrigin=import.meta.env.VITE_SUPABASE_URL?new URL(import.meta.env.VITE_SUPABASE_URL).origin:null
  window.fetch=async(input,init)=>{
   const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,window.location.href)
-  if((url.origin!==configuredOrigin&&!url.hostname.endsWith('.supabase.co'))||!url.pathname.startsWith('/rest/v1/'))return nativeFetch(input,init)
-  const rpc=url.pathname.match(/\/rest\/v1\/rpc\/([^/]+)/)?.[1]
-  if(allocation){try{const args=typeof init?.body==='string'?JSON.parse(init.body):{};const headers=new Headers(init?.headers);return new Response(JSON.stringify(allocation(rpc,url.pathname.split('/').at(-1)??'',args,url,init?.method??'GET',headers.get('Accept')?.includes('vnd.pgrst.object')??false)),{status:200,headers:{'Content-Type':'application/json'}})}catch(cause){return new Response(JSON.stringify({message:cause instanceof Error?cause.message:'Operação inválida.'}),{status:400,headers:{'Content-Type':'application/json'}})}}
-  if(provisions){try{const args=typeof init?.body==='string'?JSON.parse(init.body):{};return new Response(JSON.stringify(provisions(rpc,url.pathname.split('/').at(-1)??'',args)),{status:200,headers:{'Content-Type':'application/json'}})}catch(cause){return new Response(JSON.stringify({message:cause instanceof Error?cause.message:'Operação inválida.'}),{status:400,headers:{'Content-Type':'application/json'}})}}
-  const payload=rpc?(demoRpc[rpc]??[]):[]
+  const path=url.origin===window.location.origin?url.pathname.replace(/^\/supabase-api/,''):url.pathname
+  if((url.origin!==configuredOrigin&&!url.hostname.endsWith('.supabase.co')&&url.origin!==window.location.origin)||!path.startsWith('/rest/v1/'))return nativeFetch(input,init)
+  const rpc=path.match(/\/rest\/v1\/rpc\/([^/]+)/)?.[1]
+  if(allocation){try{const args=typeof init?.body==='string'?JSON.parse(init.body):{};const headers=new Headers(init?.headers);return new Response(JSON.stringify(allocation(rpc,path.split('/').at(-1)??'',args,url,init?.method??'GET',headers.get('Accept')?.includes('vnd.pgrst.object')??false)),{status:200,headers:{'Content-Type':'application/json'}})}catch(cause){return new Response(JSON.stringify({message:cause instanceof Error?cause.message:'Operação inválida.'}),{status:400,headers:{'Content-Type':'application/json'}})}}
+  if(provisions){try{const args=typeof init?.body==='string'?JSON.parse(init.body):{};return new Response(JSON.stringify(provisions(rpc,path.split('/').at(-1)??'',args)),{status:200,headers:{'Content-Type':'application/json'}})}catch(cause){return new Response(JSON.stringify({message:cause instanceof Error?cause.message:'Operação inválida.'}),{status:400,headers:{'Content-Type':'application/json'}})}}
+  const payload=rpc?(demoRpc[rpc]??[]):path.endsWith('/work_entries')?[{id:'qa-entry',work_date:'2026-09-29',activity_description:'Deslocação de demonstração'}]:[]
   return new Response(JSON.stringify(payload),{status:200,headers:{'Content-Type':'application/json','Content-Range':'0-0/0'}})
  }
 }

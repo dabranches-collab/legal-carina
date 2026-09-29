@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 29-09-2026 — 0.13.0 em preparação: Nova despesa
+
+- Base GitHub `main` `48bf021570fb3134f07f5fc639c0e32dc079122d`, checkout oficial `C:\Projetos\legal-carina`, branch `codex/quick-expense-0.13.0` (CONFIRMADO). Produção em `https://legal-carina.dabranches.workers.dev` mostrou 0.12.12 no browser integrado em `2026-09-29 10:43 UTC` (CONFIRMADO). Deployment ID, Version ID e commit exacto da produção actual: NÃO COMPROVADO nesta sessão. Sem ordem «publica», a 0.13.0 permanece local/GitHub, sem deploy.
+- Novo botão na barra superior, visível com «Novo registo» e «Novo cliente» em linha própria no iPhone. Fluxo rápido: escolher cliente/vertente, escolher um dos 100 registos mais recentes ou criar registo novo, introduzir despesa e juntar fotografia da câmara ou ficheiros do telefone. Novo registo usa a sociedade predefinida do cliente e pede angariador para LEGALTEAM; segue as regras de preço normais. Os anexos passam pela validação e Edge Function existentes. Sem alterações de esquema, RLS ou migrations.
+- Preview local sintético em `http://127.0.0.1:4178/?qa-iphone=1&qa-demo=1&view=overview`; gravação desactivada, sem dados reais. A tentativa inicial de usar o build de produção local mostrou erro de contacto com Auth; o modo QA da aplicação resolveu a demonstração visual. Segurança de ficheiros, lint, tipos, build de produção e QA passaram; 2 testes dirigidos do atalho e 12 testes da interface principal passaram. Suite integral interrompida depois de não produzir progresso; repetir antes de publicar. Inspecção visual do iPhone em claro/escuro concluída, mas o dispositivo real, tablet, desktop e safe areas adicionais continuam por ensaiar.
+
 ## 28-09-2026 — 0.12.12 em preparação: listagens de clientes
 
 - Checkout oficial `C:\Projetos\legal-carina`, branch `codex/client-list-columns-0.12.12` criada sobre GitHub `main` `a2875e40f321b9f83f9deb81dba280b4f32b6f95`. Produção permanece na versão 0.12.11, Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, deployment `756a758a-10c2-4a63-8bf5-6835e11f31fc`, Version ID `d7e3032e-9378-4aaa-8453-ef7cc4e0abd6`, 100% desde `2026-09-28T17:21:13Z`; `/release-notes.json` confirmou 0.12.11 em `2026-09-28`.
