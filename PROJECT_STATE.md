@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 29-09-2026 — 0.13.0 em produção
+
+- GitHub `main` `69546655dcf38720c26e99d0fc83426128beaf63` (PR #79, CI `36564781739` e secret scan `36564781785` verdes). O registo documental segue na branch `codex/deployment-record-0.13.0`; checkout oficial `C:\Projetos\legal-carina`. Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, deployment `f0a1adbe-4c36-4911-b3d5-fa5cb22e8506`, Version ID `ea7bc7a9-ec75-4686-82dd-1cece93e793f`, 100% desde `2026-09-29T12:07:57Z`. Notas online HTTP 200/0.13.0 em `12:08:22 UTC`; cabeçalho `camera=(self)`. Rollback frontend: Version ID `b2ae645d-1b53-4046-8e98-a28802273a9a` (0.12.12).
+- Nova despesa visível junto de Novo registo e Novo cliente; fluxo rápido de cliente, registo, montante e comprovativo, com captura directa pela câmara e selecção de ficheiro. Novo registo respeita avenças activas e sociedade escolhida. Segurança, lint, tipos, 55 ficheiros/283 testes unitários, runtime, E2E, build e dry-run aprovados. A versão online abriu no browser integrado com os três botões. Sem migration ou escrita remota de dados; captura e Fototeca num iPhone físico ainda não verificadas.
+
 ## 29-09-2026 — 0.13.0 local: câmara da despesa
 
 - O atalho «Nova despesa» no commit funcional `5933b889bd2b2cfcb33b08e5405cecbb36d74cb7` da branch `codex/quick-expense-0.13.0` abre agora a câmara por botão e mostra a captura dentro do formulário; «Escolher a partir de ficheiro» usa o selector normal, incluindo a Fototeca quando o iOS a apresentar. O ficheiro captado é JPEG e passa pelo fluxo de anexos existente. Sem alterações remotas, migrations ou publicação.
