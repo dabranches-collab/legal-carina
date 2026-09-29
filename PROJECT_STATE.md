@@ -1,5 +1,10 @@
 # Estado do projecto
 
+## 29-09-2026 — 0.13.0 local: câmara da despesa
+
+- O atalho «Nova despesa» abre agora a câmara por botão e mostra a captura dentro do formulário; «Escolher a partir de ficheiro» usa o selector normal, incluindo a Fototeca quando o iOS a apresentar. O ficheiro captado é JPEG e passa pelo fluxo de anexos existente. Sem alterações remotas, migrations ou publicação.
+- Lint, tipos, build e quatro testes dirigidos aprovados. Falta verificar câmara/Fototeca num iPhone físico. A pré-visualização sintética foi recompilada e mantida em `127.0.0.1:4178`, mas os cliques deixaram de produzir acções na sessão do browser integrado após o reload; a validação visual final está pendente.
+
 ## 29-09-2026 — 0.13.0 local em preparação: atalho de despesas
 
 - Checkout `C:\Projetos\legal-carina`, branch `codex/quick-expense-0.13.0`, commit funcional `570328a9527eebab963dfc5aa761641e1bee9941` confirmado no GitHub; `main` `48bf021570fb3134f07f5fc639c0e32dc079122d` (CONFIRMADO por `ls-remote`). Produção mostrou directamente 0.12.12 no browser integrado em `2026-09-29 10:43 UTC`, em `https://legal-carina.dabranches.workers.dev` (CONFIRMADO); deployment ID, Version ID e commit exacto servido não foram novamente comprovados. Não houve publicação.

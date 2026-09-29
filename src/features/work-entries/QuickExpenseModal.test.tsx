@@ -35,11 +35,11 @@ it('associa uma despesa e um comprovativo a um registo existente',async()=>{
  await user.selectOptions(await screen.findByLabelText('Registo deste cliente'),'entry-1')
  await user.type(screen.getByLabelText('Montante (€)'),'12.50')
  const document=new File(['test'],'comprovativo.pdf',{type:'application/pdf'})
- await user.upload(screen.getByLabelText(/Escolher do telefone/),document)
+ await user.upload(screen.getByLabelText(/Escolher a partir de ficheiro/),document)
  await user.click(screen.getByRole('button',{name:'Guardar despesa'}))
  await waitFor(()=>expect(onCreated).toHaveBeenCalledOnce())
  expect(rpc).toHaveBeenCalledWith('create_work_entry_expense',{p_work_entry_id:'entry-1',p_amount:12.5,p_observations:null})
- expect(uploadExpenseFiles).toHaveBeenCalledWith('expense-1',[document])
+ await waitFor(()=>expect(uploadExpenseFiles).toHaveBeenCalledWith('expense-1',[document]))
  expect(screen.getByText('Despesa guardada.')).toBeInTheDocument()
 })
 

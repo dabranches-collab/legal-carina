@@ -1,5 +1,10 @@
 # Legal Carina — handover
 
+## 29-09-2026 — 0.13.0: captura directa de comprovativos
+
+- Na branch `codex/quick-expense-0.13.0`, «Tirar fotografia» passa a pedir a câmara traseira por `getUserMedia`, mostrar pré-visualização e criar um JPEG ao capturar. Os fluxos de cancelar, fechar e desmontar libertam as pistas da câmara. «Escolher a partir de ficheiro» mantém o selector do iPhone para documentos e fotografias da Fototeca, conforme as opções apresentadas pelo iOS; os anexos aceites continuam limitados a PDF, JPEG, PNG, DOCX e XLSX.
+- Validação local: lint, tipos e build de produção aprovados; quatro testes dirigidos da despesa e da câmara passaram. A captura numa câmara real de iPhone e a escolha na Fototeca ainda carecem de ensaio no dispositivo. O preview sintético foi reconstruído em `http://127.0.0.1:4178/?qa-iphone=1&qa-demo=1&view=overview`, mas a sessão do browser integrado deixou de responder aos cliques após o reload; não declarar a inspecção visual desta correcção concluída. Não houve alteração de Supabase, migration ou deploy de produção.
+
 ## 29-09-2026 — 0.13.0 em preparação: Nova despesa
 
 - Base GitHub `main` `48bf021570fb3134f07f5fc639c0e32dc079122d`, checkout oficial `C:\Projetos\legal-carina`, branch `codex/quick-expense-0.13.0`, commit funcional `570328a9527eebab963dfc5aa761641e1bee9941` no GitHub (CONFIRMADO por `ls-remote`). Produção em `https://legal-carina.dabranches.workers.dev` mostrou 0.12.12 no browser integrado em `2026-09-29 10:43 UTC` (CONFIRMADO). Deployment ID, Version ID e commit exacto da produção actual: NÃO COMPROVADO nesta sessão. Sem ordem «publica», a 0.13.0 permanece local/GitHub, sem deploy.
