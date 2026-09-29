@@ -39,6 +39,8 @@ jobs:
           VITE_SUPABASE_PUBLISHABLE_KEY: test-publishable-key-not-a-secret
           VITE_APP_ENV: test
       - run: pnpm exec playwright test
+      - run: pnpm build
+      - run: pnpm exec playwright test e2e/pwa-production.spec.ts
         env:
           PWA_PRODUCTION_QA: '1'
 
