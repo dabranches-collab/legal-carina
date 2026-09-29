@@ -1,5 +1,11 @@
 # Deployment seguro
 
+## Produção confirmada em 2026-09-29
+
+- Plataforma: Cloudflare Workers Static Assets; serviço `legal-carina`; URL `https://legal-carina.dabranches.workers.dev`.
+- Versão 0.13.0: commit funcional `69546655dcf38720c26e99d0fc83426128beaf63` em GitHub `main` (PR #79; CI `36564781739` e secret scan `36564781785` verdes). Deployment `f0a1adbe-4c36-4911-b3d5-fa5cb22e8506`, Version ID `ea7bc7a9-ec75-4686-82dd-1cece93e793f`, 100% do tráfego desde `2026-09-29T12:07:57Z`; HTTP 200/0.13.0 em `12:08:22 UTC`. A política `camera=(self)` permite a captura na própria origem. Rollback do Worker: Version ID `b2ae645d-1b53-4046-8e98-a28802273a9a` (0.12.12).
+- Sem migration nesta versão. As últimas migrations remotas confirmadas continuam `20260928165827` e `20260928165929`. A UI publicada foi aberta no browser integrado; a captura e escolha da Fototeca dependem de ensaio num iPhone físico.
+
 ## Produção confirmada em 2026-09-28
 
 - Plataforma: Cloudflare Workers Static Assets; serviço `legal-carina`; URL `https://legal-carina.dabranches.workers.dev`.
