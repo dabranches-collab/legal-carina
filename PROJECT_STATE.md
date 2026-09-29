@@ -2,7 +2,7 @@
 
 ## 29-09-2026 — 0.13.0 local: câmara da despesa
 
-- O atalho «Nova despesa» abre agora a câmara por botão e mostra a captura dentro do formulário; «Escolher a partir de ficheiro» usa o selector normal, incluindo a Fototeca quando o iOS a apresentar. O ficheiro captado é JPEG e passa pelo fluxo de anexos existente. Sem alterações remotas, migrations ou publicação.
+- O atalho «Nova despesa» no commit funcional `5933b889bd2b2cfcb33b08e5405cecbb36d74cb7` da branch `codex/quick-expense-0.13.0` abre agora a câmara por botão e mostra a captura dentro do formulário; «Escolher a partir de ficheiro» usa o selector normal, incluindo a Fototeca quando o iOS a apresentar. O ficheiro captado é JPEG e passa pelo fluxo de anexos existente. Sem alterações remotas, migrations ou publicação.
 - Lint, tipos, build e quatro testes dirigidos aprovados. Falta verificar câmara/Fototeca num iPhone físico. A pré-visualização sintética foi recompilada e mantida em `127.0.0.1:4178`, mas os cliques deixaram de produzir acções na sessão do browser integrado após o reload; a validação visual final está pendente.
 
 ## 29-09-2026 — 0.13.0 local em preparação: atalho de despesas
