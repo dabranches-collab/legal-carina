@@ -1,5 +1,11 @@
 # Estado do projecto
 
+## 30-09-2026 — correcção operacional de numeração empresarial
+
+- Por instrução directa do utilizador, uma ficha já classificada como empresa recebeu a primeira lacuna livre da série empresarial. Operação DML atómica em Supabase, com bloqueio das tabelas de numeração, actualização da ficha e dos dois perfis e confirmação de que o código particular anterior ficou sem ocupantes. O perfil empresarial permanece activo; o perfil particular histórico permanece inactivo, sem registos associados, e já não reserva o código anterior.
+- CONFIRMADO: os 31 registos continuam associados à mesma ficha e ao perfil empresarial; a comparação integral dos registos dentro da transacção comprovou que não foram alterados. Consulta posterior confirmou código empresarial, perfil activo concordante e libertação do número anterior. Não houve migration, alteração de esquema, Auth, Storage ou publicação de código. Não se registam identificadores ou dados reais do cliente nesta documentação.
+- CONFIRMADO: GitHub main `7d16a74` antes do lote, checkout limpo em `C:\Projetos\legal-carina`; branch documental `codex/client-number-correction-20260930`. Produção respondeu 0.13.0 em `/release-notes.json` nesta sessão; deployment ID e Version ID não foram novamente consultados, mantendo-se como última prova os valores de 29-09-2026 acima. Supabase activo e últimas migrations `20260928165827` e `20260928165929` confirmadas directamente. Validação dirigida por SQL, sem alterações de aplicação que exijam build ou E2E.
+
 ## 29-09-2026 — 0.13.0 em produção
 
 - GitHub `main` `69546655dcf38720c26e99d0fc83426128beaf63` (PR #79, CI `36564781739` e secret scan `36564781785` verdes). O registo documental segue na branch `codex/deployment-record-0.13.0`; checkout oficial `C:\Projetos\legal-carina`. Worker `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`, deployment `f0a1adbe-4c36-4911-b3d5-fa5cb22e8506`, Version ID `ea7bc7a9-ec75-4686-82dd-1cece93e793f`, 100% desde `2026-09-29T12:07:57Z`. Notas online HTTP 200/0.13.0 em `12:08:22 UTC`; cabeçalho `camera=(self)`. Rollback frontend: Version ID `b2ae645d-1b53-4046-8e98-a28802273a9a` (0.12.12).
