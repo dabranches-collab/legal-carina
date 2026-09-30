@@ -1,10 +1,17 @@
 {
-  "version": "0.13.0",
+  "version": "0.13.1",
   "changes": [
-    "O botão Nova despesa na barra superior permite escolher um cliente e associar a despesa a um registo existente ou criar um registo novo com os dados essenciais.",
-    "É possível juntar um comprovativo pela câmara ou escolher ficheiros do telefone. No iPhone, os três atalhos principais aparecem lado a lado numa linha própria."
+    "Os novos registos herdam a sociedade e o valor/hora da ficha do cliente, incluindo no atalho Nova despesa, e permitem edição manual por registo.",
+    "As tabelas largas apresentam uma barra horizontal no fundo da área visível, sem exigir deslocação até à última linha."
   ],
   "releases": [
+    {
+      "version": "0.13.1",
+      "changes": [
+        "Os novos registos herdam a sociedade e o valor/hora da ficha do cliente, incluindo no atalho Nova despesa, e permitem edição manual por registo.",
+        "As tabelas largas apresentam uma barra horizontal no fundo da área visível, sem exigir deslocação até à última linha."
+      ]
+    },
     {
       "version": "0.13.0",
       "changes": [
