@@ -1,5 +1,11 @@
 # Legal Carina — handover
 
+## 30-09-2026 — versão 0.13.1 publicada e verificada
+
+- Por ordem explícita «publica», PR [#82](https://github.com/dabranches-collab/legal-carina/pull/82) integrado em GitHub `main` no commit funcional `98f73a0378ce426ffb370c5166f907f576827527`. Checkout oficial alinhado com esse commit, branch documental `codex/deployment-record-0.13.1`. CI `36749735234` e secret scan `36749735050` verdes: 55 ficheiros/283 testes unitários, runtime Worker, 152 E2E aprovados/uma omissão condicional e três testes PWA aprovados. Segurança de ficheiros, lint, tipos, suite unitária, runtime, build de produção, três testes PWA e dry-run final também aprovados localmente.
+- Worker Cloudflare `legal-carina`, URL `https://legal-carina.dabranches.workers.dev`: deployment ID `2fc58910-fca0-48b6-9e8b-db3f1e84f179`, Version ID `3cd368c4-83e4-4647-864a-630b8f6c0624`, 100% do tráfego desde `2026-09-30T17:26:17.077112Z` (CONFIRMADO por deployments status). `/release-notes.json` confirmou HTTP 200/0.13.1 em 30-09-2026; o browser integrado mostrou «Aplicação actualizada · 0.13.1» com as duas alterações. Rollback frontend: Version ID `ea7bc7a9-ec75-4686-82dd-1cece93e793f` (0.13.0).
+- Sociedade e valor/hora da ficha preenchem novos registos, incluindo no atalho Nova despesa, com edição manual por registo. Barra horizontal no fundo visível das tabelas largas, sincronizada e sem sobrepor a paginação. Antes da publicação, a auditoria exigiu os patches transitivos de undici `7.29.1` e `8.10.2`; auditoria final aprovada sem findings altos. Sem migration ou alteração de dados nesta publicação; Supabase manteve como últimas migrations confirmadas directamente `20260928165827` e `20260928165929`. O ensaio num iPhone físico permanece pendente.
+
 ## 30-09-2026 — 0.13.1 em preparação: predefinições e barra horizontal
 
 - Preparação da publicação autorizada em 30-09-2026: auditoria inicial da PR #82 bloqueou por advisories de undici. Overrides limitados aos patches `7.29.0 → 7.29.1` e `8.10.0 → 8.10.2`, sem alterações às dependências directas; lockfile regenerado e auditoria local sem vulnerabilidades altas (duas moderadas). CI e publicação serão confirmadas no registo final.
