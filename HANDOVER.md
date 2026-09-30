@@ -1348,3 +1348,10 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 - Diagnóstico adicional: a Administração mostrava `DIOGO ABRANCHES` a partir dos metadados da sessão, mas o selector de partilhas lia `dabranches` de `user_login_credentials`. O registo interno foi sincronizado com o perfil real e a verificação visual em produção confirmou «DIOGO ABRANCHES» nas partilhas, sem a etiqueta antiga.
 - Publicada em 2026-08-30 a partir do commit funcional `6fea593`: frontend Cloudflare Version ID `9988876c-ef87-4ae5-9a69-ac2f6609aa71`, bundle `index-CchSpcbr.js`, cache `carina-legal-shell-0.6.4`; Edge Function `admin-users` v9 activa com JWT obrigatório.
 - Teste funcional pós-publicação na sessão Administrador abriu `DIOGO ABRANCHES`, manteve o login `dabranches` desactivado e guardou o nome sem erro; a confirmação «Acesso de DIOGO ABRANCHES actualizado.» apareceu e o diálogo fechou.
+
+
+## 2026-09-30 — procedimento portátil de trabalho local
+
+Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
+
+Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.

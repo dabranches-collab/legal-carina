@@ -1236,3 +1236,10 @@ Actualizado em: 2026-08-17
 - Versão 0.6.4 preparada localmente: Administradores podem corrigir apenas o nome visível do Proprietário; login, perfil e estado permanecem protegidos. A interface passa a mostrar o erro funcional real das Edge Functions. Gates aprovados: segurança, lint, TypeScript, 115/115 testes e build; ainda não publicada.
 - O nome do Proprietário estava divergente entre os metadados Auth (`DIOGO ABRANCHES`) e `user_login_credentials` (`dabranches`). A cópia interna foi sincronizada em produção e o selector de partilhas já apresenta visualmente o nome correcto; a correcção de código 0.6.4 previne a recorrência após publicação.
 - Versão 0.6.4 publicada: Cloudflare Version ID `9988876c-ef87-4ae5-9a69-ac2f6609aa71`, bundle `index-CchSpcbr.js`, cache PWA 0.6.4 e `admin-users` v9. Teste real confirmou que um Administrador corrige o nome do Proprietário sem poder alterar o login e sem erro não-2xx genérico.
+
+
+## 2026-09-30 — procedimento portátil de trabalho local
+
+Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
+
+Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
