@@ -159,6 +159,10 @@ html[data-qa-theme="dark"], html[data-theme="dark"] {
   .work-filters-bar { position: static !important; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
+.visible-table-scrollbar:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+.visible-table-scroll-source { scrollbar-width: none; }
+.visible-table-scroll-source::-webkit-scrollbar { display: none; }
+@media print { .visible-table-scrollbar { display: none !important; } }
 @media print {
   @page { size: A4 portrait; margin: 12mm; }
   @page table-report { size: A4 landscape; margin: 8mm; }

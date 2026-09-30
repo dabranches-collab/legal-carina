@@ -49,17 +49,21 @@ it('associa uma despesa e um comprovativo a um registo existente',async()=>{
 
 it('cria um registo mínimo com a despesa na mesma operação',async()=>{
  const user=userEvent.setup(),onCreated=vi.fn()
+ clientDefault.mockResolvedValue({data:{primary_billing_entity_id:null,default_hourly_rate:125.5},error:null})
  rpc.mockImplementation(async (_name,args)=>({data:{workEntryId:'entry-2',expenses:[{key:args.p_expenses[0].key,id:'expense-2'}]},error:null}))
  render(<QuickExpenseModal onClose={vi.fn()} onCreated={onCreated}/> )
  await user.selectOptions(await screen.findByRole('combobox',{name:'Cliente e vertente'}),'profile-1')
  await user.click(screen.getByLabelText('Criar novo'))
+ await waitFor(()=>expect(screen.getByLabelText(/Valor\/hora/)).toHaveValue(125.5))
+ await user.clear(screen.getByLabelText(/Valor\/hora/))
+ await user.type(screen.getByLabelText(/Valor\/hora/),'80')
  await user.selectOptions(screen.getByLabelText('Responsável'),'resp-1')
  await user.type(screen.getByLabelText('Actividade'),'Deslocação')
  await user.type(screen.getByLabelText('Duração (minutos)'),'15')
  await user.type(screen.getByLabelText('Montante (€)'),'8')
  await user.click(screen.getByRole('button',{name:'Guardar despesa'}))
  await waitFor(()=>expect(onCreated).toHaveBeenCalledOnce())
- expect(rpc).toHaveBeenCalledWith('create_work_entry_with_allocation',expect.objectContaining({p_client_profile_id:'profile-1',p_professional_id:'resp-1',p_activity_description:'Deslocação',p_duration_minutes:15,p_expenses:[expect.objectContaining({amount:8})]}))
+ expect(rpc).toHaveBeenCalledWith('create_work_entry_with_allocation',expect.objectContaining({p_client_profile_id:'profile-1',p_professional_id:'resp-1',p_activity_description:'Deslocação',p_duration_minutes:15,p_hourly_rate:80,p_expenses:[expect.objectContaining({amount:8})]}))
 })
 
 it('marca o novo registo como coberto pela avença activa',async()=>{
@@ -80,13 +84,16 @@ it('marca o novo registo como coberto pela avença activa',async()=>{
 
 it('conserva a sociedade escolhida antes de chegar a predefinição do cliente',async()=>{
  const user=userEvent.setup()
- let resolveDefault!:(value:{data:{primary_billing_entity_id:string};error:null})=>void
+ let resolveDefault!:(value:{data:{primary_billing_entity_id:string;default_hourly_rate:number};error:null})=>void
  clientDefault.mockReturnValue(new Promise(resolve=>{resolveDefault=resolve}))
  getWorkEntryOptions.mockResolvedValue({data:{clientProfiles:[{id:'profile-1',client_id:'client-1',client_type:'individual',client_code:'02-01',display_name:'Cliente Sintético'}],responsibles:[{id:'resp-1',display_name:'Responsável Sintético'}],societies:[{id:'preferred',name:'Sociedade predefinida'},{id:'manual',name:'Sociedade escolhida'}],processes:[]},error:null})
  render(<QuickExpenseModal onClose={vi.fn()} onCreated={vi.fn()}/> )
  await user.selectOptions(await screen.findByRole('combobox',{name:'Cliente e vertente'}),'profile-1')
  await user.click(screen.getByLabelText('Criar novo'))
  await user.selectOptions(screen.getByLabelText('Sociedade'),'manual')
- await act(async()=>resolveDefault({data:{primary_billing_entity_id:'preferred'},error:null}))
+ await user.type(screen.getByLabelText(/Valor\/hora/),'90')
+ await user.clear(screen.getByLabelText(/Valor\/hora/))
+ await act(async()=>resolveDefault({data:{primary_billing_entity_id:'preferred',default_hourly_rate:125},error:null}))
  expect(screen.getByLabelText('Sociedade')).toHaveValue('manual')
+ expect(screen.getByLabelText(/Valor\/hora/)).toHaveValue(null)
 })
