@@ -31,3 +31,14 @@ Estas regras aplicam-se a qualquer pessoa ou agente que trabalhe na Carina - Leg
 - Nunca deixar produção à frente do GitHub.
 
 Consultar ainda `docs/NEW_COMPUTER_PROTOCOL.md`, `docs/VERSIONING.md`, `docs/deployment.md` e `docs/database/migration-reconciliation.md`.
+
+
+## Trabalho local portátil e OneDrive
+
+Para localização do trabalho e continuidade entre computadores, aplicar [LOCAL_WORKFLOW.md](LOCAL_WORKFLOW.md), incluindo quando instruções anteriores indicam uma pasta específica de outro computador. Preservar as restantes regras deste repositório.
+
+- Procurar primeiro em `C:\Dev`, incluindo nomes aproximados e subpastas; confirmar por conteúdo e remoto Git e reutilizar a cópia identificada, preservando dirty/staged/untracked.
+- Manter código, `.git`/worktrees, `node_modules`, builds, temp, caches, logs e outputs fisicamente locais; verificar caminhos resolvidos, junctions e variáveis/cache antes dos comandos.
+- OneDrive é consulta apenas; escrita só no ficheiro concretamente indicado pelo utilizador. Não hidratar/copiar `.git` recursivamente do OneDrive; preferir clone GitHub e reportar diferenças pendentes.
+- A aplicação publicada e os dados devem ser independentes do computador e das cópias locais. Não autoriza deploy, migrations, custos ou alterações de segurança.
+- Sincronizar Git preservando trabalho existente, confirmar HEAD remoto após push autorizado e documentar branch/commit/PR/testes/pendências para outro PC. Uma PR draft não equivale à regra na branch principal.
