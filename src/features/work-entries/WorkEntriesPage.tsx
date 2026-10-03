@@ -265,6 +265,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     const timer = setTimeout(() => setQuery(search.trim()), 300);
     return () => clearTimeout(timer);
   }, [search]);
+  const hasEmptyPrefilter = [year,professional,billing,invoiced,paid,archive].includes("__NONE__");
   const searchArgs = useMemo(
     () => ({
       p_search: query || null,
@@ -312,6 +313,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
   );
   useEffect(() => {
     let active = true;
+    if(hasEmptyPrefilter){setRows([]);setMeta(current=>({...current,items:[],total:0}));setLoading(false);setError("");return;}
     const silent=silentRefreshRef.current;
     silentRefreshRef.current=false;
     if(!silent)setLoading(true);
@@ -361,8 +363,9 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     return () => {
       active = false;
     };
-  }, [searchArgs, refreshToken, clientType, reviewIssue, uncollectibleOnly]);
+  }, [searchArgs, refreshToken, clientType, reviewIssue, uncollectibleOnly, hasEmptyPrefilter]);
   useEffect(()=>{
+    if(hasEmptyPrefilter){setReviewCounts({});return;}
     if(embeddedQuery!==undefined)return;
     let active=true;
     void(async()=>{
@@ -378,8 +381,9 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       attentionCountsCache.set(cacheKey,normalized);setReviewCounts(normalized);
     })();
     return()=>{active=false};
-  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
+  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery,hasEmptyPrefilter]);
   useEffect(()=>{
+    if(hasEmptyPrefilter){setReviewSummaries({});return;}
     if(embeddedQuery!==undefined||!supabase)return;
     let active=true;
     const common={p_search:query||null,p_year:year?Number(year):null,p_professional_id:professional||null,p_billing_entity_id:billing||null,p_archive:archive||null,p_client_type:clientType||null,p_client_id:clientId||null};
@@ -402,7 +406,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       attentionSummariesCache.set(key,merged);setReviewSummaries(merged);
     }).catch(()=>undefined);
     return()=>{active=false};
-  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery]);
+  },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery,hasEmptyPrefilter]);
   const clear = () => {
     setSearch("");
     setQuery("");
@@ -432,19 +436,21 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     retainer: "Cobertos por avença",
   };
   const activeFilters = [
-    year && `Ano: ${year}`,
-    professional &&
+    hasEmptyPrefilter && "Nenhuma opção seleccionada",
+    year && year !== "__NONE__" && `Ano: ${year}`,
+    professional && professional !== "__NONE__" &&
       `Responsável: ${meta.professionals.find((o) => o.id === professional)?.label}`,
-    billing &&
+    billing && billing !== "__NONE__" &&
       `Sociedade: ${meta.billingEntities.find((o) => o.id === billing)?.label}`,
-    invoiced && `Facturado: ${invoiced === "true" ? "Sim" : "Não"}`,
-    paid && `Pago: ${paid === "true" ? "Sim" : "Não"}`,
-    archive && `Arquivo: ${archive}`,
+    invoiced && invoiced !== "__NONE__" && `Facturado: ${invoiced === "true" ? "Sim" : "Não"}`,
+    paid && paid !== "__NONE__" && `Pago: ${paid === "true" ? "Sim" : "Não"}`,
+    archive && archive !== "__NONE__" && `Arquivo: ${archive}`,
     reviewIssue && `A corrigir: ${reviewLabels[reviewIssue]}`,
     clientType &&
       `Tipo de cliente: ${clientType === "company" ? "Empresa" : clientType === "mixed" ? "Mistos" : "Particular"}`,
   ].filter(Boolean) as string[];
   const loadExportRows = useCallback(async (onProgress?: (loaded:number,total:number,rows?:Entry[])=>void) => {
+    if(hasEmptyPrefilter){onProgress?.(0,0,[]);return [];}
     if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
     const exportArgs = {
       p_search: query || null,
@@ -511,6 +517,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     }
     return hydrateExpenseSummaries(entries,onProgress);
   }, [
+    hasEmptyPrefilter,
     query,
     year,
     professional,
@@ -672,84 +679,85 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
               placeholder="Cliente, código, actividade ou observação…"
             />
           </div>
-          <select
+          <div className="min-w-0" role="group" aria-label="Ano"><span className="mb-1 block text-xs text-text-secondary">Ano</span><select
             aria-label="Ano"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Todos os anos</option>
+            <option value="">Todos</option>
             {Array.from({ length: 9 }, (_, i) => 2026 - i).map((value) => (
               <option key={value}>{value}</option>
             ))}
-          </select>
-          <select
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setYear("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setYear("__NONE__")}>Limpar</button></div></div>
+          <div className="min-w-0" role="group" aria-label="Responsável"><span className="mb-1 block text-xs text-text-secondary">Responsável</span><select
             aria-label="Responsável"
             value={professional}
             onChange={(e) => setProfessional(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Todos os responsáveis</option>
+            <option value="">Todos</option>
             {meta.professionals.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
               </option>
             ))}
-          </select>
-          <select
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setProfessional("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setProfessional("__NONE__")}>Limpar</button></div></div>
+          <div className="min-w-0" role="group" aria-label="Sociedade"><span className="mb-1 block text-xs text-text-secondary">Sociedade</span><select
             aria-label="Sociedade"
             value={billing}
             onChange={(e) => setBilling(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Todas as sociedades</option>
+            <option value="">Todos</option>
             {meta.billingEntities.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
               </option>
             ))}
-          </select>
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setBilling("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setBilling("__NONE__")}>Limpar</button></div></div>
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          <select
+          <div className="min-w-0" role="group" aria-label="Estado de facturação"><span className="mb-1 block text-xs text-text-secondary">Estado de facturação</span><select
             aria-label="Estado de facturação"
             value={invoiced}
             onChange={(e) => setInvoiced(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Facturados e não facturados</option>
+            <option value="">Todos</option>
             <option value="true">Facturados</option>
             <option value="false">Não facturados</option>
-          </select>
-          <select
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setInvoiced("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setInvoiced("__NONE__")}>Limpar</button></div></div>
+          <div className="min-w-0" role="group" aria-label="Pagamento"><span className="mb-1 block text-xs text-text-secondary">Pagamento</span><select
             aria-label="Pagamento"
             value={paid}
             onChange={(e) => setPaid(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Pagos e pendentes</option>
+            <option value="">Todos</option>
             <option value="true">Pagos</option>
             <option value="false">Pendentes</option>
-          </select>
-          <select
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setPaid("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setPaid("__NONE__")}>Limpar</button></div></div>
+          <div className="min-w-0" role="group" aria-label="Arquivo"><span className="mb-1 block text-xs text-text-secondary">Arquivo</span><select
             aria-label="Arquivo"
             value={archive}
             onChange={(e) => setArchive(e.target.value)}
-            className="control min-h-9 px-3 text-sm"
+            className="control min-h-9 w-full px-3 text-sm"
           >
-            <option value="">Todos os arquivos</option>
+            <option value="">Todos</option>
             {archives.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
-          </select>
+          <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setArchive("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setArchive("__NONE__")}>Limpar</button></div></div>
           <button
             onClick={clear}
             className="control min-h-9 px-3 text-sm font-semibold"
           >
-            Limpar filtros
+            Todos
           </button>
+          <button type="button" className="control min-h-9 px-3 text-sm font-semibold" onClick={()=>{clear();setYear("__NONE__");setProfessional("__NONE__");setBilling("__NONE__");setInvoiced("__NONE__");setPaid("__NONE__");setArchive("__NONE__")}}>Limpar</button>
         </div>
         {activeFilters.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5 border-t border-border pt-2">
@@ -781,7 +789,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       <StandardDataTable
         id={embeddedQuery===undefined?"work-entries":"accompaniment-work-entries"}
         label="Registos de trabalho"
-        rows={rows}
+        rows={hasEmptyPrefilter?[]:rows}
         columns={columns}
         rowKey={(row) => row.id}
         loading={loading}
@@ -792,8 +800,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
         emptyMessage="Ainda não existem movimentos acessíveis."
         loadExportRows={loadExportRows}
         loadAllRows={loadAllTableRows}
-        totalRows={meta.total}
-        universeKey={JSON.stringify(searchArgs)}
+        totalRows={hasEmptyPrefilter?0:meta.total}
+        universeKey={JSON.stringify([searchArgs,hasEmptyPrefilter])}
         stickyHeaderOffset={tableStickyOffset}
         showSearch={embeddedQuery!==undefined}
         resultNoun="registos"

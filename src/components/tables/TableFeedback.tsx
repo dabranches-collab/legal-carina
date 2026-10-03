@@ -5,7 +5,7 @@ export function TableSkeleton({ columns = 6 }: { columns?: number }) {
 }
 
 export function TableEmptyState({ onClear }: { onClear?: () => void }) {
-  return <div className="card grid min-h-64 place-items-center p-6 text-center"><div><Icon name="search" className="mx-auto size-8 text-text-secondary"/><h3 className="mt-3 font-semibold">Nenhum registo encontrado</h3><p className="mt-1 text-sm text-text-secondary">Ajuste os filtros ou limpe a pesquisa para ver outros resultados.</p>{onClear && <button onClick={onClear} className="mt-4 text-sm font-semibold text-secondary hover:underline">Limpar filtros</button>}</div></div>
+  return <div className="card grid min-h-64 place-items-center p-6 text-center"><div><Icon name="search" className="mx-auto size-8 text-text-secondary"/><h3 className="mt-3 font-semibold">Nenhum registo encontrado</h3><p className="mt-1 text-sm text-text-secondary">Ajuste os filtros ou limpe a pesquisa para ver outros resultados.</p>{onClear && <button onClick={onClear} className="mt-4 text-sm font-semibold text-secondary hover:underline">Todos</button>}</div></div>
 }
 
 export function TableErrorState({ onRetry }: { onRetry: () => void }) {

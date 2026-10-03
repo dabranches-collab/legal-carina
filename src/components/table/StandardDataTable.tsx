@@ -222,8 +222,8 @@ function FilterPanel<Row>({
   const typed=fold(value.text??""),textSuggestions=typed.length<2?[]:(column.textSuggestions??[]).filter(item=>fold(item).includes(typed)).slice(0,10);
   const selected = value.selected ?? options?.map((item) => item.value) ?? [];
   const normalizedSelection=(next:string[])=>options&&next.length===options.length&&options.every(option=>next.includes(option.value))?undefined:next;
-  const selectVisible = () => {
-    const next=[...new Set([...selected,...selectableOptions.map(item=>item.value)])];
+  const selectAll = () => {
+    const next=(options ?? []).filter(item=>availableValues.has(item.value)).map(item=>item.value);
     onChange({...value,selected:normalizedSelection(next)});
   };
   const clearAll = () =>
@@ -278,9 +278,9 @@ function FilterPanel<Row>({
             <button
               type="button"
               className="min-h-8 rounded-md border border-primary px-2 font-semibold text-primary"
-              onClick={selectVisible}
+              onClick={selectAll}
             >
-              {optionQuery ? "Todos os encontrados" : "Todos"}
+              Todos
             </button>
             <button
               type="button"
@@ -354,13 +354,13 @@ function FilterPanel<Row>({
         </label>{typed.length>=2&&<div className="scrollbar-thin mt-2 max-h-[26.25rem] overflow-y-auto rounded-lg border border-border bg-background"><p className="px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-text-secondary">Sugestões</p>{textSuggestions.map(suggestion=><button key={suggestion} type="button" onClick={()=>onChange({...value,text:suggestion})} className="block h-7 w-full truncate border-b border-border px-2 text-left text-xs text-text-primary last:border-b-0 hover:bg-secondary-soft" title={suggestion}>{suggestion}</button>)}{!textSuggestions.length&&<p className="p-2 text-xs text-text-secondary">Sem sugestões. O texto livre continua válido.</p>}</div>}</div>
       )}
       <div className="mt-3 flex justify-between">
-        <button
+        {!options && <button
           type="button"
           onClick={() => onChange({})}
           className="min-h-11 text-xs font-semibold text-secondary"
         >
-          Limpar filtro
-        </button>
+          Limpar
+        </button>}
         <button
           type="button"
           onClick={onClose}
@@ -915,7 +915,18 @@ export function StandardDataTable<Row>({
           }}
           className="control min-h-6 px-1.5 text-[10px] font-semibold"
         >
-          Limpar filtros
+          Todos
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setFilters(Object.fromEntries(columns.filter(column => optionsFor(column).filterOptions || column.kind === "boolean").map(column => [column.id, { selected: [] }])));
+            setQuery("");
+            setPage(1);
+          }}
+          className="control min-h-6 px-1.5 text-[10px] font-semibold"
+        >
+          Limpar
         </button>
         <div>
           <button
