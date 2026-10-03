@@ -346,4 +346,17 @@ describe('HonorariumNoteModal',()=>{
   expect(text).not.toContain('Valor a pagar: 0,00 EUR')
   expect(text).not.toContain('Excedente a regularizar fora das provisões: 27,00 EUR')
  })
+it('Limpar no filtro por nota deixa zero movimentos e Todos restaura sem emitir documentos',async()=>{
+ const user=userEvent.setup()
+ render(<HonorariumNoteModal clientId="client" clientName="Cliente Sintético" onClose={()=>{}}/>)
+ await screen.findByLabelText('Seleccionar movimento de 2026-07-03')
+ const selector=screen.getByLabelText('Filtrar registos por nota')
+ const parent=selector.parentElement!
+ await user.click(parent.querySelectorAll('button')[1])
+ expect(selector).toHaveValue('none')
+ expect(screen.queryByLabelText('Seleccionar movimento de 2026-07-03')).not.toBeInTheDocument()
+ expect(documentRpc).not.toHaveBeenCalled()
+ await user.click(parent.querySelectorAll('button')[0])
+ expect(await screen.findByLabelText('Seleccionar movimento de 2026-07-03')).toBeInTheDocument()
+})
 })

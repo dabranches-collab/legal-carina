@@ -1,10 +1,17 @@
 {
-  "version": "0.13.1",
+  "version": "0.13.2",
   "changes": [
-    "Os novos registos herdam a sociedade e o valor/hora da ficha do cliente, incluindo no atalho Nova despesa, e permitem edição manual por registo.",
-    "As tabelas largas apresentam uma barra horizontal no fundo da área visível, sem exigir deslocação até à última linha."
+    "Filtros de tabelas e pré-filtros com Todos e Limpar; uma selecção vazia mantém zero resultados e exportações.",
+    "Filtros de clientes, pagamentos e fases preservam o contexto e distinguem nenhuma opção de todas."
   ],
   "releases": [
+    {
+      "version": "0.13.2",
+      "changes": [
+        "Filtros de tabelas e pré-filtros com Todos e Limpar; uma selecção vazia mantém zero resultados e exportações.",
+        "Filtros de clientes, pagamentos e fases preservam o contexto e distinguem nenhuma opção de todas."
+      ]
+    },
     {
       "version": "0.13.1",
       "changes": [

@@ -1,3 +1,11 @@
+## 2026-10-03 — 0.13.2 preparada, produção ainda 0.13.1
+
+- Tabelas partilhadas: Todos selecciona opções do contexto ignorando pesquisa interna; Limpar e última opção mantêm vazio. Pré-filtros nativos de registos conservam selecção única com estado Nenhum explícito e guardas locais para lista, totais e exportação. LEGALTEAM, notas e fase de trabalhos fixos com os mesmos comandos.
+- Campos textuais/datas mantêm semântica própria; formulários e permissões não são filtros. Sem alterações de Supabase, ACL, dados, credenciais, pipelines ou algoritmos financeiros.
+- Base confirmada: origin/main 32959d3 e produção 0.13.1, Version ID 3cd368c4-83e4-4647-864a-630b8f6c0624. Autorizações de publicação por plataforma recebidas nesta tarefa.
+- Testes locais: 287 testes gerais mais regressão isolada de preço fixo; testes browser desktop/390px de tabelas, seis pré-filtros e LEGALTEAM. Página completa de registos com 180 linhas sintéticas passou scroll horizontal/vertical, retorno ao topo, Todos/Limpar e menu em retrato/paisagem/teclado simulado, com limites de safe-area e hit testing. Nenhum defeito novo do cabeçalho reproduzido nesses cenários.
+- Limites: Chrome e insets simulados; sem Safari/iPhone físico/PWA instalada. Gate final e CI serão registados antes da publicação. Evidência local C:/Dev/filter-standardisation/carina-*.log, test-results/ e e2e/filter-all-clear.spec.ts.
+
 ## 2026-10-03 — uniformização de filtros em preparação
 
 Tabela comum: Todos selecciona todas as opções disponíveis na cascata, independentemente da pesquisa interna. Limpar mantém selecção vazia; o comando global abrange também opções geradas. Não remove filtros relacionados. Validação: 286 testes em 55 ficheiros, lint, tipos, segurança e build aprovados; E2E dirigido em Chrome a 1440×900 e 390×844 com respostas sintéticas. Novo teste cobre cascata, última opção, pesquisa interna, vazio e XLSX vazio. Sem ensaio Safari/iPhone físico ou produção autenticada. Os pré-filtros remotos simples de Registos ainda requerem auditoria separada; não declarar a plataforma integralmente concluída.
