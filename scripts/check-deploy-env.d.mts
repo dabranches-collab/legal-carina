@@ -1,1 +1,1 @@
-export function checkDeployEnvironment(env: Record<string, string | undefined>): void
+export function checkDeployEnvironment(env: Record<string, string | undefined>, expectedKeyFingerprint?: string): void
