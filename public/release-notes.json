@@ -1,10 +1,17 @@
 {
-  "version": "0.13.2",
+  "version": "0.13.3",
   "changes": [
-    "Filtros de tabelas e pré-filtros com Todos e Limpar; uma selecção vazia mantém zero resultados e exportações.",
-    "Filtros de clientes, pagamentos e fases preservam o contexto e distinguem nenhuma opção de todas."
+    "Entrada restabelecida com a configuração pública de produção verificada.",
+    "Todos/Limpar preservam a selecção vazia; a publicação passa a bloquear configurações Auth ausentes ou de teste."
   ],
   "releases": [
+    {
+      "version": "0.13.3",
+      "changes": [
+        "Entrada restabelecida com a configuração pública de produção verificada.",
+        "Todos/Limpar preservam a selecção vazia; a publicação passa a bloquear configurações Auth ausentes ou de teste."
+      ]
+    },
     {
       "version": "0.13.2",
       "changes": [
