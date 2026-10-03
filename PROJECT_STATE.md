@@ -1,8 +1,9 @@
-## 2026-10-03 - estabilizacao do ensaio da barra horizontal, sem alteracao de producao
+## 2026-10-03 — estabilização do ensaio da barra horizontal, sem alteração de produção
 
-- CI documental37144034117 falhou num boundingBox null apos zoom (160E2E aprovados,1omitido,1falha). VisibleTableScrollbars agenda medicao por requestAnimationFrame e pode desmontar o portal durante a transicao; a verificacao previa de visibilidade nao torna atomica a leitura seguinte.
-- O polling de x/y passa a devolver Infinity enquanto nao existe geometria: volta a tentar e falha se a barra nunca reaparecer ou ficar fora do viewport. Preservadas as assercoes de visibilidade, limite horizontal/vertical, sincronizacao e desaparecimento sem excesso. Nenhum codigo da aplicacao alterado.
--20 ensaios locais aprovados (suite repetida5vezes,1440/768/390,zoom0.8/1.25/1.5/2/1,claro/escuro). CI/revisao da correcção registadas na PR; producao continua0.13.3/23529d47-2201-4175-b422-d2ab5b9a8f6a. Sem novo deploy ou inferencia de falha de entrada.
+- A CI documental 37144034117 falhou ao ler boundingBox nulo após zoom: 160 E2E aprovados, um omitido e uma falha. VisibleTableScrollbars agenda a medição por requestAnimationFrame e pode desmontar o portal durante a transição; a verificação prévia de visibilidade não torna atómica a leitura seguinte.
+- O polling de x/y devolve Infinity enquanto não existe geometria: volta a tentar e falha se a barra não reaparecer ou ficar fora do viewport. Mantêm-se as asserções de visibilidade, limites, sincronização e desaparecimento sem excesso de largura. Nenhum código da aplicação foi alterado.
+- Estado local/GitHub: correcção funcional 855925d97f5e6dfc8738d137034f343e349387c4 enviada na branch codex/scrollbar-e2e-settle-20261003, PR #87 (https://github.com/dabranches-collab/legal-carina/pull/87). A revisão documental é tratada nesta mesma PR; consultar os seus checks para o resultado da CI final. Vinte ensaios locais aprovados (suite repetida cinco vezes, 1440/768/390 px, zoom 0.8/1.25/1.5/2/1, claro/escuro) e lint aprovado.
+- Produção confirmada em 2026-10-03: ambiente production, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, versão 0.13.3; deployment ID 204b9035-f10b-4c74-9140-92a66739361e, Version ID 23529d47-2201-4175-b422-d2ab5b9a8f6a, 100% desde 2026-10-03T18:19:24.924Z. Código publicado: funcional 1f02023, merge bca7be0 em main. Esta correcção de teste não implica novo deploy, mudança da aplicação ou falha de entrada.
 
 ## 2026-10-03 - 0.13.3 publicada: configuracao e filtros repostos
 
