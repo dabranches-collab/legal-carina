@@ -1,3 +1,10 @@
+## 2026-10-03 - 0.13.2 publicada e verificada
+
+- PR #85 integrada em main no merge 4a1350f (funcional ea5c7b0563c429f7f7421a9dcc64c9989667a022). CI 37137125286 aprovado: 288 testes/56 ficheiros, 161 E2E e uma omissão condicional, três PWA, runtime Worker, segurança, lint, tipos, build e auditoria dependências. Finding 4173885151 corrigido com regressão e resolvido.
+- Worker legal-carina: Version ID 5c8b14b0-3cfb-42a8-80ab-958e26ca3984, 100% do tráfego desde 2026-10-03T16:44:57Z. URL https://legal-carina.dabranches.workers.dev . release-notes.json confirma 0.13.2; HTML, notas, service worker, JS principal/runtime e CSS confirmados HTTP 200 e SHA256 idêntico ao build.
+- Browser com dados sintéticos e insets simulados, incluindo scroll/retorno/topo/hit testing e PWA em preview; não representa Safari/iPhone físico ou PWA instalada. Sem escritas operacionais, migrations, alterações de ACL, credenciais ou pipelines. Erro Cloudflare 10000 numa consulta inicial foi transitório; nova consulta, deploy e confirmação final concluíram normalmente.
+- Evidência local: C:/Dev/filter-standardisation/carina-ci-success.log, carina-release-deploy.log, carina-release-status.log e carina-public-verification.json.
+
 ## 2026-10-03 — 0.13.2 preparada, produção ainda 0.13.1
 
 - Tabelas partilhadas: Todos selecciona opções do contexto ignorando pesquisa interna; Limpar e última opção mantêm vazio. Pré-filtros nativos de registos conservam selecção única com estado Nenhum explícito e guardas locais para lista, totais e exportação. LEGALTEAM, notas e fase de trabalhos fixos com os mesmos comandos.
