@@ -1,3 +1,10 @@
+## 2026-10-03 — estabilização do ensaio da barra horizontal, sem alteração de produção
+
+- A CI documental 37144034117 falhou ao ler boundingBox nulo após zoom: 160 E2E aprovados, um omitido e uma falha. VisibleTableScrollbars agenda a medição por requestAnimationFrame e pode desmontar o portal durante a transição; a verificação prévia de visibilidade não torna atómica a leitura seguinte.
+- O polling de x/y devolve Infinity enquanto não existe geometria: volta a tentar e falha se a barra não reaparecer ou ficar fora do viewport. Mantêm-se as asserções de visibilidade, limites, sincronização e desaparecimento sem excesso de largura. Nenhum código da aplicação foi alterado.
+- Estado local/GitHub: correcção funcional 855925d97f5e6dfc8738d137034f343e349387c4 enviada na branch codex/scrollbar-e2e-settle-20261003, PR #87 (https://github.com/dabranches-collab/legal-carina/pull/87). A revisão documental é tratada nesta mesma PR; consultar os seus checks para o resultado da CI final. Vinte ensaios locais aprovados (suite repetida cinco vezes, 1440/768/390 px, zoom 0.8/1.25/1.5/2/1, claro/escuro) e lint aprovado.
+- Produção confirmada em 2026-10-03: ambiente production, Worker legal-carina, URL https://legal-carina.dabranches.workers.dev, versão 0.13.3; deployment ID 204b9035-f10b-4c74-9140-92a66739361e, Version ID 23529d47-2201-4175-b422-d2ab5b9a8f6a, 100% desde 2026-10-03T18:19:24.924Z. Código publicado: funcional 1f02023, merge bca7be0 em main. Esta correcção de teste não implica novo deploy, mudança da aplicação ou falha de entrada.
+
 ## 2026-10-03 - 0.13.3 publicada: configuracao e filtros repostos
 
 - PR86 integrada em main no merge bca7be0; funcional1f02023. CI37143058853 aprovada, incluindo290 testes, E2E, PWA, auditoria e secret scan. Finding4174232454 corrigido/resolvido: fingerprint obrigatoria da chave publica do projecto existente.
