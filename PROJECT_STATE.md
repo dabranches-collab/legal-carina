@@ -1,3 +1,10 @@
+## 2026-10-03 - incidente de entrada e rollback; 0.13.3 apenas em preparacao
+
+- A release 0.13.2 foi compilada sem VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY. HTTP 200, hashes e testes sinteticos nao validavam a configuracao de entrada publicada. O incidente foi causado pela publicacao desta tarefa.
+- Rollback concluido para 0.13.1, Cloudflare Version ID 3cd368c4-83e4-4647-864a-630b8f6c0624, 100% do trafego. Formulario publico verificado; Diogo confirmou entrada autenticada as 17:51 UTC. Nenhum teste autenticado foi executado pelo agente.
+- 0.13.3 preparada, NAO publicada: Wrangler bloqueia configuracao publica ausente, projecto diferente, chave privada ou ambiente test. Configuracao publica recuperada apenas do artefacto 0.13.1 servido, verificada e guardada em .env.local ignorado. Nenhum segredo ou credencial copiado/versionado; sem alteracao Auth/ACL/dados.
+- Os filtros de PR85 permanecem no Git mas nao na producao restaurada. Nova publicacao exige gates e smoke de entrada sobre o artefacto real; nao confundir testes com mocks com autenticacao real. Evidencias locais carina-incident-*.log e incident-login-legal-carina.png em C:/Dev/filter-standardisation.
+
 ## 2026-10-03 - 0.13.2 publicada e verificada
 
 - PR #85 integrada em main no merge 4a1350f (funcional ea5c7b0563c429f7f7421a9dcc64c9989667a022). CI 37137125286 aprovado: 288 testes/56 ficheiros, 161 E2E e uma omissão condicional, três PWA, runtime Worker, segurança, lint, tipos, build e auditoria dependências. Finding 4173885151 corrigido com regressão e resolvido.
