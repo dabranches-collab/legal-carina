@@ -33,7 +33,9 @@ test('barra acompanha o fundo visível de uma tabela longa e desaparece sem exce
   for (const zoom of [0.8, 1.25, 1.5, 2, 1]) {
     await page.evaluate(value => { document.body.style.zoom = String(value); document.querySelector('table')!.scrollIntoView({ block: 'center' }); window.dispatchEvent(new Event('resize')) }, zoom)
     await expect(bar).toBeVisible()
-    await expect.poll(async () => { const rect = (await bar.boundingBox())!; return rect.x + rect.width }).toBeLessThanOrEqual(768)
+    // Zoom/resize schedules geometry in requestAnimationFrame; the portal can briefly unmount.
+    // Missing geometry must retry and must never satisfy the viewport assertion.
+    await expect.poll(async () => { const rect = await bar.boundingBox(); return rect ? rect.x + rect.width : Number.POSITIVE_INFINITY }).toBeLessThanOrEqual(768)
   }
   await bar.evaluate(node => {
     const scroller = document.getElementById(node.getAttribute('aria-controls')!)!
@@ -42,7 +44,7 @@ test('barra acompanha o fundo visível de uma tabela longa e desaparece sem exce
   })
   await page.evaluate(() => window.scrollBy(0, 240))
   await expect(bar).toBeVisible()
-  await expect.poll(async () => (await bar.boundingBox())!.y).toBeLessThan(844)
+  await expect.poll(async () => (await bar.boundingBox())?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(844)
   await bar.evaluate(node => {
     const scroller = document.getElementById(node.getAttribute('aria-controls')!)!
     scroller.style.overflowX = 'hidden'

@@ -1,3 +1,9 @@
+## 2026-10-03 - estabilizacao do ensaio da barra horizontal, sem alteracao de producao
+
+- CI documental37144034117 falhou num boundingBox null apos zoom (160E2E aprovados,1omitido,1falha). VisibleTableScrollbars agenda medicao por requestAnimationFrame e pode desmontar o portal durante a transicao; a verificacao previa de visibilidade nao torna atomica a leitura seguinte.
+- O polling de x/y passa a devolver Infinity enquanto nao existe geometria: volta a tentar e falha se a barra nunca reaparecer ou ficar fora do viewport. Preservadas as assercoes de visibilidade, limite horizontal/vertical, sincronizacao e desaparecimento sem excesso. Nenhum codigo da aplicacao alterado.
+-20 ensaios locais aprovados (suite repetida5vezes,1440/768/390,zoom0.8/1.25/1.5/2/1,claro/escuro). CI/revisao da correcção registadas na PR; producao continua0.13.3/23529d47-2201-4175-b422-d2ab5b9a8f6a. Sem novo deploy ou inferencia de falha de entrada.
+
 ## 2026-10-03 - 0.13.3 publicada: configuracao e filtros repostos
 
 - PR86 integrada em main no merge bca7be0; funcional1f02023. CI37143058853 aprovada, incluindo290 testes, E2E, PWA, auditoria e secret scan. Finding4174232454 corrigido/resolvido: fingerprint obrigatoria da chave publica do projecto existente.
