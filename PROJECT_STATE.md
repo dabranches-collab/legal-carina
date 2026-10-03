@@ -1,3 +1,9 @@
+## 2026-10-03 — uniformização de filtros em preparação
+
+Tabela comum: Todos selecciona todas as opções disponíveis na cascata, independentemente da pesquisa interna. Limpar mantém selecção vazia; o comando global abrange também opções geradas. Não remove filtros relacionados. Validação: 286 testes em 55 ficheiros, lint, tipos, segurança e build aprovados; E2E dirigido em Chrome a 1440×900 e 390×844 com respostas sintéticas. Novo teste cobre cascata, última opção, pesquisa interna, vazio e XLSX vazio. Sem ensaio Safari/iPhone físico ou produção autenticada. Os pré-filtros remotos simples de Registos ainda requerem auditoria separada; não declarar a plataforma integralmente concluída.
+
+Branch local: codex/table-filter-all-clear-20261003. Sem push, merge ou deploy; versão pública preservada. Pedido transversal ainda em curso.
+
 # Estado do projecto
 
 ## 30-09-2026 — versão 0.13.1 publicada e verificada
