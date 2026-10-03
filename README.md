@@ -8,8 +8,8 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.13.1`, confirmada directamente em `HANDOVER.md`.
-- Fonte canónica no GitHub: `main`; commit funcional publicado `98f73a0378ce426ffb370c5166f907f576827527`, integrado pelo PR #82. O registo de publicação consta de `HANDOVER.md`.
+- Versão publicada: `0.13.3`, confirmada directamente em `HANDOVER.md`.
+- Fonte canónica no GitHub: `main`; commit funcional publicado `1f02023a5a89af62c5d425d4973633c34cb5ca0d`, integrado pelo PR #86. O registo de publicação consta de `HANDOVER.md`.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
 - As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).
 

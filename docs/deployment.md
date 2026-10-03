@@ -1,3 +1,10 @@
+## 2026-10-03 - 0.13.3 publicada: configuracao e filtros repostos
+
+- PR86 integrada em main no merge bca7be0; funcional1f02023. CI37143058853 aprovada, incluindo290 testes, E2E, PWA, auditoria e secret scan. Finding4174232454 corrigido/resolvido: fingerprint obrigatoria da chave publica do projecto existente.
+- Cloudflare Version ID23529d47-2201-4175-b422-d2ab5b9a8f6a,100% desde2026-10-03T18:19:24Z. Online release-notes0.13.3, JS index-BXef7Ne2.js com URL/fingerprint correctos, formulario Entrar e cache carina-legal-shell-0.13.3 confirmados. URL https://legal-carina.dabranches.workers.dev .
+- Gates negativos CLI/Wrangler bloqueiam chave diferente; leitura publica Auth/settings200. Build configurado renderizado1440/390 e3PWA locais aprovados. Nenhuma credencial submetida pelo agente; Diogo confirmou entrada real na0.13.1 restaurada, nao se extrapola essa aceitacao para0.13.3. Sem Auth/ACL/dados/pipelines alterados.
+- Rollback disponivel:3cd368c4-83e4-4647-864a-630b8f6c0624 (0.13.1). Evidencia C:/Dev/filter-standardisation/carina-0.13.3-public.json, carina-0.13.3-status.log e carina-authgate-*.log.
+
 ## 2026-10-03 - incidente de entrada e rollback; 0.13.3 apenas em preparacao
 
 - A release 0.13.2 foi compilada sem VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY. HTTP 200, hashes e testes sinteticos nao validavam a configuracao de entrada publicada. O incidente foi causado pela publicacao desta tarefa.
