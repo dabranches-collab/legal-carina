@@ -13,7 +13,25 @@ for(const width of [390,768,1440])for(const dark of [false,true])test('Pagamento
   if(url.includes('/rpc/record_pending_payment')){writes++;rows=rows.filter(row=>row.id!==body.p_id);data={id:'receipt'}}
   await route.fulfill({contentType:'application/json',body:JSON.stringify(data)})
  })
- await page.goto('/?qa-iphone=1&view=payments')
+ await page.goto('/?qa-iphone=1&view=debtors')
+ if(width<1024)await page.getByRole('button',{name:'Abrir navegação',exact:true}).click()
+ const navigation=page.getByRole('complementary',{name:'Navegação principal'})
+ const parent=navigation.getByRole('button',{name:'Por Receber',exact:true})
+ await expect(parent).toHaveAttribute('aria-expanded','true')
+ const submenu=navigation.getByRole('list',{name:'Por receber',exact:true})
+ const payments=submenu.getByRole('button',{name:'Pagamentos',exact:true})
+ await expect(payments).toBeVisible()
+ await expect(navigation.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'Pagamentos',exact:true})).toHaveCount(0)
+ await payments.focus();await page.keyboard.press('Enter')
+ await expect(page.getByRole('heading',{name:'Pagamentos',exact:true})).toBeVisible()
+ await expect(page.getByRole('navigation',{name:'Localização'})).toContainText('Por receber')
+ if(width<1024){
+  await expect(page.getByRole('button',{name:'Fechar navegação',exact:true})).toHaveCount(0)
+  await page.getByRole('button',{name:'Abrir navegação',exact:true}).click()
+ }
+ await expect(parent).toHaveAttribute('aria-current','page')
+ await expect(payments).toHaveAttribute('aria-current','page')
+ if(width<1024){await payments.click();await expect(page.getByRole('button',{name:'Fechar navegação',exact:true})).toHaveCount(0)}
  if(width===390)await page.addStyleTag({content:':root{--safe-top:24px;--safe-bottom:34px;--safe-left:0px;--safe-right:0px}'})
  await expect(page.getByRole('heading',{name:'Pagamentos',exact:true})).toBeVisible()
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()

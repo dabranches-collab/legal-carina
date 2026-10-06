@@ -4,7 +4,7 @@ Estado: implementação isolada, sem aplicação remota, sem deploy e sem pagame
 
 ## Comportamento
 
-- Clientes → Pagamentos contém os quatro botões pedidos, com contagens calculadas do mesmo universo que alimenta a tabela. Todos/Limpar e cascatas usam StandardDataTable. Cliente e título abrem o detalhe com um toque.
+- Por receber → Pagamentos contém os quatro botões pedidos, com contagens calculadas do mesmo universo que alimenta a tabela. Todos/Limpar e cascatas usam StandardDataTable. Cliente e título abrem o detalhe com um toque.
 - Registos não facturados abrem EditWorkEntryModal em modo de facturação: Pago e o estado Pago ficam indisponíveis. Guardar a factura e registar recebimento são passos separados.
 - Avenças pendentes reutilizam RetainerChargeDialog em modo de facturação, com data explícita, optimismo por token e auditoria. Nunca se preenchem datas de factura automaticamente.
 - Registos facturados e prestações são liquidados integralmente. Notas normais aceitam parcial/total. Preço fixo aceita apenas a liquidação integral do trabalho facturado e conserva as restrições de papel owner/admin/billing.
@@ -109,3 +109,4 @@ Restam antes de aplicar: comparação do esquema remoto instalado, autorização
 - Cobertura integrada: emissão real com provisão; facturação separada; recebimento parcial/replay; chaves iguais/diferentes concorrentes; revisão versus recebimento; estorno antes/depois de recebimento; libertação legítima de registos após anulação sem recebimentos; registo individual via RPC antiga real; avença integral/idempotente/auditada; preço fixo; owner/admin/operator/billing/professional/viewer/auditor, PIN pendente, pertença inactiva, visibilidade financeira, concessões por cliente/processo/equipa/validade e anon.
 - O gate local de SQL/RLS/concorrência está agora cumprido para estes cenários. Continuam fora do ensaio a validação JWT via HTTP/PostgREST, dados reais históricos/volume, Safari físico e smoke do destino após instalação autorizada. Não confundir estes limites com a anterior ausência de ensaio integrado, entretanto resolvida.
 - O container QA fica preservado para continuação, sem rede/portas; contém apenas fixtures sintéticas. Não há comandos de teste pendentes. O push recusado não foi repetido; sem PR/CI remota, migration remota ou deploy.
+- Validação do ajuste de navegação: 6 E2E aprovados em390/768/1440 claro/escuro, teclado, selecção, fecho móvel e ausência em Clientes. pnpm check:299 unitários/25 SQL, lint, tipos, segurança e build aprovados. Screenshots sintéticos actualizados.

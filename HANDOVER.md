@@ -1,3 +1,13 @@
+## 2026-10-06 - PR88 e ajuste final de navegação, publicação pendente
+
+- Push manual confirmado em 5e8d308; PR88 draft https://github.com/dabranches-collab/legal-carina/pull/88. CI37473441130 e secret scan37473441102 aprovados nesse commit.
+- Pedido posterior de Diogo: Pagamentos passa para Por receber > Pagamentos, antes da publicação. Migration e quatro categorias mantidas; novo commit local exige novo push manual e CI.
+- Autorização específica da migration recebida às13:45UTC, incluindo ausência de anulação de recebimentos nesta release. Não aplicada: aguardar revisão/CI do ajuste de navegação. Nenhum pagamento real, merge ou deploy executado.
+- Backup físico Supabase visível de06-10-2026 05:45:26UTC. Migration apenas SQL, sem alterar Storage; ausência de cópia independente de ficheiros não é risco adicional desta alteração.
+- Preflight13:47UTC: histórico remoto até20260928165929;11 dependências financeiras/permissões e colunas/policies das8 tabelas coincidem com QA alinhado; nomes candidatos livres. Continuidade sem órfãos; utilizadores/permissões preservados. Advisors sem ERROR; avisos existentes sobre funções SECURITY DEFINER e protecção de passwords.
+- Produção confirmada0.13.3; Cloudflare100% version7dc8bc64-d133-4fd5-868a-dde7f88e21e1 desde04-10-2026 23:30:58UTC (rollback). Sessão autenticada abriu em leitura. Configuração pública de produção verificada; dry-run e3PWA aprovados antes do ajuste.
+- Segunda fase, só depois da publicação: anulação auditada com confirmação, original preservado e saldo restaurado; NÃO exigir motivo (correcção explícita de Diogo). Nenhuma anulação real ou migration de estorno autorizada nesta etapa.
+
 ## 2026-10-06 - Integração Pagamentos no HP concluída localmente
 
 - Docker acessível como diogo; container carina-payments-qa-20261006 isolado e preservado, PostgreSQL 17.6. Sem mudanças de ACL/grupos/serviços do host.

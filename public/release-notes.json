@@ -1,14 +1,14 @@
 {
   "version": "0.14.0",
   "changes": [
-    "Clientes inclui Pagamentos, com quatro listas de pendências e detalhe por toque.",
+    "Por receber inclui o submenu Pagamentos, com quatro listas de pendências e detalhe por toque.",
     "Recebimentos de notas sem reemissão, com saldo, auditoria e protecção contra duplicação."
   ],
   "releases": [
     {
       "version": "0.14.0",
       "changes": [
-        "Clientes inclui Pagamentos, com quatro listas de pendências e detalhe por toque.",
+        "Por receber inclui o submenu Pagamentos, com quatro listas de pendências e detalhe por toque.",
         "Recebimentos de notas sem reemissão, com saldo, auditoria e protecção contra duplicação."
       ]
     },
