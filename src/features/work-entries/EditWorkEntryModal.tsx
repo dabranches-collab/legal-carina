@@ -76,12 +76,14 @@ export function EditWorkEntryModal({
   onClose,
   onSaved,
   canDelete=true,
+  billingOnly=false,
   requiresReason,
 }: {
   entryId: string;
   onClose: () => void;
   onSaved: (action?: "updated" | "deleted") => void;
   canDelete?: boolean;
+  billingOnly?: boolean;
   requiresReason?: boolean;
 }) {
   const [options, setOptions] = useState<OptionData | null>(null),
@@ -135,6 +137,7 @@ export function EditWorkEntryModal({
     event.preventDefault();
     event.stopPropagation();
     if (!supabase || !entry) return;
+    if (billingOnly && entry.is_paid) {setError("Guarde primeiro a facturação e registe depois o recebimento em Pagamentos.");return;}
     if(isLegalteam(options?.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&(!entry.task_referrer||(entry.task_referrer==='other'&&!entry.task_referrer_other?.trim()))){setError('Indique o angariador da tarefa.');return}
     if (entry.is_paid && !entry.is_invoiced) {
       setError("Um movimento pago tem de estar facturado.");
@@ -486,7 +489,7 @@ export function EditWorkEntryModal({
                 onChange={(e) => setEntry(withStatus(entry, e.target.value))}
                 className="control mt-1 w-full px-3"
               >
-                {statuses.map(([value, label]) => (
+                {statuses.filter(([value])=>!billingOnly||value!=="paid").map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
@@ -575,7 +578,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                disabled={!entry.is_invoiced}
+                disabled={billingOnly||!entry.is_invoiced}
                 checked={entry.is_paid}
                 onChange={(e) =>
                   setEntry({

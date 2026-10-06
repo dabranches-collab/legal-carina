@@ -1,7 +1,7 @@
 {
   "name": "legal-carina",
   "private": true,
-  "version": "0.13.3",
+  "version": "0.14.0",
   "packageManager": "pnpm@11.19.0",
   "type": "module",
   "scripts": {
@@ -10,12 +10,13 @@
     "lint": "oxlint",
     "typecheck": "tsc -b --pretty false",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run && node scripts/test-payments-sql.mjs",
     "test:watch": "vitest",
     "test:worker-runtime": "node scripts/test-translation-runtime.mjs",
     "test:e2e": "pnpm build && playwright test",
     "security:files": "node scripts/check-sensitive-files.mjs",
-    "check": "pnpm security:files && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm security:files && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "test:payments-sql": "node scripts/test-payments-sql.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.112.1",
@@ -29,6 +30,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.0",

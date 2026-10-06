@@ -26,3 +26,13 @@ describe('ficha de prestação',()=>{
   expect(close).not.toHaveBeenCalled()
  })
 })
+
+test('facturação em Pagamentos não permite liquidar ou inventar a data',async()=>{
+ const user=userEvent.setup(),save=vi.fn()
+ render(<RetainerChargeDialog charge={charge} billingOnly readOnly={false} onSave={save} onClose={vi.fn()}/>)
+ expect(screen.queryByRole('option',{name:'Liquidada'})).not.toBeInTheDocument()
+ await user.selectOptions(screen.getByLabelText('Estado'),'invoiced')
+ await user.click(screen.getByRole('button',{name:'Guardar prestação'}))
+ expect(await screen.findByRole('alert')).toHaveTextContent('data da factura')
+ expect(save).not.toHaveBeenCalled()
+})

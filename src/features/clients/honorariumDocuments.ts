@@ -26,3 +26,8 @@ export function noteCreditPreview(rows:Array<{id:string;effective_amount:number|
  if(apply&&sameWork)return {subtotal,vat,total,deducted:Number(revision!.deducted),remaining:round(total-Number(revision!.deducted)),balance_after:Number(account?.balance??0),newDeduction:0,returned:0}
  return {subtotal,vat,total,deducted:round(deducted),remaining:round(total-deducted),balance_after:round(available-newDeduction),newDeduction,returned:held}
 }
+
+export function documentDirectReceived(note:Pick<HonorariumDocument,'document_options'>){
+ const options=note.document_options
+ return Number((options.direct_payment as {amount?:number}|undefined)?.amount??(options.fixed_fee_payment as {external?:number}|undefined)?.external??0)
+}

@@ -35,3 +35,10 @@ describe('movimentos controlados',()=>{
  test('exige confirmação mas não justificação numa alteração em massa',async()=>{const user=userEvent.setup(),onApplied=vi.fn();render(<BulkWorkEntryModal ids={['entry-1','entry-2']} currentTotal={200} onClose={vi.fn()} onApplied={onApplied}/>);await screen.findByRole('option',{name:'Carina'});expect(screen.queryByLabelText('Motivo obrigatório')).not.toBeInTheDocument();await user.selectOptions(screen.getByLabelText('Novo valor'),'resp-1');await user.click(screen.getByText(/Confirmo a quantidade/));await user.click(screen.getByRole('button',{name:'Aplicar alteração'}));await waitFor(()=>expect(onApplied).toHaveBeenCalledWith(1));expect(rpc).toHaveBeenCalledWith('bulk_update_work_entries',{p_work_entry_ids:['entry-1','entry-2'],p_action:'responsible',p_value:'resp-1',p_reason:''})})
  test('não exige justificação ao administrador numa alteração em massa',async()=>{const user=userEvent.setup(),onApplied=vi.fn();render(<AuthContext.Provider value={{user:null,role:'admin',signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><BulkWorkEntryModal ids={['entry-1']} currentTotal={100} onClose={vi.fn()} onApplied={onApplied}/></AuthContext.Provider>);await screen.findByRole('option',{name:'Carina'});expect(screen.queryByLabelText('Motivo obrigatório')).not.toBeInTheDocument();await user.selectOptions(screen.getByLabelText('Novo valor'),'resp-1');await user.click(screen.getByText(/Confirmo a quantidade/));await user.click(screen.getByRole('button',{name:'Aplicar alteração'}));await waitFor(()=>expect(onApplied).toHaveBeenCalledWith(1));expect(rpc).toHaveBeenCalledWith('bulk_update_work_entries',{p_work_entry_ids:['entry-1'],p_action:'responsible',p_value:'resp-1',p_reason:''})})
 })
+
+test('passo de facturação em Pagamentos mantém Pago desactivado',async()=>{
+ render(<EditWorkEntryModal entryId="entry-1" billingOnly onClose={vi.fn()} onSaved={vi.fn()}/>)
+ await screen.findByDisplayValue('Actividade original')
+ expect(screen.getByLabelText('Pago',{exact:true})).toBeDisabled()
+ expect(screen.queryByRole('option',{name:'Pago'})).not.toBeInTheDocument()
+})

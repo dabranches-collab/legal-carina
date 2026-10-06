@@ -1,3 +1,27 @@
+## 2026-10-06 - PR88 e ajuste final de navegação, publicação pendente
+
+- Push manual confirmado em 5e8d308; PR88 draft https://github.com/dabranches-collab/legal-carina/pull/88. CI37473441130 e secret scan37473441102 aprovados nesse commit.
+- Pedido posterior de Diogo: Pagamentos passa para Por receber > Pagamentos, antes da publicação. Migration e quatro categorias mantidas; novo commit local exige novo push manual e CI.
+- Autorização específica da migration recebida às13:45UTC, incluindo ausência de anulação de recebimentos nesta release. Não aplicada: aguardar revisão/CI do ajuste de navegação. Nenhum pagamento real, merge ou deploy executado.
+- Backup físico Supabase visível de06-10-2026 05:45:26UTC. Migration apenas SQL, sem alterar Storage; ausência de cópia independente de ficheiros não é risco adicional desta alteração.
+- Preflight13:47UTC: histórico remoto até20260928165929;11 dependências financeiras/permissões e colunas/policies das8 tabelas coincidem com QA alinhado; nomes candidatos livres. Continuidade sem órfãos; utilizadores/permissões preservados. Advisors sem ERROR; avisos existentes sobre funções SECURITY DEFINER e protecção de passwords.
+- Produção confirmada0.13.3; Cloudflare100% version7dc8bc64-d133-4fd5-868a-dde7f88e21e1 desde04-10-2026 23:30:58UTC (rollback). Sessão autenticada abriu em leitura. Configuração pública de produção verificada; dry-run e3PWA aprovados antes do ajuste.
+- Segunda fase, só depois da publicação: anulação auditada com confirmação, original preservado e saldo restaurado; NÃO exigir motivo (correcção explícita de Diogo). Nenhuma anulação real ou migration de estorno autorizada nesta etapa.
+
+## 2026-10-06 - Integração Pagamentos no HP concluída localmente
+
+- Docker acessível como diogo; container carina-payments-qa-20261006 isolado e preservado, PostgreSQL 17.6. Sem mudanças de ACL/grupos/serviços do host.
+- Checks finais: 299 unitários, 25 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
+- Metadados remotos consultados só em leitura: funções financeiras e colunas coincidem; policies históricas de work_entries foram reproduzidas apenas no QA e os 16 cenários passaram novamente. Detalhes/reconciliações/impacto e rollback em docs/payments-workspace.md.
+- Falta autorização informada para a migration candidata e smoke HTTP do destino. Frontend não deve ser publicado antes das RPCs. Não houve novo push, PR, alteração remota ou deploy.
+## 2026-10-06 — Pagamentos 0.14.0 em preparação isolada
+
+- Branch codex/payments-20261006, baseada em main 7da5bb1d044aa225b9eaee11080422ccb515dd44. Checkout original e três configurações Playwright não versionadas preservados.
+- Clientes → Pagamentos: quatro categorias, contagens, filtros partilhados e detalhe por toque. Facturação explícita antes de receber; notas com parcial/total sem nova versão documental, sem mexer em provisões e sem cobrança individual duplicada.
+- Migration local 20261006114804_add_payments_workspace.sql, livro auditado, idempotência, saldo/versão concorrente e guardas de associação. Nenhuma migration, pagamento, credencial, permissão de utilizador ou publicação remota alterada.
+- Evidência, decisões de negócio, testes e plano de publicação: docs/payments-workspace.md. O ensaio PostgreSQL com esquema mínimo não substitui RLS integrada/múltiplas sessões; publicação permanece bloqueada por essa validação e pela autorização própria.
+- Produção conhecida 0.13.3 em 03-10-2026; rede HTTP local indisponível impediu nova confirmação. Não confundir versão local 0.14.0 com produção.
+
 ## 2026-10-03 — estabilização do ensaio da barra horizontal, sem alteração de produção
 
 - A CI documental 37144034117 falhou ao ler boundingBox nulo após zoom: 160 E2E aprovados, um omitido e uma falha. VisibleTableScrollbars agenda a medição por requestAnimationFrame e pode desmontar o portal durante a transição; a verificação prévia de visibilidade não torna atómica a leitura seguinte.

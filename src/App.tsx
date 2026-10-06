@@ -23,12 +23,13 @@ const AdminLandingPage=lazy(()=>import('./features/admin/AdminLandingPage').then
 const AccessLogsPage=lazy(()=>import('./features/admin/AccessLogsPage').then(module=>({default:module.AccessLogsPage})))
 const MasterDataPage=lazy(()=>import('./features/master-data/MasterDataPage').then(module=>({default:module.MasterDataPage})))
 const ProvisionsPage=lazy(()=>import('./features/clients/ProvisionsPage').then(module=>({default:module.ProvisionsPage})))
+const PaymentsPage=lazy(()=>import('./features/payments/PaymentsPage').then(module=>({default:module.PaymentsPage})))
 const RetainersPage=lazy(()=>import('./features/master-data/RetainersPage').then(module=>({default:module.RetainersPage})))
 const NotesPage=lazy(()=>import('./features/notes/NotesPage').then(module=>({default:module.NotesPage})))
 const CreateWorkEntryModal=lazy(()=>import('./features/work-entries/CreateWorkEntryModal').then(module=>({default:module.CreateWorkEntryModal})))
 const QuickExpenseModal=lazy(()=>import('./features/work-entries/QuickExpenseModal').then(module=>({default:module.QuickExpenseModal})))
 
-const validViews:ViewId[] = ['overview','work','debtors','notes','clients','retainers','provisions','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
+const validViews:ViewId[] = ['overview','work','debtors','notes','clients','retainers','provisions','payments','billing','professionals','imports','import-review','master-data','admin','admin-users','admin-access-logs']
 const restrictedViews:ViewId[]=['imports','import-review','admin','admin-users']
 const ownerViews:ViewId[]=['admin-access-logs']
 const workPrefilterParams=['professionalId','billingEntityId','invoiced','paid','collectionState','missingSociety','missingPrice','clientId'] as const
@@ -96,6 +97,7 @@ export function AuthenticatedApplication() {
   else if (view === 'debtors') content = <DebtorsPage />
   else if (view === 'notes') content = <NotesPage />
   else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
+  else if (view === 'payments') content = <PaymentsPage />
   else if (view === 'provisions') content = <ProvisionsPage />
   else if (view === 'retainers') content = <RetainersPage />
   else if (view === 'billing') content = society?<EntityDashboard key={`billing-${society}`} kind="billing" initialSelectionLabel={society} />:<BillingLandingPage onSelect={(name)=>navigate('billing',name)}/>
