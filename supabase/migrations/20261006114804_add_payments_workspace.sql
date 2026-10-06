@@ -172,6 +172,13 @@ begin
    then raise exception 'Pedido já utilizado ou sem permissão.' using errcode='42501';end if;
   return jsonb_build_object('id',receipt.id,'amount',receipt.amount,'replayed',true);
  end if;
+ -- Serialise settlement with credit reversals/applications using their account lock.
+ -- Re-read the queue/token only after this lock: a reversal may have committed while waiting.
+ if p_category='note' then
+  perform 1 from public.client_credit_accounts a where a.client_id=client.id
+   and a.billing_entity_id=(note->>'billing_entity_id')::uuid and a.currency=note->>'currency'
+   order by a.id for update;
+ end if;
  if p_category='work' then select * into work from public.work_entries where id=p_id for update;
  elsif p_category='retainer' then select * into charge from public.retainer_charges where id=p_id for update;end if;
  select i into item from private.payment_items() i where i->>'category'=p_category and i->>'id'=p_id::text;

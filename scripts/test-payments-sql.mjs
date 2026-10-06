@@ -88,5 +88,58 @@ await check('fixed fee receipt respects role, invoice and existing provision, no
  await assert.rejects(sql(`insert into client_credit_movements(kind,reverses_id) values('reversal','${uid(72)}')`),/recebimentos/)
  await sql("select set_config('test.role','owner',false)")
 })
-console.log(checks+' PostgreSQL contract checks passed. Dependencies/ACL helpers stubbed; not full Supabase RLS or multi-connection concurrency validation.')
+
+await check('receipt/audit failure rolls back settlement atomically',async()=>{
+ const before=await find(legacy);
+ await sql("create function private.test_fail_audit() returns trigger language plpgsql as $$begin raise exception 'synthetic audit failure';end;$$; create trigger z_test_fail_audit before insert on audit_log for each row execute function private.test_fail_audit();");
+ await assert.rejects(pay(before,5,uid(800)),/synthetic audit failure/);
+ assert.equal((await find(legacy)).remaining,before.remaining);
+ assert.equal((await one("select count(*)::int n from pending_payment_receipts where request_id=$1",[uid(800)])).n,0);
+ await sql('drop trigger z_test_fail_audit on audit_log; drop function private.test_fail_audit();');
+});
+// Replace permission stubs with the actual latest repository helpers and synthetic ACL rows.
+await sql(`create table firm_members(firm_id uuid,user_id uuid,role text,active boolean);
+ create table user_login_credentials(user_id uuid,must_change_pin boolean);
+ create table access_grants(firm_id uuid,active boolean,valid_from timestamptz,valid_until timestamptz,permission text,principal_type text,user_id uuid,team_id uuid,resource_type text,billing_entity_id uuid,client_id uuid,matter_id uuid);
+ create table team_members(team_id uuid,user_id uuid,firm_id uuid);
+ create table billing_entity_financial_permissions(firm_id uuid,user_id uuid,billing_entity_id uuid,can_view_financials boolean);
+ insert into firm_members values('${firm}','${user}','owner',true);
+ insert into user_login_credentials values('${user}',false);
+ grant usage on schema public,auth to authenticated;`);
+async function realHelper(file,name){const source=fs.readFileSync(root+'supabase/migrations/'+file,'utf8');const match=source.match(new RegExp('create or replace function private\\.'+name+'\\([\\s\\S]*?\\$\\$;'));assert.ok(match,name);await sql(match[0]);}
+// Drop stubs because PostgreSQL cannot rename their anonymous arguments with CREATE OR REPLACE.
+await sql('drop function private.has_scope_access(uuid,uuid,uuid,uuid,text) cascade; drop function private.can_view_billing_financials(uuid,uuid) cascade; drop function private.has_firm_role(uuid,text[]) cascade;');
+await realHelper('20260805113907_add_auth_terms_and_access_control.sql','permission_rank');
+await realHelper('20260816132003_require_initial_pin_change.sql','has_completed_pin_setup');
+await realHelper('20260816192000_align_auditor_and_security_policies.sql','has_firm_role');
+await realHelper('20260819002500_allow_operator_all_work_management.sql','has_scope_access');
+await realHelper('20260816110033_reconcile_username_pin_access.sql','can_view_billing_financials');
+const authQueue=async()=>{await sql('set role authenticated');try{return await queue()}finally{await sql('reset role')}};
+await check('actual ACL: owner sees queue, incomplete PIN and inactive membership see none',async()=>{
+ assert.ok((await authQueue()).length>0);
+ await sql('update user_login_credentials set must_change_pin=true');assert.equal((await authQueue()).length,0);
+ await sql('update user_login_credentials set must_change_pin=false;update firm_members set active=false');assert.equal((await authQueue()).length,0);
+ await sql('update firm_members set active=true');
+});
+await check('actual ACL: operator requires financial permission',async()=>{
+ await sql("update firm_members set role='operator'");assert.equal((await authQueue()).length,0);
+ await sql(`insert into billing_entity_financial_permissions values('${firm}','${user}','${society}',true)`);assert.ok((await authQueue()).length>0);
+});
+await check('actual ACL: viewer gets scoped read only; expired grants hide items',async()=>{
+ await sql("update firm_members set role='viewer'");assert.equal((await authQueue()).length,0);
+ await sql(`insert into access_grants values('${firm}',true,now()-interval '1 day',null,'view','user','${user}',null,'client',null,'${client}',null)`);
+ const items=await authQueue();assert.ok(items.length>0);assert.ok(items.every(i=>!i.can_pay&&!i.can_edit));
+ await sql("update access_grants set valid_until=now()-interval '1 minute'");assert.equal((await authQueue()).length,0);
+ await sql('update access_grants set valid_until=null');
+});
+await check('actual ACL: unscoped foreign client hidden and receipt table denies direct read/write',async()=>{
+ await sql(`insert into clients values('${uid(901)}','${firm}','Outra ficha');insert into work_entries(id,firm_id,client_id,billing_entity_id) values('${uid(902)}','${firm}','${uid(901)}','${society}')`);
+ assert.ok(!(await authQueue()).some(i=>i.id===uid(902)));
+ await sql('set role authenticated');try{
+ await assert.rejects(sql('select * from pending_payment_receipts'),/permission denied/);
+ await assert.rejects(sql('delete from pending_payment_receipts'),/permission denied/);
+ await assert.rejects(pay(await find(legacy),1,uid(810)),/Sem permiss/);
+ }finally{await sql('reset role')}
+});
+console.log(checks+' PostgreSQL contract checks passed. Real repository ACL helpers tested with synthetic ACL tables; core schema/work RPC still partial, not full Supabase or multi-connection concurrency validation.')
 await db.close()

@@ -78,7 +78,7 @@ export default defineConfig({
   ],
   server: { proxy: supabaseFunctionProxy },
   preview: { proxy: supabaseFunctionProxy },
-  optimizeDeps: { noDiscovery: true, include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime'] },
+  optimizeDeps: { noDiscovery: true, include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'pdf-lib'] },
   test: {
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
