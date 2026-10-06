@@ -32,3 +32,10 @@ test('revisão recalcula quando foi estornada uma aplicação partilhada por out
  const result=noteCreditPreview([{id:'a',effective_amount:100},{id:'b',effective_amount:200}],0,{...account,balance:200},[revision],revision,true)
  expect(result).toMatchObject({deducted:300,newDeduction:300,returned:100,balance_after:0})
 })
+
+import {documentDirectReceived} from './honorariumDocuments'
+test('recebimentos das notas incluem pagamento externo de preço fixo sem duplicar provisões',()=>{
+ expect(documentDirectReceived({document_options:{direct_payment:{amount:30},fixed_fee_payment:{provision:20,external:103}}})).toBe(30)
+ expect(documentDirectReceived({document_options:{fixed_fee_payment:{provision:20,external:103}}})).toBe(103)
+ expect(documentDirectReceived({document_options:{}})).toBe(0)
+})

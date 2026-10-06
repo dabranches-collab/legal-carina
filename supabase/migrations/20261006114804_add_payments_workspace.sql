@@ -221,7 +221,8 @@ begin
   previous_paid:=coalesce((previous->'document_options'->'direct_payment'->>'amount')::numeric,(previous->'document_options'->'fixed_fee_payment'->>'external')::numeric,0);
   incoming_paid:=coalesce((new.document_options->'direct_payment'->>'amount')::numeric,(new.document_options->'fixed_fee_payment'->>'external')::numeric,0);
   if coalesce((previous->'document_options'->>'payment_revision')::integer,0)<>coalesce((new.document_options->>'payment_revision')::integer,0) then raise exception 'Existem novos recebimentos. Reabra a nota antes de a rever.' using errcode='40001';end if;
-  if previous_paid>0 and (new.voided or incoming_paid<previous_paid or new.total<new.deducted+incoming_paid
+  if previous_paid>0 and (new.voided or incoming_paid<previous_paid
+    or (new.total<(previous->>'total')::numeric and new.total<new.deducted+incoming_paid)
     or new.client_id::text<>previous->>'client_id' or new.billing_entity_id::text<>previous->>'billing_entity_id'
     or new.currency<>previous->>'currency'
     or (select jsonb_agg(i->>'id' order by i->>'id') from jsonb_array_elements(new.items)i)
