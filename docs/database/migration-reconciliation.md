@@ -1,5 +1,15 @@
 # Reconciliação do histórico de migrations
 
+## 06-10-2026 — Pagamentos aplicado isoladamente
+
+| Ficheiro local | Registo remoto confirmado |
+| --- | --- |
+| `20261006114804_add_payments_workspace.sql` | `20261006144551` — nome `20261006114804_add_payments_workspace` |
+
+Aplicação pela integração Supabase depois da autorização directa de publicação e CI final do PR #88 aprovada. `supabase migration list --linked` continua a devolver ProjectRefNotLinkedError neste checkout; histórico remoto lido antes/depois pela integração. Sem db push global, migration repair ou alterações históricas.
+
+Backup recuperável confirmado: 06-10-2026 05:45:26 UTC. Dependências (11 funções/146 colunas/14 policies de oito tabelas) coincidiram com QA; 16 cenários de RLS/concorrência real aprovados. Pós-instalação: tabela RLS sem acesso directo, quatro RPCs authenticated, sete triggers, continuidade de utilizadores/permissões por hashes e zero recebimentos no smoke. Storage/Auth não alterados. A reversão do frontend conserva o livro/auditoria/guardas; estorno de recebimentos ainda não implementado.
+
 ## 28-09-2026 — alertas sem preço e movimentos recentes (aplicadas)
 
 | Ficheiro local | Registo remoto da integração Supabase |

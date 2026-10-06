@@ -1,3 +1,9 @@
+## 2026-10-06 — produção 0.14.0 confirmada
+
+Por receber → Pagamentos publicado a partir do PR #88: commit funcional `ae6116d`, merge em main `9df5f26`. CI completa aprovada (299 unitários, 25 SQL, 167 E2E/uma omissão, três PWA); preflight e 16 cenários PostgreSQL/RLS/concorrência aprovados. Migration local `20261006114804` aplicada isoladamente como registo remoto `20261006144551`.
+
+Cloudflare deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`, Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`, 100% desde 06-10-2026 14:47:47 UTC. URL https://legal-carina.dabranches.workers.dev, notas online 0.14.0, hashes iguais ao build e sessão autenticada/PWA/menu de quatro filas confirmados. Nenhum pagamento real registado no smoke; utilizadores e permissões preservados. Sem estorno nesta release; Safari físico não ensaiado. Rollback frontend 0.13.3: `7dc8bc64-d133-4fd5-868a-dde7f88e21e1`, mantendo livro/auditoria/guardas. Detalhes em HANDOVER e docs/deployment.
+
 ## 2026-10-06 - PR88 e ajuste final de navegação, publicação pendente
 
 - Push manual confirmado em 5e8d308; PR88 draft https://github.com/dabranches-collab/legal-carina/pull/88. CI37473441130 e secret scan37473441102 aprovados nesse commit.

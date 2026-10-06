@@ -14,6 +14,16 @@
 
 # Deployment seguro
 
+## 06-10-2026 — versão 0.14.0 publicada e verificada
+
+Por ordem explícita «publica», PR #88 integrado no merge `9df5f264a6f3e65c93cd45b679ff2242a4e663f5` (funcional `ae6116d`). CI `37480126368` e secret scan `37480126626` aprovados: 299 unitários, 25 SQL, 167 E2E/uma omissão e três PWA. Gates locais, seis cenários de navegação, 16 cenários PostgreSQL reais e dry-run aprovados.
+
+Migration Pagamentos aplicada isoladamente antes do frontend: registo remoto `20261006144551`, nome `20261006114804_add_payments_workspace`. Backup físico recuperável confirmado no painel: 06-10-2026 05:45:26 UTC. Preflight de funções/colunas/policies igual ao QA; continuidade de utilizadores e permissões preservada. RLS, grants e sete triggers confirmados; zero recebimentos gravados no smoke. Sem Auth/Storage ou repair/db push.
+
+Worker `legal-carina`, https://legal-carina.dabranches.workers.dev: deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`, Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`, 100% desde `2026-10-06T14:47:47Z`. HTTP confirma 0.14.0; hashes de HTML/notas/service worker/JS/CSS/Pagamentos iguais ao build. Sessão autenticada carregou Por receber → Pagamentos e as quatro filas; actualização PWA activada. Não se registaram pagamentos reais.
+
+Rollback frontend: `7dc8bc64-d133-4fd5-868a-dde7f88e21e1` (0.13.3). Conservar livro, auditoria e guardas da base após recebimentos; não reverter flags nem apagar dados. O fluxo de estorno de recebimentos permanece fora desta release. Safari físico não foi ensaiado.
+
 ## 30-09-2026 — versão 0.13.1 publicada e verificada
 
 - Por ordem explícita «publica», PR [#82](https://github.com/dabranches-collab/legal-carina/pull/82) integrado em GitHub `main` no commit funcional `98f73a0378ce426ffb370c5166f907f576827527`. Checkout oficial alinhado com esse commit, branch documental `codex/deployment-record-0.13.1`. CI `36749735234` e secret scan `36749735050` verdes: 55 ficheiros/283 testes unitários, runtime Worker, 152 E2E aprovados/uma omissão condicional e três testes PWA aprovados. Segurança de ficheiros, lint, tipos, suite unitária, runtime, build de produção, três testes PWA e dry-run final também aprovados localmente.
