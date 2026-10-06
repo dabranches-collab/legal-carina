@@ -1,3 +1,11 @@
+## 2026-10-06 — Pagamentos 0.14.0 em preparação isolada
+
+- Branch codex/payments-20261006, baseada em main 7da5bb1d044aa225b9eaee11080422ccb515dd44. Checkout original e três configurações Playwright não versionadas preservados.
+- Clientes → Pagamentos: quatro categorias, contagens, filtros partilhados e detalhe por toque. Facturação explícita antes de receber; notas com parcial/total sem nova versão documental, sem mexer em provisões e sem cobrança individual duplicada.
+- Migration local 20261006114804_add_payments_workspace.sql, livro auditado, idempotência, saldo/versão concorrente e guardas de associação. Nenhuma migration, pagamento, credencial, permissão de utilizador ou publicação remota alterada.
+- Evidência, decisões de negócio, testes e plano de publicação: docs/payments-workspace.md. O ensaio PostgreSQL com esquema mínimo não substitui RLS integrada/múltiplas sessões; publicação permanece bloqueada por essa validação e pela autorização própria.
+- Produção conhecida 0.13.3 em 03-10-2026; rede HTTP local indisponível impediu nova confirmação. Não confundir versão local 0.14.0 com produção.
+
 ## 2026-10-03 — estabilização do ensaio da barra horizontal, sem alteração de produção
 
 - A CI documental 37144034117 falhou ao ler boundingBox nulo após zoom: 160 E2E aprovados, um omitido e uma falha. VisibleTableScrollbars agenda a medição por requestAnimationFrame e pode desmontar o portal durante a transição; a verificação prévia de visibilidade não torna atómica a leitura seguinte.

@@ -41,7 +41,7 @@ export function FixedFeeNoteActions({job,societyName,readOnly}:{job:Job;societyN
    const bankAccounts=issuer.bank_accounts?.length?issuer.bank_accounts:issuer.iban?[{account_holder:issuer.bank_account_holder??'',bank_name:issuer.bank_name??'',account_number:issuer.bank_account_number??'',iban:issuer.iban,bic_swift:issuer.bic_swift??'',currency:job.currency}]:[]
    if(!issuer.legal_name||!issuer.tax_number||!issuer.address||!bankAccounts.length)throw new Error('Complete os dados de identificação e a conta bancária da sociedade antes de emitir a nota.')
    const presentation:FormalSnapshot={version:1,societyName,clientName:client.display_name,clientDocument:client,issuer,issuerLogo:await issuerLogo(issuer,societyName),language:client.honorarium_language??'pt',columns:['period','description','duration'],showTimeTotal:true,showAmountTotal:true,bankAccounts}
-   const options={client_name:client.display_name,society_name:societyName,language:presentation.language,presentation,fixed_fee_paid:job.is_paid}
+   const options={payment_revision:Number(note?.document_options.payment_revision??0),client_name:client.display_name,society_name:societyName,language:presentation.language,presentation,fixed_fee_paid:job.is_paid}
    const response=await supabase.rpc('issue_fixed_fee_honorarium_note',{p_job_id:job.id,p_document_options:options,p_expected_total:totalWithVat(job.agreed_amount,job.vat_rate),p_expected_applied:Number(job.provision_applied??0),p_expected_revision:note?.revision??null,p_request_id:crypto.randomUUID()})
    if(response.error)throw response.error
    const saved=response.data as ProvisionNote&HonorariumDocument

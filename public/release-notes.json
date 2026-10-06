@@ -1,10 +1,17 @@
 {
-  "version": "0.13.3",
+  "version": "0.14.0",
   "changes": [
-    "Entrada restabelecida com a configuração pública de produção verificada.",
-    "Todos/Limpar preservam a selecção vazia; a publicação passa a bloquear configurações Auth ausentes ou de teste."
+    "Clientes inclui Pagamentos, com quatro listas de pendências e detalhe por toque.",
+    "Recebimentos de notas sem reemissão, com saldo, auditoria e protecção contra duplicação."
   ],
   "releases": [
+    {
+      "version": "0.14.0",
+      "changes": [
+        "Clientes inclui Pagamentos, com quatro listas de pendências e detalhe por toque.",
+        "Recebimentos de notas sem reemissão, com saldo, auditoria e protecção contra duplicação."
+      ]
+    },
     {
       "version": "0.13.3",
       "changes": [
