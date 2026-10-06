@@ -241,6 +241,9 @@ begin
  then raise exception 'Um registo já está pago. Não pode ser cobrado numa nova nota.';end if;
  if not new.voided and new.fixed_fee_job_id is null and exists(
   select 1 from private.current_payment_notes() n where n->>'document_id'<>new.document_id::text
+  -- The provision issuer creates its legacy snapshot in this transaction before the version.
+  -- It is the same note, not an independent document; existing versioned documents still conflict.
+  and not (new.credit_note_id is not null and n->>'document_id'=new.credit_note_id::text and n->>'id'=new.credit_note_id::text)
   and exists(select 1 from jsonb_array_elements(n->'items')a join jsonb_array_elements(new.items)b on a->>'id'=b->>'id'))
  then raise exception 'Um registo já pertence a outra nota vigente. Reveja essa nota.';end if;
  return new;

@@ -97,6 +97,17 @@ await check('receipt/audit failure rolls back settlement atomically',async()=>{
  assert.equal((await one("select count(*)::int n from pending_payment_receipts where request_id=$1",[uid(800)])).n,0);
  await sql('drop trigger z_test_fail_audit on audit_log; drop function private.test_fail_audit();');
 });
+await check('new provision snapshot is the same emitted document, not duplicate collection',async()=>{
+const w=uid(930),credit=uid(940),doc=uid(942);
+await sql(`insert into work_entries(id,firm_id,client_id,billing_entity_id)values('${w}','${firm}','${client}','${society}');
+insert into provision_honorarium_notes(id,account_id,number,created_by,total,deducted,remaining,items)values('${credit}','${uid(30)}','NH-NEW','${user}',100,30,70,'[{"id":"${w}"}]');
+insert into client_credit_movements(account_id,note_id,kind,amount)values('${uid(30)}','${credit}','consumption',-30);
+insert into honorarium_document_versions(id,document_id,revision,number,firm_id,client_id,billing_entity_id,created_by,subtotal,vat_rate,vat,total,deducted,remaining,balance_after,currency,items,document_options,credit_note_id,request_id,request_payload)
+values('${doc}','${doc}',1,'NH-NEW','${firm}','${client}','${society}','${user}',100,0,0,100,30,70,0,'EUR','[{"id":"${w}"}]','{}','${credit}',gen_random_uuid(),'{}');`);
+assert.equal(await find(credit),undefined);assert.equal((await find(doc)).remaining,70);
+await assert.rejects(insertNote(uid(943),[{id:w}],{}),/outra nota vigente/);
+});
+
 // Replace permission stubs with the actual latest repository helpers and synthetic ACL rows.
 await sql(`create table firm_members(firm_id uuid,user_id uuid,role text,active boolean);
  create table user_login_credentials(user_id uuid,must_change_pin boolean);

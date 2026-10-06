@@ -1,3 +1,9 @@
+## 2026-10-06 - Integração Pagamentos no HP concluída localmente
+
+- Docker acessível como diogo; container carina-payments-qa-20261006 isolado e preservado, PostgreSQL 17.6. Sem mudanças de ACL/grupos/serviços do host.
+- Checks finais: 299 unitários, 25 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
+- Metadados remotos consultados só em leitura: funções financeiras e colunas coincidem; policies históricas de work_entries foram reproduzidas apenas no QA e os 16 cenários passaram novamente. Detalhes/reconciliações/impacto e rollback em docs/payments-workspace.md.
+- Falta autorização informada para a migration candidata e smoke HTTP do destino. Frontend não deve ser publicado antes das RPCs. Não houve novo push, PR, alteração remota ou deploy.
 ## 2026-10-06 — Pagamentos 0.14.0 em preparação isolada
 
 - Branch codex/payments-20261006, baseada em main 7da5bb1d044aa225b9eaee11080422ccb515dd44. Checkout original e três configurações Playwright não versionadas preservados.
