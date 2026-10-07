@@ -1,6 +1,12 @@
+## 2026-10-07 — próxima versão local 0.15.0, produção 0.14.0
+
+Correcções sem motivo/override manual e modalidade Avença + horas preparadas em `codex/retainer-extra-hours-20261007`: pacote anual/mensal, renovação, divisão dos minutos de fronteira e facturação por registo apenas do excedente. A gravação e a associação à avença são atómicas. Documentos emitidos conservam os valores.
+
+303 unitários, 34 SQL, 15 cenários PostgreSQL de consumo, 16 de pagamentos, quatro de concorrência e oito E2E específicos aprovados; suite E2E completa em validação. Build/dry-run aprovados. Duas migrations de 07-10 ainda não instaladas; código/PR não equivalem a publicação. Produção reconfirmada 0.14.0 e Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`. Falta ordem «publica». Consultar HANDOVER e docs/retainer-extra-hours.md.
+
 ## 2026-10-06 — produção 0.14.0 confirmada
 
-Por receber → Pagamentos publicado a partir do PR #88: commit funcional `ae6116d`, merge em main `9df5f26`. CI completa aprovada (299 unitários, 25 SQL, 167 E2E/uma omissão, três PWA); preflight e 16 cenários PostgreSQL/RLS/concorrência aprovados. Migration local `20261006114804` aplicada isoladamente como registo remoto `20261006144551`.
+Por receber → Pagamentos publicado a partir do PR #88: commit funcional `ae6116d`, merge em main `9df5f26`. CI completa aprovada (299 unitários, 34 SQL, 167 E2E/uma omissão, três PWA); preflight e 16 cenários PostgreSQL/RLS/concorrência aprovados. Migration local `20261006114804` aplicada isoladamente como registo remoto `20261006144551`.
 
 Cloudflare deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`, Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`, 100% desde 06-10-2026 14:47:47 UTC. URL https://legal-carina.dabranches.workers.dev, notas online 0.14.0, hashes iguais ao build e sessão autenticada/PWA/menu de quatro filas confirmados. Nenhum pagamento real registado no smoke; utilizadores e permissões preservados. Sem estorno nesta release; Safari físico não ensaiado. Rollback frontend 0.13.3: `7dc8bc64-d133-4fd5-868a-dde7f88e21e1`, mantendo livro/auditoria/guardas. Detalhes em HANDOVER e docs/deployment.
 
@@ -17,7 +23,7 @@ Cloudflare deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`, Version ID `7f91ce
 ## 2026-10-06 - Integração Pagamentos no HP concluída localmente
 
 - Docker acessível como diogo; container carina-payments-qa-20261006 isolado e preservado, PostgreSQL 17.6. Sem mudanças de ACL/grupos/serviços do host.
-- Checks finais: 299 unitários, 25 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
+- Checks finais: 299 unitários, 34 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
 - Metadados remotos consultados só em leitura: funções financeiras e colunas coincidem; policies históricas de work_entries foram reproduzidas apenas no QA e os 16 cenários passaram novamente. Detalhes/reconciliações/impacto e rollback em docs/payments-workspace.md.
 - Falta autorização informada para a migration candidata e smoke HTTP do destino. Frontend não deve ser publicado antes das RPCs. Não houve novo push, PR, alteração remota ou deploy.
 ## 2026-10-06 — Pagamentos 0.14.0 em preparação isolada

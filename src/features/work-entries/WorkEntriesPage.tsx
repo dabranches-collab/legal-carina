@@ -813,7 +813,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
           onCreated={() => {
             invalidateWorkUniverse();
             setCreating(false);
-            setNotice("Movimento criado e registado na auditoria.");
+            setNotice("Movimento criado.");
             setRefreshToken((value) => value + 1);
           }}
         />
@@ -829,7 +829,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
             setEditingId(null);
             setNotice(action === "deleted"
               ? "Movimento apagado e preservado no histórico de auditoria."
-              : "Movimento actualizado e registado na auditoria.");
+              : "Movimento actualizado.");
             setRefreshToken((value) => value + 1);
             onEntrySaved?.();
           }}
