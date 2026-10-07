@@ -1,3 +1,7 @@
+## 2026-10-07 — 0.15.0 com ordem de publicação, PR #90
+
+Publicação autorizada explicitamente; gates finais em curso, ainda sem deploy ou migrations novas. Backup físico de 07-10-2026 05:49:11 UTC confirmado no painel. Nova execução local: 303 unitários/34 SQL, 15 cenários PostgreSQL de avenças, 16 de pagamentos/RLS, quatro de concorrência, três PWA e dry-run aprovados. A primeira CI detectou expectativas antigas de filtros fixos; actualizadas para o scroll pedido, conservando alinhamento das colunas e estabilidade da altura, com correcção do salto de 24 px na transição. Consultar PR #90 para CI final.
+
 ## 2026-10-07 — scroll dos registos corrigido localmente
 
 Filtros e pesquisa deixam de permanecer sobre a tabela ao descer, em todas as dimensões. Cabeçalho de colunas desktop/tablet alinhado directamente sob o cabeçalho da aplicação. Pré-visualização local com 100 registos sintéticos e sem API indisponível; validada no browser integrado em portátil, tablet e iPhone, claro/escuro. Tipos, lint, 22 testes existentes da tabela e build aprovados. Branch `codex/retainer-extra-hours-20261007`; sem publicação.

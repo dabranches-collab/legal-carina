@@ -1,3 +1,10 @@
+## 2026-10-07 — publicação 0.15.0 autorizada, gates finais
+
+- Ordem explícita «PUBLICA» recebida nesta tarefa; PR #90. Produção ainda 0.14.0 até concluir os gates e instalar isoladamente as duas migrations de 07-10.
+- 303 unitários, 34 SQL, 15 cenários PostgreSQL de avenças, 16 de pagamentos/RLS e quatro de concorrência aprovados novamente; três PWA do build de produção e dry-run aprovados. Backup físico recuperável de 07-10-2026 05:49:11 UTC confirmado directamente no painel Supabase.
+- Primeira CI da PR: segurança, tipos, unitários/SQL/runtime e auditoria aprovados; 163 E2E aprovados, um omitido e dez expectativas antigas que exigiam filtros fixos. Ensaios actualizados ao requisito de scroll livre; corrigido também o salto de 24 px na transição do cabeçalho. Nova CI necessária neste commit.
+- CLI `migration list --linked` sem projecto ligado; histórico revisto pela integração até `20261006161821`. Linha de base de acessos sem órfãos; permissões, RLS e policies registadas para comparação posterior. Sem mudanças Auth/Storage.
+
 ## 2026-10-07 — scroll dos registos e pré-visualização local
 
 - Na branch `codex/retainer-extra-hours-20261007`, filtros gerais e ferramentas/pesquisa da tabela acompanham o scroll em todas as dimensões. O cabeçalho de colunas conserva a fixação existente a partir de tablet, directamente sob o cabeçalho da aplicação, sem reservar espaço para os filtros.

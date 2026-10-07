@@ -604,7 +604,7 @@ export function StandardDataTable<Row>({
         // Compensar apenas essa pequena diferença evita tapar a primeira linha.
         // Actualizar no mesmo evento evita o salto causado por um render posterior.
         const gap=Math.max(0,targetTop-tableRect.top);
-        const leadingGap=window.scrollY<1?gap:Math.min(24,gap);
+        const leadingGap=stickyTools?(window.scrollY<1?gap:Math.min(24,gap)):0;
         spacer.style.height=`${headerHeight+leadingGap}px`;
         header.style.position="fixed";
         header.style.transform="none";
