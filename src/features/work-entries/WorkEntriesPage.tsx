@@ -244,21 +244,6 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
   const [reviewCounts,setReviewCounts]=useState<Record<string,number|null>>({});
   const [reviewSummaries,setReviewSummaries]=useState<Record<string,FilterSummary>>({});
   const silentRefreshRef=useRef(false);
-  const filtersBarRef=useRef<HTMLDivElement>(null);
-  const [tableStickyOffset,setTableStickyOffset]=useState(112);
-  useEffect(()=>{
-    const bar=filtersBarRef.current;
-    const update=()=>{
-      const appHeader=document.querySelector<HTMLElement>('.app-shell-header');
-      const headerHeight=Math.ceil(appHeader?.getBoundingClientRect().height??64);
-      const keepFiltersSticky = !!bar && window.innerWidth >= 1024 && window.innerHeight > 900;
-      setTableStickyOffset(headerHeight+(keepFiltersSticky?Math.ceil(bar!.getBoundingClientRect().height):0));
-    };
-    update();
-    const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(update);
-    if(bar)observer?.observe(bar);const header=document.querySelector('.app-shell-header');if(header)observer?.observe(header);window.addEventListener('resize',update);
-    return()=>{observer?.disconnect();window.removeEventListener('resize',update)};
-  },[]);
   const [creating, setCreating] = useState(false),
     [editingId, setEditingId] = useState<string | null>(null);
   useEffect(() => {
@@ -630,7 +615,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
           {notice}
         </p>
       )}
-      {embeddedQuery===undefined&&<div ref={filtersBarRef} className="work-filters-bar grid gap-2 bg-background pb-2 lg:sticky lg:top-[var(--app-header-height,9.75rem)] lg:z-50 lg:grid-cols-[minmax(0,1fr)_7.5rem]">
+      {embeddedQuery===undefined&&<div className="work-filters-bar grid gap-2 bg-background pb-2 lg:grid-cols-[minmax(0,1fr)_7.5rem]">
       <section aria-label="Filtros dos registos" className="card p-2 shadow-sm">
       <div
         aria-labelledby="review-issues-title"
@@ -802,7 +787,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
         loadAllRows={loadAllTableRows}
         totalRows={hasEmptyPrefilter?0:meta.total}
         universeKey={JSON.stringify([searchArgs,hasEmptyPrefilter])}
-        stickyHeaderOffset={tableStickyOffset}
+        stickyTools={false}
         showSearch={embeddedQuery!==undefined}
         resultNoun="registos"
         onRowDoubleClick={(row) => setEditingId(row.id)}
@@ -813,7 +798,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
           onCreated={() => {
             invalidateWorkUniverse();
             setCreating(false);
-            setNotice("Movimento criado e registado na auditoria.");
+            setNotice("Movimento criado.");
             setRefreshToken((value) => value + 1);
           }}
         />
@@ -829,7 +814,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
             setEditingId(null);
             setNotice(action === "deleted"
               ? "Movimento apagado e preservado no histórico de auditoria."
-              : "Movimento actualizado e registado na auditoria.");
+              : "Movimento actualizado.");
             setRefreshToken((value) => value + 1);
             onEntrySaved?.();
           }}

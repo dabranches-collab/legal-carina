@@ -72,7 +72,7 @@ test('arrastar uma divisória altera só a largura dessa coluna e persiste', asy
   expect(persisted).toBeCloseTo(after[0],0)
 })
 
-test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) => {
+test('filtros saem da vista e cabeçalho de colunas permanece fixo sem saltos', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 800 })
   await page.goto('/?qa-iphone=1&view=work')
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
@@ -82,7 +82,7 @@ test('barra e filtros da tabela permanecem fixos sem saltos', async ({ page }) =
   const header = table.locator('thead')
   const horizontal = table.locator('.scrollbar-thin.overflow-x-auto')
   await page.evaluate(() => window.scrollTo(0, 900))
-  await expect(tools).toBeInViewport()
+  await expect(tools).not.toBeInViewport()
   const headerViewportPositions:number[] = []
   for (const scrollTop of [920, 960, 1000, 1040, 1000, 960, 920]) {
     await page.evaluate((top) => window.scrollTo(0, top), scrollTop)
@@ -118,7 +118,7 @@ for (const { height, zoom } of [
   { height: 1240, zoom: 1 }, { height: 1080, zoom: 1 },
   { height: 1240, zoom: 1.25 }, { height: 1080, zoom: 1.25 },
   { height: 1240, zoom: 1.5 }, { height: 1080, zoom: 1.5 },
-]) test(`desktop 1920×${height} a ${zoom * 100}% conserva altura e filtros no início do scroll`, async ({ page }) => {
+]) test(`desktop 1920×${height} a ${zoom * 100}% liberta os filtros e conserva altura no início do scroll`, async ({ page }) => {
   await page.setViewportSize({ width: Math.round(1920 / zoom), height: Math.round(height / zoom) })
   await page.goto('/?qa-iphone=1&view=work')
   const table = page.getByRole('region', { name: 'Registos de trabalho' })
@@ -128,8 +128,7 @@ for (const { height, zoom } of [
   const start = await table.evaluate(element => {
     const tableTop = element.querySelector('table')!.getBoundingClientRect().top + window.scrollY
     const fixedHeight = document.querySelector('.app-shell-header')!.getBoundingClientRect().height
-    const toolsHeight = element.querySelector('.table-tools')!.getBoundingClientRect().height
-    return tableTop - fixedHeight - toolsHeight
+    return tableTop - fixedHeight
   })
   const heights: number[] = []
   for (const delta of [-12, -2, 2, 12, 28, 2, -2]) {
@@ -139,11 +138,12 @@ for (const { height, zoom } of [
   }
   expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(2)
   await page.evaluate(top => window.scrollTo({ top, behavior: 'instant' }), start + 120)
-  await expect(tools).toBeInViewport()
   await expect(header).toBeInViewport()
   await expect.poll(() => header.evaluate(element => getComputedStyle(element).position)).toBe('fixed')
   const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
-  expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y + toolsBox!.height - 1)
+  const appHeaderBox=(await page.locator('.app-shell-header').boundingBox())!
+  expect(toolsBox!.y+toolsBox!.height).toBeLessThanOrEqual(appHeaderBox.y+appHeaderBox.height+1)
+  expect(Math.abs(headerBox!.y-appHeaderBox.y-appHeaderBox.height)).toBeLessThan(2)
   expect(headerBox!.y + headerBox!.height).toBeLessThanOrEqual(Math.round(height / zoom))
   await page.screenshot({ path: `test-results/desktop-table-${height}-${zoom}.png` })
 })
@@ -252,15 +252,16 @@ test('zoom equivalente a 150% liberta as pendências e conserva a tabela fixa', 
 
   // Labels and actions can change the natural height of the prefilters.
   const filtersEnd = await filters.evaluate(element => element.getBoundingClientRect().bottom + window.scrollY)
+  const toolsEnd = await tools.evaluate(element => element.getBoundingClientRect().bottom + window.scrollY)
   const appHeaderHeight = (await page.locator('.app-shell-header').boundingBox())!.height
-  await page.evaluate(top => window.scrollTo({top,behavior:'instant'}), filtersEnd + appHeaderHeight)
+  await page.evaluate(top => window.scrollTo({top,behavior:'instant'}), Math.max(filtersEnd,toolsEnd) + appHeaderHeight + 24)
   await expect(filters).not.toBeInViewport()
-  await expect(tools).toBeInViewport()
+  await expect(tools).not.toBeInViewport()
   const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
   expect(toolsBox).not.toBeNull()
   expect(headerBox).not.toBeNull()
-  expect(Math.abs(toolsBox!.y-(await page.locator('.app-shell-header').boundingBox())!.height)).toBeLessThan(2)
-  expect(headerBox!.y).toBeGreaterThanOrEqual(toolsBox!.y+toolsBox!.height-1)
+  expect(Math.abs(headerBox!.y-appHeaderHeight)).toBeLessThan(2)
+  expect(toolsBox!.y+toolsBox!.height).toBeLessThanOrEqual(appHeaderHeight)
   await page.screenshot({ path: 'test-results/table-sticky-150-dark.png', fullPage: false })
 })
 
@@ -298,7 +299,7 @@ test('criação de movimento no iPhone mantém as acções visíveis durante o s
 })
 
 for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
-  test(`filtros permanecem fixos sem saltos com zoom ${Math.round(zoom * 100)}%`, async ({ page }) => {
+  test(`pesquisa sai da vista e colunas permanecem fixas com zoom ${Math.round(zoom * 100)}%`, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/?qa-iphone=1&view=work')
     const table = page.getByRole('region', { name: 'Registos de trabalho' })
@@ -316,7 +317,9 @@ for (const zoom of [0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
       const toolsBox=await tools.boundingBox()
       expect(toolsBox).not.toBeNull()
       expect(headerBox).not.toBeNull()
-      expect(toolsBox!.y).toBeGreaterThanOrEqual(0)
+      const appHeaderBox=(await page.locator('.app-shell-header').boundingBox())!
+      expect(toolsBox!.y+toolsBox!.height).toBeLessThanOrEqual(appHeaderBox.y+appHeaderBox.height+1)
+      expect(Math.abs(headerBox!.y-appHeaderBox.y-appHeaderBox.height)).toBeLessThan(2)
     }
     expect(Math.max(...positions) - Math.min(...positions)).toBeLessThanOrEqual(.75)
   })

@@ -156,7 +156,6 @@ export function EditWorkEntryModal({
     setSaving(true);
     setError("");
     if(originalBillingScope==='fixed_fee'&&entry.billing_scope!=='fixed_fee'){const association=await supabase.rpc('assign_work_entry_fixed_fee',{p_work_entry_id:entry.id,p_fixed_fee_job_id:null,p_reason:reason||'Desassociação do trabalho de preço fixo'});if(association.error){setError(association.error.message);setSaving(false);return}}
-    if(originalBillingScope==='retainer'&&entry.billing_scope!=='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'standard',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     const result = await updateWorkEntry(entry, reason);
     if (result.error) {
       const messages:Record<string,string>={
@@ -169,7 +168,6 @@ export function EditWorkEntryModal({
       setSaving(false);
       return;
     }
-    if(entry.billing_scope!==originalBillingScope&&entry.billing_scope==='retainer'){const scope=await supabase.rpc('set_work_entry_billing_scope',{p_work_entry_id:entry.id,p_billing_scope:'retainer',p_reason:reason||null});if(scope.error){setError(scope.error.message);setSaving(false);return}}
     if(entry.billing_scope==='fixed_fee'&&(entry.fixed_fee_job_id!==originalFixedFeeJobId||originalBillingScope!=='fixed_fee')){const association=await supabase.rpc('assign_work_entry_fixed_fee',{p_work_entry_id:entry.id,p_fixed_fee_job_id:entry.fixed_fee_job_id,p_reason:reason||'Associação a trabalho de preço fixo'});if(association.error){setError(association.error.message);setSaving(false);return}}
     onSaved("updated");
   }
@@ -302,7 +300,7 @@ export function EditWorkEntryModal({
               </select>
             </label>
             {isLegalteam(options.societies.find(item=>item.id===entry.billing_entity_id)?.name??'')&&<TaskReferrerFields value={entry.task_referrer??''} other={entry.task_referrer_other??''} onChange={(task_referrer,task_referrer_other)=>setEntry({...entry,task_referrer,task_referrer_other})}/>}
-            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer'|'fixed_fee';setEntry({...entry,billing_scope,fixed_fee_job_id:billing_scope==='fixed_fee'?entry.fixed_fee_job_id:null,...(billing_scope==='retainer'||billing_scope==='fixed_fee'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:billing_scope==='retainer'?'retainer':'fixed',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">Facturação normal do registo</option><option value="retainer" disabled={originalBillingScope==='fixed_fee'}>Coberto pela avença · apenas horas</option><option value="fixed_fee" disabled={!fixedFeeJobs.length||entry.is_invoiced||entry.is_paid}>Trabalho a preço fixo · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao associar a um trabalho a preço fixo, o preço e valor anteriores deste registo deixam de contar; o valor acordado fica no trabalho.</span></label>
+            <label className="text-sm sm:col-span-2 lg:col-span-3">Tratamento para facturação<select aria-label="Tratamento para facturação" disabled={Boolean(entry.retainer_id)} value={entry.billing_scope} onChange={event=>{const billing_scope=event.target.value as 'standard'|'retainer'|'fixed_fee';setEntry({...entry,billing_scope,fixed_fee_job_id:billing_scope==='fixed_fee'?entry.fixed_fee_job_id:null,...(billing_scope==='retainer'||billing_scope==='fixed_fee'?{effective_hourly_rate:null,effective_amount:null,effective_discount_amount:null,discount_percentage:null,discount_reason:null,charge_type:billing_scope==='retainer'?'retainer':'fixed',is_billable:false,is_invoiced:false,invoice_date:null,is_paid:false,status:'draft'}:{charge_type:'hourly',is_billable:true})})}} className="control mt-1 w-full px-3"><option value="standard">{entry.retainer_id?'Avença + horas · excedente facturável':'Facturação normal do registo'}</option><option value="retainer" disabled={originalBillingScope==='fixed_fee'}>Coberto pela avença · apenas horas</option><option value="fixed_fee" disabled={!fixedFeeJobs.length||entry.is_invoiced||entry.is_paid}>Trabalho a preço fixo · apenas horas</option></select><span className="mt-1 block text-xs text-text-secondary">Ao associar a um trabalho a preço fixo, o preço e valor anteriores deste registo deixam de contar; o valor acordado fica no trabalho.</span></label>
             {entry.billing_scope==='fixed_fee'&&<label className="text-sm sm:col-span-2 lg:col-span-3">Trabalho deste cliente<select required aria-label="Trabalho a preço fixo" value={entry.fixed_fee_job_id??''} onChange={event=>setEntry({...entry,fixed_fee_job_id:event.target.value||null})} className="control mt-1 w-full px-3"><option value="">Escolher trabalho…</option>{fixedFeeJobs.filter(job=>job.billing_entity_id===null||job.billing_entity_id===entry.billing_entity_id).map(job=><option key={job.id} value={job.id}>{job.title}</option>)}</select></label>}
             <label className="text-sm sm:col-span-2 lg:col-span-3">
               Actividade
@@ -332,19 +330,20 @@ export function EditWorkEntryModal({
                 onChange={(duration_minutes)=>setEntry({
                   ...entry,
                   duration_minutes,
-                  effective_amount: recalculateAmount(
+                  effective_amount: entry.retainer_id?entry.effective_amount:entry.billing_scope==='standard'?recalculateAmount(
                     duration_minutes,
                     entry.effective_hourly_rate,
                     entry.effective_discount_amount,
-                  ),
+                  ):null,
                 })}
               />
             </label>
+            {entry.retainer_id&&<p className="rounded-lg bg-secondary-soft p-3 text-sm sm:col-span-2 lg:col-span-3">Avença + horas: {entry.retainer_covered_minutes??0} min incluídos · {entry.retainer_excess_minutes??0} min excedentes. O excedente por facturar é recalculado ao guardar, mantendo a duração total. Os valores de documentos já emitidos são preservados.</p>}
             <WorkEntryExpensesEditor entryId={entry.id} drafts={expenseDrafts} onDraftsChange={setExpenseDrafts} requiresReason={requiresReason===true}/>
             <label className="text-sm">
               Preço/hora efectivo
               <input
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 type="number"
                 min="0"
                 step="0.01"
@@ -371,7 +370,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Valor final
               <input
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 type="number"
                 min="0"
                 step="0.01"
@@ -401,7 +400,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Tipo de cobrança
               <select
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 value={entry.charge_type ?? ""}
                 onChange={(e) =>
                   setEntry({ ...entry, charge_type: e.target.value || null })
@@ -523,7 +522,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 checked={entry.is_billable}
                 onChange={(e) =>
                   setEntry({ ...entry, is_billable: e.target.checked })
@@ -534,7 +533,7 @@ export function EditWorkEntryModal({
             <label className="flex min-h-11 items-center gap-2 text-sm">
               <input
                 type="checkbox"
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 checked={entry.is_invoiced}
                 onChange={(e) =>
                   setEntry({
@@ -555,7 +554,7 @@ export function EditWorkEntryModal({
             <label className="text-sm">
               Data da factura
               <CalendarDateInput
-                disabled={entry.billing_scope!=='standard'}
+                disabled={entry.billing_scope!=='standard'||Boolean(entry.retainer_id)}
                 ariaLabel="Data da factura"
                 value={entry.invoice_date ?? ""}
                 onChange={(value) => {
@@ -590,15 +589,15 @@ export function EditWorkEntryModal({
               />
               Pago
             </label>
-            <label className="text-sm sm:col-span-2">
-              Motivo da alteração manual{requiresReason === false ? " (opcional)" : ""}
+            {requiresReason!==false&&<label className="text-sm sm:col-span-2">
+              Motivo da alteração manual
               <textarea
                 required={requiresReason === true}
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 className="control mt-1 min-h-20 w-full p-3"
               />
-            </label>
+            </label>}
           </div>
         )}
         {deleteMode && (

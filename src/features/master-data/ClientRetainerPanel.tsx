@@ -25,6 +25,8 @@ type Retainer = {
   ends_on: string | null;
   reference_hourly_rate: number | null;
   included_hours: number | null;
+  billing_mode: 'retainer' | 'retainer_plus_hours';
+  excess_hourly_rate: number | null;
   billing_interval_months: number;
   hours_interval_months: number;
   notes: string | null;
@@ -63,6 +65,8 @@ const empty = () => ({
   ends_on: "",
   reference_hourly_rate: "",
   included_hours: "",
+  billing_mode: 'retainer' as 'retainer' | 'retainer_plus_hours',
+  excess_hourly_rate: "",
   billing_interval_months: "1",
   hours_interval_months: "1",
   notes: "",
@@ -128,7 +132,7 @@ export function ClientRetainerPanel({
           .eq("client_id", clientId)
           .order("period_start", { ascending: false }),
         supabase.rpc("get_client_retainer_summary", { p_client_id: clientId }),
-        supabase.from("work_entries").select("work_date,duration_minutes").eq("client_id",clientId).eq("billing_scope","retainer").order("work_date"),
+        supabase.from("work_entries").select("work_date,duration_minutes").eq("client_id",clientId).or("billing_scope.eq.retainer,retainer_id.not.is.null").order("work_date"),
       ]);
     const failure =
       retainerResult.error ?? societyResult.error ?? chargeResult.error ?? usageResult.error;
@@ -158,6 +162,8 @@ export function ClientRetainerPanel({
                 : String(found.reference_hourly_rate),
             included_hours:
               found.included_hours == null ? "" : String(found.included_hours),
+            billing_mode: found.billing_mode??'retainer',
+            excess_hourly_rate: found.excess_hourly_rate==null?'':String(found.excess_hourly_rate),
             billing_interval_months: String(found.billing_interval_months ?? 1),
             hours_interval_months: String(found.hours_interval_months ?? found.billing_interval_months ?? 1),
             notes: found.notes ?? "",
@@ -187,6 +193,8 @@ export function ClientRetainerPanel({
       ends_on:item.ends_on??"",
       reference_hourly_rate:item.reference_hourly_rate==null?"":String(item.reference_hourly_rate),
       included_hours:item.included_hours==null?"":String(item.included_hours),
+      billing_mode:item.billing_mode??'retainer',
+      excess_hourly_rate:item.excess_hourly_rate==null?'':String(item.excess_hourly_rate),
       billing_interval_months:String(item.billing_interval_months??1),
       hours_interval_months:String(item.hours_interval_months??item.billing_interval_months??1),
       notes:item.notes??"",
@@ -216,6 +224,8 @@ export function ClientRetainerPanel({
       return;
     }
     const payload = {
+      billing_mode: form.billing_mode,
+      excess_hourly_rate: form.excess_hourly_rate===''?null:Number(form.excess_hourly_rate.replace(',','.')),
       firm_id: firmId,
       client_id: clientId,
       billing_entity_id: form.billing_entity_id,
@@ -231,6 +241,9 @@ export function ClientRetainerPanel({
       notes: form.notes.trim() || null,
       updated_at: new Date().toISOString(),
     };
+    if(form.billing_mode==='retainer_plus_hours'&&(includedHours===null||payload.excess_hourly_rate===null||!Number.isFinite(payload.excess_hourly_rate)||payload.excess_hourly_rate<0)){
+      setError('Indique as horas incluídas e um preço/hora válido para o excedente.');setSaving(false);return;
+    }
     const result = retainer
       ? await supabase
           .from("client_retainers")
@@ -369,8 +382,8 @@ export function ClientRetainerPanel({
             Avença
           </h3>
           <p className="mt-1 text-xs text-text-secondary">
-            As horas utilizadas na avença ficam separadas das mensalidades e não recebem
-            valor individual.
+            As horas incluídas ficam separadas das prestações. Na modalidade Avença + horas,
+            o excedente é cobrado por registo ao preço/hora acordado.
           </p>
         </div>
       </div>
@@ -491,6 +504,19 @@ export function ClientRetainerPanel({
             />
             <span className="mt-1 block text-xs font-normal text-text-secondary">Permite comparar as horas realizadas com o limite acordado nesse período.</span>
           </label>
+          <label className="text-sm font-semibold">
+            Modalidade
+            <select aria-label="Modalidade da avença" value={form.billing_mode} onChange={event=>setForm({...form,billing_mode:event.target.value as Retainer['billing_mode']})} className="control mt-1 w-full px-3">
+              <option value="retainer">Avença simples</option>
+              <option value="retainer_plus_hours">Avença + horas</option>
+            </select>
+            <span className="mt-1 block text-xs font-normal text-text-secondary">Em Avença + horas, o pacote é renovado no período escolhido. Apenas os minutos excedentes são cobrados por registo.</span>
+          </label>
+          {form.billing_mode==='retainer_plus_hours'&&<label className="text-sm font-semibold">
+            Preço/hora após consumir o pacote
+            <input aria-label="Preço/hora do excedente" type="number" min="0" step="0.01" value={form.excess_hourly_rate} onChange={event=>setForm({...form,excess_hourly_rate:event.target.value})} className="control mt-1 w-full px-3"/>
+            <span className="mt-1 block text-xs font-normal text-text-secondary">Para 32 horas por ano, indique 32 horas incluídas e seleccione o período Anual. Não acumula horas de anos anteriores.</span>
+          </label>}
           <label className="text-sm font-semibold">
             Período de controlo das horas
             <select value={form.hours_interval_months} onChange={event=>setForm({...form,hours_interval_months:event.target.value})} className="control mt-1 w-full px-3">

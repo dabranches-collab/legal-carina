@@ -1,3 +1,4 @@
+import {retryWorkEntryWrite} from './retryWorkEntryWrite'
 import { supabase } from '../../lib/supabase'
 
 export type WorkEntryOptions={
@@ -6,7 +7,7 @@ export type WorkEntryOptions={
   responsibles:Array<{id:string;display_name:string}>
   processes:Array<{id:string;client_id:string;matter_code:string;title:string}>
 }
-export type EditableWorkEntry={id:string;work_date:string;client_profile_id:string;matter_id:string|null;fixed_fee_job_id?:string|null;professional_id:string;billing_entity_id:string|null;activity_description:string;observations:string|null;duration_minutes:number;effective_hourly_rate:number|null;effective_amount:number|null;currency:string;status:string;is_billable:boolean;is_invoiced:boolean;invoice_date:string|null;is_paid:boolean;archive_status:string|null;charge_type:string|null;effective_discount_amount:number|null;discount_percentage:number|null;discount_reason:string|null;has_manual_override:boolean;source_type:string;billing_scope:'standard'|'retainer'|'fixed_fee';task_referrer?:string|null;task_referrer_other?:string|null}
+export type EditableWorkEntry={retainer_id?:string|null;retainer_covered_minutes?:number|null;retainer_excess_minutes?:number|null;id:string;work_date:string;client_profile_id:string;matter_id:string|null;fixed_fee_job_id?:string|null;professional_id:string;billing_entity_id:string|null;activity_description:string;observations:string|null;duration_minutes:number;effective_hourly_rate:number|null;effective_amount:number|null;currency:string;status:string;is_billable:boolean;is_invoiced:boolean;invoice_date:string|null;is_paid:boolean;archive_status:string|null;charge_type:string|null;effective_discount_amount:number|null;discount_percentage:number|null;discount_reason:string|null;has_manual_override:boolean;source_type:string;billing_scope:'standard'|'retainer'|'fixed_fee';task_referrer?:string|null;task_referrer_other?:string|null}
 
 const missingFunction=(error:{code?:string;message?:string}|null)=>error?.code==='PGRST202'||Boolean(error?.message?.includes('schema cache'))
 
@@ -37,7 +38,7 @@ export async function getWorkEntryOptions():Promise<{data:WorkEntryOptions|null;
 export async function getWorkEntryForEdit(entryId:string):Promise<{data:EditableWorkEntry|null;error:{message:string}|null}> {
   if(!supabase)return{data:null,error:{message:'Ligação ao Supabase indisponível.'}}
   const rpc=await supabase.rpc('get_work_entry_for_edit',{p_work_entry_id:entryId})
-  if(!rpc.error&&rpc.data){let referrals=await supabase.from('work_entries').select('task_referrer,task_referrer_other,fixed_fee_job_id').eq('id',entryId).maybeSingle();if(referrals.error?.code==='42703'||referrals.error?.message?.includes('fixed_fee_job_id'))referrals=await supabase.from('work_entries').select('task_referrer,task_referrer_other').eq('id',entryId).maybeSingle();if(referrals.error)return{data:null,error:referrals.error};return{data:{...rpc.data,...referrals.data,fixed_fee_job_id:(referrals.data as {fixed_fee_job_id?:string|null}|null)?.fixed_fee_job_id??null} as unknown as EditableWorkEntry,error:null}}
+  if(!rpc.error&&rpc.data){let referrals=await supabase.from('work_entries').select('task_referrer,task_referrer_other,fixed_fee_job_id,retainer_id,retainer_covered_minutes,retainer_excess_minutes').eq('id',entryId).maybeSingle();if(referrals.error?.code==='42703'||referrals.error?.message?.includes('fixed_fee_job_id'))referrals=await supabase.from('work_entries').select('task_referrer,task_referrer_other').eq('id',entryId).maybeSingle();if(referrals.error)return{data:null,error:referrals.error};return{data:{...rpc.data,...referrals.data,fixed_fee_job_id:(referrals.data as {fixed_fee_job_id?:string|null}|null)?.fixed_fee_job_id??null} as unknown as EditableWorkEntry,error:null}}
   if(!missingFunction(rpc.error))return{data:null,error:rpc.error}
   const result=await supabase.from('work_entries').select('id,work_date,client_profile_id,matter_id,fixed_fee_job_id,professional_id,billing_entity_id,activity_description,observations,duration_minutes,effective_hourly_rate,effective_amount,currency,status,is_billable,is_invoiced,invoice_date,is_paid,archive_status,charge_type,effective_discount_amount,discount_percentage,discount_reason,has_manual_override,source_type,billing_scope,task_referrer,task_referrer_other').eq('id',entryId).maybeSingle()
   return{data:result.data as EditableWorkEntry|null,error:result.error}
@@ -46,7 +47,7 @@ export async function getWorkEntryForEdit(entryId:string):Promise<{data:Editable
 export async function updateWorkEntry(entry:EditableWorkEntry,reason:string):Promise<{error:{message:string}|null}> {
   if(!supabase)return{error:{message:'Ligação ao Supabase indisponível.'}}
   const {id,...values}=entry
-  const result=await supabase.rpc('update_work_entry_with_allocation',{p_work_entry_id:id,p_values:values as unknown as Record<string,unknown>,p_reason:reason})
+  const result=await retryWorkEntryWrite(()=>supabase!.rpc('update_work_entry_with_allocation',{p_work_entry_id:id,p_values:values as unknown as Record<string,unknown>,p_reason:reason}))
   return{error:result.error?.code==='PGRST202'?{message:'A edição completa ficará disponível após a actualização controlada da base de dados.'}:result.error}
 }
 

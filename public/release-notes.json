@@ -1,10 +1,19 @@
 {
-  "version": "0.14.0",
+  "version": "0.15.0",
   "changes": [
-    "Por receber inclui o submenu Pagamentos, com quatro listas de pendências e detalhe por toque.",
-    "Recebimentos de notas sem reemissão, com saldo, auditoria e protecção contra duplicação."
+    "Avença + horas: pacote mensal ou anual, com cobrança por registo apenas dos minutos excedentes.",
+    "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria.",
+    "Filtros e pesquisa dos registos acompanham o scroll, libertando espaço para ler a tabela."
   ],
   "releases": [
+    {
+      "version": "0.15.0",
+      "changes": [
+        "Avença + horas: pacote mensal ou anual, com cobrança por registo apenas dos minutos excedentes.",
+        "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria.",
+        "Filtros e pesquisa dos registos acompanham o scroll, libertando espaço para ler a tabela."
+      ]
+    },
     {
       "version": "0.14.0",
       "changes": [

@@ -39,6 +39,7 @@ await sql(original.match(/create function public.get_client_honorarium_documents
 const core=fs.readFileSync(root+'supabase/migrations/20260805113851_create_legal_carina_data_model.sql','utf8')
 await sql(core.match(/create or replace function private.audit_business_change\(\)[\s\S]*?\$\$;/)[0])
 await sql(fs.readFileSync(root+'supabase/migrations/20261006114804_add_payments_workspace.sql','utf8'))
+await sql(fs.readFileSync(root+'supabase/migrations/20261006154806_fix_work_payment_lock_order.sql','utf8'))
 const queue=async()=> (await one('select public.get_payment_queue() q')).q
 const find=async id=>(await queue()).find(x=>x.id===id)
 const pay=(i,amount,request=uid(100+checks))=>one('select public.record_pending_payment($1,$2,$3,$4,$5,$6,$7) r',[i.category,i.id,amount,'2026-10-06','Transferência sintética',i.token,request])

@@ -1,3 +1,40 @@
+## 2026-10-07 — compatibilidade entre avença e preço fixo
+
+- Associação a preço fixo liberta o consumo da avença e conserva o tratamento do trabalho a preço fixo. Cenário adicional autenticado com RLS aprovado; total de 16 cenários PostgreSQL de avenças e nove SQL. CI final requerida na PR #90; ainda sem instalação remota/publicação.
+
+## 2026-10-07 — publicação 0.15.0 autorizada, gates finais
+
+- Ordem explícita «PUBLICA» recebida nesta tarefa; PR #90. Produção ainda 0.14.0 até concluir os gates e instalar isoladamente as duas migrations de 07-10.
+- 303 unitários, 34 SQL, 15 cenários PostgreSQL de avenças, 16 de pagamentos/RLS e quatro de concorrência aprovados novamente; três PWA do build de produção e dry-run aprovados. Backup físico recuperável de 07-10-2026 05:49:11 UTC confirmado directamente no painel Supabase.
+- Primeira CI da PR: segurança, tipos, unitários/SQL/runtime e auditoria aprovados; 163 E2E aprovados, um omitido e dez expectativas antigas que exigiam filtros fixos. Ensaios actualizados ao requisito de scroll livre; corrigido também o salto de 24 px na transição do cabeçalho. Nova CI necessária neste commit.
+- CLI `migration list --linked` sem projecto ligado; histórico revisto pela integração até `20261006161821`. Linha de base de acessos sem órfãos; permissões, RLS e policies registadas para comparação posterior. Sem mudanças Auth/Storage.
+
+## 2026-10-07 — scroll dos registos e pré-visualização local
+
+- Na branch `codex/retainer-extra-hours-20261007`, filtros gerais e ferramentas/pesquisa da tabela acompanham o scroll em todas as dimensões. O cabeçalho de colunas conserva a fixação existente a partir de tablet, directamente sob o cabeçalho da aplicação, sem reservar espaço para os filtros.
+- Browser integrado corrigido: a URL anterior usava uma API local indisponível. Demonstração com `qa-demo=1&qa-allocation=1&qa-scroll=1`, exclusivamente local/teste, apresenta 100 movimentos sintéticos. Sem ligação a dados reais.
+- Verificação no browser integrado: portátil 1366×768, tablet 768×844 e iPhone 390×844, claro/escuro, filtros fora da vista e sem excesso de largura da página; cabeçalho alinhado no desktop/tablet. Tipos, lint, 22 testes existentes da tabela e build aprovados. Evidência em `output/scroll-registos-corrigido.png`, não versionada.
+- A suite E2E anterior das avenças terminou com 167 aprovados, três omitidos e cinco falhas (client-assignment e quatro pagamentos); ainda por investigar antes da publicação. Não declarar a suite completa verde.
+- Alterações apenas em preparação 0.15.0; produção continua no estado 0.14.0 documentado abaixo. Sem deploy nem instalação de migrations nesta correcção.
+
+## 2026-10-07 — 0.15.0 em preparação: correcções e Avença + horas
+
+- Branch `codex/retainer-extra-hours-20261007`, baseada no registo local da publicação 0.14.0. Gravação normal sem motivo/override manual; associação de avença atómica. Pacote de horas por período (incluindo anual), cobrança por registo apenas dos minutos excedentes e renovação sem acumulação.
+- Validação: 303 unitários, 34 SQL, 15 cenários PostgreSQL de avenças, 16 de pagamentos/RLS e quatro de concorrência financeira; oito E2E específicos em 1440/768/390 claro/escuro/perfis. Build e dry-run aprovados. Suite E2E completa em curso na preparação da entrega; consultar a PR para CI final.
+- Duas migrations de 07-10 exclusivamente locais, sem instalação remota. Fonte do patch de lock de pagamentos já aplicado recuperada de `c1843c8`; registo remoto `20261006161821`. Correcção sharp/Miniflare reaproveitada de `4531456`, sem high/critical na auditoria.
+- Produção reconfirmada 0.14.0, Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`, deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`, URL https://legal-carina.dabranches.workers.dev. Correcções de dados autorizadas executadas separadamente; sem deploy nem migrations novas em produção. Falta ordem «publica» para instalar e activar a modalidade no contrato autorizado.
+- Detalhes, limites de documentos emitidos, QA e ordem de publicação em [docs/retainer-extra-hours.md](docs/retainer-extra-hours.md). Outputs sintéticos em `output/retainer-*`, não versionados.
+
+## 2026-10-06 — 0.14.0 publicada: Por receber → Pagamentos
+
+- Ordem directa de publicação recebida nesta tarefa. PR #88 integrado em `main` no merge `9df5f264a6f3e65c93cd45b679ff2242a4e663f5`, commit funcional `ae6116d21d4b69daeb6d9630428c9a253675332c`. CI `37480126368` e secret scan `37480126626` aprovados: 299 unitários, 34 SQL, 167 E2E/uma omissão e três PWA.
+- Gates locais repetidos: segurança, lint, tipos, 299 unitários/34 SQL, build e dry-run; 16 cenários PostgreSQL com RLS/concorrência real; seis cenários de navegação em 390/768/1440 claro/escuro; três PWA. O primeiro ensaio do menu usou o build de produção (QA desactivado), falhou no ecrã de entrada e foi repetido num build QA isolado: 6/6 aprovados. Não houve alteração de código para contornar o ensaio.
+- Migration aplicada isoladamente pela integração Supabase: ficheiro local `20261006114804_add_payments_workspace.sql` corresponde ao registo remoto `20261006144551`, nome `20261006114804_add_payments_workspace`. Preflight: 11 funções, 146 colunas e 14 policies das oito tabelas coincidiram com QA; nomes novos livres e backup recuperável de 06-10-2026 05:45:26 UTC confirmado. CLI `migration list --linked` continua sem projecto ligado; histórico confirmado pela integração, sem repair/db push.
+- Pós-instalação: 11 funções novas, sete triggers e RLS activa no livro; sem acesso directo anon/authenticated, quatro RPCs apenas para authenticated. Utilizadores, pertenças, concessões e permissões financeiras preservados por contagens/hashes. Zero recebimentos registados durante a instalação e o smoke. Advisors sem ERROR; permanecem avisos existentes e os avisos esperados das quatro RPCs SECURITY DEFINER deliberadamente autorizadas.
+- Produção Cloudflare `legal-carina`, https://legal-carina.dabranches.workers.dev: deployment `d0d2b9e4-4770-48b1-ad83-45fb19e4098a`; Version ID `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`, 100% desde 2026-10-06T14:47:47Z. Notas HTTP 0.14.0 e hashes de HTML/notas/SW/JS/CSS/Pagamentos iguais ao build. Sessão autenticada e activação da PWA confirmadas; Por receber → Pagamentos carregou as quatro filas em leitura, sem gravar operações reais.
+- Rollback do frontend: `7dc8bc64-d133-4fd5-868a-dde7f88e21e1` (0.13.3). Preservar livro, auditoria e guardas da base, sobretudo após recebimentos. Esta release ainda não tem estorno de recebimentos; Safari/iPhone físico não ensaiado. Storage, Auth e permissões de utilizadores não alterados.
+- Evidência local em `output/publish-*-20261006.*` e `output/published-payments-menu-0.14.0.png` (apenas navegação, sem dados de clientes). Registo documental numa branch própria; sem segunda publicação de aplicação.
+
 ## 2026-10-06 - PR88 e ajuste final de navegação, publicação pendente
 
 - Push manual confirmado em 5e8d308; PR88 draft https://github.com/dabranches-collab/legal-carina/pull/88. CI37473441130 e secret scan37473441102 aprovados nesse commit.
@@ -11,7 +48,7 @@
 ## 2026-10-06 - Integração Pagamentos no HP concluída localmente
 
 - Docker acessível como diogo; container carina-payments-qa-20261006 isolado e preservado, PostgreSQL 17.6. Sem mudanças de ACL/grupos/serviços do host.
-- Checks finais: 299 unitários, 25 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
+- Checks finais: 299 unitários, 34 SQL e 16 cenários reais de RLS/concorrência aprovados. Corrigida falsa duplicação entre snapshot de provisão e versão da mesma emissão.
 - Metadados remotos consultados só em leitura: funções financeiras e colunas coincidem; policies históricas de work_entries foram reproduzidas apenas no QA e os 16 cenários passaram novamente. Detalhes/reconciliações/impacto e rollback em docs/payments-workspace.md.
 - Falta autorização informada para a migration candidata e smoke HTTP do destino. Frontend não deve ser publicado antes das RPCs. Não houve novo push, PR, alteração remota ou deploy.
 ## 2026-10-06 — Pagamentos 0.14.0 em preparação isolada
