@@ -1,8 +1,9 @@
 import {expect,test} from '@playwright/test'
+import packageJson from '../package.json' with {type:'json'}
 const base={client_id:'client',client_name:'Cliente sintético',society_name:'Sociedade teste',date:'2026-10-01',currency:'EUR',total:123,received:10,deducted:20,remaining:93,token:'v1',can_pay:true,can_edit:true,status:'Por receber'}
 for(const width of [390,768,1440])for(const dark of [false,true])test('Pagamentos '+width+' '+(dark?'escuro':'claro'),async({page})=>{
  await page.setViewportSize({width,height:900})
- await page.addInitScript(({dark})=>{localStorage.setItem('carina-theme',dark?'dark':'light');localStorage.setItem('carina-release-notes-seen','0.14.0')},{dark})
+ await page.addInitScript(({dark,version})=>{localStorage.setItem('carina-theme',dark?'dark':'light');localStorage.setItem('carina-release-notes-seen',version)},{dark,version:packageJson.version})
  let rows=[{...base,id:'u',category:'unbilled',title:'Registo por facturar',can_pay:false,status:'Por facturar'},{...base,id:'w',category:'work',title:'Registo facturado'},{...base,id:'n',category:'note',title:'NH-TESTE',revision:2},{...base,id:'r',category:'retainer',title:'Avença · 10/2026'}]
  let writes=0
  await page.route('**/rest/v1/**',async route=>{

@@ -56,7 +56,7 @@ begin
  if target_client is null or coalesce((p_values->>'duration_minutes')::integer,0)<0 or btrim(coalesce(p_values->>'activity_description',''))='' then raise exception 'invalid work entry';end if;
  if new_paid and not new_invoiced then raise exception 'paid movement must be invoiced';end if;
  if new_invoiced and new_invoice_date is null then raise exception 'invoice date required';end if;
- 
+
  previous_correction:=current_setting('app.work_entry_correction',true);
  perform set_config('app.work_entry_correction','on',true);
  update public.work_entries set work_date=(p_values->>'work_date')::date,client_id=target_client,client_profile_id=(p_values->>'client_profile_id')::uuid,matter_id=nullif(p_values->>'matter_id','')::uuid,professional_id=(p_values->>'professional_id')::uuid,billing_entity_id=nullif(p_values->>'billing_entity_id','')::uuid,activity_description=btrim(p_values->>'activity_description'),observations=nullif(btrim(coalesce(p_values->>'observations','')),''),duration_minutes=(p_values->>'duration_minutes')::integer,effective_hourly_rate=nullif(p_values->>'effective_hourly_rate','')::numeric,effective_amount=nullif(p_values->>'effective_amount','')::numeric,currency=upper(p_values->>'currency'),status=p_values->>'status',is_billable=(p_values->>'is_billable')::boolean,is_invoiced=new_invoiced,invoice_date=case when new_invoiced then new_invoice_date else null end,is_paid=new_paid,archive_status=nullif(p_values->>'archive_status',''),charge_type=nullif(p_values->>'charge_type',''),effective_discount_amount=nullif(p_values->>'effective_discount_amount','')::numeric,discount_percentage=nullif(p_values->>'discount_percentage','')::numeric,discount_reason=nullif(btrim(coalesce(p_values->>'discount_reason','')),''),has_manual_override=true,updated_by=auth.uid()where id=e.id;
@@ -74,7 +74,7 @@ declare previous public.work_entries%rowtype;current_entry public.work_entries%r
 begin
  select * into previous from public.work_entries where id=p_work_entry_id;
  select coalesce(bool_or(role='operator'),false) into operator_requires_reason from public.firm_members where firm_id=previous.firm_id and user_id=auth.uid() and active;
- 
+
  rate_changed:=nullif(p_values->>'effective_hourly_rate','')::numeric is distinct from previous.effective_hourly_rate;
  discount_changed:=nullif(p_values->>'effective_discount_amount','')::numeric is distinct from previous.effective_discount_amount or nullif(p_values->>'discount_percentage','')::numeric is distinct from previous.discount_percentage;
  dimensions_changed:=(p_values->>'work_date')::date is distinct from previous.work_date or nullif(p_values->>'client_profile_id','')::uuid is distinct from previous.client_profile_id or nullif(p_values->>'matter_id','')::uuid is distinct from previous.matter_id or nullif(p_values->>'professional_id','')::uuid is distinct from previous.professional_id or nullif(p_values->>'billing_entity_id','')::uuid is distinct from previous.billing_entity_id;

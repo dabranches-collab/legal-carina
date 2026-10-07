@@ -4,6 +4,7 @@ import {createQaAllocationData} from '../src/lib/qaAllocationData'
 for(const width of [1440,768,390])for(const colorScheme of ['light','dark'] as const){
  test(`avença anual + horas · ${width} · ${colorScheme}`,async({page})=>{
   await page.setViewportSize({width,height:950});await page.emulateMedia({colorScheme});
+  await page.addInitScript(theme=>localStorage.setItem('carina-theme',theme),colorScheme);
   const fixture=createQaAllocationData(),writes:Record<string,unknown>[]=[];
   const terms={id:'synthetic-annual-retainer',firm_id:'synthetic-firm',client_id:'00000000-0000-4000-8000-000000000020',billing_entity_id:'00000000-0000-4000-8000-000000000001',active:true,monthly_amount:100,currency:'EUR',starts_on:'2026-01-01',ends_on:null,reference_hourly_rate:null,included_hours:32,billing_interval_months:1,hours_interval_months:12,billing_mode:'retainer',excess_hourly_rate:null,notes:null};
   await page.route('**/rest/v1/**',async route=>{

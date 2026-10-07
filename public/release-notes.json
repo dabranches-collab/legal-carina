@@ -2,14 +2,16 @@
   "version": "0.15.0",
   "changes": [
     "Avença + horas: pacote mensal ou anual, com cobrança por registo apenas dos minutos excedentes.",
-    "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria."
+    "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria.",
+    "Filtros e pesquisa dos registos acompanham o scroll, libertando espaço para ler a tabela."
   ],
   "releases": [
     {
       "version": "0.15.0",
       "changes": [
         "Avença + horas: pacote mensal ou anual, com cobrança por registo apenas dos minutos excedentes.",
-        "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria."
+        "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria.",
+        "Filtros e pesquisa dos registos acompanham o scroll, libertando espaço para ler a tabela."
       ]
     },
     {
