@@ -57,6 +57,14 @@ await check('concurrent annual consumption rolls back cleanly and is safe to ret
  }finally{held.stdin.end('rollback;\n');await finished}
  const retried=work('2028-01-03',60);assert.equal(row(retried).effective_amount,150);
 });
+await check('fixed fee assignment releases retainer hours and preserves fixed fee treatment',()=>{
+ const included=work('2029-01-02',1920),overage=work('2029-01-03',60);
+ assert.equal(row(overage).effective_amount,150);
+ const job=query(`insert into fixed_fee_jobs(firm_id,client_id,billing_entity_id,title,agreed_amount,created_by)values('${firm}','${client}','${society}','Synthetic fixed job',100,'${actor}')returning id;`);
+ query(`select assign_work_entry_fixed_fee('${included}','${job}');`);
+ const fixed=row(included);assert.equal(fixed.billing_scope,'fixed_fee');assert.equal(fixed.fixed_fee_job_id,job);assert.equal(fixed.retainer_id,null);assert.equal(fixed.retainer_covered_minutes,null);assert.equal(fixed.effective_amount,null);
+ assert.equal(row(overage).effective_amount,null);assert.equal(row(overage).retainer_covered_minutes,60);
+});
 await check('returning to simple retainer removes unbilled excess',()=>{
  query(`update client_retainers set billing_mode='retainer' where id='${terms}';`);
  assert.equal(row(second).effective_amount,null);assert.equal(row(second).retainer_id,null);

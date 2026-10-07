@@ -1,3 +1,7 @@
+## 2026-10-07 — compatibilidade financeira final
+
+A passagem de avença para preço fixo liberta as horas e conserva a associação ao trabalho. 16 cenários PostgreSQL de avenças e nove SQL aprovados; CI final na PR #90. Publicação autorizada, ainda sem instalação remota/deploy.
+
 ## 2026-10-07 — 0.15.0 com ordem de publicação, PR #90
 
 Publicação autorizada explicitamente; gates finais em curso, ainda sem deploy ou migrations novas. Backup físico de 07-10-2026 05:49:11 UTC confirmado no painel. Nova execução local: 303 unitários/34 SQL, 15 cenários PostgreSQL de avenças, 16 de pagamentos/RLS, quatro de concorrência, três PWA e dry-run aprovados. A primeira CI detectou expectativas antigas de filtros fixos; actualizadas para o scroll pedido, conservando alinhamento das colunas e estabilidade da altura, com correcção do salto de 24 px na transição. Consultar PR #90 para CI final.

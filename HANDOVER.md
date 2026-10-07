@@ -1,3 +1,7 @@
+## 2026-10-07 — compatibilidade entre avença e preço fixo
+
+- Associação a preço fixo liberta o consumo da avença e conserva o tratamento do trabalho a preço fixo. Cenário adicional autenticado com RLS aprovado; total de 16 cenários PostgreSQL de avenças e nove SQL. CI final requerida na PR #90; ainda sem instalação remota/publicação.
+
 ## 2026-10-07 — publicação 0.15.0 autorizada, gates finais
 
 - Ordem explícita «PUBLICA» recebida nesta tarefa; PR #90. Produção ainda 0.14.0 até concluir os gates e instalar isoladamente as duas migrations de 07-10.

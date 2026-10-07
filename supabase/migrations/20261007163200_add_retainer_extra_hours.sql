@@ -20,6 +20,11 @@ begin
      is distinct from(old.retainer_id,old.retainer_covered_minutes,old.retainer_excess_minutes)))then
   raise exception 'O consumo da avença é calculado automaticamente.' using errcode='42501';
  end if;
+ -- Um trabalho a preço fixo deixa de consumir a bolsa de horas da avença.
+ if tg_op='UPDATE' and new.billing_scope='fixed_fee' and old.retainer_id is not null
+  and new.retainer_id=old.retainer_id then
+  new.retainer_id:=null;new.retainer_covered_minutes:=null;new.retainer_excess_minutes:=null;
+ end if;
  if tg_op='UPDATE' and old.retainer_id is not null and new.retainer_id=old.retainer_id
   and (new.client_id is distinct from old.client_id or new.billing_entity_id is distinct from old.billing_entity_id
    or not exists(select 1 from public.client_retainers r where r.id=new.retainer_id
