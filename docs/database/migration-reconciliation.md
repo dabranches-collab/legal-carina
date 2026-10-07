@@ -1,5 +1,16 @@
 # Reconciliação do histórico de migrations
 
+## 07-10-2026 — correcções e Avença + horas instaladas
+
+| Ficheiro local | Registo remoto confirmado |
+| --- | --- |
+| `20261007163156_simplify_work_entry_corrections.sql` | `20261007220603` — nome `20261007163156_simplify_work_entry_corrections` |
+| `20261007163200_add_retainer_extra_hours.sql` | `20261007220610` — nome `20261007163200_add_retainer_extra_hours` |
+
+Instalação isolada pela integração após ordem «PUBLICA» e CI final da PR #90 aprovada. CLI `migration list --linked` devolveu ProjectRefNotLinkedError; histórico remoto conferido antes/depois pela integração. Não reaplicada a migration de locks de pagamentos já instalada como `20261006161821`.
+
+Backup físico recuperável: 07-10-2026 05:49:11 UTC. 16 cenários PostgreSQL de avenças e nove SQL, incluindo mudança para preço fixo; 16 pagamentos/RLS e quatro de concorrência aprovados. Após DDL, agregados financeiros e hashes de pertenças/concessões/permissões/policies inalterados, zero órfãos; três funções privadas sem EXECUTE anon/authenticated, três triggers e advisors sem ERROR. Activação posterior limitada ao contrato autorizado, com conferência transaccional de identidades/durações/documentos. Sem Auth/Storage, db push ou repair; rollback frontend conserva as colunas e vínculos aditivos.
+
 ## 06-10-2026 — Pagamentos aplicado isoladamente
 
 | Ficheiro local | Registo remoto confirmado |

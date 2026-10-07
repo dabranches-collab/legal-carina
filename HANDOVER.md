@@ -1,3 +1,11 @@
+## 2026-10-07 — 0.15.0 publicada e verificada
+
+- Ordem «PUBLICA» executada. PR #90 integrada em `main`, merge `a78f20083b582f20374406af3a3c1e74457574ee`, funcional final `7a5d7352d67ab9a0ea777367f9fde2ff631842b6`. CI `37692549349` e secret scan `37692549348` aprovados: 303 unitários, 34 SQL, 173 E2E/uma omissão e três PWA. Local: 16 cenários PostgreSQL de avenças, 16 pagamentos/RLS, quatro de concorrência, 27 scroll/zoom, build e dry-run aprovados.
+- Produção: Worker `legal-carina`, https://legal-carina.dabranches.workers.dev, deployment `8bcf665e-9ab1-468e-ab3a-6d2370a43d3e`, Version ID `82f9b0a9-9a14-48fe-900d-490032f52621`, 100% desde `2026-10-07T22:07:35.259718Z`. Dez assets públicos, incluindo HTML, notas, service worker e páginas alteradas, iguais ao build por SHA-256 às 22:07:57 UTC. Browser integrado confirmou entrada e alterações 0.15.0, sem submeter credenciais; entrada autenticada não ensaiada pelo agente.
+- Duas migrations aplicadas isoladamente: correcções `20261007220603`, avença/excedente `20261007220610`; correspondência em docs/database/migration-reconciliation.md. Dados financeiros, utilizadores, permissões e policies iguais à linha de base após DDL. Três funções privadas sem EXECUTE anon/authenticated e três triggers confirmados. Advisors sem ERROR; mesmas categorias INFO/WARN pré-existentes.
+- Modalidade activada somente no contrato expressamente autorizado; horas anuais e excedente acordado confirmados, identidades/durações/angariação/documentos preservados. Sem novos recebimentos, alterações Auth/Storage, db push global ou repair. Backup recuperável confirmado 07-10-2026 05:49:11 UTC.
+- Rollback frontend disponível para 0.14.0: `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`; conservar schema aditivo, vínculos e dados da avença. Safari/iPhone físico não ensaiado. Registo documental posterior na branch `codex/publication-record-0.15.0-20261007`, sem segundo deploy; outputs sintéticos/públicos não versionados.
+
 ## 2026-10-07 — compatibilidade entre avença e preço fixo
 
 - Associação a preço fixo liberta o consumo da avença e conserva o tratamento do trabalho a preço fixo. Cenário adicional autenticado com RLS aprovado; total de 16 cenários PostgreSQL de avenças e nove SQL. CI final requerida na PR #90; ainda sem instalação remota/publicação.

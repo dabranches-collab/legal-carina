@@ -1,3 +1,13 @@
+## 07-10-2026 — 0.15.0 publicada e verificada
+
+PR #90 integrada em main `a78f20083b582f20374406af3a3c1e74457574ee`, funcional `7a5d735`; CI `37692549349` e secret scan `37692549348` aprovados: 303 unitários, 34 SQL, 173 E2E/uma omissão, três PWA. Local: 16 cenários PostgreSQL de avenças, 16 pagamentos/RLS, quatro de concorrência e 27 scroll/zoom; build/dry-run aprovados. Ordem directa «PUBLICA» recebida.
+
+Worker `legal-carina`, https://legal-carina.dabranches.workers.dev: deployment `8bcf665e-9ab1-468e-ab3a-6d2370a43d3e`, Version ID `82f9b0a9-9a14-48fe-900d-490032f52621`, 100% desde `2026-10-07T22:07:35.259718Z`. Dez assets públicos exactamente iguais ao build às 22:07:57 UTC; configuração pública Auth validada pelo gate de produção. Browser integrado apresentou entrada e alterações 0.15.0; nenhuma credencial submetida, sem smoke autenticado pelo agente.
+
+Migrations isoladas `20261007220603`/`20261007220610`, contrato autorizado activado; continuidade e agregados financeiros preservados após DDL. Backup físico recuperável confirmado no painel: 07-10-2026 05:49:11 UTC. Advisors sem ERROR, permissões/RLS/policies preservadas. Sem novos recebimentos, Auth/Storage, db push ou repair. Correspondência e limites em docs/database/migration-reconciliation.md e docs/retainer-extra-hours.md.
+
+Rollback frontend 0.14.0: `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`; conservar schema aditivo e dados. Registo documental posterior sem segundo deploy. Safari/iPhone físico não ensaiado.
+
 ## 2026-10-03 - 0.13.3 publicada: configuracao e filtros repostos
 
 - PR86 integrada em main no merge bca7be0; funcional1f02023. CI37143058853 aprovada, incluindo290 testes, E2E, PWA, auditoria e secret scan. Finding4174232454 corrigido/resolvido: fingerprint obrigatoria da chave publica do projecto existente.

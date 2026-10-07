@@ -1,3 +1,9 @@
+## 2026-10-07 — produção 0.15.0 confirmada
+
+Publicada por ordem «PUBLICA», PR #90/merge `a78f200`, funcional `7a5d735`. CI final aprovada: 303 unitários, 34 SQL, 173 E2E/uma omissão e três PWA; 16 cenários PostgreSQL de avenças, 16 pagamentos/RLS e quatro de concorrência locais. Filtros/pesquisa acompanham o scroll; correcções sem motivo/override manual; avença anual/mensal cobra só minutos excedentes e liberta horas na associação a preço fixo.
+
+Worker legal-carina, https://legal-carina.dabranches.workers.dev, Version ID `82f9b0a9-9a14-48fe-900d-490032f52621`, deployment `8bcf665e-9ab1-468e-ab3a-6d2370a43d3e`, 100% desde `2026-10-07T22:07:35.259718Z`. Dez assets públicos coincidem com o build; entrada/alterações 0.15.0 renderizadas no browser integrado sem autenticação submetida. Migrations remotas `20261007220603`/`20261007220610` instaladas isoladamente; contrato autorizado activado, restantes contratos preservados. Continuidade/RLS/policies e dados financeiros preservados após DDL; advisors sem ERROR. Backup 07-10-2026 05:49:11 UTC; rollback frontend 0.14.0 `7f91ce33-407c-4a0c-93fd-8dc594fb96a1`. Detalhes no HANDOVER e docs de deployment/reconciliação. Registo documental posterior sem novo deploy.
+
 ## 2026-10-07 — compatibilidade financeira final
 
 A passagem de avença para preço fixo liberta as horas e conserva a associação ao trabalho. 16 cenários PostgreSQL de avenças e nove SQL aprovados; CI final na PR #90. Publicação autorizada, ainda sem instalação remota/deploy.
