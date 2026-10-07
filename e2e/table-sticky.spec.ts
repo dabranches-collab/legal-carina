@@ -252,8 +252,9 @@ test('zoom equivalente a 150% liberta as pendências e conserva a tabela fixa', 
 
   // Labels and actions can change the natural height of the prefilters.
   const filtersEnd = await filters.evaluate(element => element.getBoundingClientRect().bottom + window.scrollY)
+  const toolsEnd = await tools.evaluate(element => element.getBoundingClientRect().bottom + window.scrollY)
   const appHeaderHeight = (await page.locator('.app-shell-header').boundingBox())!.height
-  await page.evaluate(top => window.scrollTo({top,behavior:'instant'}), filtersEnd + appHeaderHeight)
+  await page.evaluate(top => window.scrollTo({top,behavior:'instant'}), Math.max(filtersEnd,toolsEnd) + appHeaderHeight + 24)
   await expect(filters).not.toBeInViewport()
   await expect(tools).not.toBeInViewport()
   const [toolsBox, headerBox] = await Promise.all([tools.boundingBox(), header.boundingBox()])
