@@ -1,3 +1,9 @@
+## 2026-10-07 — scroll dos registos corrigido localmente
+
+Filtros e pesquisa deixam de permanecer sobre a tabela ao descer, em todas as dimensões. Cabeçalho de colunas desktop/tablet alinhado directamente sob o cabeçalho da aplicação. Pré-visualização local com 100 registos sintéticos e sem API indisponível; validada no browser integrado em portátil, tablet e iPhone, claro/escuro. Tipos, lint, 22 testes existentes da tabela e build aprovados. Branch `codex/retainer-extra-hours-20261007`; sem publicação.
+
+A suite E2E anterior das avenças terminou com 167 aprovados, três omitidos e cinco falhas em client-assignment/pagamentos, por investigar antes de publicar. As duas migrations de 07-10 continuam exclusivamente locais.
+
 ## 2026-10-07 — próxima versão local 0.15.0, produção 0.14.0
 
 Correcções sem motivo/override manual e modalidade Avença + horas preparadas em `codex/retainer-extra-hours-20261007`: pacote anual/mensal, renovação, divisão dos minutos de fronteira e facturação por registo apenas do excedente. A gravação e a associação à avença são atómicas. Documentos emitidos conservam os valores.

@@ -1,3 +1,11 @@
+## 2026-10-07 — scroll dos registos e pré-visualização local
+
+- Na branch `codex/retainer-extra-hours-20261007`, filtros gerais e ferramentas/pesquisa da tabela acompanham o scroll em todas as dimensões. O cabeçalho de colunas conserva a fixação existente a partir de tablet, directamente sob o cabeçalho da aplicação, sem reservar espaço para os filtros.
+- Browser integrado corrigido: a URL anterior usava uma API local indisponível. Demonstração com `qa-demo=1&qa-allocation=1&qa-scroll=1`, exclusivamente local/teste, apresenta 100 movimentos sintéticos. Sem ligação a dados reais.
+- Verificação no browser integrado: portátil 1366×768, tablet 768×844 e iPhone 390×844, claro/escuro, filtros fora da vista e sem excesso de largura da página; cabeçalho alinhado no desktop/tablet. Tipos, lint, 22 testes existentes da tabela e build aprovados. Evidência em `output/scroll-registos-corrigido.png`, não versionada.
+- A suite E2E anterior das avenças terminou com 167 aprovados, três omitidos e cinco falhas (client-assignment e quatro pagamentos); ainda por investigar antes da publicação. Não declarar a suite completa verde.
+- Alterações apenas em preparação 0.15.0; produção continua no estado 0.14.0 documentado abaixo. Sem deploy nem instalação de migrations nesta correcção.
+
 ## 2026-10-07 — 0.15.0 em preparação: correcções e Avença + horas
 
 - Branch `codex/retainer-extra-hours-20261007`, baseada no registo local da publicação 0.14.0. Gravação normal sem motivo/override manual; associação de avença atómica. Pacote de horas por período (incluindo anual), cobrança por registo apenas dos minutos excedentes e renovação sem acumulação.

@@ -62,6 +62,7 @@ type Props<Row> = {
   universeKey?: string;
   onRowDoubleClick?: (row: Row) => void;
   stickyHeaderOffset?: number;
+  stickyTools?: boolean;
   showSearch?: boolean;
   resultNoun?: string;
   rowHeight?: number;
@@ -393,6 +394,7 @@ export function StandardDataTable<Row>({
   universeKey = "",
   onRowDoubleClick,
   stickyHeaderOffset: requestedStickyOffset,
+  stickyTools = true,
   showSearch = true,
   resultNoun = "resultados",
   rowHeight = 34,
@@ -592,7 +594,7 @@ export function StandardDataTable<Row>({
     };
     const update=()=>{
       const tableRect=table.getBoundingClientRect(),headerHeight=header.offsetHeight;
-      const targetTop=tools.getBoundingClientRect().bottom;
+      const targetTop=stickyTools?tools.getBoundingClientRect().bottom:stickyHeaderOffset;
       const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop;
       if(!shouldFix){if(fixed)reset();return}
       if(!fixed){
@@ -629,7 +631,7 @@ export function StandardDataTable<Row>({
       scroller.removeEventListener("scroll",update);
       reset();
     };
-  },[stickyHeaderOffset,shown.length,stickyLayoutKey]);
+  },[stickyHeaderOffset,stickyTools,shown.length,stickyLayoutKey]);
   useEffect(() => {
     localStorage.setItem(
       storageKey,
@@ -881,7 +883,7 @@ export function StandardDataTable<Row>({
       <div
         ref={toolsElement}
         style={{ top: stickyHeaderOffset }}
-        className="table-tools z-40 flex min-h-9 flex-wrap items-center gap-1 border-b border-border bg-surface px-2 py-1 shadow-sm md:sticky"
+        className={`table-tools z-40 flex min-h-9 flex-wrap items-center gap-1 border-b border-border bg-surface px-2 py-1 shadow-sm ${stickyTools?'md:sticky':''}`}
       >
         {showSearch && <label className="relative min-w-52 flex-1">
           <span className="sr-only">Pesquisar em {label}</span>

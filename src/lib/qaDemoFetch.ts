@@ -19,7 +19,7 @@ const demoRpc:Record<string,unknown>={
 export function installQaDemoFetch(){
  const params=new URLSearchParams(window.location.search)
  if(!(import.meta.env.DEV||import.meta.env.VITE_APP_ENV==='test')||params.get('qa-demo')!=='1')return
- const allocation=params.get('qa-allocation')==='1'?createQaAllocationData():null
+ const allocation=params.get('qa-allocation')==='1'?createQaAllocationData(params.get('qa-scroll')==='1'?100:4):null
  const provisions=params.get('qa-provisions')==='1'?createQaProvisionData():null
  const nativeFetch=window.fetch.bind(window)
  const configuredOrigin=import.meta.env.VITE_SUPABASE_URL?new URL(import.meta.env.VITE_SUPABASE_URL).origin:null
