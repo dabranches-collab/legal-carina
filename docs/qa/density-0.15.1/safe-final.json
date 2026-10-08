@@ -1,0 +1,2567 @@
+[
+  {
+    "id": "overview",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      320,
+      568
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      390,
+      844
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      430,
+      932
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "16px",
+      "right": "16px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      768,
+      1024
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "19.2px",
+      "right": "19.2px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      1024,
+      768
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      844,
+      390
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      901,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      932,
+      430
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "overview",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "work",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "debtors",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "retainers",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "provisions",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "notes",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-users",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "admin-access-logs",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "master-data",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "imports",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  },
+  {
+    "id": "import-review",
+    "viewport": [
+      956,
+      440
+    ],
+    "documentOverflow": false,
+    "unsafe": [],
+    "small": [],
+    "homeBar": null,
+    "mainPadding": {
+      "left": "59px",
+      "right": "59px"
+    }
+  }
+]

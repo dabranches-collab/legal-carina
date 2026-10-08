@@ -1,0 +1,78 @@
+[
+  {
+    "id": "overview",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "work",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "debtors",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "clients",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "clients&clientType=individual",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "clients&clientType=individual&clientMode=list",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "billing",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "billing&society=LEGALTEAM",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "professionals",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "professionals&professional=Carina",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "retainers",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "provisions",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "notes",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "admin",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "admin-users",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "admin-access-logs",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "master-data",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "imports",
+    "fullTextPreserved": true
+  },
+  {
+    "id": "import-review",
+    "fullTextPreserved": true
+  }
+]

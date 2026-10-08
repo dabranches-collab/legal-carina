@@ -1,3 +1,21 @@
+## 2026-10-08 - revisão pontual: desktop remoto sem apontador
+
+A compactação desktop passa também a abranger `pointer: none` a partir de 1280 px, como nas sessões HP/RDP sem rato físico. Uma única alteração no media query; declarações, fontes, regras coarse/mobile e regras de negócio intactas. Validação focada: Chrome real do HP em 1920×1080, `pointer:none`, filtros em grelha, 10 linhas completas, primeira linha a 719.25 px, topbar 156 px, sidebar 256 px e sem overflow; emulação móvel coarse 390×844 mantém filtros em bloco, alvos 44 px, campos 16 px e safe areas 47/34 px. CI anterior aprovada; commit separado requer nova CI e revisão curta antes do deploy autorizado. Produção ainda 0.15.0.
+
+## 2026-10-08 - 0.15.1 retomada para revisão curta
+
+Pacote de densidade visual retomado num clone isolado, branch `codex/desktop-density-0.15.1-20261008`, a partir de `origin/main` confirmado em `a78f20083b582f20374406af3a3c1e74457574ee`. Patch original SHA-256 `90ecec691d3a7ce426223082cd4ac1093a6f8cf93d386b3be72d9d0802b009aa`; aplicação inversa verificada antes desta actualização documental. Código, versão e notas mantêm identidade com o pacote preparado. Evidências sintéticas preservadas em `docs/qa/density-0.15.1/`.
+
+A publicação deste pacote está autorizada, condicionada à revisão curta e aos gates finais. Produção HTTP reconfirmada em 0.15.0 nesta retoma. Ainda sem merge/deploy 0.15.1; consultar a PR draft desta branch para SHA e CI finais. Pagamentos, avenças, autenticação, permissões, schema, regras de negócio e respectivos checkouts preservados. Sem operações na base de dados. O registo anterior descreve a preparação original; a presente entrada actualiza a autorização e a fase de entrega.
+
+## 2026-10-08 — 0.15.1 concluída localmente, por rever
+
+Base `a78f20083b582f20374406af3a3c1e74457574ee` (main após PR #90, 0.15.0). Clone isolado; checkout activo preservado. Painéis de entrada deixam de esticar para preencher a altura do ecrã. Filtros dos Registos colocam Todos/Limpar ao lado da selecção em desktop; cartões e gráficos têm margens mais compactas. Texto dos gráficos ajustado para 11 px e controlos touch para 44 px. A grelha de filtros a 1024 px respeita o espaço entre sidebar e áreas seguras.
+
+Security:files, lint, TypeScript e build aprovados. 303 testes distintos aprovados: a repetição integral teve dois timeouts de 5 s em WorkEntryModals durante execução concorrente; o ficheiro completo foi repetido isoladamente e os seus 18 testes passaram sem alterar timeouts ou testes. Os 25 contratos SQL de pagamentos e nove de avenças passaram com esquema sintético local. 65 E2E seleccionados aprovados (63 na primeira execução, dois do servidor isolado corrigidos e aprovados na repetição); nove cenários de menus/gráficos repetidos após o ajuste final de rótulos, todos aprovados. 240 estados antes/depois (24 vistas e variantes), 171 verificações de áreas seguras e 152 estados de nitidez. Conteúdo textual das 19 vistas principais e cinco variantes adicionais preservado. Os seis E2E de Pagamentos com dados sintéticos passaram (um timeout transitório de navegação a 768 px passou na repetição isolada sem alterar código ou teste).
+
+Evidência e limites: [docs/qa/density-0.15.1/README.md](docs/qa/density-0.15.1/README.md). Código local em preparação; GitHub/produção permanecem na versão base confirmada. Sem commit/push/deploy deste pacote, sem acesso a dados reais ou migrations. Próximo passo: revisão do patch; publicação exige autorização directa válida.
+
 ## 2026-10-07 — compatibilidade entre avença e preço fixo
 
 - Associação a preço fixo liberta o consumo da avença e conserva o tratamento do trabalho a preço fixo. Cenário adicional autenticado com RLS aprovado; total de 16 cenários PostgreSQL de avenças e nove SQL. CI final requerida na PR #90; ainda sem instalação remota/publicação.

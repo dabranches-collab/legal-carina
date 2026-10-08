@@ -1,11 +1,17 @@
 {
-  "version": "0.15.0",
+  "version": "0.15.1",
   "changes": [
-    "Avença + horas: pacote mensal ou anual, com cobrança por registo apenas dos minutos excedentes.",
-    "Correcções de movimentos sem motivo obrigatório nem dependência de lançamentos manuais de auditoria.",
-    "Filtros e pesquisa dos registos acompanham o scroll, libertando espaço para ler a tabela."
+    "Painéis de entrada com altura natural e filtros dos registos mais compactos em desktop.",
+    "Controlos tácteis e campos ajustados para tablet e iPhone, preservando a área de trabalho."
   ],
   "releases": [
+    {
+      "version": "0.15.1",
+      "changes": [
+        "Painéis de entrada com altura natural e filtros dos registos mais compactos em desktop.",
+        "Controlos tácteis e campos ajustados para tablet e iPhone, preservando a área de trabalho."
+      ]
+    },
     {
       "version": "0.15.0",
       "changes": [

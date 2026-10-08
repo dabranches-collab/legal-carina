@@ -82,7 +82,7 @@ function ChartSubtotals({
 }) {
   if (!items.length) return null;
   return (
-    <dl className="mt-4 grid gap-1.5 border-t border-border pt-3 text-[0.68rem]">
+    <dl className="mt-4 grid gap-1.5 border-t border-border pt-3 text-[11px]">
       {items.map((item) => (
         <div
           key={item.label}
@@ -120,7 +120,7 @@ function SeriesToggle({
         type="button"
         aria-pressed={!individual}
         onClick={() => onChange(false)}
-        className={`h-6 rounded-l border px-1.5 text-[0.6rem] font-semibold leading-none ${!individual ? "border-secondary bg-secondary text-surface" : "border-border bg-surface text-text-secondary"}`}
+        className={`h-6 rounded-l border px-1.5 text-[11px] font-semibold leading-none ${!individual ? "border-secondary bg-secondary text-surface" : "border-border bg-surface text-text-secondary"}`}
       >
         Agregado
       </button>
@@ -128,7 +128,7 @@ function SeriesToggle({
         type="button"
         aria-pressed={individual}
         onClick={() => onChange(true)}
-        className={`h-6 rounded-r border px-1.5 text-[0.6rem] font-semibold leading-none ${individual ? "border-secondary bg-secondary text-surface" : "border-border bg-surface text-text-secondary"}`}
+        className={`h-6 rounded-r border px-1.5 text-[11px] font-semibold leading-none ${individual ? "border-secondary bg-secondary text-surface" : "border-border bg-surface text-text-secondary"}`}
       >
         Por {optionLabel}
       </button>
@@ -150,7 +150,7 @@ function PeriodBreakdown({
     <span className="group relative block">
       <button
         type="button"
-        className="period-breakdown-trigger relative min-h-7 w-full rounded px-0.5 text-[0.62rem] text-text-secondary hover:bg-secondary-soft focus-visible:outline-2 focus-visible:outline-secondary"
+        className="period-breakdown-trigger relative min-h-7 w-full rounded px-0.5 text-[11px] text-text-secondary hover:bg-secondary-soft focus-visible:outline-2 focus-visible:outline-secondary"
         aria-label={`Detalhe de ${label}`}
       >
         {label}
@@ -277,7 +277,7 @@ export function AnnualValueChart({
                   title={pointTooltip(point.label, point.value, point.societies)}
                   className="relative flex h-full min-w-0 flex-col justify-end pb-5"
                 >
-                  <span className="financial-value mb-1 truncate text-center text-[0.55rem] font-semibold tabular-nums">
+                  <span className="financial-value mb-1 truncate text-center text-[11px] font-semibold tabular-nums">
                     {compactMoney.format(point.value)}
                   </span>
                   <div
@@ -334,14 +334,14 @@ export function AnnualValueChart({
                 title={pointTooltip(point.label, point.value, point.societies)}
                 className="group flex h-full min-w-0 flex-1 flex-col justify-end"
               >
-                <span className="financial-value mb-2 whitespace-nowrap text-center text-[0.62rem] font-semibold tabular-nums text-text-primary">
+                <span className="financial-value mb-2 whitespace-nowrap text-center text-[11px] font-semibold tabular-nums text-text-primary">
                   {compactMoney.format(point.value)}
                 </span>
                 <div
                   className="min-h-1 rounded-t-md bg-chart-1 transition-[height,filter] duration-300 hover:brightness-110"
                   style={{ height: `${(point.value / max) * 100}%` }}
                 />
-                <span className="mt-2 text-center text-[0.62rem] text-text-secondary">
+                <span className="mt-2 text-center text-[11px] text-text-secondary">
                   {String(point.label).slice(2)}
                 </span>
               </div>
@@ -477,7 +477,7 @@ export function MonthlyValueChart({
                 <span
                   key={index}
                   title={tooltips[index]}
-                  className="financial-value absolute -translate-x-1/2 rounded bg-surface/90 px-1 text-[0.58rem] font-semibold tabular-nums text-text-primary shadow-sm"
+                  className="financial-value absolute -translate-x-1/2 rounded bg-surface/90 px-1 text-[11px] font-semibold tabular-nums text-text-primary shadow-sm"
                   style={{
                     left: `${(index / 11) * 100}%`,
                     top: `${Math.max(0, 88 - (value / max) * 82)}%`,
@@ -487,7 +487,7 @@ export function MonthlyValueChart({
                 </span>
               ))}
             </div>
-            <div className="grid grid-cols-12 text-center text-[0.62rem] text-text-secondary">
+            <div className="grid grid-cols-12 text-center text-[11px] text-text-secondary">
               {labels.map((month, index) => (
                 <span title={tooltips[index]} key={`${month}-${index}`}>
                   {month}
@@ -565,7 +565,7 @@ export function MonthlyValueChart({
                   valuesFor(society).map((value, monthIndex) => (
                     <span
                       key={`${society}-${monthIndex}`}
-                      className="financial-value absolute -translate-x-1/2 whitespace-nowrap rounded bg-surface/90 px-0.5 text-[0.46rem] font-semibold tabular-nums shadow-sm"
+                      className="financial-value absolute -translate-x-1/2 whitespace-nowrap rounded bg-surface/90 px-0.5 text-[11px] font-semibold tabular-nums shadow-sm"
                       style={{
                         left: `${(monthIndex / 11) * 100}%`,
                         top: `${Math.max(0, 86 - (value / seriesMax) * 78 + societyIndex * 4)}%`,
@@ -577,7 +577,7 @@ export function MonthlyValueChart({
                   )),
                 )}
               </div>
-              <div className="grid grid-cols-12 text-center text-[0.62rem] text-text-secondary">
+              <div className="grid grid-cols-12 text-center text-[11px] text-text-secondary">
                 {labels.map((month, index) => (
                   <PeriodBreakdown
                     key={`${month}-${index}`}
@@ -629,7 +629,7 @@ export function MonthlyValueChart({
                 <span
                   key={index}
                   title={tooltips[index]}
-                  className="financial-value absolute -translate-x-1/2 rounded bg-surface/90 px-1 text-[0.58rem] font-semibold tabular-nums text-text-primary shadow-sm"
+                  className="financial-value absolute -translate-x-1/2 rounded bg-surface/90 px-1 text-[11px] font-semibold tabular-nums text-text-primary shadow-sm"
                   style={{
                     left: `${(index / 11) * 100}%`,
                     top: `${Math.max(0, 88 - (value / max) * 82)}%`,
@@ -640,7 +640,7 @@ export function MonthlyValueChart({
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-12 text-center text-[0.62rem] text-text-secondary">
+          <div className="grid grid-cols-12 text-center text-[11px] text-text-secondary">
             {labels.map((month, index) => (
               <PeriodBreakdown
                 key={`${month}-${index}`}
@@ -728,14 +728,14 @@ export function CompactVerticalChart({
               title={`${label}\n${valueFormatter(values[index])}`}
               className="group flex h-full min-w-0 flex-1 flex-col justify-end"
             >
-              <span className="financial-value mb-1 truncate text-center text-[0.55rem] font-semibold tabular-nums">
+              <span className="financial-value mb-1 truncate text-center text-[11px] font-semibold tabular-nums">
                 {valueFormatter(values[index])}
               </span>
               <span
                 className="min-h-1 rounded-t bg-chart-1 transition-[height,filter] duration-300 group-hover:brightness-110"
                 style={{ height: `${(values[index] / max) * 74}%` }}
               />
-              <span className="mt-1.5 pb-1 text-center text-[0.6rem] text-text-secondary">
+              <span className="mt-1.5 pb-1 text-center text-[11px] text-text-secondary">
                 {label}
               </span>
             </div>
@@ -935,7 +935,7 @@ export function YearComparisonChart({
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-12 gap-2 pt-2 text-center text-[0.62rem] text-text-secondary">
+          <div className="grid grid-cols-12 gap-2 pt-2 text-center text-[11px] text-text-secondary">
             {months.map((month) => (
               <span key={month}>{month}</span>
             ))}
@@ -1010,7 +1010,7 @@ export function SocietyEvolutionChart({ data }: { data: SocietyYearPoint[] }) {
                               : `var(--color-chart-${(societyIndex % 4) + 1})`,
                           }}
                         />
-                        <span className="absolute bottom-0 text-[0.55rem] text-text-secondary">
+                        <span className="absolute bottom-0 text-[11px] text-text-secondary">
                           {String(year).slice(2)}
                         </span>
                       </div>

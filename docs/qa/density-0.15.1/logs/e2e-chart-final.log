@@ -1,0 +1,16 @@
+
+Running 9 tests using 1 worker
+
+(node:42348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 100% em modo light (14, 24 e 27 polegadas) (31.2s)
+  ok 2 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 125% em modo light (14, 24 e 27 polegadas) (25.3s)
+  ok 3 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 150% em modo light (14, 24 e 27 polegadas) (25.8s)
+  ok 4 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 100% em modo light (14, 24 e 27 polegadas) (24.1s)
+  ok 5 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 125% em modo light (14, 24 e 27 polegadas) (25.0s)
+  ok 6 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 150% em modo light (14, 24 e 27 polegadas) (25.6s)
+  ok 7 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 100% em modo dark (14, 24 e 27 polegadas) (25.7s)
+  ok 8 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 150% em modo dark (14, 24 e 27 polegadas) (26.8s)
+  ok 9 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:171:1 ÔÇ║ dashboard preenchido mant├®m gr├íficos contidos e informa├º├úo mensal acess├¡vel (1.7s)
+
+  9 passed (3.6m)

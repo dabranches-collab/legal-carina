@@ -1,0 +1,39 @@
+$ pnpm security:files && pnpm lint && pnpm typecheck && pnpm test && pnpm build
+$ node scripts/check-sensitive-files.mjs
+Nenhum ficheiro sens├¡vel proibido est├í versionado.
+$ oxlint
+$ tsc -b --pretty false
+$ vitest run && node scripts/test-payments-sql.mjs && node scripts/test-retainer-sql.mjs
+
+ RUN  v4.1.10 [workspace]/legal-carina
+
+ ÔØ» src/features/work-entries/WorkEntryModals.test.tsx (18 tests | 2 failed) 36553ms
+     ├ù mant├®m Estado, Facturado e Pago coerentes, incluindo os dois tipos de incobr├ível 5100ms
+     ├ù exige confirma├º├úo e motivo audit├ível antes de eliminar 5081ms
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 2 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  src/features/work-entries/WorkEntryModals.test.tsx > movimentos controlados > mant├®m Estado, Facturado e Pago coerentes, incluindo os dois tipos de incobr├ível
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ÔØ» src/features/work-entries/WorkEntryModals.test.tsx:46:2
+
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/2]ÔÄ»
+
+ FAIL  src/features/work-entries/WorkEntryModals.test.tsx > movimentos controlados > exige confirma├º├úo e motivo audit├ível antes de eliminar
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ÔØ» src/features/work-entries/WorkEntryModals.test.tsx:47:2
+
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/2]ÔÄ»
+
+
+ Test Files  1 failed | 58 passed (59)
+      Tests  2 failed | 301 passed (303)
+   Start at  10:51:52
+   Duration  234.91s (transform 3.88s, setup 25.66s, import 6.51s, tests 93.45s, environment 89.80s)
+
+[ELIFECYCLE] Test failed. See above for more details.
+[ELIFECYCLE] Command failed with exit code 1.

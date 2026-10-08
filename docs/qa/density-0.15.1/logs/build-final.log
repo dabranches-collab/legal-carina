@@ -1,0 +1,72 @@
+$ tsc -b && vite build
+vite v8.2.0 building client environment for production...
+[2K
+transforming...Ô£ô 565 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      1.26 kB Ôöé gzip:   0.58 kB
+dist/assets/pdf.worker.min-r-TJsTTt.mjs          1,039.20 kB
+dist/assets/index-D5p8MhPq.css                      88.63 kB Ôöé gzip:  16.09 kB
+dist/assets/openClientRecord-bQFb1GUV.js             0.13 kB Ôöé gzip:   0.13 kB
+dist/assets/WorkResultsLink-UzAi9LVx.js              0.40 kB Ôöé gzip:   0.29 kB
+dist/assets/readBatches-Dtn_5CXd.js                  0.42 kB Ôöé gzip:   0.30 kB
+dist/assets/AppLink-CXRptOCz.js                      0.45 kB Ôöé gzip:   0.31 kB
+dist/assets/useResizablePlainTable-CZR4xNA_.js       0.90 kB Ôöé gzip:   0.55 kB
+dist/assets/AdminLandingPage-CGDbQItN.js             0.94 kB Ôöé gzip:   0.56 kB
+dist/assets/fixedFeeFinance-BM6pWPdX.js              1.04 kB Ôöé gzip:   0.53 kB
+dist/assets/rolldown-runtime-Dd_uD5pT.js             1.10 kB Ôöé gzip:   0.62 kB
+dist/assets/date-z5QvVTxd.js                         1.11 kB Ôöé gzip:   0.56 kB
+dist/assets/AttentionPanel-B1TwhwaH.js               1.18 kB Ôöé gzip:   0.63 kB
+dist/assets/useModalLifecycle-DctRt_Hr.js            1.44 kB Ôöé gzip:   0.60 kB
+dist/assets/pdf-rBUbSOrA.js                          1.44 kB Ôöé gzip:   0.75 kB
+dist/assets/CalendarDateInput-PXknkNUH.js            1.51 kB Ôöé gzip:   0.80 kB
+dist/assets/AccessLogsPage-Anp-jqvL.js               1.66 kB Ôöé gzip:   0.87 kB
+dist/assets/ColumnResizeHandle-BHYtv9Pl.js           1.75 kB Ôöé gzip:   0.86 kB
+dist/assets/fixedFeeDashboard-WndeYVkS.js            1.93 kB Ôöé gzip:   0.89 kB
+dist/assets/attentionCounts-nowguw0G.js              2.30 kB Ôöé gzip:   0.78 kB
+dist/assets/DebtorFixedFeeJobs-CUDRKAeK.js           2.31 kB Ôöé gzip:   1.20 kB
+dist/assets/DebtorRetainerCharges-pT8oQLti.js        2.67 kB Ôöé gzip:   1.25 kB
+dist/assets/DashboardProcessingGrid-BgEmvNhK.js      2.80 kB Ôöé gzip:   0.98 kB
+dist/assets/AdminTables-BXVdFj9t.js                  2.95 kB Ôöé gzip:   1.18 kB
+dist/assets/RetainerChargeDialog-D2w51b3g.js         3.43 kB Ôöé gzip:   1.53 kB
+dist/assets/ImportReviewPage-DVqaJkIC.js             3.57 kB Ôöé gzip:   1.61 kB
+dist/assets/ProfessionalLandingPage-DoUCxdX0.js      4.37 kB Ôöé gzip:   1.73 kB
+dist/assets/fixedFeeAnalytics-D6lKIw63.js            4.39 kB Ôöé gzip:   1.69 kB
+dist/assets/BillingLandingPage-BR2-8wi4.js           5.22 kB Ôöé gzip:   1.88 kB
+dist/assets/workEntryCompatibility-CMPUz23I.js       6.80 kB Ôöé gzip:   2.62 kB
+dist/assets/RetainersPage-DxR1XCaN.js                7.83 kB Ôöé gzip:   2.49 kB
+dist/assets/WorkEntryExpensesEditor-Y8lXm1Ns.js      8.00 kB Ôöé gzip:   2.73 kB
+dist/assets/debtorSummary-WjTHvqAS.js                8.30 kB Ôöé gzip:   2.64 kB
+dist/assets/ProvisionsPage-BmcvHYgg.js               9.11 kB Ôöé gzip:   3.08 kB
+dist/assets/ClientLandingPage-NpKChPEa.js           10.01 kB Ôöé gzip:   3.01 kB
+dist/assets/OverviewPage-BCKWfuOH.js                10.32 kB Ôöé gzip:   3.44 kB
+dist/assets/PaymentsPage-D0gs08bN.js                11.93 kB Ôöé gzip:   4.45 kB
+dist/assets/DebtorsPage-DJEbqnK-.js                 12.63 kB Ôöé gzip:   4.24 kB
+dist/assets/ImportWizard-BUPrNspN.js                13.11 kB Ôöé gzip:   4.84 kB
+dist/assets/CreateWorkEntryModal-BaVWlPJu.js        13.21 kB Ôöé gzip:   4.58 kB
+dist/assets/NotesPage-wQqY04VG.js                   14.99 kB Ôöé gzip:   4.72 kB
+dist/assets/QuickExpenseModal-CjvbQq6f.js           16.27 kB Ôöé gzip:   5.25 kB
+dist/assets/EditWorkEntryModal-B64e6sqm.js          17.29 kB Ôöé gzip:   4.90 kB
+dist/assets/AdminPage-BoQZ4JuF.js                   17.57 kB Ôöé gzip:   4.82 kB
+dist/assets/MetricCard-DAp_9mPP.js                  19.31 kB Ôöé gzip:   4.92 kB
+dist/assets/WorkEntriesPage-BNtte0_U.js             26.21 kB Ôöé gzip:   7.47 kB
+dist/assets/purify.es-BlKBIatO.js                   27.12 kB Ôöé gzip:  10.54 kB
+dist/assets/StandardDataTable-DRyBE4jV.js           28.43 kB Ôöé gzip:   9.03 kB
+dist/assets/analyzeFile-DCHLI6qI.js                 29.04 kB Ôöé gzip:  10.67 kB
+dist/assets/EntityDashboard-Drf1idlJ.js             44.97 kB Ôöé gzip:  13.62 kB
+dist/assets/ClientCreditPanel-WMEEepVd.js           55.95 kB Ôöé gzip:  18.58 kB
+dist/assets/index.es-DgTKX4NY.js                   151.43 kB Ôöé gzip:  48.92 kB
+dist/assets/html2canvas-KL8tBLDX.js                199.49 kB Ôöé gzip:  46.77 kB
+dist/assets/index-DcErHim8.js                      278.38 kB Ôöé gzip:  87.17 kB
+dist/assets/jspdf.es.min-D449RYIy.js               399.56 kB Ôöé gzip: 129.79 kB
+dist/assets/es-DY73bV4A.js                         420.01 kB Ôöé gzip: 175.58 kB
+dist/assets/HonorariumNoteModal-CM5jaCGo.js        430.99 kB Ôöé gzip: 122.24 kB
+dist/assets/xlsx-CIWsbm6w.js                       492.49 kB Ôöé gzip: 160.52 kB
+dist/assets/MasterDataPage-DbCFHWXo.js             517.40 kB Ôöé gzip: 145.07 kB
+
+Ô£ô built in 1.19s
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

@@ -1,0 +1,9 @@
+
+Running 2 tests using 1 worker
+
+(node:40804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:12:1 ÔÇ║ matriz local exp├Áe modelos e controlos acess├¡veis (1.9s)
+  ok 2 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:153:1 ÔÇ║ manifest e service worker de produ├º├úo s├úo v├ílidos (95ms)
+
+  2 passed (3.6s)
