@@ -1,3 +1,7 @@
+## 2026-10-08 - revisão pontual: desktop remoto sem apontador
+
+A compactação desktop passa também a abranger `pointer: none` a partir de 1280 px, como nas sessões HP/RDP sem rato físico. Uma única alteração no media query; declarações, fontes, regras coarse/mobile e regras de negócio intactas. Validação focada: Chrome real do HP em 1920×1080, `pointer:none`, filtros em grelha, 10 linhas completas, primeira linha a 719.25 px, topbar 156 px, sidebar 256 px e sem overflow; emulação móvel coarse 390×844 mantém filtros em bloco, alvos 44 px, campos 16 px e safe areas 47/34 px. CI anterior aprovada; commit separado requer nova CI e revisão curta antes do deploy autorizado. Produção ainda 0.15.0.
+
 ## 2026-10-08 - 0.15.1 retomada para revisão curta
 
 Pacote de densidade visual retomado num clone isolado, branch `codex/desktop-density-0.15.1-20261008`, a partir de `origin/main` confirmado em `a78f20083b582f20374406af3a3c1e74457574ee`. Patch original SHA-256 `90ecec691d3a7ce426223082cd4ac1093a6f8cf93d386b3be72d9d0802b009aa`; aplicação inversa verificada antes desta actualização documental. Código, versão e notas mantêm identidade com o pacote preparado. Evidências sintéticas preservadas em `docs/qa/density-0.15.1/`.

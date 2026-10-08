@@ -1,3 +1,5 @@
+> Ajuste da revisão curta: a alternativa `(min-width: 1280px) and (pointer: none)` foi adicionada ao mesmo bloco desktop. Chrome real do HP/RDP em 1920×1080: filtros em grelha, 10 linhas completas, primeira linha 719.25 px, header/sidebar 156/256 px, sem overflow. Guarda coarse/mobile 390×844: filtros em bloco, alvos 44 px, campos 16 px, safe areas 47/34 px. Sem mudanças nas restantes regras; nova CI e revisão curta do commit separado pendentes.
+
 > Retoma de 08-10-2026: branch `codex/desktop-density-0.15.1-20261008`, baseada no mesmo `a78f200`. Publicação autorizada após revisão curta e gates finais. As contagens abaixo são as evidências do pacote original: 65 E2E de apresentação mais seis de Pagamentos = 71 distintos. CI da PR validará o SHA final. Nenhuma alteração funcional adicional.
 
 # Revisão local — legal-carina 0.15.1

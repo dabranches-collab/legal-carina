@@ -261,7 +261,7 @@ main .overscroll-contain { overscroll-behavior: auto; }
   }
 }
 
-@media (min-width: 1280px) and (pointer: fine) {
+@media (min-width: 1280px) and (pointer: fine), (min-width: 1280px) and (pointer: none) {
   .dashboard-landing > .grid > .card { padding: 16px; }
   .dashboard-landing .card dl { margin-top: 16px; gap: 8px; }
   .dashboard-summary-pair > section.card { padding: 16px; }
