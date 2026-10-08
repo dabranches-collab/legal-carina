@@ -1,0 +1,65 @@
+
+Running 6 tests using 1 worker
+
+(node:30468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 390 claro (2.1s)
+  ok 2 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 390 escuro (2.0s)
+  x  3 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 768 claro (30.1s)
+(node:36656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 768 escuro (1.8s)
+  ok 5 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 1440 claro (1.5s)
+  ok 6 [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 1440 escuro (1.5s)
+
+
+  1) [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 768 claro ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('complementary', { name: 'Navega├º├úo principal' }).getByRole('list', { name: 'Por receber', exact: true }).getByRole('button', { name: 'Pagamentos', exact: true })
+        - locator resolved to <button type="button" aria-current="page" title="Executar a ac├º├úo ┬½Pagamentos┬╗." aria-description="Executar a ac├º├úo ┬½Pagamentos┬╗." class="min-h-11 w-full rounded-md border px-2 py-1 text-left text-xs transition-colors border-accent bg-accent font-semibold text-navigation">Pagamentos</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+      - element was detached from the DOM, retrying
+        - locator resolved to <button type="button" aria-current="page" title="Executar a ac├º├úo ┬½Pagamentos┬╗." aria-description="Executar a ac├º├úo ┬½Pagamentos┬╗." class="min-h-11 w-full rounded-md border px-2 py-1 text-left text-xs transition-colors border-accent bg-accent font-semibold text-navigation">Pagamentos</button>
+      - attempting click action
+        2 ├ù waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - element is outside of the viewport
+        - retrying click action
+        - waiting 20ms
+        2 ├ù waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - element is outside of the viewport
+        - retrying click action
+          - waiting 100ms
+        54 ├ù waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - element is outside of the viewport
+         - retrying click action
+           - waiting 500ms
+
+
+      33 |  await expect(parent).toHaveAttribute('aria-current','page')
+      34 |  await expect(payments).toHaveAttribute('aria-current','page')
+    > 35 |  if(width<1024){await payments.click();await expect(page.getByRole('button',{name:'Fechar navega├º├úo',exact:true})).toHaveCount(0)}
+         |                                ^
+      36 |  if(width===390)await page.addStyleTag({content:':root{--safe-top:24px;--safe-bottom:34px;--safe-left:0px;--safe-right:0px}'})
+      37 |  await expect(page.getByRole('heading',{name:'Pagamentos',exact:true})).toBeVisible()
+      38 |  await page.getByRole('button',{name:/Notas de honor├írios n├úo pagas/}).click()
+        at [workspace]\legal-carina\e2e\payments.spec.ts:35:32
+
+    Error Context: test-results\payments-Pagamentos-768-claro-chromium\error-context.md
+
+  1 failed
+    [chromium] ÔÇ║ e2e\payments.spec.ts:4:66 ÔÇ║ Pagamentos 768 claro ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+  5 passed (41.8s)

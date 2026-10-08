@@ -1,0 +1,136 @@
+$ pnpm security:files && pnpm lint && pnpm typecheck && pnpm test && pnpm build
+$ node scripts/check-sensitive-files.mjs
+Nenhum ficheiro sens├¡vel proibido est├í versionado.
+$ oxlint
+$ tsc -b --pretty false
+$ vitest run && node scripts/test-payments-sql.mjs && node scripts/test-retainer-sql.mjs
+
+ RUN  v4.1.10 [workspace]/legal-carina
+
+
+ Test Files  59 passed (59)
+      Tests  303 passed (303)
+   Start at  10:28:24
+   Duration  218.13s (transform 3.28s, setup 27.32s, import 5.96s, tests 66.24s, environment 97.93s)
+
+PASS unbilled note work retains invoicing but not separate payment
+PASS direct work payment and reassociation blocked for noted work
+PASS partial receipt preserves provision, number and revision
+PASS lost response retry is idempotent
+PASS stale balance and excess rejected atomically
+PASS receipt audited with balance before
+PASS stale revision cannot discard a receipt
+PASS paid note cannot be voided or lose items
+PASS current revision preserves received total, counts once
+PASS full settlement clears queue without invoice side effect
+PASS legacy provision note partial and reversal protection
+PASS unbilled retainer cannot auto-invoice; partial rejected; total accepted
+PASS work receipt requires invoice evidence and preserves invoice
+PASS financial and scope denials return no payment data
+PASS API surface grants no direct receipt mutation or private helper execution
+PASS subsequent editors cannot undo audited work or retainer receipt
+PASS explicit retainer invoicing requires date, detects stale data and never receives
+PASS duplicate current note associations rejected
+PASS fixed fee receipt respects role, invoice and existing provision, no reissue
+PASS receipt/audit failure rolls back settlement atomically
+PASS new provision snapshot is the same emitted document, not duplicate collection
+PASS actual ACL: owner sees queue, incomplete PIN and inactive membership see none
+PASS actual ACL: operator requires financial permission
+PASS actual ACL: viewer gets scoped read only; expired grants hide items
+PASS actual ACL: unscoped foreign client hidden and receipt table denies direct read/write
+25 PostgreSQL contract checks passed. Real repository ACL helpers tested with synthetic ACL tables; core schema/work RPC still partial, not full Supabase or multi-connection concurrency validation.
+PASS actual legacy guard matches SQL NULL with a JSON null override
+PASS actual SQL: annual boundary bills only 45 minutes
+PASS actual SQL: correction redistributes unbilled annual consumption
+PASS actual SQL: renewal resets quota
+PASS actual SQL: cancellation releases included hours
+PASS actual SQL: consumption cannot be edited directly
+PASS actual SQL: invalid mode lacks required quota or hourly rate
+PASS actual SQL: simple retainer clears unbilled extra charges
+PASS actual SQL: private functions have no authenticated execution
+9 retainer SQL checks passed. Minimal synthetic schema; full Auth/RLS and concurrency separately tested in PostgreSQL.
+$ tsc -b && vite build
+vite v8.2.0 building client environment for production...
+[2K
+transforming...Ô£ô 565 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      1.26 kB Ôöé gzip:   0.58 kB
+dist/assets/pdf.worker.min-r-TJsTTt.mjs          1,039.20 kB
+dist/assets/index-UHwUCuGl.css                      88.36 kB Ôöé gzip:  16.03 kB
+dist/assets/openClientRecord-bQFb1GUV.js             0.13 kB Ôöé gzip:   0.13 kB
+dist/assets/WorkResultsLink-C3-sVc-G.js              0.40 kB Ôöé gzip:   0.29 kB
+dist/assets/readBatches-D5zSYqgO.js                  0.42 kB Ôöé gzip:   0.30 kB
+dist/assets/AppLink-8X1cv8Oe.js                      0.45 kB Ôöé gzip:   0.31 kB
+dist/assets/useResizablePlainTable-DisUgkVK.js       0.90 kB Ôöé gzip:   0.55 kB
+dist/assets/AdminLandingPage-tqLn36TP.js             0.94 kB Ôöé gzip:   0.55 kB
+dist/assets/fixedFeeFinance-BM6pWPdX.js              1.04 kB Ôöé gzip:   0.53 kB
+dist/assets/rolldown-runtime-Dd_uD5pT.js             1.10 kB Ôöé gzip:   0.62 kB
+dist/assets/date-z5QvVTxd.js                         1.11 kB Ôöé gzip:   0.56 kB
+dist/assets/AttentionPanel-D0h-HADl.js               1.18 kB Ôöé gzip:   0.63 kB
+dist/assets/useModalLifecycle-bACgeLku.js            1.44 kB Ôöé gzip:   0.60 kB
+dist/assets/pdf-DwWAyNTt.js                          1.44 kB Ôöé gzip:   0.75 kB
+dist/assets/CalendarDateInput-CiWZOwbY.js            1.51 kB Ôöé gzip:   0.80 kB
+dist/assets/AccessLogsPage-CqOoCbWS.js               1.66 kB Ôöé gzip:   0.87 kB
+dist/assets/ColumnResizeHandle-DDuXg9Xe.js           1.75 kB Ôöé gzip:   0.86 kB
+dist/assets/fixedFeeDashboard-WndeYVkS.js            1.93 kB Ôöé gzip:   0.89 kB
+dist/assets/attentionCounts-C2_EJGs0.js              2.30 kB Ôöé gzip:   0.78 kB
+dist/assets/DebtorFixedFeeJobs-DD2eM6r2.js           2.31 kB Ôöé gzip:   1.20 kB
+dist/assets/DebtorRetainerCharges-Dd3xkxxA.js        2.67 kB Ôöé gzip:   1.25 kB
+dist/assets/DashboardProcessingGrid-Be3ovAmF.js      2.80 kB Ôöé gzip:   0.98 kB
+dist/assets/AdminTables-kBQ4HDrK.js                  2.95 kB Ôöé gzip:   1.18 kB
+dist/assets/RetainerChargeDialog-DClH2Zx7.js         3.43 kB Ôöé gzip:   1.53 kB
+dist/assets/ImportReviewPage-CQgdNotw.js             3.57 kB Ôöé gzip:   1.61 kB
+dist/assets/ProfessionalLandingPage-D3234TE3.js      4.37 kB Ôöé gzip:   1.73 kB
+dist/assets/fixedFeeAnalytics-C_VzlMOc.js            4.39 kB Ôöé gzip:   1.69 kB
+dist/assets/BillingLandingPage-B-dbikpN.js           5.22 kB Ôöé gzip:   1.88 kB
+dist/assets/workEntryCompatibility-BKK2LeKP.js       6.80 kB Ôöé gzip:   2.62 kB
+dist/assets/RetainersPage-C_ZIQvJs.js                7.83 kB Ôöé gzip:   2.49 kB
+dist/assets/WorkEntryExpensesEditor-EwO8ZBX9.js      8.00 kB Ôöé gzip:   2.73 kB
+dist/assets/debtorSummary-DT3w1URn.js                8.30 kB Ôöé gzip:   2.65 kB
+dist/assets/ProvisionsPage-VIQ6_QR8.js               9.11 kB Ôöé gzip:   3.08 kB
+dist/assets/ClientLandingPage-BqOtvrkw.js           10.01 kB Ôöé gzip:   3.01 kB
+dist/assets/OverviewPage-DhYt1VVn.js                10.32 kB Ôöé gzip:   3.44 kB
+dist/assets/PaymentsPage-BJrpVzhA.js                11.93 kB Ôöé gzip:   4.45 kB
+dist/assets/DebtorsPage-CDwijylm.js                 12.63 kB Ôöé gzip:   4.24 kB
+dist/assets/ImportWizard-DnxabQ_2.js                13.11 kB Ôöé gzip:   4.83 kB
+dist/assets/CreateWorkEntryModal-D39Ipzhe.js        13.21 kB Ôöé gzip:   4.58 kB
+dist/assets/NotesPage-DqBkotVE.js                   14.99 kB Ôöé gzip:   4.72 kB
+dist/assets/QuickExpenseModal-CYJgUsjW.js           16.27 kB Ôöé gzip:   5.25 kB
+dist/assets/EditWorkEntryModal-D79u-iX8.js          17.29 kB Ôöé gzip:   4.90 kB
+dist/assets/AdminPage-C6vPm5th.js                   17.57 kB Ôöé gzip:   4.82 kB
+dist/assets/MetricCard-BU6xKWiU.js                  19.35 kB Ôöé gzip:   4.93 kB
+dist/assets/WorkEntriesPage-DhA4qWTE.js             26.21 kB Ôöé gzip:   7.47 kB
+dist/assets/purify.es-BlKBIatO.js                   27.12 kB Ôöé gzip:  10.54 kB
+dist/assets/StandardDataTable-BQgU-RR8.js           28.43 kB Ôöé gzip:   9.03 kB
+dist/assets/analyzeFile-CclTxkLk.js                 29.04 kB Ôöé gzip:  10.67 kB
+dist/assets/EntityDashboard-ehSnEDQE.js             44.97 kB Ôöé gzip:  13.62 kB
+dist/assets/ClientCreditPanel-BGiZyNAc.js           55.95 kB Ôöé gzip:  18.58 kB
+dist/assets/index.es-PeFO6She.js                   151.43 kB Ôöé gzip:  48.92 kB
+dist/assets/html2canvas-KL8tBLDX.js                199.49 kB Ôöé gzip:  46.77 kB
+dist/assets/index-DLavc5-r.js                      278.28 kB Ôöé gzip:  87.11 kB
+dist/assets/jspdf.es.min-DDMl6ThK.js               399.56 kB Ôöé gzip: 129.79 kB
+dist/assets/es-DY73bV4A.js                         420.01 kB Ôöé gzip: 175.58 kB
+dist/assets/HonorariumNoteModal-Lh7wHmqS.js        430.99 kB Ôöé gzip: 122.24 kB
+dist/assets/xlsx-CIWsbm6w.js                       492.49 kB Ôöé gzip: 160.52 kB
+dist/assets/MasterDataPage-EoPo_VZq.js             517.40 kB Ôöé gzip: 145.08 kB
+
+Ô£ô built in 1.35s
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+error during build:
+Error: Actualize as notas da vers├úo antes de publicar.
+    at PluginContextImpl.closeBundle (file:///[workspace]/legal-carina/node_modules/.vite-temp/vite.config.ts.timestamp-1791451949461-ac7708aa7ba9b.mjs:289:56)
+    at PluginContextImpl.handler (file:///[workspace]/legal-carina/node_modules/.pnpm/vite@8.2.0_@types+node@24.13.3_esbuild@0.28.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:33929:13)
+    at plugin (file:///[workspace]/legal-carina/node_modules/.pnpm/rolldown@1.2.2/node_modules/rolldown/dist/shared/bindingify-input-options-BHixd47T.mjs:1721:17)
+    at file:///[workspace]/legal-carina/node_modules/.pnpm/rolldown@1.2.2/node_modules/rolldown/dist/shared/bindingify-input-options-BHixd47T.mjs:1928:21
+    at plugin.<computed> (file:///[workspace]/legal-carina/node_modules/.pnpm/rolldown@1.2.2/node_modules/rolldown/dist/shared/bindingify-input-options-BHixd47T.mjs:2125:18) {
+  code: 'PLUGIN_ERROR',
+  plugin: 'version-service-worker',
+  hook: 'closeBundle'
+}
+[ELIFECYCLE] Command failed with exit code 1.
+[ELIFECYCLE] Command failed with exit code 1.

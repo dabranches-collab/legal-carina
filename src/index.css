@@ -228,19 +228,19 @@ main .overscroll-contain { overscroll-behavior: auto; }
   .dashboard-overview-followup > article:nth-child(7):last-child { grid-column: span 2; }
 }
 
-/* Os painéis de entrada ocupam o espaço útil apenas quando cabem no ecrã. */
+/* Os painéis de entrada acompanham o conteúdo sem esticar as métricas. */
 @media (min-width: 1024px) {
   .dashboard-landing {
     display: flex;
-    min-height: calc(100dvh - var(--app-header-height, 156px) - 3.5rem);
+    min-height: 0;
     flex-direction: column;
   }
   .dashboard-landing > .grid:last-child {
-    flex: 1;
-    max-height: 48rem;
-    margin-block: auto;
+    flex: none;
+    max-height: none;
+    margin-block: 0;
     grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
-    grid-auto-rows: minmax(min-content, 1fr);
+    grid-auto-rows: auto;
   }
   .dashboard-landing > .grid:last-child > .card { width: 100%; max-width: 40rem; justify-self: center; }
   .dashboard-landing > .client-summary-grid:last-child {
@@ -251,14 +251,55 @@ main .overscroll-contain { overscroll-behavior: auto; }
   }
   .dashboard-landing > .client-summary-grid:last-child > .card { max-width: none; }
   .dashboard-landing .card dl {
-    flex: 1;
-    grid-auto-rows: minmax(min-content, 1fr);
+    flex: none;
+    grid-auto-rows: auto;
   }
   .dashboard-landing .card dl > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+}
+
+@media (min-width: 1280px) and (pointer: fine) {
+  .dashboard-landing > .grid > .card { padding: 16px; }
+  .dashboard-landing .card dl { margin-top: 16px; gap: 8px; }
+  .dashboard-summary-pair > section.card { padding: 16px; }
+  .card:has(> .metric-card-value) { padding: 12px; }
+  .metric-card-detail { min-height: 0; }
+  figure.card[data-chart-title] { padding: 16px; }
+  figure.card[data-chart-title] > div { margin-top: 16px; }
+  .work-filters-bar [role="group"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 4px 6px;
+  }
+  .work-filters-bar [role="group"] > span { grid-column: 1 / -1; margin-bottom: 0; }
+  .work-filters-bar [role="group"] > div { margin-top: 0; gap: 4px; }
+  .work-filters-bar [role="group"] > div > button {
+    min-height: 36px;
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+  .work-filters-bar [role="group"] > select { min-height: 36px; padding-inline: 8px; }
+}
+
+@media (pointer: coarse) {
+  :is(.app-shell-main, .app-shell-header, .app-shell-sidebar) :is(button, [role="button"], select, summary) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .app-shell-main a { min-height: 44px; }
+  .app-shell-main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) and (pointer: coarse) {
+  .work-filters-bar { grid-template-columns: minmax(0, 1fr); }
+  .work-filters-bar > section > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 .record-save { background: var(--color-success); border-color: var(--color-success); color: var(--color-surface); }

@@ -1,0 +1,120 @@
+
+Running 65 tests using 1 worker
+
+(node:12228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 100% em modo light (14, 24 e 27 polegadas) (21.6s)
+  ok  2 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 125% em modo light (14, 24 e 27 polegadas) (21.8s)
+  ok  3 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 150% em modo light (14, 24 e 27 polegadas) (26.3s)
+  ok  4 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 100% em modo light (14, 24 e 27 polegadas) (23.2s)
+  ok  5 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 125% em modo light (14, 24 e 27 polegadas) (23.2s)
+  ok  6 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 150% em modo light (14, 24 e 27 polegadas) (23.8s)
+  ok  7 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1240 a 100% em modo dark (14, 24 e 27 polegadas) (23.2s)
+  ok  8 [chromium] ÔÇ║ e2e\desktop-layout.spec.ts:26:56 ÔÇ║ menus desktop 1920├ù1080 a 150% em modo dark (14, 24 e 27 polegadas) (22.7s)
+  ok  9 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:49:73 ÔÇ║ Todos/Limpar 1440 (6.0s)
+  ok 10 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:49:73 ÔÇ║ Todos/Limpar 390 (6.4s)
+  ok 11 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:77:73 ÔÇ║ Pr├®-filtros Todos/Limpar 1440 (8.8s)
+  ok 12 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:77:73 ÔÇ║ Pr├®-filtros Todos/Limpar 390 (7.5s)
+  ok 13 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:92:235 ÔÇ║ Safe area ap├│s scroll portrait (3.6s)
+  ok 14 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:92:235 ÔÇ║ Safe area ap├│s scroll landscape (4.0s)
+  ok 15 [chromium] ÔÇ║ e2e\filter-all-clear.spec.ts:92:235 ÔÇ║ Safe area ap├│s scroll keyboard (3.1s)
+  x  16 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:12:1 ÔÇ║ matriz local exp├Áe modelos e controlos acess├¡veis (5.5s)
+(node:34908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 17 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 17: safe area, alvos e overflow (861ms)
+  ok 18 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone Air: safe area, alvos e overflow (778ms)
+  ok 19 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 17 Pro: safe area, alvos e overflow (722ms)
+  ok 20 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 17 Pro Max: safe area, alvos e overflow (758ms)
+  ok 21 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 17e: safe area, alvos e overflow (765ms)
+  ok 22 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 16: safe area, alvos e overflow (818ms)
+  ok 23 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 16 Plus: safe area, alvos e overflow (782ms)
+  ok 24 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 16 Pro: safe area, alvos e overflow (993ms)
+  ok 25 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 16 Pro Max: safe area, alvos e overflow (1.3s)
+  ok 26 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 16e: safe area, alvos e overflow (827ms)
+  ok 27 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:27:3 ÔÇ║ iPhone 13 mini: safe area, alvos e overflow (868ms)
+  ok 28 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:69:3 ÔÇ║ Pesquisa dos clientes fica por tr├ís da navega├º├úo em todos os iPhones (light) (8.2s)
+  ok 29 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:69:3 ÔÇ║ Pesquisa dos clientes fica por tr├ís da navega├º├úo em todos os iPhones (dark) (8.3s)
+  ok 30 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:102:1 ÔÇ║ atalho global cria registos e importa├º├Áes deixam de aparecer na navega├º├úo (1.1s)
+  ok 31 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:115:1 ÔÇ║ rota├º├úo, tema escuro, texto ampliado e teclado n├úo criam overflow horizontal (807ms)
+  ok 32 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:125:1 ÔÇ║ atalhos de registo, cliente e despesa ficam lado a lado e abrem as fichas a partir de qualquer p├ígina (16.0s)
+  x  33 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:153:1 ÔÇ║ manifest e service worker de produ├º├úo s├úo v├ílidos (29ms)
+(node:39836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 34 [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:171:1 ÔÇ║ dashboard preenchido mant├®m gr├íficos contidos e informa├º├úo mensal acess├¡vel (1.3s)
+  ok 35 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:48:1 ÔÇ║ arrastar uma divis├│ria altera s├│ a largura dessa coluna e persiste (7.1s)
+  ok 36 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:75:1 ÔÇ║ filtros saem da vista e cabe├ºalho de colunas permanece fixo sem saltos (4.9s)
+  ok 37 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1240 a 100% liberta os filtros e conserva altura no in├¡cio do scroll (2.7s)
+  ok 38 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1080 a 100% liberta os filtros e conserva altura no in├¡cio do scroll (2.9s)
+  ok 39 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1240 a 125% liberta os filtros e conserva altura no in├¡cio do scroll (2.9s)
+  ok 40 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1080 a 125% liberta os filtros e conserva altura no in├¡cio do scroll (3.4s)
+  ok 41 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1240 a 150% liberta os filtros e conserva altura no in├¡cio do scroll (4.3s)
+  ok 42 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:121:4 ÔÇ║ desktop 1920├ù1080 a 150% liberta os filtros e conserva altura no in├¡cio do scroll (4.8s)
+  ok 43 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:151:1 ÔÇ║ cabe├ºalho e filtros mant├¬m o centro exacto das c├®lulas com larguras persistidas ap├│s sticky (7.3s)
+  ok 44 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:175:1 ÔÇ║ sticky compacto n├úo ocupa o ecr├ú num iPhone e filtros abrem dentro do viewport (7.0s)
+  ok 45 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:209:1 ÔÇ║ iPhone em landscape mant├®m filtros, menu e cabe├ºalho fora das ├íreas recortadas (5.9s)
+  ok 46 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:244:1 ÔÇ║ zoom equivalente a 150% liberta as pend├¬ncias e conserva a tabela fixa (3.0s)
+  ok 47 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:268:1 ÔÇ║ cria├º├úo de movimento no iPhone mant├®m as ac├º├Áes vis├¡veis durante o scroll (4.8s)
+  ok 48 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 80% (5.1s)
+  ok 49 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 90% (4.3s)
+  ok 50 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 100% (2.5s)
+  ok 51 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 110% (3.8s)
+  ok 52 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 125% (3.7s)
+  ok 53 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 150% (4.0s)
+  ok 54 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 175% (3.6s)
+  ok 55 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:302:3 ÔÇ║ pesquisa sai da vista e colunas permanecem fixas com zoom 200% (3.6s)
+  ok 56 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone SE antigo: registos e cria├º├úo n├úo provocam overflow global (2.6s)
+  ok 57 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone SE: registos e cria├º├úo n├úo provocam overflow global (2.6s)
+  ok 58 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone 12ÔÇô15: registos e cria├º├úo n├úo provocam overflow global (2.7s)
+  ok 59 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone 15 Pro: registos e cria├º├úo n├úo provocam overflow global (2.4s)
+  ok 60 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone Plus: registos e cria├º├úo n├úo provocam overflow global (2.5s)
+  ok 61 [chromium] ÔÇ║ e2e\table-sticky.spec.ts:336:3 ÔÇ║ iPhone Pro Max: registos e cria├º├úo n├úo provocam overflow global (2.5s)
+  ok 62 [chromium] ÔÇ║ e2e\visible-horizontal-scroll.spec.ts:4:3 ÔÇ║ barra horizontal vis├¡vel e sincronizada a 1440px (2.1s)
+  ok 63 [chromium] ÔÇ║ e2e\visible-horizontal-scroll.spec.ts:4:3 ÔÇ║ barra horizontal vis├¡vel e sincronizada a 768px (2.1s)
+  ok 64 [chromium] ÔÇ║ e2e\visible-horizontal-scroll.spec.ts:4:3 ÔÇ║ barra horizontal vis├¡vel e sincronizada a 390px (2.2s)
+  ok 65 [chromium] ÔÇ║ e2e\visible-horizontal-scroll.spec.ts:28:1 ÔÇ║ barra acompanha o fundo vis├¡vel de uma tabela longa e desaparece sem excesso de largura (2.3s)
+
+
+  1) [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:12:1 ÔÇ║ matriz local exp├Áe modelos e controlos acess├¡veis ÔöÇÔöÇ
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Matriz iPhone' })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('heading', { name: 'Matriz iPhone' })
+
+
+      13 |   test.skip(Boolean(process.env.PWA_PRODUCTION_QA), 'A matriz /iphone-preview existe apenas no servidor Vite de desenvolvimento.')
+      14 |   await page.goto('/iphone-preview')
+    > 15 |   await expect(page.getByRole('heading', { name:'Matriz iPhone' })).toBeVisible()
+         |                                                                     ^
+      16 |   await expect(page.getByRole('navigation', { name:'Modelos de iPhone' }).getByRole('button')).toHaveCount(11)
+      17 |   await expect(page.getByRole('button', { name:'iPhone 17', exact:true })).toHaveAttribute('aria-pressed','true')
+      18 |   await page.getByRole('button', { name:'iPhone 16 Pro', exact:true }).click()
+        at [workspace]\legal-carina\e2e\iphone-pwa.spec.ts:15:69
+
+    Error Context: test-results\iphone-pwa-matriz-local-exp├Áe-modelos-e-controlos-acess├¡veis-chromium\error-context.md
+
+  2) [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:153:1 ÔÇ║ manifest e service worker de produ├º├úo s├úo v├ílidos ÔöÇ
+
+    SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON
+
+      154 |   const manifest=await request.get('/manifest.webmanifest')
+      155 |   expect(manifest.ok()).toBe(true)
+    > 156 |   const manifestData=await manifest.json()
+          |                      ^
+      157 |   expect(manifestData.display).toBe('standalone')
+      158 |   expect(manifestData.icons.map((icon:{src:string})=>icon.src)).toEqual([
+      159 |     '/lady-justice-windows-icon-192.png','/lady-justice-windows-icon-512.png',
+        at [workspace]\legal-carina\e2e\iphone-pwa.spec.ts:156:22
+
+    Error Context: test-results\iphone-pwa-manifest-e-service-worker-de-produ├º├úo-s├úo-v├ílidos-chromium\error-context.md
+
+  2 failed
+    [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:12:1 ÔÇ║ matriz local exp├Áe modelos e controlos acess├¡veis ÔöÇÔöÇÔöÇ
+    [chromium] ÔÇ║ e2e\iphone-pwa.spec.ts:153:1 ÔÇ║ manifest e service worker de produ├º├úo s├úo v├ílidos ÔöÇÔöÇ
+  63 passed (6.6m)
