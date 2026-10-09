@@ -2,7 +2,7 @@
 
 ## Preparação entregue
 
-O protótipo é independente da aplicação operacional. A branch prepara a estrutura e os contratos dos componentes; não activa a proposta nem altera dados. A entrada vive em `prototypes/workflow/`, com configuração própria e preparação SemVer `0.16.0-preview.1`. A versão operacional continua `0.15.1` no código-base.
+O protótipo é independente da aplicação operacional. A branch prepara a estrutura e os contratos dos componentes; não activa a proposta nem altera dados. A entrada vive em `prototypes/workflow/`, com configuração própria e preparação SemVer `0.16.0-preview.2`. A versão operacional continua `0.15.1` no código-base.
 
 Componentes preparados: `Navigation` (cinco áreas + Definições secundárias), `ClientNavigation` (cinco áreas da ficha), `Panel`, `Modal` (dialog nativo, foco/retorno e Escape) e `OperationDialog` (pedido de operação e contexto do cliente). `model.ts` separa rotas, dados de demonstração e pedidos; `catalog.ts` fornece o inventário de cobertura.
 
@@ -24,6 +24,17 @@ Na integração futura, os componentes adaptam-se aos tokens Tailwind e à bibli
 | Arquivo / facturas | ClientDocumentsPanel, ClientInvoicesPanel | Manter Storage/scopes/ligações temporárias. Facturas em preparação continuam marcadas; não prometer uma funcionalidade concluída. |
 | Notas | NotesPage | Conservar tarefas, anexos, voz, partilha por pessoa e Consulta/Edição. |
 | Administração e importações | AdminPage, AccessLogsPage, ImportWizard, ImportReviewPage | Administração restrita; logs só owner; nenhuma migração de permissões implícita. Importações históricas não limpam dados. |
+
+## Caixas, gráficos e pré-filtros — conservação obrigatória
+
+A simplificação dos menus conserva as caixas com valores/contagens, os gráficos e os atalhos para os itens contabilizados. Reutilizar OverviewPage, EntityDashboard, WorkResultsLink e os componentes em `src/components/dashboard/Charts.tsx`; conservar consultas, denominadores, scopes, permissões e regras financeiras.
+
+- Resumo/entidades: horas, valores trabalhados/facturados/recebidos, preço médio, por receber e acompanhamento. Conservar também movimentos sem preço, sem sociedade e incobráveis; não substituir estes indicadores pelas nove caixas ilustrativas do protótipo.
+- Gráficos actuais: evolução anual/mensal, horas por ano, valores por cliente/sociedade/responsável, facturação, recebimentos, preço médio, tipo de cliente e análises/repartição LEGALTEAM. Manter as séries e permitir abrir o respectivo universo a partir de barras/segmentos relevantes.
+- Pré-filtro: aplicar selecção global de sociedade/responsável/tipo, mais segmento/cliente/estado/período; mostrar critérios, permitir limpar o pré-filtro e regressar ao resumo sem perder a selecção global.
+- Não confundir quantidade de documentos, movimentos, contratos ou clientes. A contagem da caixa deve corresponder ao universo da lista; totais monetários mantêm as regras existentes e protecção financeira.
+
+O protótipo já demonstra nove caixas clicáveis, barras por cliente e estado e segmentos de tipo. As listas globais de trabalho/financeiro/contratos respeitam a selecção. Horas excluem despesas; notas pendentes incluem só versões vigentes com saldo. Perfil de consulta também pode utilizar pré-filtros. Séries temporais e indicadores adicionais continuam mapeados para reutilização dos componentes operacionais, não reimplementados nesta demonstração.
 
 ## Compatibilidade de acessos
 

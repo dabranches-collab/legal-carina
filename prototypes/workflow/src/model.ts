@@ -13,7 +13,9 @@ export type Provision = { id: string; clientId: string; amount: number; applied:
 export type Receipt = { id: string; clientId: string; noteId?: string; amount: number; reference: string; date: string }
 export type Memo = { id: string; title: string; body: string; urgency: string; shared: string; completed: boolean }
 export type DemoState = { clients: Client[]; entries: Entry[]; notes: Note[]; retainers: Retainer[]; jobs: FixedJob[]; provisions: Provision[]; receipts: Receipt[]; memos: Memo[]; attachments: { id: string; clientId: string; name: string; type: string }[] }
-export type Route = { area: Area; clientId?: string; clientTab?: ClientTab; financeTab?: FinanceTab; setting?: string; society?: string; responsible?: string; legacy?: string }
+export type DashboardFocus = 'clients' | 'hours' | 'notes' | 'receipts' | 'unbilled' | 'unpaid' | 'provisions' | 'retainers' | 'fixed'
+export const dashboardFocusLabels: Record<DashboardFocus, string> = { clients: 'Clientes na selecção', hours: 'Horas registadas', notes: 'Notas por receber', receipts: 'Recebimentos registados', unbilled: 'Registos não facturados', unpaid: 'Registos facturados não pagos', provisions: 'Provisão disponível', retainers: 'Avenças', fixed: 'Trabalhos a preço fixo' }
+export type Route = { focus?: DashboardFocus; scopeClient?: string; scopeCategory?: string; area: Area; clientId?: string; clientTab?: ClientTab; financeTab?: FinanceTab; setting?: string; society?: string; responsible?: string; legacy?: string }
 export type Draft = { clientId: string; description: string; date: string; amount: string; minutes: string; language: Language; format: 'pdf' | 'word'; reference: string; mode: string; period: string; urgency: string; shared: string; failTranslation: boolean; provision: string; fileName: string; targetId: string }
 export type OperationRequest = { kind: Operation; clientId?: string; entryId?: string; noteId?: string; retainerId?: string; jobId?: string; memoId?: string }
 

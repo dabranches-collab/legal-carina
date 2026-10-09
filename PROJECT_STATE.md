@@ -1,3 +1,9 @@
+## 2026-10-09 — caixas e gráficos mantidos como pré-filtros
+
+Protótipo 0.16.0-preview.2 na branch `codex/workflow-prototype-20261009`, a partir do lote `1c37f10`. Nove caixas clicáveis; barras de actividade por cliente e de acompanhamento; segmentos de tipo inclusivos para mistos. Contagens, horas e saldos partilham a selecção com as listas. Pré-filtro explícito, remoção e regresso ao Resumo com sociedade/responsável/tipo conservados; histórico do browser conserva o destino e segmento. Trabalho, financeiro e contratos globais respeitam a selecção.
+
+40 E2E aprovados: dez percursos nos quatro formatos desktop/tablet/iPhone vertical/horizontal, incluindo claro/escuro, teclado, contagens/listas, saldo, contexto e listas vazias. Tipos, lint, auditoria de isolamento e build independente aprovados. Os 303 unitários anteriores não foram repetidos: sem alteração operacional. Sem backend, deploy, migration ou alteração de versão raiz; publicação remota não reconfirmada neste lote. O protótipo não substitui os gráficos anuais/mensais nem os indicadores adicionais actuais: conservação/reutilização obrigatória documentada em `docs/workflow/integration.md`. Safari/iPhone físico e integrações reais continuam por validar. A autorização permite continuar a implementação sem novas confirmações; esta entrada descreve apenas o lote concluído.
+
 ## 2026-10-09 — simplificação preparada em isolamento
 
 Preparação autorizada para revisão, sem activação operacional. Branch `codex/workflow-prototype-20261009`, base origin/main `88adcd6471f3ef469470c6a0899dd1dc6a187eb7`. Inventário de 84 funcionalidades e 16 rotas antigas; proposta de cinco menus e cinco grupos na ficha. Protótipo separado 0.16.0-preview.1 com dados fictícios, componentes comuns e downloads PDF/Word/XLSX. Azure Translator PT/EN/FR, versões, arquivos, contratos e diferenças financeiras documentados; integrações reais ainda não ligadas.

@@ -11,7 +11,7 @@ export function Navigation({ route, open, onClose, onNavigate, role }: { route: 
       <button className="mobile-close" aria-label="Fechar menu" onClick={onClose}>×</button>
       <p className="nav-caption">ÁREA DE TRABALHO</p>
       <nav>{menus.map(menu => <button key={menu.id} className={route.area === menu.id ? 'selected' : ''} aria-current={route.area === menu.id ? 'page' : undefined} onClick={() => onNavigate({ area: menu.id })}><span aria-hidden="true">{menu.icon}</span>{menu.label}</button>)}</nav>
-      <div className="nav-footer">{role !== 'viewer' && <button className={route.area === 'definicoes' ? 'selected' : ''} aria-current={route.area === 'definicoes' ? 'page' : undefined} onClick={() => onNavigate({ area: 'definicoes' })}>⚙ Definições</button>}<div className="profile"><span>OP</span><div>Operador de demonstração<small>Dados exclusivamente fictícios</small></div></div><small>Preparação 0.16.0-preview.1</small></div>
+      <div className="nav-footer">{role !== 'viewer' && <button className={route.area === 'definicoes' ? 'selected' : ''} aria-current={route.area === 'definicoes' ? 'page' : undefined} onClick={() => onNavigate({ area: 'definicoes' })}>⚙ Definições</button>}<div className="profile"><span>OP</span><div>Operador de demonstração<small>Dados exclusivamente fictícios</small></div></div><small>Preparação 0.16.0-preview.2</small></div>
     </aside>
   </>
 }

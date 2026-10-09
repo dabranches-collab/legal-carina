@@ -12,3 +12,13 @@
 /* Permite alcançar Definições e o rodapé em ecrãs baixos/landscape. */
 .navigation{overflow-y:auto;overscroll-behavior:contain}
 .navigation .brand,.navigation nav,.navigation .nav-footer{flex-shrink:0}
+
+/* Caixas e gráficos são também controlos de pré-filtro acessíveis. */
+.metrics>.metric-card{padding:20px;border:1px solid var(--border);background:var(--surface);border-radius:12px;box-shadow:var(--shadow);min-width:0;text-align:left;white-space:normal;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.metric-card:hover,.chart-filter:hover,.category-chart button:hover{border-color:var(--blue);background:var(--soft)}
+.metric-card small:last-child{font-weight:400;color:var(--muted)}
+.filter-context{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;background:var(--soft);border:1px solid var(--border);border-radius:9px;margin-bottom:20px;font-size:12px;overflow-wrap:anywhere}
+.filter-context>span{flex:1;min-width:180px}.filter-context button{font-size:12px}
+.chart-filter{width:100%;min-height:64px;padding:12px;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:10px;white-space:normal;background:var(--surface)}
+.chart-filter>span:first-child{font-size:12px;overflow-wrap:anywhere}.chart-track{grid-column:1/-1;height:8px;background:var(--soft);border-radius:6px;overflow:hidden}.chart-track>span{display:block;height:100%;background:var(--blue);border-radius:6px}
+.category-chart{display:flex;flex-wrap:wrap;gap:12px}.category-chart button{display:flex;gap:18px;align-items:center;justify-content:space-between;flex:1;min-width:150px;padding:15px;white-space:normal}.category-chart strong{font-size:22px}

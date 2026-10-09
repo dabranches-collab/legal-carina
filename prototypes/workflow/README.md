@@ -51,3 +51,7 @@ Consultar [inventário](../../docs/workflow/inventory.md), [integração](../../
 ## PDFs de revisão
 
 Depois da auditoria e das capturas Playwright: `python scripts/workflow/review_pdf.py` (requer ReportLab). Gera mapa mental de uma página, revisão visual e inventário em A4 horizontal, na pasta ignorada `output/workflow-review/`.
+
+## Caixas e gráficos como pré-filtros
+
+No Resumo, nove caixas abrem os itens contabilizados. Barras de actividade filtram horas por cliente; barras de acompanhamento filtram estados/documentos/contratos; segmentos de tipo filtram clientes (contagens inclusivas para mistos). A lista indica o critério, conserva sociedade/responsável/tipo e permite remover o pré-filtro ou voltar ao Resumo. Os gráficos anuais/mensais e indicadores operacionais completos serão reutilizados na integração; estas séries não são substituídas pelos exemplos do protótipo.
