@@ -1,5 +1,9 @@
 # Estado da nova versão — 09-10-2026
 
+## Retoma local — código funcional `511d89d`
+
+Cloudflare/Supabase e QA completo disponíveis nesta retoma. Os nove RPC têm agora migration aditiva candidata e passaram 15 verificações com o esquema reconciliado; pagamentos/RLS, avenças, concorrência, contratos sintéticos e unitários aprovados. Build/dry-run com configuração real e cinco áreas aprovados; backup recuperável de 09-10-2026 05:51 UTC confirmado. PR draft #93, CI funcional 37998912619 e CI do PR 37999259451 aprovadas, incluindo secret scan. **Ainda não pronta para activação:** tradução/documentos reais com conteúdo fictício, Safari físico e revisão operacional sem evidência. Produção permanece 0.15.1, sem merge, instalação remota ou deploy. A autorização mantém-se. [Preflight actual e limites](publication-preflight.md) prevalece sobre o relato histórico seguinte; a retoma foi expressamente autorizada a verificar integrações reais.
+
 **Ainda não pronta para publicação.** Frontend 0.16.0 em preparação, branch `codex/workflow-prototype-20261009`; este lote continua `de349b159fbed954a6510397798daa4aecad9b5c`. Publicação explicitamente autorizada pelo utilizador. O preflight ficou bloqueado por falta de acessos/configuração e validações pendentes; nenhuma publicação, merge em main, migration, operação real ou alteração de permissões. Ver [preflight de publicação](publication-preflight.md).
 
 ## Preparado neste lote

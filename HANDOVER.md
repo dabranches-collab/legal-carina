@@ -1,3 +1,11 @@
+## 2026-10-09 — checkpoint de publicação: QA completo e configuração real
+
+Código funcional `511d89db9df82e00c12df6b796bb0456a3d984cf`, branch `codex/workflow-prototype-20261009`, PR draft [#93](https://github.com/dabranches-collab/legal-carina/pull/93). Publicação autorizada; **produção permanece 0.15.1**, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, 100% desde 08-10-2026 14:27:46 UTC. Sem merge/deploy/SQL remoto nesta retoma.
+
+Migration exacta dos nove RPC aprovada em 15 verificações no QA com metadados reconciliados. Repetidos e aprovados 16 pagamentos/RLS, 16 avenças, quatro concorrência, 27 contratos de âmbito e 344 unitários. Segurança/lint/tipos/build/dry-run com configuração real e cinco áreas aprovados. Backup recuperável **09-10-2026 05:51:00 UTC**, zero órfãos, 49/49 tabelas públicas com RLS, advisors sem ERROR. Sessão real carregou resumo/pagamentos; não certifica documentos/tradução.
+
+CI funcional `37998912619` aprovada (344 unitários, 61 contratos SQL, 56 integração, 172 regressão e quatro PWA; quatro omissões PWA da regressão executadas no build próprio). Execução adicional do PR `37999259451` também aprovada com as mesmas contagens; secret scan aprovado. Faltam tradução Azure e upload/download autenticados com conteúdo fictício identificado, Safari/iPhone físico e revisão operacional. Perguntas de evidência e registo de teste pendentes; autorização não precisa de repetição. Nove RPC ainda ausentes em produção. Antes de instalar, refrescar histórico pela integração existente, baseline/continuidade e backup; não usar db push global/repair. [Preflight actual](docs/workflow/publication-preflight.md) prevalece sobre os checkpoints históricos abaixo.
+
 ## 2026-10-09 — retoma local: QA completo e nove RPC revistos
 
 Retoma de `3dc45ac41f20f7d8de83d9ae8ecbe7a42d13384a` no checkout portátil `C:\Dev\legal-carina-payments`, branch `codex/workflow-prototype-20261009`. Autorização de publicação mantém-se. Cloudflare OAuth existente, acesso Supabase e configuração pública de produção confirmados; sem novas credenciais ou ampliação de acessos. Produção consultada: 0.15.1, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, 100% desde `2026-10-08T14:27:46.164248Z`.
