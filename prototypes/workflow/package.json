@@ -1,0 +1,7 @@
+{
+  "name": "carina-workflow-prototype",
+  "version": "0.16.0-preview.1",
+  "type": "module",
+  "private": true,
+  "description": "Preparação isolada; não é uma versão publicada da aplicação operacional."
+}

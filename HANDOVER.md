@@ -1,3 +1,9 @@
+## 2026-10-09 — simplificação preparada em isolamento
+
+Preparação autorizada para revisão, sem activação operacional. Branch `codex/workflow-prototype-20261009`, base origin/main `88adcd6471f3ef469470c6a0899dd1dc6a187eb7`. Inventário de 84 funcionalidades e 16 rotas antigas; proposta de cinco menus e cinco grupos na ficha. Protótipo separado 0.16.0-preview.1 com dados fictícios, componentes comuns e downloads PDF/Word/XLSX. Azure Translator PT/EN/FR, versões, arquivos, contratos e diferenças financeiras documentados; integrações reais ainda não ligadas.
+
+24 cenários de protótipo aprovados em quatro formatos de ecrã; 303 unitários existentes aprovados, segurança/lint/tipos/build aprovados. Nenhum ficheiro operacional, versão raiz, backend ou integração alterado. SQL não executado por dependência local ausente. Revisão humana e iPhone físico/Safari pendentes antes de activar. Produção não consultável nesta sessão (HTTP 403); não reutilizar versões antigas destas notas como confirmação actual. Documentação e limites: [docs/workflow/validation.md](docs/workflow/validation.md), [integração](docs/workflow/integration.md), [percursos](docs/workflow/operator-journeys.md).
+
 ## 2026-10-08 - revisão pontual: desktop remoto sem apontador
 
 A compactação desktop passa também a abranger `pointer: none` a partir de 1280 px, como nas sessões HP/RDP sem rato físico. Uma única alteração no media query; declarações, fontes, regras coarse/mobile e regras de negócio intactas. Validação focada: Chrome real do HP em 1920×1080, `pointer:none`, filtros em grelha, 10 linhas completas, primeira linha a 719.25 px, topbar 156 px, sidebar 256 px e sem overflow; emulação móvel coarse 390×844 mantém filtros em bloco, alvos 44 px, campos 16 px e safe areas 47/34 px. CI anterior aprovada; commit separado requer nova CI e revisão curta antes do deploy autorizado. Produção ainda 0.15.0.
