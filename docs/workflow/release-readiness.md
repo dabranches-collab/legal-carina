@@ -1,6 +1,6 @@
 # Estado da nova versão — 09-10-2026
 
-**Ainda não pronta para publicação.** Frontend 0.16.0 em preparação, branch `codex/workflow-prototype-20261009`; este lote continua `de349b159fbed954a6510397798daa4aecad9b5c`. Implementação e testes autorizados; nenhuma publicação, merge em main, migration, operação real ou alteração de permissões. A autorização de publicação continua a exigir «publica».
+**Ainda não pronta para publicação.** Frontend 0.16.0 em preparação, branch `codex/workflow-prototype-20261009`; este lote continua `de349b159fbed954a6510397798daa4aecad9b5c`. Publicação explicitamente autorizada pelo utilizador. O preflight ficou bloqueado por falta de acessos/configuração e validações pendentes; nenhuma publicação, merge em main, migration, operação real ou alteração de permissões. Ver [preflight de publicação](publication-preflight.md).
 
 ## Preparado neste lote
 

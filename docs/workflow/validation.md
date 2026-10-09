@@ -1,3 +1,15 @@
+## 2026-10-09 — publicação autorizada, preflight bloqueado
+
+O utilizador deu a ordem explícita «aprovado, publica». **A autorização está dada e mantém-se; não voltar a pedir aprovação dos passos já autorizados.** A publicação não foi executada por bloqueios técnicos e de validação. Verificação registada em 09-10-2026 20:41 WAT.
+
+SHA seleccionado `9ced9611decc3025af749a8c7fe9fad5e2ed073d` confirmado no GitHub, branch `codex/workflow-prototype-20261009`; main remoto continua `88adcd6471f3ef469470c6a0899dd1dc6a187eb7`. CI do próprio SHA seleccionado também aprovada: [run 37978860247](https://github.com/dabranches-collab/legal-carina/actions/runs/37978860247), validate e dependency-audit concluídos com sucesso. Não confundir com os resultados locais anteriores, que não foram repetidos neste preflight.
+
+Wrangler whoami confirmou ausência de autenticação. O dry-run oficial (`wrangler deploy --dry-run`) terminou com código 1 na guarda existente: falta a URL/chave pública Supabase de produção verificada. Não se alterou essa guarda nem se usou configuração fictícia. Ambiente sem bindings/identidades Cloudflare/Supabase; os hosts de publicação/verificação não constam da política vigente. Leitura da versão pública não conseguiu estabelecer ligação, pelo que deployment/version ID, rollback activo e backup actual continuam não confirmados. Nenhum artefacto foi enviado para produção.
+
+Continuam por validar/instalar os nove RPC dos filtros e por concluir QA PostgreSQL completo; sem esses RPC, o âmbito financeiro apresenta erro. Nenhuma migration ou operação em dados/permissões reais foi executada. Faltam ainda os ensaios físicos e os pré-requisitos de produção documentados. [Preflight e requisitos de publicação](publication-preflight.md). Evidência sanitizada em `output/workflow-delivery/publication-preflight.json`.
+
+Este lote altera só documentação e regista a autorização e os bloqueios; não representa merge em main, deploy ou validação de integrações reais. O SHA documental seguinte será confirmado no remoto depois do push; produção permanece sem confirmação nesta conversa.
+
 ## 2026-10-09 — CI funcional aprovada e bloqueios QA confirmados
 
 Código funcional local e remoto confirmado: `956b39bee78f9d72c0e8844ae44758df43c4a150`, branch `codex/workflow-prototype-20261009`, frontend 0.16.0 em preparação. **CI funcional aprovada:** [run 37976453290](https://github.com/dabranches-collab/legal-carina/actions/runs/37976453290), validate e dependency-audit concluídos com sucesso, confirmado em 09-10-2026 às 19:13:16 UTC pela página pública do GitHub. A API Actions recusou Forbidden; consulta pública resolveu a confirmação sem novas credenciais nem mudanças de rede. Observação sanitizada em `output/workflow-delivery/ci-observation.json`.
