@@ -1,5 +1,13 @@
 # Publicação autorizada — preflight de 09-10-2026
 
+## Retoma no computador local
+
+Acessos Cloudflare OAuth/Supabase e configuração pública de produção confirmados no checkout portátil. Produção 0.15.1, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, 100% desde 08-10-2026 14:27:46 UTC. CI do commit de retoma `3dc45ac` aprovada no run `37981962069`; alterações SQL desta retoma exigem nova CI.
+
+Container oficial disponível, network none/sem portas. Reconciliado apenas no QA por metadados: 49 tabelas públicas, colunas/policies/funções existentes iguais à base instalada; Vault incluído, nenhuma cópia de registos/segredos. Ensaios repetidos: 16 pagamentos/RLS, 16 avenças, quatro de concorrência; 15 verificações dos nove RPC e 27 contratos PGlite aprovados. Correcção do resumo por responsável conserva zero autorizado e NULL oculto. Migration aditiva candidata `20261009221918_add_workflow_scoped_reads.sql`, ainda não aplicada remotamente.
+
+Browser integrado com sessão autenticada 0.15.1. Auth/settings e Storage/status HTTP 200; bindings Azure presentes. Smoke local de Azure recusado por chave local ausente, sem envio de dados; não recuperar o segredo do Worker. Continuam por concluir tradução e documentos autenticados reais, backup actual, Safari/iPhone físico e revisão dos operadores, build/dry-run de produção e CI final. Sem novo deploy/merge ou SQL remoto neste checkpoint. A autorização mantém-se; bloqueios antigos de ausência de identidades/QA estão resolvidos neste computador.
+
 A ordem «aprovado, publica» foi recebida. A autorização mantém-se; o bloqueio é técnico e de validação, não falta de confirmação do utilizador. Registo: 09-10-2026 20:41 WAT.
 
 ## Evidência desta tentativa

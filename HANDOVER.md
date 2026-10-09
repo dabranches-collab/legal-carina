@@ -1,3 +1,13 @@
+## 2026-10-09 — retoma local: QA completo e nove RPC revistos
+
+Retoma de `3dc45ac41f20f7d8de83d9ae8ecbe7a42d13384a` no checkout portátil `C:\Dev\legal-carina-payments`, branch `codex/workflow-prototype-20261009`. Autorização de publicação mantém-se. Cloudflare OAuth existente, acesso Supabase e configuração pública de produção confirmados; sem novas credenciais ou ampliação de acessos. Produção consultada: 0.15.1, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, 100% desde `2026-10-08T14:27:46.164248Z`.
+
+Container oficial QA disponível, sem rede/portas. Reconciliado apenas no QA com metadados de produção: 49 tabelas públicas, colunas, policies e definições de todas as funções existentes coincidem; incluída a migration Vault antes omitida. Sem cópia de dados ou segredos. Repetidos com a baseline reconciliada: 16 cenários pagamentos/RLS, 16 avenças e quatro de concorrência aprovados.
+
+Nove propostas instaladas apenas no QA e 15 verificações de esquema completo aprovadas: equivalência sem âmbito, sete papéis/visibilidade financeira, PIN/pertença, outra firma, perfis mistos/inactivos, intersecções, UUID, revisões de notas, grants expirados, mais de mil perfis e nenhuma escrita pelas leituras. Corrigida apresentação de zero financeiro autorizado nos resumos por responsável, conservando NULL sem autorização; gerador normaliza CRLF para validação portátil. 27 contratos PGlite repetidos/aprovados. Migration candidata `20261009221918_add_workflow_scoped_reads.sql`, ainda não instalada remotamente.
+
+Sessão autenticada 0.15.1 confirmada no browser integrado. Auth/settings e Storage/status HTTP 200; isto não certifica upload/download ou tradução real. Bindings Azure presentes no Worker, chave não disponível localmente, smoke de tradução local recusou antes de enviar textos. Safari/iPhone físico e revisão dos operadores pendentes de evidência; ensaios reais e backup actual ainda por concluir antes da activação. Sem merge/deploy ou alterações remotas nesta retoma até este checkpoint. Ver docs/workflow/publication-preflight.md.
+
 ## 2026-10-09 — publicação autorizada, preflight bloqueado
 
 O utilizador deu a ordem explícita «aprovado, publica». **A autorização está dada e mantém-se; não voltar a pedir aprovação dos passos já autorizados.** A publicação não foi executada por bloqueios técnicos e de validação. Verificação registada em 09-10-2026 20:41 WAT.

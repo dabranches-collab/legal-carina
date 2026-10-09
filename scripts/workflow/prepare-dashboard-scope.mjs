@@ -15,7 +15,7 @@ const predicate=`
 const scopeSignature='p_scope_billing_entity_id uuid default null,p_scope_professional_id uuid default null,p_scope_client_type text default null'
 const names=[['get_professional_landing_summaries',professionalFile,''],['get_dashboard_overview',overviewFile,''],['get_dashboard_metric_breakdowns',overviewFile,''],['get_client_category_dashboard',entityFile,'p_client_type text default null'],['get_entity_dashboard_rolling',entityFile,'p_kind text,p_entity_id uuid default null']]
 const functions=names.map(([name,file,args])=>{
- const source=readFileSync(resolve(root,file),'utf8'),definition=source.match(new RegExp(`create or replace function public\\.${name}\\([\\s\\S]*?\\n\\$\\$;`,'i'))?.[0]
+ const source=readFileSync(resolve(root,file),'utf8').replace(/\r\n/g,'\n'),definition=source.match(new RegExp(`create or replace function public\\.${name}\\([\\s\\S]*?\\n\\$\\$;`,'i'))?.[0]
  if(!definition)throw new Error('Missing authoritative definition: '+name)
  let scoped=definition.replace(`public.${name}(${args})`,`public.get_workflow_${name.slice(4)}(${args?args+',':''}${scopeSignature})`)
  if(scoped===definition)throw new Error('Signature drift: '+name)
@@ -25,6 +25,9 @@ const functions=names.map(([name,file,args])=>{
  scoped=scoped.replaceAll(marker,marker+predicate)
  if(name==='get_dashboard_metric_breakdowns')scoped=scoped.replace('select society,','select billing_entity_id as "billingEntityId",society,').replace('group by society order by society','group by billing_entity_id,society order by society,billing_entity_id')
  if(name==='get_professional_landing_summaries'){
+  scoped=scoped.replace('case when financial.can_view then w.effective_amount end amount','case when financial.can_view then w.effective_amount end amount,financial.can_view can_view_financials')
+  scoped=scoped.replace('sum(a.amount)total','case when bool_or(a.can_view_financials) then coalesce(sum(a.amount),0) end total')
+  scoped=scoped.replace('sum(a.amount)filter(where a.is_invoiced)invoiced','case when bool_or(a.can_view_financials) then coalesce(sum(a.amount)filter(where a.is_invoiced),0) end invoiced')
   scoped=scoped.replace('where p.active order by','where p.active and private.is_firm_member(p.firm_id) and (p_scope_professional_id is null or p.id=p_scope_professional_id) order by')
   scoped=scoped.replace('coalesce(a.total,0)','case when a.professional_id is null then 0 else a.total end').replace('coalesce(a.invoiced,0)','case when a.professional_id is null then 0 else a.invoiced end')
  }
@@ -44,5 +47,5 @@ commit;
 `
 const target=resolve(root,'docs/workflow/sql/workflow_dashboard_scope.sql')
 if(process.argv.includes('--write'))writeFileSync(target,proposed)
-else if(readFileSync(target,'utf8')!==proposed)throw new Error('Dashboard proposal drift; review authoritative sources before regenerating.')
+else if(readFileSync(target,'utf8').replace(/\r\n/g,'\n')!==proposed)throw new Error('Dashboard proposal drift; review authoritative sources before regenerating.')
 console.log('Five scoped dashboard proposals verified against authoritative source bodies.')

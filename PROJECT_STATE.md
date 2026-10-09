@@ -1,3 +1,7 @@
+## 2026-10-09 — retoma local e validação dos filtros
+
+Acessos Cloudflare/Supabase e configuração pública existentes confirmados. Produção 0.15.1/Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`; publicação 0.16.0 continua autorizada e por executar. QA sem rede reconciliado com produção (49 tabelas/colunas/policies/funções), exclusivamente dados sintéticos. 16 pagamentos/RLS, 16 avenças, quatro de concorrência e 15 verificações dos nove RPC aprovados; 27 PGlite repetidos. Corrigido zero autorizado/NULL oculto no resumo por responsável e normalização CRLF no gerador. Migration candidata `20261009221918_add_workflow_scoped_reads.sql` ainda só local. Auth/Storage disponíveis e sessão autenticada confirmada; tradução/upload/download reais, backup actual, Safari físico e revisão operacional ainda pendentes. Não confundir disponibilidade com validação integral. Detalhes no HANDOVER/preflight.
+
 ## 2026-10-09 — publicação autorizada, preflight bloqueado
 
 O utilizador deu a ordem explícita «aprovado, publica». **A autorização está dada e mantém-se; não voltar a pedir aprovação dos passos já autorizados.** A publicação não foi executada por bloqueios técnicos e de validação. Verificação registada em 09-10-2026 20:41 WAT.
