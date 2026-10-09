@@ -1,3 +1,11 @@
+## 2026-10-10 — publicação e correcção de timeout em curso
+
+Após informar dos ensaios externos pendentes, o utilizador ordenou novamente «avança, não percas os dados e publica». PR #93 integrado em main `85696e0a77741e073a9f9eb78f28e2509234d037`. Migration nove RPC aplicada isoladamente: remoto `20261009232051`, nome `20261009221918_add_workflow_scoped_reads`. As contagens/hashes das 52 relações públicas/Auth users/Storage e as definições anteriores coincidiram antes/depois; zero alterações a dados, colunas, policies ou funções existentes. Nove RPC autenticados, anon revogado; advisors sem ERROR.
+
+0.16.0 publicada às 00:22:16 WAT (09-10 23:22:16 UTC), Version ID `6fa05e3c-854c-409c-8916-346ce57677b7`, deployment `778b5d93-3b9c-47d3-a906-d02880fa3095`; dez assets públicos iguais ao build real. Sessão autenticada abriu cinco áreas e resumo filtrado. Pagamentos com âmbito combinado apresentou statement timeout: **frontend revertido para 0.15.1**, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, conservando dados/migration.
+
+Correcção aditiva em `codex/fix-workflow-scope-performance`: materializar selecção de clientes e fila impede cálculo repetido por item. Migration `20261009232441_materialize_workflow_read_scope.sql`; 27 contratos e três verificações de chamadas em PostgreSQL aprovados, QA completo em repetição. Sem alargar permissões ou timeouts. Não repetir autorização; concluir QA/CI, instalar só a correcção, voltar a activar 0.16.0 e confirmar smoke real. Ensaios físicos e tradução/upload/download continuam por comprovar; a ordem de publicação não é evidência desses testes.
+
 ## 2026-10-09 — checkpoint de publicação: QA completo e configuração real
 
 Código funcional `511d89db9df82e00c12df6b796bb0456a3d984cf`, branch `codex/workflow-prototype-20261009`, PR draft [#93](https://github.com/dabranches-collab/legal-carina/pull/93). Publicação autorizada; **produção permanece 0.15.1**, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, 100% desde 08-10-2026 14:27:46 UTC. Sem merge/deploy/SQL remoto nesta retoma.

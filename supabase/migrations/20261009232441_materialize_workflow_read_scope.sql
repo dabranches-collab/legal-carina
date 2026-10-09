@@ -1,8 +1,8 @@
 -- PROPOSTA DE LEITURA. Não é uma migration e não foi aplicada a serviços reais.
 -- SECURITY INVOKER: respeita RLS das relações e os controlos das RPC originais.
 -- Não altera linhas financeiras, cálculo de montantes, tokens ou permissões existentes.
-begin;
-create function public.get_workflow_client_ids(
+
+create or replace function public.get_workflow_client_ids(
  p_scope_billing_entity_id uuid default null,
  p_scope_professional_id uuid default null,
  p_scope_client_type text default null
@@ -25,7 +25,7 @@ create function public.get_workflow_client_ids(
   or exists(select 1 from public.client_credit_accounts a where a.client_id=c.id and a.billing_entity_id=p_scope_billing_entity_id));
 $$;
 
-create function public.get_workflow_client_credit_accounts(
+create or replace function public.get_workflow_client_credit_accounts(
  p_scope_billing_entity_id uuid default null,
  p_scope_professional_id uuid default null,
  p_scope_client_type text default null
@@ -37,7 +37,7 @@ create function public.get_workflow_client_credit_accounts(
  and (p_scope_billing_entity_id is null or a->>'billing_entity_id'=p_scope_billing_entity_id::text);
 $$;
 
-create function public.get_workflow_retainer_management(
+create or replace function public.get_workflow_retainer_management(
  p_scope_billing_entity_id uuid default null,
  p_scope_professional_id uuid default null,
  p_scope_client_type text default null
@@ -47,7 +47,7 @@ create function public.get_workflow_retainer_management(
  from public.get_retainer_management() r, clients where clients.ids ? r.client_id::text;
 $$;
 
-create function public.get_workflow_payment_queue(
+create or replace function public.get_workflow_payment_queue(
  p_scope_billing_entity_id uuid default null,
  p_scope_professional_id uuid default null,
  p_scope_client_type text default null
@@ -77,4 +77,6 @@ $$;
 -- Proposta de acesso às novas RPC; RLS e grants existentes permanecem intactos.
 revoke all on function public.get_workflow_client_ids(uuid,uuid,text),public.get_workflow_client_credit_accounts(uuid,uuid,text),public.get_workflow_retainer_management(uuid,uuid,text),public.get_workflow_payment_queue(uuid,uuid,text) from public,anon;
 grant execute on function public.get_workflow_client_ids(uuid,uuid,text),public.get_workflow_client_credit_accounts(uuid,uuid,text),public.get_workflow_retainer_management(uuid,uuid,text),public.get_workflow_payment_queue(uuid,uuid,text) to authenticated;
-commit;
+
+
+notify pgrst,'reload schema';

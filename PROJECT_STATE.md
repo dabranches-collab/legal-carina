@@ -1,3 +1,9 @@
+## 2026-10-10 — correcção de desempenho antes de republicar
+
+PR #93 integrado em main `85696e0`; nove RPC instalados remotamente `20261009232051`. Dados preservados: contagens/hashes das 52 relações iguais antes/depois, esquema/funções anteriores intactos, advisors sem ERROR. Publicação 0.16.0 com configuração real confirmada; smoke de pagamentos filtrados revelou timeout, pelo que o frontend foi revertido para 0.15.1, conservando a base.
+
+Branch `codex/fix-workflow-scope-performance` prepara materialização de clientes/fila numa migration aditiva. 27 contratos e três verificações PostgreSQL de cálculo único aprovados; QA completo/CI antes da republicação. Autorização expressa renovada depois de comunicar ensaios externos pendentes; não voltar a pedi-la. Detalhes, IDs e limites no HANDOVER.
+
 ## 2026-10-09 — checkpoint de publicação: QA completo e configuração real
 
 Código funcional `511d89db9df82e00c12df6b796bb0456a3d984cf`, branch `codex/workflow-prototype-20261009`, PR draft [#93](https://github.com/dabranches-collab/legal-carina/pull/93). Publicação autorizada; **produção permanece 0.15.1**, deployment `c5e0592b-f8a8-45a8-a60f-5c50a5a072b7`, Version ID `151f1a53-e74c-4aff-9b0b-2e9a583975d1`, 100% desde 08-10-2026 14:27:46 UTC. Sem merge/deploy/SQL remoto nesta retoma.
