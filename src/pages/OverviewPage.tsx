@@ -73,7 +73,7 @@ const percent = (part: MoneyValue, total: MoneyValue) =>
     ? Math.round((part / total) * 100)
     : 0;
 
-export function OverviewPage() {
+export function OverviewPage({onSociety,onProfessional}: {onSociety?: (name:string)=>void;onProfessional?: (name:string)=>void} = {}) {
   const [data, setData] = useState<OverviewData | null>(null);
   const [breakdowns, setBreakdowns] = useState<MetricBreakdown[]>([]);
   const [error, setError] = useState("");
@@ -419,6 +419,7 @@ export function OverviewPage() {
               <div className="grid gap-4 lg:[&>figure]:col-span-1">
                 <HorizontalChart
                   title="Valor por sociedade"
+                  onSelect={onSociety}
                   subtitle="Sociedades"
                   labels={data.byBilling.map((p) => String(p.label))}
                   values={data.byBilling.map((p) => p.value)}
@@ -426,6 +427,7 @@ export function OverviewPage() {
                 />
                 <HorizontalChart
                   title="Valor por responsável"
+                  onSelect={onProfessional}
                   subtitle="Distribuição do trabalho"
                   labels={data.byProfessional.map((p) => String(p.label))}
                   values={data.byProfessional.map((p) => p.value)}

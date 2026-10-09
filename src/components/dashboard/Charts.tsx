@@ -663,6 +663,7 @@ export function HorizontalChart({
   values,
   valueFormatter = (value) => value.toLocaleString("pt-PT"),
   subtotals = [],
+  onSelect,
 }: {
   title: string;
   subtitle: string;
@@ -670,16 +671,17 @@ export function HorizontalChart({
   values: number[];
   valueFormatter?: (value: number) => string;
   subtotals?: ChartSubtotal[];
+  onSelect?: (label: string) => void;
 }) {
   const max = Math.max(...values, 1);
   const financial = /valor|preço|factura|receb/i.test(`${title} ${subtitle}`);
   return (
     <ChartCard title={title} subtitle={subtitle}>
-      <div className="space-y-3" role="img" aria-label={title}>
+      <div className="space-y-3" role={onSelect ? 'group' : 'img'} aria-label={title}>
         {labels.map((label, index) => (
           <div key={label}>
             <div className="mb-1 flex justify-between gap-3 text-xs">
-              <span className="truncate text-text-secondary">{label}</span>
+              {onSelect ? <button type="button" className="min-h-11 min-w-0 truncate text-left text-text-secondary underline underline-offset-2" aria-label={`Abrir ${label} · ${title}`} onClick={() => onSelect(label)}>{label}</button> : <span className="truncate text-text-secondary">{label}</span>}
               <span
                 className={`${financial ? "financial-value " : ""}font-semibold tabular-nums`}
               >

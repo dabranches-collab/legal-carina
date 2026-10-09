@@ -1,4 +1,5 @@
 import { WorkflowNavigation, WorkflowSections } from './WorkflowNavigation'
+import './workflowPreview.css'
 import { workflowArea, workflowAreaLabel } from '../../types/workflowNavigation'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Icon, type IconName } from '../ui/Icon'
@@ -100,7 +101,7 @@ export function AppShell({ workflowPreview=false, activeView, selectedSociety, s
   const refreshData=()=>{setRefreshing(true);onRefresh();window.setTimeout(()=>setRefreshing(false),500)}
 
   return (
-    <div className="min-h-screen bg-background text-text-primary">
+    <div data-workflow-preview={workflowPreview ? 'true' : undefined} className="min-h-screen bg-background text-text-primary">
       {mobileOpen && <button className="app-safe-fixed fixed z-[55] bg-navigation/35 lg:hidden" aria-label="Fechar navegação" onClick={() => setMobileOpen(false)} />}
       <aside aria-label="Navegação principal" className={`app-shell-sidebar fixed inset-y-0 left-0 z-[60] flex flex-col border-r border-border bg-navigation text-navigation-text transition-[width,transform] duration-200 ${collapsed ? 'lg:w-20' : 'lg:w-64'} w-[min(18rem,calc(100vw-var(--safe-right)))] ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex h-18 items-center gap-3 border-b border-surface/10 px-5">

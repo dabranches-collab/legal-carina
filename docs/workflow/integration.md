@@ -1,3 +1,7 @@
+## Estado actual — 09-10-2026, regressão alargada
+
+A ficha real nos cinco grupos está concluída apenas em DEV/teste. Gráficos por sociedade/responsável abrem os painéis reais na prévia; a navegação por categoria conserva o modo e a tabela funciona no ensaio horizontal com recortes simulados. Consultar [release-readiness.md](release-readiness.md) para resultados actuais e limites e [cloud-setup.md](cloud-setup.md) para repetir os ensaios isolados. Filtros financeiros transversais, backend completo/concorrência, serviços reais e Safari físico continuam pendentes. Os registos abaixo documentam os lotes anteriores.
+
 # Integração da proposta, sem interrupção dos operadores
 
 ## Preparação entregue

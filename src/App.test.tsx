@@ -184,6 +184,16 @@ describe('interface principal', () => {
 })
 
 describe('primeira integração do workflow', () => {
+  it('conserva o preview ao mudar de categoria e recarregar a lista', async () => {
+    window.history.replaceState({}, '', '/?workflow=preview&view=clients')
+    renderApp('operator')
+    await userEvent.click(screen.getByRole('button', {name:'Empresas'}))
+    expect(new URLSearchParams(window.location.search).get('workflow')).toBe('preview')
+    expect(new URLSearchParams(window.location.search).get('clientType')).toBe('company')
+    expect(new URLSearchParams(window.location.search).get('clientMode')).toBe('list')
+    expect(screen.getByRole('list', {name:'Áreas de trabalho'})).toBeInTheDocument()
+    window.history.replaceState({}, '', '/')
+  })
   it('abre módulos reais pelos cinco menus e conserva indicadores e atalhos', async () => {
     window.history.replaceState({}, '', '/?workflow=preview&view=overview')
     renderApp('operator')

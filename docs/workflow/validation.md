@@ -1,3 +1,13 @@
+## 2026-10-09 — regressão alargada e preparação da entrega
+
+Estado de referência deste lote: [docs/workflow/release-readiness.md](docs/workflow/release-readiness.md). Sobre `1c9d051`, na branch `codex/workflow-prototype-20261009`, foram corrigidos o restauro do preview por categoria e a sobreposição da primeira linha da tabela no iPhone horizontal. Gráficos de sociedade/responsável abrem painéis reais na prévia. Nova camada de isolamento reutiliza os E2E existentes, incluindo documentos e PWA compilada, sem contactar serviços reais.
+
+Nesta conversa: 318 unitários/62 ficheiros e 34 contratos SQL locais aprovados; Worker simulado, segurança, lint, tipos e build aprovados. E2E: 172 percursos existentes cobertos (uma falha durante reinício repetida e aprovada), 28 da ficha nova, quatro ensaios adicionais de acesso/safe areas, seis documentos com preview activo, 40 do protótipo e três da PWA de produção local aprovados. Auditoria de dependências sem altas/críticas (duas moderadas, duas baixas). Instruções: [docs/workflow/cloud-setup.md](docs/workflow/cloud-setup.md). Os JSONs preservam as tentativas iniciais; não confundir mocks com validação de Azure/Auth/Storage reais.
+
+Não pronto para publicar: filtros simultâneos transversais ainda não implementados nos resumos/filas financeiras; falta o contrato de leitura correspondente. Três ensaios de integração/concorrência bloqueados por ausência do container PostgreSQL QA exigido, antes de inserir dados. Faltam Safari/iPhone físico, revisão dos operadores, integrações reais e CI remota/activação. O modo novo continua restrito a DEV/teste. Não alterar serviços ou cálculos financeiros por suposição.
+
+Sem mudanças neste lote a dependências, lockfile, Worker, SQL, Auth, permissões ou funções de gravação financeira. Sem credenciais/dados reais, merge em main, deploy ou migrations. Produção não consultada; nenhum deployment/version ID novo. A instalação congelada foi repetida e aprovada. A gravação do rascunho install_script/start_skill foi recusada por configuração-base desactualizada; proposta completa preservada no ZIP `output/workflow-delivery/environment-setup-handover.zip`, sem nova publicação ou mudanças de rede. Persistência dos campos não confirmada. O lote será versionado e o SHA da branch confirmado directamente após o push; o recibo local fica em `output/workflow-delivery/receipt.json`. As entradas abaixo são históricas e não substituem este estado.
+
 # Ficha real — validação de continuação
 
 ## 2026-10-09 — ficha real em cinco grupos, apenas em teste

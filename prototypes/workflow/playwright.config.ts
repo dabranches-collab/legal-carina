@@ -10,7 +10,8 @@ export default defineConfig({
   workers: 1,
   outputDir: '../../output/workflow-qa/results',
   reporter: [['list'], ['json', { outputFile: resolve(import.meta.dirname, '../../output/workflow-qa/results.json') }]],
-  use: { baseURL: 'http://127.0.0.1:5175', trace: 'retain-on-failure', launchOptions: { executablePath: process.env.WORKFLOW_CHROMIUM_EXECUTABLE ?? (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined), args: ['--no-sandbox'] } },
+  use: { baseURL: 'http://127.0.0.1:5175', serviceWorkers:'block', trace: 'retain-on-failure', launchOptions: { executablePath: process.env.WORKFLOW_CHROMIUM_EXECUTABLE ?? (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined), args: ['--no-sandbox','--disable-background-networking','--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1'] } },
+  webServer: {command:'node node_modules/vite/bin/vite.js --config prototypes/workflow/vite.config.ts --host 127.0.0.1',cwd:resolve(import.meta.dirname,'../..'),url:'http://127.0.0.1:5175',reuseExistingServer:false},
   projects: [
     { name: 'desktop', use: { viewport: { width: 1440, height: 900 } } },
     { name: 'tablet', use: { viewport: { width: 768, height: 1024 }, hasTouch: true } },
