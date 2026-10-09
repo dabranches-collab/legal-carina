@@ -1,3 +1,4 @@
+import { workflowPreviewEnabled } from '../../types/workflowNavigation'
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -14,6 +15,7 @@ function writeTarget(target:RecordTarget|null){
  const url=new URL(window.location.href)
  if(target){url.searchParams.set('record',target.id);url.searchParams.set('recordSection',target.section);if(target.clientPage)url.searchParams.set('recordPage',target.clientPage);else url.searchParams.delete('recordPage')}
  else{url.searchParams.delete('record');url.searchParams.delete('recordSection');url.searchParams.delete('recordPage')}
+ if(!target&&workflowPreviewEnabled(url.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV)){url.searchParams.delete('clientGroup');url.searchParams.delete('clientPage');url.searchParams.delete('recordFilter')}
  window.history.replaceState(window.history.state,'',url)
 }
 

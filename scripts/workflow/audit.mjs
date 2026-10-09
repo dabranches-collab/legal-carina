@@ -24,7 +24,7 @@ for (const file of readdirSync(folder).filter(f => /\.(ts|tsx)$/.test(f))) {
 const changed = execFileSync('git', ['diff', '--name-only', '88adcd6471f3ef469470c6a0899dd1dc6a187eb7'], { cwd: root, encoding: 'utf8' }).trim().split('\n').filter(Boolean)
 const operational = changed.filter(f => /^(src\/|worker\/|supabase\/|public\/|package\.json$|pnpm-lock\.yaml$|vite\.config\.ts$|wrangler)/.test(f))
 const operationalPreview = process.argv.includes('--operational-preview')
-const allowedPreviewFiles = new Set(['src/App.tsx', 'src/App.test.tsx', 'src/components/ui/AppLink.tsx', 'src/components/ui/AppLink.test.tsx', 'src/components/layout/AppShell.tsx', 'src/components/layout/WorkflowNavigation.tsx', 'src/types/workflowNavigation.ts', 'src/types/workflowNavigation.test.ts', 'package.json', 'public/release-notes.json'])
+const allowedPreviewFiles = new Set(['src/features/master-data/MasterDataPage.tsx', 'src/features/master-data/RecordDialogHost.tsx', 'src/features/master-data/workflowClientNavigation.ts', 'src/features/master-data/workflowClientNavigation.test.ts', 'src/App.tsx', 'src/App.test.tsx', 'src/components/ui/AppLink.tsx', 'src/components/ui/AppLink.test.tsx', 'src/components/layout/AppShell.tsx', 'src/components/layout/WorkflowNavigation.tsx', 'src/types/workflowNavigation.ts', 'src/types/workflowNavigation.test.ts', 'package.json', 'public/release-notes.json'])
 const unexpected = operationalPreview ? operational.filter(file => !allowedPreviewFiles.has(file)) : operational
 if (unexpected.length) throw new Error('Código operacional fora do âmbito: ' + unexpected.join(', '))
 const out = resolve(root, 'output/workflow-review'); mkdirSync(out, { recursive: true })

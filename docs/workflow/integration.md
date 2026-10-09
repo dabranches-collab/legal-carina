@@ -60,3 +60,13 @@ A implementação operacional foi autorizada em 09-10-2026, condicionada à conc
 A opção exige `(DEV || VITE_APP_ENV === 'test') && workflow=preview`: não activa a nova navegação num build operacional comum. Nenhum bypass de Auth foi acrescentado. AppLink conserva a opção nos destinos internos de validação, sem propagar parâmetros para destinos externos. Administração permanece owner/admin; logs só owner; dados base conservam o acesso actual.
 
 Ainda não concluídos: reorganização da ficha nos cinco grupos, filtros globais transversais, interacções adicionais dos gráficos operacionais, validação integrada Azure/Storage e revisão física Safari/iPhone. Os 40 E2E existentes nesta entrega pertencem ao protótipo independente; não devem ser apresentados como E2E da nova navegação operacional.
+
+## Ficha real organizada em grupos — continuação de 09-10
+
+A ficha em MasterDataPage/RecordDialogHost passa a ter os cinco grupos apenas no modo `workflow=preview` autorizado em DEV/teste. As dez páginas antigas continuam disponíveis dentro dos grupos; os mesmos painéis tratam contratos, documentos e financeiro. `clientGroup`, `clientPage` e `recordFilter` mantêm o destino após recarregar. O grupo Trabalho reutiliza WorkEntriesPage com filtro por cliente. O modo habitual permanece predefinido.
+
+Validar isoladamente com `pnpm exec playwright test --config playwright.workflow.config.ts`. Esta configuração é necessária: o E2E dedicado é omitido na configuração habitual para não arrancar num servidor sem bloqueio de serviços. O servidor de teste remove proxies e tradução local e recusa os caminhos de serviços; o browser bloqueia destinos externos e usa fixtures sintéticos. Os resultados/capturas ficam em `output/workflow-integration/`.
+
+A ficha e os URLs foram validados em Chromium emulado, sem escrever no backend. Filtros globais transversais, interacções adicionais dos gráficos e serviços reais continuam pendentes; consultar validation.md para os limites e o defeito da tabela horizontal observado.
+
+Revisão visual em A4: após os E2E, `python scripts/workflow/review_client_pdf.py` (ReportLab) gera `output/workflow-integration/carina-ficha-cinco-grupos-a4.pdf`, duas páginas claro/escuro com capturas desktop/iPhone de dados fictícios.

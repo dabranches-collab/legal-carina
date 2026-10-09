@@ -1,3 +1,5 @@
+import { workflowPreviewEnabled } from '../../types/workflowNavigation'
+import { clientGroups, clientPages, restoreClientGroup, type ClientGroup } from './workflowClientNavigation'
 import { referrerNames } from '../../lib/professionalNames'
 import {
   lazy,
@@ -211,11 +213,13 @@ export function MasterDataPage({
   onRecordSaved?:()=>void;
   clientTypeFilter?: "individual" | "company" | "mixed" | null;
 }) {
+  const [clientGroup,setClientGroup]=useState<ClientGroup>('summary');
   const [clientDetailsReady,setClientDetailsReady]=useState(false);
   const [referrerOptions,setReferrerOptions]=useState<Array<{id:string;name:string}>>([]);
   const [section, setSection] = useState<Section>(initialSection),
     [rows, setRows] = useState<Row[]>([]),
     [firmId, setFirmId] = useState("");
+  const workflowPreview=workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV) && section==='clients';
   const firmIdRef = useRef("");
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
@@ -299,12 +303,13 @@ export function MasterDataPage({
   const creatorOpenedRef = useRef(false);
   const openedRecordRef = useRef<string | null>(null);
   const updateRecordLocation = useCallback((record:Row|null,page?:typeof clientPage,filter?:FilterKey|null) => {
-    if(focusedRecordId||createOnMount)return
+    if(createOnMount||(focusedRecordId&&!workflowPreview))return
     const url=new URL(window.location.href)
     if(record){url.searchParams.set("record",record.id);url.searchParams.set("clientPage",page??"general");if(filter)url.searchParams.set("recordFilter",filter);else url.searchParams.delete("recordFilter")}
     else{url.searchParams.delete("record");url.searchParams.delete("clientPage");url.searchParams.delete("recordFilter")}
-    window.history.replaceState(window.history.state,"",url)
-  },[focusedRecordId,createOnMount]);
+    if(workflowPreview){if(record)url.searchParams.set('clientGroup',clientGroup);else url.searchParams.delete('clientGroup')}
+    window.history.replaceState(window.history.state,'',url)
+  },[focusedRecordId,createOnMount,workflowPreview,clientGroup]);
   useEffect(()=>{
     if(section!=="clients"||focusedRecordId||createOnMount)return
     const url=new URL(window.location.href)
@@ -427,7 +432,9 @@ export function MasterDataPage({
     const savedFilter=params.get("record")===row.id?params.get("recordFilter"):null
     const savedPage=params.get("record")===row.id?params.get("clientPage"):null
     const restoredPage=initialClientPage??(['general','contacts','billing','retainer','fixedFees','provisions','invoices','honorariumNotes','credentials','documents'].includes(savedPage??'')?savedPage as typeof clientPage:"general")
-    setActiveWorkFilter(restoredPage==='general'&&(['all','uninvoiced','unpaid','missingPrice','missingSociety'] as string[]).includes(savedFilter??'')?savedFilter as FilterKey:null);
+    const restoredFilter=(workflowPreview||restoredPage==='general')&&(['all','uninvoiced','unpaid','missingPrice','missingSociety'] as string[]).includes(savedFilter??'')?savedFilter as FilterKey:null
+    const restoredGroup=restoreClientGroup(params.get('clientGroup'),restoredPage,Boolean(savedPage||initialClientPage),Boolean(restoredFilter))
+    setActiveWorkFilter(restoredFilter??(workflowPreview&&restoredGroup==='work'?'all':null));
     setCreating(false);
     setClientDetailsReady(false);
     setEditing(row);
@@ -435,6 +442,7 @@ export function MasterDataPage({
     setShowOtherProfile(false);
     setDirty(false);
     setClientPage(restoredPage);
+    setClientGroup(restoredGroup);
     setEditName(row.display_name ?? row.name ?? "");
     setError("");
     setDetails(emptyDetails());
@@ -1353,12 +1361,14 @@ export function MasterDataPage({
               </button>
             </div>
             <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pb-4 sm:px-6">
-              {editing && (
+              {editing && workflowPreview && <nav aria-label="Grupos da ficha do cliente" className="sticky top-0 z-20 -mx-4 flex flex-wrap gap-2 border-b border-border bg-surface px-4 py-3 sm:-mx-6 sm:px-6">{clientGroups.map(group=><button key={group.id} type="button" aria-current={clientGroup===group.id?'page':undefined} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold ${clientGroup===group.id?'border-primary bg-primary text-surface':'border-primary/35 text-primary'}`} onClick={()=>{setClientGroup(group.id);setActiveWorkFilter(group.id==='work'?'all':null);if(group.id==='work'||group.id==='summary')setClientPage('general');const first=clientPages.find(page=>page.group===group.id);if(first)setClientPage(first.id)}}>{group.label}</button>)}</nav>}
+              {editing && workflowPreview && clientGroup==='summary' && <section aria-label="Resumo da ficha" className="my-4 rounded-lg border border-border p-4"><h3 className="font-semibold">{editName}</h3><dl className="mt-3 grid gap-3 sm:grid-cols-2"><div><dt>Sociedade</dt><dd>{billingOptions.find(row=>row.id===details.primary_billing_entity_id)?.name??'Por definir'}</dd></div><div><dt>Contacto</dt><dd>{details.email||details.phone||'Por definir'}</dd></div></dl><p className="mt-3 text-sm text-text-secondary">Abra uma caixa para consultar os registos; os documentos e contratos conservam os painéis existentes.</p></section>}
+              {editing && (!workflowPreview || clientGroup==='summary' || clientGroup==='work') && (
                 <nav
                   aria-label="Separadores da ficha"
-                  className="sticky top-0 z-10 -mx-4 grid grid-cols-2 gap-1.5 border-b border-border bg-surface px-4 py-2 shadow-sm sm:-mx-6 sm:grid-cols-4 lg:grid-cols-7 sm:px-6"
+                  className={`${workflowPreview?'':'sticky top-0'} z-10 -mx-4 grid grid-cols-2 gap-1.5 border-b border-border bg-surface px-4 py-2 shadow-sm sm:-mx-6 sm:grid-cols-4 lg:grid-cols-7 sm:px-6`}
                 >
-                  <button type="button" aria-current={activeWorkFilter === null ? 'page' : undefined} onClick={() => setActiveWorkFilter(null)} className={`flex min-h-12 items-center justify-center rounded-lg border px-2 text-xs font-semibold ${activeWorkFilter === null ? 'border-primary bg-primary text-surface' : 'border-primary/35 text-primary'}`}>Ficha</button>
+                  {!workflowPreview && <button type="button" aria-current={activeWorkFilter === null ? 'page' : undefined} onClick={() => setActiveWorkFilter(null)} className={`flex min-h-12 items-center justify-center rounded-lg border px-2 text-xs font-semibold ${activeWorkFilter === null ? 'border-primary bg-primary text-surface' : 'border-primary/35 text-primary'}`}>Ficha</button>}
                   {[
                     [
                       "Ver todos os registos",
@@ -1388,7 +1398,7 @@ export function MasterDataPage({
                       key={text}
                       title={description}
                       aria-current={activeWorkFilter === key ? 'page' : undefined}
-                      onClick={() => setActiveWorkFilter(key)}
+                      onClick={() => {setActiveWorkFilter(key);if(workflowPreview){setClientGroup('work');setClientPage('general')}}}
                     className={`flex min-h-12 min-w-0 flex-col items-center justify-center rounded-lg border px-1.5 py-1 text-center text-[11px] font-semibold leading-tight hover:text-white ${activeWorkFilter === key ? "border-primary bg-primary text-surface" : "border-secondary/45 bg-secondary-soft text-secondary hover:bg-secondary"}`}
                     >
                       <span>{text}</span>
@@ -1426,14 +1436,15 @@ export function MasterDataPage({
                   </>}
                 </nav>
               )}
-              {section === "clients" && activeWorkFilter === null && (
-                <nav aria-label="Páginas da ficha do cliente" className="sticky top-0 z-20 -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
-                  {([['general','Geral'],['contacts','Contactos'],['billing','Facturação'],['retainer','Avença'],['fixedFees','Preço fixo'],['provisions','Provisões'],['credentials','Credenciais'],['documents','Documentos'],['invoices','Facturas'],['honorariumNotes','Notas de Honorários']] as const).map(([id,label])=>{const selected=clientPage===id,special=id==='invoices'||id==='honorariumNotes';const position=id==='invoices'?'lg:col-start-5':'';const tone=special?(selected?'border-[#24558d] bg-[#24558d] text-white shadow-sm':'border-[#24558d]/70 bg-[#dceafb] text-[#17385f] hover:bg-[#c8def7] dark:bg-[#143454] dark:text-[#dceafb]'):(selected?'border-primary bg-primary text-surface shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10');return <button key={id} type="button" aria-current={selected?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${position} ${tone}`}>{label}</button>})}
+              {section === "clients" && activeWorkFilter === null && (!workflowPreview || clientGroup==='data' || clientGroup==='contracts' || clientGroup==='finance') && (
+                <nav aria-label="Páginas da ficha do cliente" className={`${workflowPreview?'z-10':'sticky top-0 z-20'} -mx-4 grid grid-cols-2 gap-2 border-b border-border bg-surface px-4 py-3 shadow-sm sm:-mx-6 sm:grid-cols-3 sm:px-6 lg:grid-cols-6`}>
+                  {clientPages.filter(page=>!workflowPreview || page.group===clientGroup).map(({id,label})=>{const selected=clientPage===id,special=id==='invoices'||id==='honorariumNotes';const position=!workflowPreview&&id==='invoices'?'lg:col-start-5':'';const tone=special?(selected?'border-[#24558d] bg-[#24558d] text-white shadow-sm':'border-[#24558d]/70 bg-[#dceafb] text-[#17385f] hover:bg-[#c8def7] dark:bg-[#143454] dark:text-[#dceafb]'):(selected?'border-primary bg-primary text-surface shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10');return <button key={id} type="button" aria-current={selected?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${position} ${tone}`}>{label}</button>})}
                 </nav>
               )}
               {activeWorkFilter && editing ? <Suspense fallback={<p role="status" className="p-4">A carregar registos…</p>}><WorkEntriesPage key={`${editing.id}-${activeWorkFilter}`} embeddedQuery={(() => { const query = new URLSearchParams(); query.set(section === 'clients' ? 'clientId' : section === 'billing_entities' ? 'billingEntityId' : 'professionalId', editing.id); if (activeWorkFilter === 'uninvoiced' || activeWorkFilter === 'unpaid') query.set('collectionState', activeWorkFilter); if (activeWorkFilter === 'missingPrice') query.set('missingPrice', 'true'); if (activeWorkFilter === 'missingSociety') query.set('missingSociety', 'true'); return query.toString(); })()} onEntrySaved={() => window.dispatchEvent(new Event('entity-record-saved'))}/></Suspense> : <>
               <fieldset
                 disabled={mode === "view" || (section === "clients" && !clientDetailsReady)}
+                hidden={workflowPreview && Boolean(editing) && clientGroup==='summary'}
                 data-compact={mode === "view" ? "true" : "false"}
                 data-client-page={section === "clients" ? clientPage : undefined}
                 onDoubleClick={() => { if (mode === "view") setMode("edit") }}
