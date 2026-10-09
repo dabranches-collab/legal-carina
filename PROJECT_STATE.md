@@ -1,3 +1,7 @@
+## 2026-10-10 — 0.16.0 publicada
+
+0.16.0 confirmada a 100%, Version ID `e175a768-fbaf-4239-a5d5-bc2b5d9d2cfc`, deployment `f7539c54-2249-4fa7-a4f7-63e676ad214f`, 10-10-2026 00:43:30 WAT. Fonte funcional main `bfde6a8`; CI da correcção `38004536233` e secret scan aprovados. Migrations remotas `20261009232051` (nove RPC) e `20261009234216` (materialização), correspondentes a `20261009221918_add_workflow_scoped_reads.sql` e `20261009232441_materialize_workflow_read_scope.sql`. Hashes/contagens das 52 relações iguais antes/depois de cada aplicação, funções/colunas/policies anteriores preservadas; advisors sem ERROR. Smoke real dos pagamentos combinados passou após corrigir timeout, com provisões/avenças filtradas e resumo funcionais. Backup 09-10-2026 05:51 UTC; Storage intacto. Sem pagamentos ou dados operacionais alterados. Ensaios físicos, revisão operacional e tradução/documentos reais continuam não certificados. Detalhes/rollback em HANDOVER.md; este registo prevalece sobre as entradas históricas seguintes. Sem novo deploy por documentação.
+
 ## 2026-10-10 — correcção de desempenho antes de republicar
 
 PR #93 integrado em main `85696e0`; nove RPC instalados remotamente `20261009232051`. Dados preservados: contagens/hashes das 52 relações iguais antes/depois, esquema/funções anteriores intactos, advisors sem ERROR. Publicação 0.16.0 com configuração real confirmada; smoke de pagamentos filtrados revelou timeout, pelo que o frontend foi revertido para 0.15.1, conservando a base.
