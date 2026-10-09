@@ -1,10 +1,17 @@
 {
-  "version": "0.15.1",
+  "version": "0.16.0",
   "changes": [
-    "Painéis de entrada com altura natural e filtros dos registos mais compactos em desktop.",
-    "Controlos tácteis e campos ajustados para tablet e iPhone, preservando a área de trabalho."
+    "Primeira integração da navegação simplificada em modo de teste: Resumo, Clientes, Trabalho, Financeiro e Notas, com Definições secundárias.",
+    "Módulos, indicadores, gráficos, documentos, traduções e regras operacionais existentes conservados. A navegação habitual mantém-se como predefinição."
   ],
   "releases": [
+    {
+      "version": "0.16.0",
+      "changes": [
+        "Primeira integração da navegação simplificada em modo de teste: Resumo, Clientes, Trabalho, Financeiro e Notas, com Definições secundárias.",
+        "Módulos, indicadores, gráficos, documentos, traduções e regras operacionais existentes conservados. A navegação habitual mantém-se como predefinição."
+      ]
+    },
     {
       "version": "0.15.1",
       "changes": [

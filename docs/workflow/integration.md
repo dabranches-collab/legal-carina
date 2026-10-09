@@ -2,11 +2,11 @@
 
 ## Preparação entregue
 
-O protótipo é independente da aplicação operacional. A branch prepara a estrutura e os contratos dos componentes; não activa a proposta nem altera dados. A entrada vive em `prototypes/workflow/`, com configuração própria e preparação SemVer `0.16.0-preview.2`. A versão operacional continua `0.15.1` no código-base.
+O protótipo é independente da aplicação operacional. A branch inclui agora o primeiro lote de integração no frontend existente, disponível apenas em desenvolvimento/teste com `workflow=preview`; a navegação habitual continua predefinida. Não há instalação em produção nem alteração de dados. A entrada vive em `prototypes/workflow/`, com configuração própria e preparação SemVer `0.16.0-preview.2`. A versão do frontend local passa a `0.16.0` em preparação; a versão publicada não foi reconfirmada nesta sessão.
 
 Componentes preparados: `Navigation` (cinco áreas + Definições secundárias), `ClientNavigation` (cinco áreas da ficha), `Panel`, `Modal` (dialog nativo, foco/retorno e Escape) e `OperationDialog` (pedido de operação e contexto do cliente). `model.ts` separa rotas, dados de demonstração e pedidos; `catalog.ts` fornece o inventário de cobertura.
 
-Na integração futura, os componentes adaptam-se aos tokens Tailwind e à biblioteca `Icon` existente, e recebem permissões reais de `AuthContext`. Não transportar o selector de perfil de ensaio para a aplicação operacional.
+Na integração, os componentes adaptam-se aos tokens Tailwind e à biblioteca `Icon` existente, e recebem permissões reais de `AuthContext`. Não transportar o selector de perfil de ensaio para a aplicação operacional.
 
 ## Reutilização dos módulos actuais
 
@@ -51,4 +51,12 @@ Os atalhos distintos devem emitir o mesmo `OperationRequest`, com o cliente, doc
 5. Rever acessibilidade, PWA, iPhone físico e desempenho; obter validação humana dos operadores.
 6. Só após ordem explícita «publica», gates, CI e janela combinada: activar o novo acesso. Manter reversão do frontend e preservar todos os livros/documentos.
 
-Não estão autorizados neste lote: merge em main, deploy operacional, alterações Auth/Storage/permissões, migrations ou dados reais. A autorização recebida cobre preparação e revisão isoladas.
+A implementação operacional foi autorizada em 09-10-2026, condicionada à conclusão dos testes. Não se pedem novas confirmações para o trabalho já autorizado. A integração actual cobre apenas navegação e acesso aos módulos existentes em teste; nenhuma publicação operacional, migration ou mudança de permissões foi efectuada.
+
+## Primeira integração no código real — 0.16.0 em preparação
+
+`WorkflowNavigation` organiza cinco áreas e Definições secundárias. `WorkflowSections` reúne os acessos contextuais; reutiliza as sociedades/responsáveis já carregados pelo AppShell. O Resumo abre OverviewPage e EntityDashboard com os seus gráficos, métricas e WorkResultsLink existentes. Clientes abre a lista geral de MasterDataPage; os acessos por tipo, avenças e URLs anteriores mantêm-se. Financeiro reúne DebtorsPage, PaymentsPage e ProvisionsPage. Criação global conserva CreateWorkEntryModal/QuickExpenseModal/MasterDataPage; o acesso às fichas continua por RecordDialogHost, incluindo documentos, credenciais, traduções e contratos.
+
+A opção exige `(DEV || VITE_APP_ENV === 'test') && workflow=preview`: não activa a nova navegação num build operacional comum. Nenhum bypass de Auth foi acrescentado. AppLink conserva a opção nos destinos internos de validação, sem propagar parâmetros para destinos externos. Administração permanece owner/admin; logs só owner; dados base conservam o acesso actual.
+
+Ainda não concluídos: reorganização da ficha nos cinco grupos, filtros globais transversais, interacções adicionais dos gráficos operacionais, validação integrada Azure/Storage e revisão física Safari/iPhone. Os 40 E2E existentes nesta entrega pertencem ao protótipo independente; não devem ser apresentados como E2E da nova navegação operacional.

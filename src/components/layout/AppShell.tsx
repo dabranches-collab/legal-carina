@@ -1,3 +1,5 @@
+import { WorkflowNavigation, WorkflowSections } from './WorkflowNavigation'
+import { workflowArea, workflowAreaLabel } from '../../types/workflowNavigation'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Icon, type IconName } from '../ui/Icon'
 import type { NavigationItem, ViewId } from '../../types/navigation'
@@ -18,9 +20,9 @@ const navigation: NavigationItem[] = [
   { id: 'admin', label: 'Definições', icon: 'admin' },
 ]
 
-interface AppShellProps { activeView: ViewId; selectedSociety:string|null; selectedProfessional:string|null; selectedClientType:'individual'|'company'|'mixed'|null; selectedClientMode:'dashboard'|'list'; settingsEntity:'clients'|'billing_entities'|'professionals'|null; onRefresh:()=>void; onCreateWorkEntry:()=>void; onCreateExpense:()=>void; onCreateClient:()=>void; onNavigate: (view: ViewId) => void; onNavigateSociety:(name:string)=>void; onNavigateProfessional:(name:string)=>void; onNavigateClientType:(type:'individual'|'company'|'mixed',mode:'dashboard'|'list')=>void; onNavigateRetainers:()=>void; onNavigateSettings:(target:'admin'|'clients'|'billing_entities'|'professionals')=>void; children: ReactNode }
+interface AppShellProps { workflowPreview?:boolean; activeView: ViewId; selectedSociety:string|null; selectedProfessional:string|null; selectedClientType:'individual'|'company'|'mixed'|null; selectedClientMode:'dashboard'|'list'; settingsEntity:'clients'|'billing_entities'|'professionals'|null; onRefresh:()=>void; onCreateWorkEntry:()=>void; onCreateExpense:()=>void; onCreateClient:()=>void; onNavigate: (view: ViewId) => void; onNavigateSociety:(name:string)=>void; onNavigateProfessional:(name:string)=>void; onNavigateClientType:(type:'individual'|'company'|'mixed',mode:'dashboard'|'list')=>void; onNavigateRetainers:()=>void; onNavigateSettings:(target:'admin'|'clients'|'billing_entities'|'professionals')=>void; children: ReactNode }
 
-export function AppShell({ activeView, selectedSociety, selectedProfessional, selectedClientType, selectedClientMode, settingsEntity, onRefresh, onCreateWorkEntry, onCreateExpense, onCreateClient, onNavigate, onNavigateSociety, onNavigateProfessional, onNavigateClientType, onNavigateRetainers, onNavigateSettings, children }: AppShellProps) {
+export function AppShell({ workflowPreview=false, activeView, selectedSociety, selectedProfessional, selectedClientType, selectedClientMode, settingsEntity, onRefresh, onCreateWorkEntry, onCreateExpense, onCreateClient, onNavigate, onNavigateSociety, onNavigateProfessional, onNavigateClientType, onNavigateRetainers, onNavigateSettings, children }: AppShellProps) {
  const headerRef=useRef<HTMLElement>(null)
  useEffect(()=>{
   const header=headerRef.current;if(!header)return
@@ -59,6 +61,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
   useEffect(()=>{const db=supabase;if(!db)return;let active=true;void(async()=>{const [societies,professionals]=await Promise.all([db.from('billing_entities').select('name').eq('active',true),db.from('professionals').select('display_name').eq('active',true)]);if(active){setBillingSocieties(resultRows<{name?:string}>(societies.data).map(item=>item.name).filter((name):name is string=>Boolean(name)).sort((a,b)=>a.localeCompare(b,'pt-PT')));setProfessionalNames(resultRows<{display_name?:string}>(professionals.data).map(item=>item.display_name).filter((name):name is string=>Boolean(name)).sort((a,b)=>a.localeCompare(b,'pt-PT')))}})();return()=>{active=false}},[refreshing])
   const menuLabel=(name:string)=>name.toLocaleLowerCase('pt-PT').replace(/(^|[\s\-/])([\p{L}]+)/gu,(_,separator:string,word:string)=>separator+(separator&&['de','da','do','das','dos','e'].includes(word)?word:word.charAt(0).toLocaleUpperCase('pt-PT')+word.slice(1)))
   const dashboardSelected=activeView==='clients'&&Boolean(selectedClientType)&&selectedClientMode==='dashboard'
+  const area=workflowArea(activeView,dashboardSelected)
   const currentLabel = dashboardSelected?'Visão Geral':activeView==='payments'?'Por receber':(activeView==='retainers'||activeView==='provisions')?'Clientes':activeView==='master-data'?'Definições':activeView==='admin-users'?'Utilizadores':activeView==='admin-access-logs'?'Registos de acesso':navigation.find(({ id }) => id === activeView)?.label ?? 'Carina - Legal'
   const isNavigationSelected = (id:ViewId) => (activeView===id&&!(id==='clients'&&dashboardSelected)) || (id==='overview'&&dashboardSelected) || (id==='debtors'&&activeView==='payments') || (id==='clients'&&(activeView==='retainers'||activeView==='provisions')) || (id==='admin'&&(activeView==='admin-users'||activeView==='admin-access-logs'||activeView==='master-data'||activeView==='imports'||activeView==='import-review'))
   const subLabel = activeView==='payments'?'Pagamentos':activeView==='provisions'?'Provisões':activeView==='retainers'?'Avenças':activeView==='billing'&&selectedSociety?menuLabel(selectedSociety):activeView==='professionals'&&selectedProfessional?professionalName(selectedProfessional):activeView==='clients'&&selectedClientType?({individual:'Particulares',company:'Empresas',mixed:'Mistos'} as const)[selectedClientType]:activeView==='master-data'?(settingsEntity==='billing_entities'?'Sociedades':'Clientes'):activeView==='admin-users'?'Utilizadores':activeView==='admin-access-logs'?'Registos de acesso':activeView==='imports'?'Importações':activeView==='import-review'?'Revisão de importações':null
@@ -93,6 +96,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
         : activeView==='master-data'
           ? [{label:'Definições',icon:'admin'},{label:settingsEntity==='billing_entities'?'Sociedades':'Clientes',icon:settingsEntity==='billing_entities'?'building':'clients'}]
           : [{label:parentLabel,icon:activeNavigation?.icon??(activeView==='payments'?'payment':activeView==='billing'?'building':'overview')},...(subLabel&&subLabel!==parentLabel?[{label:subLabel,icon:activeView==='payments'?'payment':activeView==='clients'?'clients':activeView==='professionals'?'people':'building'} as {label:string;icon:IconName}]:[])]
+  if(workflowPreview){ locationLevels.splice(0,locationLevels.length,{label:workflowAreaLabel(area),icon:area==='financeiro'?'payment':area==='clientes'?'clients':area==='trabalho'?'clock':area==='notas'?'audit':area==='definicoes'?'admin':'overview'},...(subLabel?[{label:subLabel,icon:'overview' as IconName}]:[])) }
   const refreshData=()=>{setRefreshing(true);onRefresh();window.setTimeout(()=>setRefreshing(false),500)}
 
   return (
@@ -107,7 +111,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
           </button>
         </div>
         <nav className="scrollbar-thin flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4">
-          <ul className="space-y-1">
+          {workflowPreview ? <WorkflowNavigation area={area} collapsed={collapsed} canManageSettings={canManageMasterData} onNavigate={next=>{onNavigate(next);setMobileOpen(false)}}/> : <ul className="space-y-1">
             {navigation.filter(item=>item.id!=='admin'||canManageMasterData).map((item) => {const selected=isNavigationSelected(item.id);const hasSubmenu=item.id==='debtors'||item.id==='overview'||item.id==='billing'||item.id==='professionals'||item.id==='clients'||item.id==='admin';const expanded=expandedMenu===item.id;return <li key={item.id}><button type="button" title={collapsed ? menuLabel(item.label) : undefined} onClick={() => { if(hasSubmenu)setExpandedMenu(value=>value===item.id?null:item.id);else setExpandedMenu(null);onNavigate(item.id==='admin'&&!canManageSettings?'master-data':item.id) }} aria-current={selected ? 'page' : undefined} aria-expanded={hasSubmenu?expanded:undefined}
               className={`flex min-h-10 w-full items-center gap-3 rounded-lg border px-3 py-2 text-left text-sm font-medium transition-colors ${selected ? 'border-accent bg-accent font-semibold text-navigation shadow-sm' : 'border-accent/35 bg-surface/5 text-accent/85 hover:border-accent/60 hover:bg-surface/10 hover:text-accent'}`}>
               <Icon name={item.icon} className={`size-5 shrink-0 ${selected ? 'text-navigation' : 'text-accent/80'}`} />{!collapsed && <><span className="flex-1">{menuLabel(item.label)}</span>{hasSubmenu&&<span className={`grid size-6 shrink-0 place-items-center rounded-full border ${selected?'border-navigation/30 bg-navigation/10':'border-accent/50 bg-accent/10'}`}><Icon name="chevron" className={`size-4 stroke-[2.5] transition-transform ${expanded?'rotate-90':'lg:rotate-90'}`}/></span>}</>}
@@ -123,7 +127,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
               {([['clients','Clientes'],['billing_entities','Sociedades'],['professionals','Responsáveis']] as const).map(([target,label])=>{const selectedSub=activeView==='master-data'&&settingsEntity===target;return <li key={target}><button type="button" onClick={()=>onNavigateSettings(target)} aria-current={selectedSub?'page':undefined} className={`min-h-9 w-full rounded-md border px-2 py-1 text-left text-xs transition-colors ${selectedSub?'border-accent bg-accent font-semibold text-navigation':'border-accent/30 bg-surface/5 text-accent/80 hover:border-accent/60 hover:bg-surface/10 hover:text-accent'}`}>{label}</button></li>})}
             </ul>}
             </li>})}
-          </ul>
+          </ul>}
         {!collapsed && <div className="sidebar-justice pointer-events-none mt-auto flex h-24 shrink-0 translate-y-2 items-end justify-center px-5 py-2 sm:h-32 lg:h-64 lg:translate-y-0 lg:items-center lg:py-3" aria-hidden="true">
           <div
             className="h-full w-full max-w-28 bg-accent opacity-80 lg:max-w-52"
@@ -162,6 +166,7 @@ export function AppShell({ activeView, selectedSociety, selectedProfessional, se
           <div className="grid size-10 place-items-center rounded-full border border-accent/50 bg-secondary text-xs font-semibold text-navigation-text" title={displayName}>{displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase()}</div>
         </header>
         <main id="main-content" className="app-shell-main py-4 sm:py-5">
+          {workflowPreview && <WorkflowSections area={area} activeView={activeView} role={role} societies={billingSocieties} professionals={professionalNames} selectedSociety={selectedSociety} selectedProfessional={selectedProfessional} selectedClientType={selectedClientType} onNavigate={onNavigate} onSociety={onNavigateSociety} onProfessional={onNavigateProfessional} onClientType={onNavigateClientType} onSettings={onNavigateSettings}/>}
           {children}
         </main>
       </div>

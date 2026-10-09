@@ -17,7 +17,7 @@ Abrir a URL local apresentada, normalmente `http://localhost:5175/`. Um endereç
 ```sh
 node node_modules/typescript/bin/tsc -p prototypes/workflow/tsconfig.json
 node node_modules/oxlint/bin/oxlint prototypes/workflow scripts/workflow
-node scripts/workflow/audit.mjs
+node scripts/workflow/audit.mjs --operational-preview
 node node_modules/@playwright/test/cli.js test -c prototypes/workflow/playwright.config.ts
 node node_modules/vite/bin/vite.js build --config prototypes/workflow/vite.config.ts
 node scripts/workflow/package.mjs
@@ -55,3 +55,5 @@ Depois da auditoria e das capturas Playwright: `python scripts/workflow/review_p
 ## Caixas e gráficos como pré-filtros
 
 No Resumo, nove caixas abrem os itens contabilizados. Barras de actividade filtram horas por cliente; barras de acompanhamento filtram estados/documentos/contratos; segmentos de tipo filtram clientes (contagens inclusivas para mistos). A lista indica o critério, conserva sociedade/responsável/tipo e permite remover o pré-filtro ou voltar ao Resumo. Os gráficos anuais/mensais e indicadores operacionais completos serão reutilizados na integração; estas séries não são substituídas pelos exemplos do protótipo.
+
+A branch contém também integração operacional em teste; a auditoria aceita apenas os ficheiros explicitamente previstos com `--operational-preview`. Sem esta opção continua a exigir isolamento total do código operacional.
