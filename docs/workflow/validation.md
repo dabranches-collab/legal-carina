@@ -1,6 +1,21 @@
-# Validação da preparação — 09-10-2026
+# Validação e continuidade do workflow — 09-10-2026
 
-Branch `codex/workflow-prototype-20261009`; base `88adcd6471f3ef469470c6a0899dd1dc6a187eb7` (origin/main confirmado por fetch). Versão operacional local 0.15.1 preservada; protótipo separado 0.16.0-preview.2. Produção não alterada; consulta HTTP de versão devolveu 403, pelo que não se reconfirma aqui a versão instalada.
+
+## Estado actual da entrega
+
+Branch `codex/workflow-prototype-20261009`, em `/workspace/legal-carina`. Frontend 0.16.0 em preparação; protótipo independente 0.16.0-preview.2. O commit de integração `9ba01aae88e3f6675cc5827068c8a2b5705fdd2c` foi enviado e confirmado directamente no GitHub por `git ls-remote` em 09-10-2026; este registo documental segue esse commit na mesma branch. O bloqueio de rede anterior ficou resolvido. O SHA final desta entrega é o HEAD da branch após o commit documental e será novamente verificado directamente após o push.
+
+A integração real conserva os componentes existentes e exige `workflow=preview` em DEV/teste. A ficha organizada em cinco grupos está concluída no protótipo; **a reorganização da ficha real continua pendente**. O checkout não tinha alterações por guardar: 9ba01aa já continha todo o código real preparado. História e trabalho existentes preservados.
+
+Nesta entrega executados: auditoria `node scripts/workflow/audit.mjs --operational-preview` (84 funções, 16 vistas antigas, dez ficheiros operacionais previstos), segurança `node scripts/check-sensitive-files.mjs` e `git diff --check`, aprovados. Só documentação alterada; os testes de implementação abaixo são resultados de execuções anteriores, não repetidos agora.
+
+Pendências: ficha real em cinco grupos; filtros globais transversais; interacções adicionais dos gráficos operacionais; E2E da integração real; Safari/iPhone físico; ensaios integrados Azure/Storage/regras/perfis; revisão pelos operadores. Os testes SQL ficaram por executar por ausência de `@electric-sql/pglite` no ambiente.
+
+Nenhum merge em main, deploy, migration ou operação em dados reais/permissões/serviços de produção. Versão instalada não reconfirmada nesta entrega; nenhum deployment/version ID novo. Os relatos históricos abaixo distinguem preparação isolada e primeira integração.
+
+## Preparação isolada — contexto histórico
+
+Base `88adcd6471f3ef469470c6a0899dd1dc6a187eb7`; versão operacional do código-base 0.15.1 antes da primeira integração. A consulta HTTP de versão nessa preparação devolveu 403; não usar esse registo como confirmação da versão instalada agora.
 
 ## Evidência concluída
 
@@ -26,4 +41,4 @@ Nove caixas e três grupos de gráficos clicáveis; selecção global aplicada �
 
 Navegação em cinco áreas ligada aos componentes reais; protegida por opção explícita apenas DEV/teste. A navegação normal mantém-se predefinida. Nenhuma operação no backend, Auth/RLS/Storage/Worker ou migrations. Auditoria `--operational-preview` verifica uma lista exacta de ficheiros previstos, mantendo o modo de isolamento estrito sem essa opção. Dez ficheiros operacionais preparados neste lote, incluindo testes, versão e notas.
 
-A suite unitária completa inicial passou 307 testes; depois da conservação do modo em links internos/externos, os 19 testes relevantes passaram novamente (App, gate e AppLink). Verificação final integral: **310 testes aprovados em 61 ficheiros**, após os últimos ajustes. Segurança de ficheiros, auditoria do âmbito, lint, tipos e build aprovados. Tipos, lint e build operacional aprovados. Os 40 E2E anteriores validam apenas o protótipo. Falta E2E em browser da integração real, Safari físico, ficha reorganizada e validação das integrações antes de activar. Push do lote operacional pendente por restrição de rede do sandbox; não pedir repetidamente a autorização já recebida.
+A suite unitária completa inicial passou 307 testes; depois da conservação do modo em links internos/externos, os 19 testes relevantes passaram novamente (App, gate e AppLink). Verificação final integral: **310 testes aprovados em 61 ficheiros**, após os últimos ajustes. Segurança de ficheiros, auditoria do âmbito, lint, tipos e build aprovados. Tipos, lint e build operacional aprovados. Os 40 E2E anteriores validam apenas o protótipo. Falta E2E em browser da integração real, Safari físico, ficha reorganizada e validação das integrações antes de activar. Nesse lote o push ficou pendente por restrição de rede; resolvido nesta entrega, como registado no estado actual acima.
