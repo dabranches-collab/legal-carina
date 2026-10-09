@@ -2,8 +2,9 @@ import type { IconName } from '../components/ui/Icon'
 import type { ViewId } from './navigation'
 
 export type WorkflowArea = 'resumo' | 'clientes' | 'trabalho' | 'financeiro' | 'notas' | 'definicoes'
-export function workflowPreviewEnabled(search: string, development: boolean, appEnvironment?: string): boolean {
-  return (development || appEnvironment === 'test') && new URLSearchParams(search).get('workflow') === 'preview'
+export function workflowPreviewEnabled(search: string, development: boolean, appEnvironment?: string, navigationLayout?: string): boolean {
+  // Deployment opt-in is separate from APP_ENV=test, which also enables synthetic QA.
+  return navigationLayout === 'five-areas' || ((development || appEnvironment === 'test') && new URLSearchParams(search).get('workflow') === 'preview')
 }
 export function workflowArea(view: ViewId, clientDashboard = false): WorkflowArea {
   if (view === 'overview' || view === 'billing' || view === 'professionals' || (view === 'clients' && clientDashboard)) return 'resumo'

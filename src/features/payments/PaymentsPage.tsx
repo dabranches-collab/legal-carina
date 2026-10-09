@@ -1,3 +1,5 @@
+import { useWorkflowScope } from '../workflow/useWorkflowScope'
+import { scopedRead } from '../workflow/scopedRead'
 import {useCallback,useEffect,useRef,useState} from 'react'
 import {supabase} from '../../lib/supabase'
 import {StandardDataTable,type TableColumn} from '../../components/table/StandardDataTable'
@@ -8,10 +10,11 @@ import {PaymentDialog} from './PaymentDialog'
 import {paymentCategories,paymentCounts,money,type PaymentCategory,type PaymentItem} from './payments'
 
 export function PaymentsPage(){
+ const scope=useWorkflowScope()
  const [rows,setRows]=useState<PaymentItem[]>([]),[category,setCategory]=useState<PaymentCategory>('unbilled'),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('')
  const [invoicing,setInvoicing]=useState<{item:PaymentItem;charge:RetainerCharge}|null>(null)
  const [selected,setSelected]=useState<PaymentItem|null>(null),[editing,setEditing]=useState<string|null>(null),generation=useRef(0)
- const load=useCallback(async()=>{const run=++generation.current;setLoading(true);setError('');try{if(!supabase)throw new Error('Ligação ao Supabase indisponível.');const result=await supabase.rpc('get_payment_queue');if(result.error)throw result.error;if(run===generation.current)setRows(result.data??[])}catch(cause){if(run===generation.current){setRows([]);setError(cause&&typeof cause==='object'&&'message' in cause?String(cause.message):'Não foi possível consultar as pendências.')}}finally{if(run===generation.current)setLoading(false)}},[])
+ const load=useCallback(async()=>{const run=++generation.current;setLoading(true);setError('');try{if(!supabase)throw new Error('Ligação ao Supabase indisponível.');const data=await scopedRead('get_payment_queue',scope);if(run===generation.current)setRows(data??[])}catch(cause){if(run===generation.current){setRows([]);setError(cause&&typeof cause==='object'&&'message' in cause?String(cause.message):'Não foi possível consultar as pendências.')}}finally{if(run===generation.current)setLoading(false)}},[scope])
  useEffect(()=>{void load();const refresh=()=>{void load()};window.addEventListener('entity-record-saved',refresh);return()=>{window.removeEventListener('entity-record-saved',refresh)}},[load])
  const counts=paymentCounts(rows)
  const columns:TableColumn<PaymentItem>[]=[

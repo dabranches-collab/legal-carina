@@ -1,3 +1,5 @@
+import { WorkflowScopeProvider } from './features/workflow/WorkflowScopeContext'
+import { preserveWorkflowScope } from './types/workflowScope'
 import { workflowPreviewEnabled } from './types/workflowNavigation'
 import { WorkResultsProvider } from './features/work-entries/WorkResultsProvider'
 import { RecordDialogHost } from './features/master-data/RecordDialogHost'
@@ -66,7 +68,7 @@ function buttonDescription(button:HTMLButtonElement){
 
 export function AuthenticatedApplication() {
   const {role}=useAuth()
-  const [workflowPreview]=useState(()=>workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV))
+  const [workflowPreview]=useState(()=>workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV,import.meta.env.VITE_WORKFLOW_NAVIGATION))
   const canManageSettings=role==='owner'||role==='admin'
   const [initial] = useState(()=>{const location=readLocation();if((restrictedViews.includes(location.view)&&!canManageSettings)||(ownerViews.includes(location.view)&&role!=='owner')){overviewLocation();return readLocation()}return location})
   const [view, setView] = useState<ViewId>(initial.view)
@@ -92,13 +94,13 @@ export function AuthenticatedApplication() {
     for(const param of workPrefilterParams)url.searchParams.delete(param)
     url.searchParams.delete('clientMode'); url.searchParams.delete('record'); url.searchParams.delete('recordSection'); url.searchParams.delete('recordPage'); url.searchParams.delete('clientPage'); url.searchParams.delete('clientGroup'); url.searchParams.delete('recordFilter'); url.searchParams.delete('clientSearch'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
   }
-  function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';if(workflowPreview)url.searchParams.set('workflow','preview');url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
+  function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);const previousScope=new URLSearchParams(url.search);url.search='';if(workflowPreview)preserveWorkflowScope(previousScope,url.searchParams);if(workflowPreview)url.searchParams.set('workflow','preview');url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
   let content: React.ReactNode
   if (view === 'overview') content = <OverviewPage onSociety={workflowPreview ? name=>navigate('billing',name) : undefined} onProfessional={workflowPreview ? name=>navigate('professionals',null,null,null,name) : undefined} />
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
   else if (view === 'debtors') content = <DebtorsPage />
   else if (view === 'notes') content = <NotesPage />
-  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):workflowPreview?<MasterDataPage initialSection="clients"/>:<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
+  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage applySharedFilters={workflowPreview} initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):workflowPreview?<MasterDataPage applySharedFilters initialSection="clients"/>:<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
   else if (view === 'payments') content = <PaymentsPage />
   else if (view === 'provisions') content = <ProvisionsPage />
   else if (view === 'retainers') content = <RetainersPage />
@@ -119,7 +121,7 @@ export default function App() {
   const qaEnabled=import.meta.env.DEV||import.meta.env.VITE_APP_ENV==='test'
   if (qaEnabled && qaParams.get('qa-iphone') === '1') {
     const qaRole=qaParams.get('qa-role')==='owner'?'owner':qaParams.get('qa-role')==='admin'?'admin':'operator'
-    return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><AuthenticatedApplication /><PwaUpdateNotice /></AuthContext.Provider>
+    return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><WorkflowScopeProvider><AuthenticatedApplication /></WorkflowScopeProvider><PwaUpdateNotice /></AuthContext.Provider>
   }
-  return <><AuthGate><AuthenticatedApplication /></AuthGate><PwaUpdateNotice /></>
+  return <><AuthGate><WorkflowScopeProvider><AuthenticatedApplication /></WorkflowScopeProvider></AuthGate><PwaUpdateNotice /></>
 }

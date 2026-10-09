@@ -11,4 +11,9 @@ describe('navegação em validação', () => {
     expect(workflowPreviewEnabled('?workflow=preview', true)).toBe(true)
     expect(workflowPreviewEnabled('?workflow=preview', false, 'test')).toBe(true)
   })
+  it('prepara activação independente do modo QA, desligada por defeito',()=>{
+    expect(workflowPreviewEnabled('?view=clients',false,'production','five-areas')).toBe(true)
+    expect(workflowPreviewEnabled('?view=clients',false,'production')).toBe(false)
+    expect(workflowPreviewEnabled('?qa-iphone=1',false,'production','unknown')).toBe(false)
+  })
 })

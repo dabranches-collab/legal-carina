@@ -12,6 +12,13 @@ test('manifest abre e reabre o PWA na Visão geral',()=>{
 
 test.skip(!process.env.PWA_PRODUCTION_QA, 'Executado apenas contra o preview de produção local.')
 
+test('nova navegação em produção mantém autenticação apesar dos parâmetros QA',async({page})=>{
+ await page.goto('/?qa-iphone=1&qa-role=owner&qa-demo=1&workflow=preview&view=payments')
+ await expect(page.getByRole('button',{name:'Entrar',exact:true})).toBeVisible()
+ await expect(page.getByRole('complementary',{name:'Navegação principal'})).toHaveCount(0)
+ await expect(page.getByRole('heading',{name:'Pagamentos',exact:true})).toHaveCount(0)
+})
+
 test('depois de actualizar mostra as alterações até serem fechadas',async({page})=>{
  await page.goto('/')
  await page.evaluate(()=>localStorage.setItem('carina-release-notes-seen','0.7.1'))

@@ -1,3 +1,5 @@
+import { useWorkflowScope } from '../workflow/useWorkflowScope'
+import { scopedClientIds } from '../workflow/scopedRead'
 import { workflowPreviewEnabled } from '../../types/workflowNavigation'
 import { clientGroups, clientPages, restoreClientGroup, type ClientGroup } from './workflowClientNavigation'
 import { referrerNames } from '../../lib/professionalNames'
@@ -202,6 +204,7 @@ export function MasterDataPage({
   clientTypeFilter = null,
   focusedRecordId,
   createOnMount = false,
+  applySharedFilters = false,
   onDismiss,
   onRecordSaved,
 }: {
@@ -209,6 +212,7 @@ export function MasterDataPage({
   initialClientPage?:'fixedFees';
   focusedRecordId?: string;
   createOnMount?: boolean;
+  applySharedFilters?: boolean;
   onDismiss?:()=>void;
   onRecordSaved?:()=>void;
   clientTypeFilter?: "individual" | "company" | "mixed" | null;
@@ -216,10 +220,11 @@ export function MasterDataPage({
   const [clientGroup,setClientGroup]=useState<ClientGroup>('summary');
   const [clientDetailsReady,setClientDetailsReady]=useState(false);
   const [referrerOptions,setReferrerOptions]=useState<Array<{id:string;name:string}>>([]);
+  const scope=useWorkflowScope();
   const [section, setSection] = useState<Section>(initialSection),
     [rows, setRows] = useState<Row[]>([]),
     [firmId, setFirmId] = useState("");
-  const workflowPreview=workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV) && section==='clients';
+  const workflowPreview=workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV,import.meta.env.VITE_WORKFLOW_NAVIGATION) && section==='clients';
   const firmIdRef = useRef("");
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
@@ -346,11 +351,14 @@ export function MasterDataPage({
         : section === "clients"
           ? "id,firm_id,display_name,client_code,client_type,tax_number,email,phone,address,client_referrer,client_referrer_other,primary_billing_entity_id,active"
           : "id,firm_id,display_name,active";
-    const { data, error: failure } = await withTransientRetry(() => {
+    let scopeIds:Set<string>|null=null;
+    if(section==='clients'&&!focusedRecordId&&!createOnMount&&applySharedFilters){try{scopeIds=await scopedClientIds(scope)}catch(cause){if(isCurrent()){setRows([]);setError(cause instanceof Error?cause.message:'Não foi possível seleccionar clientes.');setLoading(false)}return}}
+    const { data: sourceData, error: failure } = await withTransientRetry(() => {
       const query=db.from(section).select(fields).order(section === "billing_entities" ? "name" : "display_name");
       return focusedRecordId?query.eq('id',focusedRecordId):query;
     });
     if (!isCurrent()) return;
+    const data=scopeIds?((sourceData??[]) as unknown as Row[]).filter(row=>scopeIds.has(row.id)):sourceData;
     if (failure) setError(failure.message);
     else if (focusedRecordId) setRows((data??[]) as unknown as Row[]);
     else if (section === "clients") {
@@ -420,7 +428,7 @@ export function MasterDataPage({
       );
     } else setRows((data ?? []) as unknown as Row[]);
     if (isCurrent()) setLoading(false);
-  }, [section,focusedRecordId]);
+  }, [section,focusedRecordId,createOnMount,applySharedFilters,scope]);
   useEffect(() => {
     void load();
     return () => {
@@ -1441,7 +1449,8 @@ export function MasterDataPage({
                   {clientPages.filter(page=>!workflowPreview || page.group===clientGroup).map(({id,label})=>{const selected=clientPage===id,special=id==='invoices'||id==='honorariumNotes';const position=!workflowPreview&&id==='invoices'?'lg:col-start-5':'';const tone=special?(selected?'border-[#24558d] bg-[#24558d] text-white shadow-sm':'border-[#24558d]/70 bg-[#dceafb] text-[#17385f] hover:bg-[#c8def7] dark:bg-[#143454] dark:text-[#dceafb]'):(selected?'border-primary bg-primary text-surface shadow-sm':'border-primary/35 bg-surface text-primary hover:bg-primary/10');return <button key={id} type="button" aria-current={selected?'page':undefined} onClick={()=>setClientPage(id)} className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition-colors ${position} ${tone}`}>{label}</button>})}
                 </nav>
               )}
-              {activeWorkFilter && editing ? <Suspense fallback={<p role="status" className="p-4">A carregar registos…</p>}><WorkEntriesPage key={`${editing.id}-${activeWorkFilter}`} embeddedQuery={(() => { const query = new URLSearchParams(); query.set(section === 'clients' ? 'clientId' : section === 'billing_entities' ? 'billingEntityId' : 'professionalId', editing.id); if (activeWorkFilter === 'uninvoiced' || activeWorkFilter === 'unpaid') query.set('collectionState', activeWorkFilter); if (activeWorkFilter === 'missingPrice') query.set('missingPrice', 'true'); if (activeWorkFilter === 'missingSociety') query.set('missingSociety', 'true'); return query.toString(); })()} onEntrySaved={() => window.dispatchEvent(new Event('entity-record-saved'))}/></Suspense> : <>
+              {workflowPreview&&section==='clients'&&(scope.society||scope.professional||scope.clientType)&&<p className="mb-3 text-sm text-text-secondary">A ficha conserva todos os dados e movimentos deste cliente. Os filtros partilhados seleccionam clientes na lista.</p>}
+              {activeWorkFilter && editing ? <Suspense fallback={<p role="status" className="p-4">A carregar registos…</p>}><WorkEntriesPage ignoreWorkflowScope key={`${editing.id}-${activeWorkFilter}`} embeddedQuery={(() => { const query = new URLSearchParams(); query.set(section === 'clients' ? 'clientId' : section === 'billing_entities' ? 'billingEntityId' : 'professionalId', editing.id); if (activeWorkFilter === 'uninvoiced' || activeWorkFilter === 'unpaid') query.set('collectionState', activeWorkFilter); if (activeWorkFilter === 'missingPrice') query.set('missingPrice', 'true'); if (activeWorkFilter === 'missingSociety') query.set('missingSociety', 'true'); return query.toString(); })()} onEntrySaved={() => window.dispatchEvent(new Event('entity-record-saved'))}/></Suspense> : <>
               <fieldset
                 disabled={mode === "view" || (section === "clients" && !clientDetailsReady)}
                 hidden={workflowPreview && Boolean(editing) && clientGroup==='summary'}

@@ -1,43 +1,46 @@
 # Estado da nova versão — 09-10-2026
 
-**Ainda não pronta para publicação.** Frontend 0.16.0 em preparação, branch `codex/workflow-prototype-20261009`; continuação sobre `1c9d051983b0cc34012edec422e5dd73a97f2a19`. A nova navegação e a ficha real estão disponíveis apenas por opção explícita em DEV/teste. A autorização para implementar e testar mantém-se; produção exige ordem explícita «publica».
+**Ainda não pronta para publicação.** Frontend 0.16.0 em preparação, branch `codex/workflow-prototype-20261009`; este lote continua `de349b159fbed954a6510397798daa4aecad9b5c`. Implementação e testes autorizados; nenhuma publicação, merge em main, migration, operação real ou alteração de permissões. A autorização de publicação continua a exigir «publica».
 
-## Alterações deste lote
+## Preparado neste lote
 
-- Mudança de categoria de clientes conserva `workflow=preview`, incluindo após recarregar; sair da ficha remove o contexto de grupo na navegação.
-- Gráficos de valor por sociedade e por responsável abrem o respectivo painel real na prévia, com botões acessíveis. Valores, consultas e ocultação financeira não foram recalculados.
-- Cabeçalho compacto da prévia em ecrãs horizontais baixos permite abrir a primeira linha da tabela. A correcção aplica-se só à prévia; não altera a interface habitual.
-- Runner reutilizável de regressão isola os testes existentes. Bloqueio de serviços também aplicado à prévia do build local.
+Cinco menus e ficha real em cinco grupos, preservando as dez páginas existentes. Filtros partilhados de sociedade, responsável e tipo de cliente nas listas, trabalho, filas e gráficos; URL, histórico e ligações conservam o âmbito. A ficha mantém dados/movimentos completos e bloqueia a mudança global enquanto o diálogo está aberto. Manutenção conserva a leitura habitual.
 
-## Verificações
+Dívidas, avenças, notas e contas mantêm os montantes integrais e indicam o respectivo alcance. Trabalho e gráficos usam a intersecção das três dimensões. Pagamentos conservam ordem, tokens, revisões e capacidades da fila original. Mistos paginam perfis e movimentos e respeitam a vertente e o cliente explícito. Sociedades homónimas são agregadas por UUID; valores financeiros ocultos continuam ocultos. Distribuição entre sociedades mantém o período integral.
+
+Nove novos contratos SQL de leitura preparados **fora de migrations**, sem execução num servidor real. Com âmbito activo, a aplicação exige os novos RPC; se faltarem, mostra erro, sem recuar para resultados globais. [Contrato e semântica](scoped-read-contract.md).
+
+Opção de build `VITE_WORKFLOW_NAVIGATION=five-areas` preparada, desactivada por omissão e independente dos atalhos QA. Build de produção local tenta forjar os parâmetros QA e deve permanecer no login. CI da branch prepara contratos sintéticos, regressão existente isolada e PWA compilada; execução remota ainda não confirmada.
+
+## Verificações desta continuação
 
 | Verificação | Resultado / alcance |
 | --- | --- |
-| Instalação | Congelada, Node 24.19.0 / pnpm 11.19.0; lockfile respeitado. |
-| Unitários | 318 aprovados, 62 ficheiros; 21 relevantes repetidos após os ajustes finais. |
-| SQL local | 25 contratos de pagamentos e nove de avenças aprovados; esquema sintético parcial. |
-| Worker | Tradução EN/FR de movimentos/despesas e recusa de redireccionamentos aprovadas com outbound totalmente simulado. |
-| E2E existentes | 172 cenários sem dependências reais cobertos: 171 passaram inicialmente; uma falha durante reinício do servidor foi repetida, junto de outro cenário de zoom, e ambos passaram. Os três cenários PWA são executados separadamente. |
-| Ficha nova | 28 cenários aprovados: desktop, tablet e iPhone vertical/horizontal em Chromium emulado; dez páginas existentes, cinco grupos, URLs, categorias e filtros combinados. Quatro cenários adicionais aprovados após acrescentar a verificação de recortes laterais/fundo e acesso aos controlos no iPhone horizontal. |
-| Documentos na prévia | Seis cenários aprovados: PDF com anexos, rascunho sem gravação/numeração, EN/FR com despesas e totais e notas/cobranças multipágina. Traduções e armazenamento simulados. |
-| Protótipo separado | 40 cenários novamente aprovados em quatro formatos; inclui Word/PDF, filtros, traduções, contratos e perfis simulados. |
-| PWA compilada | Três cenários aprovados no build de produção local: manifest, aviso da versão e instalação/activação/cache/notas do service worker. |
-| Segurança / lint / tipos / build | Aprovados; build mantém o aviso existente de chunks grandes. Auditoria de dependências: zero vulnerabilidades altas/críticas, duas moderadas e duas baixas; sem alteração de dependências. |
-| CI remota / deploy | CI remota não confirmada; nenhum merge, deploy ou dry-run de publicação executado neste lote. |
-| Rascunho do ambiente | Gravação de install_script/start_skill recusada por configuração-base desactualizada. Proposta integral preservada em ZIP; persistência não confirmada, sem publicação do ambiente. |
+| Instalação | Congelada aprovada, Node 24.19.0 / pnpm 11.19.0, sem alteração de dependências ou lockfile. |
+| Unitários | 344 aprovados em 66 ficheiros. |
+| SQL sintético | 25 contratos de pagamentos + nove de avenças + 27 contratos de âmbito/resumos aprovados (61). Incluem corpos reais dos resumos com auxiliares ACL sintéticos; não provam o esquema completo. |
+| Worker | EN/FR, movimentos/despesas e recusa de redireccionamentos aprovados; Azure inteiramente simulado. |
+| Integração nova | 56 E2E aprovados nos quatro formatos: desktop, tablet e iPhone vertical/horizontal, em Chromium emulado. Ficha, restauro, intersecções, financeiros integrais, paginação de mistos, gráficos/listas, bloqueio de RPC ausente e pedidos externos; erros JavaScript monitorizados. |
+| Regressão habitual | 172 cenários existentes cobertos: 170 passaram na execução inicial com dois workers; duas interrupções de geometria foram repetidas com um worker e passaram. Quatro cenários PWA saltados aqui e executados no build de produção local. |
+| Documentos na nova navegação | Seis aprovados: anexos PDF/JPEG, rascunho sem numeração/gravação, EN/FR com movimentos/despesas/totais e documentos multipágina. |
+| Protótipo independente | 40 aprovados nos quatro formatos; PDF/Word, traduções, contratos e pagamentos simulados. |
+| PWA de produção local | Quatro aprovados: manifest, recusa dos atalhos QA, aviso da versão e instalação/activação/cache/service worker. Build com flag five-areas e destino fictício. |
+| Segurança / lint / tipos / build | Aprovados; mantém aviso de chunks grandes. Auditoria: duas vulnerabilidades moderadas, duas baixas, nenhuma alta/crítica. Não alteradas dependências para as corrigir. |
+| CI remota / publicação | CI remota não confirmada. Nenhum merge, deploy ou dry-run de publicação. |
+| Instruções de ambiente | Guardadas no workspace. Persistência de install_script/start_skill bloqueada por configuração-base desactualizada; proposta completa preservada, sem publicação do ambiente. |
 
-A primeira tentativa de PWA utilizou inadvertidamente `VITE_APP_ENV=test`: dois cenários passaram e a instalação expirou, porque esse modo remove service workers. O ensaio final usa o modo de produção local, destinos fictícios e a mesma configuração isolada; não houve alteração do código da PWA nem dos limites dos testes. O primeiro ensaio de zoom falhou após reinício do servidor durante preparação da configuração; a repetição com servidor estabilizado passou. Não se ocultaram estas tentativas.
+Um erro de composição que introduzi no dashboard foi detectado e corrigido antes da suite final. As primeiras tentativas dirigidas também detectaram asserções que não correspondiam à apresentação existente (`1200,00 €`, nome completo «Paula Chaves» e rótulo «Valor Trabalhado»); os testes foram alinhados com estes contratos existentes, sem alterar a formatação/nome da aplicação nem remover verificações de montantes ou de selecção. As tentativas estão preservadas nos logs locais. A suite final de integração passou 56/56, sem skips ou retries.
 
-Os E2E verificam pedidos simulados e os filtros transmitidos às consultas. Limpar o filtro volta a mostrar os quatro movimentos sintéticos: o filtro não é uma operação de eliminação. Isto não é uma prova de integridade de todos os dados de produção.
+As duas interrupções da regressão ocorreram em testes iniciados às 18:34:55/58 UTC, coincidindo com alterações da documentação às 18:34:57 e 18:35:10 enquanto o Vite estava activo. Essas escritas podem provocar recarregamento; a repetição sem alterações de ficheiros passou os dois cenários completos. Falhas iniciais e repetição preservadas em `output/workflow-regression/scoped-initial-results.json` e `retry.json`. Não se removeram asserções nem se excluíram rotas. Os seis documentos foram repetidos com a nova navegação depois desta regressão.
 
-## O que falta
+## Bloqueios antes de disponibilizar aos operadores
 
-1. **Filtros transversais financeiros.** Trabalho aceita sociedade + responsável + tipo de cliente em conjunto. Os painéis actuais não partilham esse contrato: `get_dashboard_overview()` e `get_dashboard_metric_breakdowns()` não recebem filtros; `get_payment_queue()` não recebe âmbito; `get_entity_dashboard_rolling(p_kind,p_entity_id)` recebe uma entidade; `get_client_credit_accounts(p_client_id)` recebe um cliente. Algumas filas financeiras não incluem responsável ou categoria. A selecção nos acessos do Resumo abre painéis por entidade; não filtra simultaneamente toda a aplicação. A proposta do protótipo não deve ser apresentada como integração completa. É necessária implementação do contrato de leitura e validação das regras de agregação/visibilidade antes de activar filtros globais. Não acrescentar argumentos inexistentes, filtrar contas por suposição ou reconstruir saldos incompletos no frontend.
-2. **Base completa e concorrência.** Os três scripts de integração/locks recusaram iniciar por ausência de `carina-payments-qa-20261006`. Não existem imagens Docker locais. Não se substituiu a base nem se alteraram permissões/rede. Faltam ensaios do esquema completo, RLS/ACL e duas ligações concorrentes.
-3. **Integrações reais.** Azure, Auth, Storage, permissões e serviços reais não foram contactados, conforme instrução do utilizador. Os mocks validam contratos, tratamento de falhas e documentos; não provam disponibilidade, configuração ou qualidade linguística do Azure real.
-4. **Safari/iPhone físico e revisão operacional.** Chromium emulado não substitui Safari físico, câmara/ficheiros reais ou validação pelos operadores.
-5. **Activação e entrega.** A flag continua restrita a DEV/teste; a configuração e o plano de activação/reversão exigem validação antes de disponibilizar aos operadores. Confirmar CI e dry-run de publicação, versão instalada e janela de entrega na fase de publicação autorizada.
+1. **Base completa, RLS/ACL e concorrência.** Os scripts exigem o container PostgreSQL QA dedicado, ausente nesta instância. As tentativas recusaram antes de inserir dados; não se substituiu por outra base nem se alteraram rede/permissões. Contratos PGlite sintéticos não substituem estes ensaios.
+2. **Nove RPC ainda não instalados.** Rever as propostas e validar no esquema completo antes de qualquer aplicação autorizada. Sem eles, as vistas com âmbito financeiro apresentam erro. A preparação do frontend não basta para activação dos filtros.
+3. **Integrações reais.** Azure, Auth e Storage reais não contactados, por instrução expressa. Mocks validam contratos, documentos e falhas; não confirmam disponibilidade, configuração ou qualidade linguística do Azure real.
+4. **Safari/iPhone físico e operadores.** Faltam ensaio físico, revisão de percursos e validação operacional. Emulação Chromium não substitui Safari.
+5. **Entrega.** Confirmar CI remota e, apenas na fase de publicação autorizada, dry-run, configuração de activação/reversão, versão instalada e janela de entrega. A opção nova não foi configurada em produção.
 
-Nenhuma alteração neste lote a dependências, lockfile, Worker, migrations, permissões ou regras de gravação financeira. Não foram usados dados ou credenciais reais. Os ensaios não provocaram gravações reais, mas não autorizam prometer ausência absoluta de regressões na produção.
+Os filtros não executam eliminações e os testes verificam o regresso dos registos após limpar o âmbito. Não houve alteração das funções de gravação, cálculos-base ou dados reais; isto não permite garantir ausência absoluta de regressões em produção. Produção não foi consultada neste lote; não há deployment/version ID novo.
 
-Instruções reproduzíveis: [cloud-setup.md](cloud-setup.md). Evidência detalhada local: JSONs e capturas nas pastas `output/workflow-*`; revisão em `output/workflow-integration/carina-ficha-cinco-grupos-a4.pdf`.
+Instruções reproduzíveis: [cloud-setup.md](cloud-setup.md). Evidência local em `output/workflow-*`, logs em `/workspace/.tmp/workflow-scope-*` e recibo de entrega em `output/workflow-delivery/receipt.json` após confirmação do SHA remoto. Revisão visual A4: `output/workflow-integration/carina-ficha-cinco-grupos-a4.pdf`.

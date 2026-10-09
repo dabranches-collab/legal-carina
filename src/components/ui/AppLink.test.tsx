@@ -22,3 +22,12 @@ it('conserva os links habituais sem opção de validação', () => {
   render(<AppLink href="?view=work&missingPrice=true">Sem preço</AppLink>)
   expect(screen.getByRole('link')).toHaveAttribute('href', '?view=work&missingPrice=true')
 })
+it('transporta os filtros partilhados para os registos do cliente',()=>{
+  window.history.replaceState({},'', '/?workflow=preview&scopeClientType=company&scopeSociety=00000000-0000-4000-8000-000000000002')
+  render(<AppLink href="?view=work&clientId=fixture">Registos</AppLink>)
+  const href=new URL(screen.getByRole('link').getAttribute('href')!,window.location.href)
+  expect(href.searchParams.get('scopeClientType')).toBe('company')
+  expect(href.searchParams.get('clientId')).toBe('fixture')
+  expect(href.searchParams.get('scopeSociety')).toBe('00000000-0000-4000-8000-000000000002')
+  window.history.replaceState({},'','/')
+})

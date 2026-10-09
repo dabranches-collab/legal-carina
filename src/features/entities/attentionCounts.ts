@@ -1,11 +1,18 @@
+import { mixedWorkAggregate } from '../work-entries/mixedWorkScope'
 import { supabase } from '../../lib/supabase'
 import { readIdBatches } from '../../lib/readBatches'
 
 export type AttentionCounts={uninvoiced:number;unpaid:number;missingPrice:number}
 
-export async function getAttentionCounts(filters:{clientType?:string;professionalId?:string;billingEntityId?:string}):Promise<AttentionCounts>{
+export async function getAttentionCounts(filters:{clientType?:string;professionalId?:string;billingEntityId?:string},strict=false):Promise<AttentionCounts>{
  const db=supabase
  if(!db)return {uninvoiced:0,unpaid:0,missingPrice:0}
+ if(strict&&filters.clientType==='mixed'){
+  const result=await mixedWorkAggregate('get_work_attention_counts',{p_client_type:'mixed',p_professional_id:filters.professionalId??null,p_billing_entity_id:filters.billingEntityId??null,p_client_id:null},false)
+  if(result.error)throw new Error(result.error.message)
+  const data=result.data as Record<string,number>
+  return {uninvoiced:Number(data.uninvoiced??0),unpaid:Number(data.unpaid??0),missingPrice:Number(data.missing_price??0)}
+ }
  if(filters.clientType==='mixed'){
   const profiles=await db.from('client_profiles').select('client_id,client_type').eq('active',true)
   if(profiles.error)return {uninvoiced:0,unpaid:0,missingPrice:0}
@@ -21,6 +28,7 @@ export async function getAttentionCounts(filters:{clientType?:string;professiona
   db.rpc('get_attention_work_entries',{p_kind:'unpaid',p_search:base.p_search,p_year:base.p_year,p_professional_id:base.p_professional_id,p_billing_entity_id:base.p_billing_entity_id,p_archive:base.p_archive,p_missing_price:false,p_client_type:base.p_client_type,p_client_id:base.p_client_id,p_missing_society:base.p_missing_society}),
   db.rpc('get_attention_work_entries',{p_kind:'missing_price',p_search:base.p_search,p_year:base.p_year,p_professional_id:base.p_professional_id,p_billing_entity_id:base.p_billing_entity_id,p_archive:base.p_archive,p_missing_price:false,p_client_type:base.p_client_type,p_client_id:base.p_client_id,p_missing_society:base.p_missing_society}),
  ])
+ if(strict){for(const response of [uninvoiced,unpaid,missingPrice])if(response.error)throw new Error(response.error.message);else if(!response.data||!['number','string'].includes(typeof (response.data as {total?:unknown}).total)||!Number.isFinite(Number((response.data as {total?:unknown}).total)))throw new Error('Contagem filtrada inválida.')}
  const total=(response:{data:unknown;error:unknown})=>response.error?0:Number((response.data as {total?:number}|null)?.total??0)
  return {uninvoiced:total(uninvoiced),unpaid:total(unpaid),missingPrice:total(missingPrice)}
 }

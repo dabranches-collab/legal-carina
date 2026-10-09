@@ -27,6 +27,8 @@ pnpm --config.verify-deps-before-run=false test
 pnpm --config.verify-deps-before-run=false test:worker-runtime
 pnpm --config.verify-deps-before-run=false audit --audit-level high
 node scripts/workflow/audit.mjs --operational-preview
+node scripts/workflow/prepare-dashboard-scope.mjs
+node scripts/workflow/test-read-scope.mjs
 git diff --check
 ```
 
@@ -59,11 +61,12 @@ O runner de regressão cria cópias temporárias em `e2e/.isolated`, ajusta impo
 VITE_SUPABASE_URL=http://127.0.0.1:54321 \
 VITE_SUPABASE_PUBLISHABLE_KEY=test-publishable-key-not-a-secret \
 VITE_APP_ENV=isolated-production \
+VITE_WORKFLOW_NAVIGATION=five-areas \
   pnpm --config.verify-deps-before-run=false build --config scripts/workflow/isolated-vite.config.ts
 WORKFLOW_REGRESSION_PRODUCTION=1 node scripts/workflow/regression.mjs
 ```
 
-Este build é de produção local com destino Supabase fictício, sem configuração real e sem activar os atalhos QA ou a nova navegação. O modo `VITE_APP_ENV=test` desactiva o service worker por definição; não serve para o ensaio de instalação da PWA. Só a configuração PWA local permite service workers, sobre estes artefactos fictícios, mantendo os destinos externos bloqueados e os proxies recusados. Nunca executar builds e estes testes simultaneamente, pois partilham `dist`.
+Este build é de produção local com destino Supabase fictício e a opção preparada de navegação em cinco áreas. Não activa os atalhos de autenticação QA: o teste tenta forjá-los e confirma que permanece no login. O modo `VITE_APP_ENV=test` desactiva o service worker por definição; não serve para o ensaio de instalação da PWA. Só a configuração PWA local permite service workers, sobre estes artefactos fictícios, mantendo os destinos externos bloqueados e os proxies recusados. Nunca executar builds e estes testes simultaneamente, pois partilham `dist`.
 
 Resultados em `output/workflow-integration`, `output/workflow-regression`, `output/workflow-pwa` e `output/workflow-qa`. `python scripts/workflow/review_client_pdf.py` gera a revisão visual A4 após os E2E da ficha. Consultar [release-readiness.md](release-readiness.md) para resultados e limitações. Nenhum destes comandos autoriza publicação.
 

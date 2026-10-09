@@ -1,3 +1,4 @@
+import { isMixedWorkScope, mixedProfileType } from '../../types/workflowScope'
 import type { FixedFeeLine } from '../clients/fixedFeeAnalytics'
 
 export type FilterSummary={minutes:number;amount:number;priced:number;count:number}
@@ -13,7 +14,7 @@ export function mergeFixedFeeAttentionSummaries(base:Record<string,FilterSummary
   if(filters.billingEntityId&&line.billingEntityId!==filters.billingEntityId)continue
   if(filters.archive&&line.archiveStatus!==filters.archive)continue
   if(filters.clientId&&line.clientId!==filters.clientId)continue
-  if(filters.clientType&&(filters.clientType==='mixed'?!line.mixedClient:line.clientType!==filters.clientType))continue
+  if(filters.clientType&&(isMixedWorkScope(filters.clientType)?(!line.mixedClient||(mixedProfileType(filters.clientType)&&line.clientType!==mixedProfileType(filters.clientType))):line.clientType!==filters.clientType))continue
   if(query&&![line.title,line.clientName,line.clientCode,line.activityDescription,line.observations].some(value=>value?.toLocaleLowerCase('pt-PT').includes(query)))continue
   if(line.isInvoiced&&line.isPaid)continue
   const key=line.isInvoiced?'unpaid':'uninvoiced',amount=line.isInvoiced?line.unpaid:line.uninvoiced

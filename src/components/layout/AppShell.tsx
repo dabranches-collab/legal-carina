@@ -1,3 +1,4 @@
+import { WorkflowFilters } from './WorkflowFilters'
 import { WorkflowNavigation, WorkflowSections } from './WorkflowNavigation'
 import './workflowPreview.css'
 import { workflowArea, workflowAreaLabel } from '../../types/workflowNavigation'
@@ -168,6 +169,7 @@ export function AppShell({ workflowPreview=false, activeView, selectedSociety, s
         </header>
         <main id="main-content" className="app-shell-main py-4 sm:py-5">
           {workflowPreview && <WorkflowSections area={area} activeView={activeView} role={role} societies={billingSocieties} professionals={professionalNames} selectedSociety={selectedSociety} selectedProfessional={selectedProfessional} selectedClientType={selectedClientType} onNavigate={onNavigate} onSociety={onNavigateSociety} onProfessional={onNavigateProfessional} onClientType={onNavigateClientType} onSettings={onNavigateSettings}/>}
+          {workflowPreview && !['notas','definicoes'].includes(area) && <WorkflowFilters view={activeView} aggregate={area==='resumo'}/>}
           {children}
         </main>
       </div>
