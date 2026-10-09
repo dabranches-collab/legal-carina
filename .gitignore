@@ -23,6 +23,8 @@ coverage/
 tsconfig.worker.tsbuildinfo
 test-results/
 playwright-report/
+output/workflow-*/
+output/workflow-*.png
 
 # Dados, importações e documentos confidenciais
 /imports/
@@ -65,3 +67,6 @@ backups/
 *.njsproj
 *.sln
 *.sw?
+
+# Artefactos de ensaio locais do protótipo
+prototypes/workflow/output/

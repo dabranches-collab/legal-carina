@@ -1,0 +1,19 @@
+import { describe, expect, it } from 'vitest'
+import { workflowPreviewEnabled } from './workflowNavigation'
+
+describe('navegação em validação', () => {
+  it('ignora pedidos de preview na configuração operacional', () => {
+    expect(workflowPreviewEnabled('?workflow=preview', false, 'production')).toBe(false)
+    expect(workflowPreviewEnabled('?workflow=preview&qa-iphone=1', false)).toBe(false)
+  })
+  it('exige opção explícita mesmo no ambiente de teste', () => {
+    expect(workflowPreviewEnabled('?view=overview', true)).toBe(false)
+    expect(workflowPreviewEnabled('?workflow=preview', true)).toBe(true)
+    expect(workflowPreviewEnabled('?workflow=preview', false, 'test')).toBe(true)
+  })
+  it('prepara activação independente do modo QA, desligada por defeito',()=>{
+    expect(workflowPreviewEnabled('?view=clients',false,'production','five-areas')).toBe(true)
+    expect(workflowPreviewEnabled('?view=clients',false,'production')).toBe(false)
+    expect(workflowPreviewEnabled('?qa-iphone=1',false,'production','unknown')).toBe(false)
+  })
+})

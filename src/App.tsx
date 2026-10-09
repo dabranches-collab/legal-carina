@@ -1,3 +1,6 @@
+import { WorkflowScopeProvider } from './features/workflow/WorkflowScopeContext'
+import { preserveWorkflowScope } from './types/workflowScope'
+import { workflowPreviewEnabled } from './types/workflowNavigation'
 import { WorkResultsProvider } from './features/work-entries/WorkResultsProvider'
 import { RecordDialogHost } from './features/master-data/RecordDialogHost'
 import { VisibleTableScrollbars } from './components/table/VisibleTableScrollbars'
@@ -65,6 +68,7 @@ function buttonDescription(button:HTMLButtonElement){
 
 export function AuthenticatedApplication() {
   const {role}=useAuth()
+  const [workflowPreview]=useState(()=>workflowPreviewEnabled(window.location.search,import.meta.env.DEV,import.meta.env.VITE_APP_ENV,import.meta.env.VITE_WORKFLOW_NAVIGATION))
   const canManageSettings=role==='owner'||role==='admin'
   const [initial] = useState(()=>{const location=readLocation();if((restrictedViews.includes(location.view)&&!canManageSettings)||(ownerViews.includes(location.view)&&role!=='owner')){overviewLocation();return readLocation()}return location})
   const [view, setView] = useState<ViewId>(initial.view)
@@ -88,15 +92,15 @@ export function AuthenticatedApplication() {
     if(nextEntity) url.searchParams.set('entity',nextEntity); else url.searchParams.delete('entity')
     if(nextProfessional) url.searchParams.set('professional',nextProfessional); else url.searchParams.delete('professional')
     for(const param of workPrefilterParams)url.searchParams.delete(param)
-    url.searchParams.delete('clientMode'); url.searchParams.delete('record'); url.searchParams.delete('recordSection'); url.searchParams.delete('recordPage'); url.searchParams.delete('clientPage'); url.searchParams.delete('recordFilter'); url.searchParams.delete('clientSearch'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
+    url.searchParams.delete('clientMode'); url.searchParams.delete('record'); url.searchParams.delete('recordSection'); url.searchParams.delete('recordPage'); url.searchParams.delete('clientPage'); url.searchParams.delete('clientGroup'); url.searchParams.delete('recordFilter'); url.searchParams.delete('clientSearch'); window.history.pushState({},'',url); setView(nextView); setSociety(nextSociety); setProfessional(nextProfessional); setClientType(nextClientType); setClientMode('dashboard'); setSettingsEntity(nextEntity)
   }
-  function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);url.search='';url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
+  function navigateClientSection(type:'individual'|'company'|'mixed',mode:'dashboard'|'list') { const url=new URL(window.location.href);const previousScope=new URLSearchParams(url.search);url.search='';if(workflowPreview)preserveWorkflowScope(previousScope,url.searchParams);if(workflowPreview)url.searchParams.set('workflow','preview');url.searchParams.set('view','clients');url.searchParams.set('clientType',type);if(mode==='list')url.searchParams.set('clientMode','list');window.history.pushState({},'',url);setView('clients');setSociety(null);setProfessional(null);setClientType(type);setClientMode(mode);setSettingsEntity(null) }
   let content: React.ReactNode
-  if (view === 'overview') content = <OverviewPage />
+  if (view === 'overview') content = <OverviewPage onSociety={workflowPreview ? name=>navigate('billing',name) : undefined} onProfessional={workflowPreview ? name=>navigate('professionals',null,null,null,name) : undefined} />
   else if (view === 'work') content = <WorkEntriesPage canDelete={role==='owner'||role==='admin'||role==='manager'||role==='operator'} requiresReason={false} />
   else if (view === 'debtors') content = <DebtorsPage />
   else if (view === 'notes') content = <NotesPage />
-  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
+  else if (view === 'clients') content = clientType?(clientMode==='list'?<MasterDataPage applySharedFilters={workflowPreview} initialSection="clients" clientTypeFilter={clientType}/>:<EntityDashboard kind="client" aggregateClients clientCategory={clientType}/>):workflowPreview?<MasterDataPage applySharedFilters initialSection="clients"/>:<ClientLandingPage onSelect={(type)=>navigateClientSection(type,'list')} onRetainers={()=>navigate('retainers')} onProvisions={()=>navigate('provisions')}/>
   else if (view === 'payments') content = <PaymentsPage />
   else if (view === 'provisions') content = <ProvisionsPage />
   else if (view === 'retainers') content = <RetainersPage />
@@ -109,7 +113,7 @@ export function AuthenticatedApplication() {
   else if (view === 'admin-users') content = <AdminPage />
   else if (view === 'admin-access-logs') content = <AccessLogsPage />
   else content = <PlaceholderPage title="Módulo" description="Área em preparação." icon="warning" />
-  return <AppShell activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onCreateWorkEntry={()=>setCreatingWorkEntry(true)} onCreateExpense={()=>setCreatingExpense(true)} onCreateClient={()=>setCreatingClient(true)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateRetainers={()=>navigate('retainers')} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><WorkResultsProvider key={refreshKey} enabled={["billing","clients","professionals"].includes(view)} contextKey={JSON.stringify([view,society,professional,clientType,clientMode])}>{content}</WorkResultsProvider>{creatingWorkEntry&&<CreateWorkEntryModal onClose={()=>setCreatingWorkEntry(false)} onCreated={()=>{setCreatingWorkEntry(false);setRefreshKey(value=>value+1)}}/>}{creatingExpense&&<QuickExpenseModal onClose={()=>setCreatingExpense(false)} onCreated={()=>setRefreshKey(value=>value+1)}/>}{creatingClient&&<MasterDataPage initialSection="clients" createOnMount onDismiss={()=>setCreatingClient(false)} onRecordSaved={()=>setRefreshKey(value=>value+1)}/>}</Suspense><RecordDialogHost/><VisibleTableScrollbars/></AppShell>
+  return <AppShell workflowPreview={workflowPreview} activeView={view} selectedSociety={society} selectedProfessional={professional} selectedClientType={clientType} selectedClientMode={clientMode} settingsEntity={settingsEntity} onRefresh={()=>setRefreshKey(value=>value+1)} onCreateWorkEntry={()=>setCreatingWorkEntry(true)} onCreateExpense={()=>setCreatingExpense(true)} onCreateClient={()=>setCreatingClient(true)} onNavigate={navigate} onNavigateSociety={(name)=>navigate('billing',name)} onNavigateProfessional={(name)=>navigate('professionals',null,null,null,name)} onNavigateClientType={navigateClientSection} onNavigateRetainers={()=>navigate('retainers')} onNavigateSettings={(target)=>target==='admin'?navigate('admin'):navigate('master-data',null,null,target)}><Suspense fallback={<div role="status" className="card flex min-h-40 items-center gap-3 p-6" aria-label="A carregar módulo"><span className="size-5 animate-spin rounded-full border-2 border-secondary border-t-transparent" aria-hidden="true"/><div><p className="font-semibold">A abrir ecrã</p><p className="mt-1 text-sm text-text-secondary">O conteúdo está a ser preparado.</p></div></div>}><WorkResultsProvider key={refreshKey} enabled={["billing","clients","professionals"].includes(view)} contextKey={JSON.stringify([view,society,professional,clientType,clientMode])}>{content}</WorkResultsProvider>{creatingWorkEntry&&<CreateWorkEntryModal onClose={()=>setCreatingWorkEntry(false)} onCreated={()=>{setCreatingWorkEntry(false);setRefreshKey(value=>value+1)}}/>}{creatingExpense&&<QuickExpenseModal onClose={()=>setCreatingExpense(false)} onCreated={()=>setRefreshKey(value=>value+1)}/>}{creatingClient&&<MasterDataPage initialSection="clients" createOnMount onDismiss={()=>setCreatingClient(false)} onRecordSaved={()=>setRefreshKey(value=>value+1)}/>}</Suspense><RecordDialogHost/><VisibleTableScrollbars/></AppShell>
 }
 
 export default function App() {
@@ -117,7 +121,7 @@ export default function App() {
   const qaEnabled=import.meta.env.DEV||import.meta.env.VITE_APP_ENV==='test'
   if (qaEnabled && qaParams.get('qa-iphone') === '1') {
     const qaRole=qaParams.get('qa-role')==='owner'?'owner':qaParams.get('qa-role')==='admin'?'admin':'operator'
-    return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><AuthenticatedApplication /><PwaUpdateNotice /></AuthContext.Provider>
+    return <AuthContext.Provider value={{user:null,role:qaRole,signOut:async()=>undefined,updatePassword:async()=>false,enrollPasskey:async()=>''}}><WorkflowScopeProvider><AuthenticatedApplication /></WorkflowScopeProvider><PwaUpdateNotice /></AuthContext.Provider>
   }
-  return <><AuthGate><AuthenticatedApplication /></AuthGate><PwaUpdateNotice /></>
+  return <><AuthGate><WorkflowScopeProvider><AuthenticatedApplication /></WorkflowScopeProvider></AuthGate><PwaUpdateNotice /></>
 }

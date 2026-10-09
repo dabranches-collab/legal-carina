@@ -12,6 +12,14 @@ beforeEach(() => {
     data: { total: args.p_kind === 'missing_price' ? 426 : 0 },
   }))
 })
+it('contadores partilhados não apresentam zero quando uma consulta falha',async()=>{
+ rpc.mockResolvedValue({data:null,error:{message:'Unavailable'}})
+ await expect(getAttentionCounts({professionalId:'pro',billingEntityId:'society',clientType:'company'},true)).rejects.toThrow('Unavailable')
+})
+it('contadores partilhados recusam uma resposta incompleta',async()=>{
+ rpc.mockResolvedValue({data:{items:[]},error:null})
+ await expect(getAttentionCounts({billingEntityId:'society'},true)).rejects.toThrow('inválida')
+})
 
 it('usa a pendência de cobrança normal nas caixas de clientes e sociedades', async () => {
   expect(await getAttentionCounts({ clientType: 'company' })).toEqual({

@@ -5,6 +5,11 @@ import {mergeFixedFeeAttentionSummaries} from './fixedFeeAttention'
 const line=(values:Partial<FixedFeeLine>):FixedFeeLine=>({jobId:'job',entryId:'entry',title:'Visto Gold',clientId:'client',clientName:'Cliente teste',clientType:'individual',mixedClient:false,billingEntityId:'society',billingEntityName:'Sociedade',professionalId:'professional',professionalName:'Responsável',archiveStatus:null,date:'2026-09-21',minutes:30,amount:100,isInvoiced:false,invoiced:0,paid:0,unpaid:0,uninvoiced:100,...values})
 
 describe('resumos de registos a preço fixo',()=>{
+ test('cliente misto conserva apenas a vertente seleccionada sem duplicar preço fixo',()=>{
+  const rows=[line({mixedClient:true}),line({entryId:'company',mixedClient:true,clientType:'company',amount:50,uninvoiced:50}),line({entryId:'individual-only',mixedClient:false,amount:500,uninvoiced:500})]
+  expect(mergeFixedFeeAttentionSummaries({},rows,{clientType:'mixed:individual'}).uninvoiced).toEqual({count:1,minutes:30,amount:100,priced:1})
+  expect(mergeFixedFeeAttentionSummaries({},rows,{clientType:'mixed:company'}).uninvoiced?.amount).toBe(50)
+ })
  test('soma uma vez o preço repartido e conserva o preço médio por hora',()=>{
   const result=mergeFixedFeeAttentionSummaries({uninvoiced:{minutes:60,amount:145,priced:1,count:1}},[
    line({entryId:'one',minutes:30,amount:66.66,uninvoiced:66.66}),

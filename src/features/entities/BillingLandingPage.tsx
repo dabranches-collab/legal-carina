@@ -1,3 +1,7 @@
+import { useWorkflowScope } from '../workflow/useWorkflowScope'
+import { scopedQuery } from '../workflow/scopedRead'
+import { matchesWorkflowWorkScope } from '../workflow/workScopeMatch'
+import { hasWorkflowScope } from '../../types/workflowScope'
 import { useEffect, useState } from "react";
 import { Icon } from "../../components/ui/Icon";
 import { supabase } from "../../lib/supabase";
@@ -9,6 +13,7 @@ import { mergeFixedFeeMetrics } from './fixedFeeDashboard'
 
 type BillingSummary = {
   id: string;
+  billingEntityId?:string;
   society: string;
   minutes: number;
   worked: number | null;
@@ -32,6 +37,7 @@ export function BillingLandingPage({
 }: {
   onSelect: (society: string) => void;
 }) {
+  const scope=useWorkflowScope();
   const [data, setData] = useState<BillingSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -48,15 +54,16 @@ export function BillingLandingPage({
       const entities=await supabase.from("billing_entities").select("id,name").eq("active", true);
       if(!active)return;
       if(!entities.error)setProcessingNames((entities.data??[]).map(item=>item.name).sort((a,b)=>a.localeCompare(b,'pt-PT')));
-      const [breakdowns,feeLines]=await Promise.all([supabase.rpc("get_dashboard_metric_breakdowns"),loadFixedFeeLines()]);
+      const [breakdowns,feeLines]=await Promise.all([scopedQuery("get_dashboard_metric_breakdowns",scope),loadFixedFeeLines()]);
       if (!active) return;
       if (entities.error || breakdowns.error) {
         setError(entities.error?.message ?? breakdowns.error?.message ?? "Não foi possível carregar as sociedades.");
       } else {
         const rows = (breakdowns.data ?? []) as BillingSummary[];
         const byName = new Map(rows.map((row) => [row.society, row]));
-        const baseData = (entities.data ?? []).sort((a,b)=>a.name.localeCompare(b.name,'pt-PT')).map(({ id, name }) => ({
-            ...(byName.get(name) ?? {
+        const byId = new Map(rows.map(row=>[row.billingEntityId,row]));
+        const baseData = (entities.data ?? []).filter(item=>!scope.society||item.id===scope.society).sort((a,b)=>a.name.localeCompare(b.name,'pt-PT')).map(({ id, name }) => ({
+            ...((hasWorkflowScope(scope)?byId.get(id):byName.get(name)) ?? {
               society: name,
               minutes: 0,
               worked: 0,
@@ -66,8 +73,8 @@ export function BillingLandingPage({
               activeClients: 0,
             }), id,
           }));
-        const counts=await Promise.all(baseData.map(item=>getAttentionCounts({billingEntityId:item.id})));
-        if(active)setData(baseData.map((item,index)=>{const current={...item,...counts[index]},scoped=feeLines.filter(line=>line.billingEntityId===item.id);const merged=mergeFixedFeeMetrics({minutes:current.minutes,total:current.worked,invoiced:current.invoiced,paid:current.paid,pending:current.receivable,averageRate:null,uninvoicedCount:current.uninvoiced,unpaidCount:current.unpaid,missingPrice:current.missingPrice},scoped);return {...current,worked:merged.total,invoiced:merged.invoiced,paid:merged.paid,receivable:merged.pending,uninvoiced:merged.uninvoicedCount??current.uninvoiced,unpaid:merged.unpaidCount??current.unpaid,missingPrice:merged.missingPrice??current.missingPrice}}));
+        const counts=await Promise.all(baseData.map(item=>getAttentionCounts({billingEntityId:item.id,professionalId:scope.professional||undefined,clientType:scope.clientType||undefined},hasWorkflowScope(scope))));
+        if(active)setData(baseData.map((item,index)=>{const current={...item,...counts[index]},scoped=feeLines.filter(line=>matchesWorkflowWorkScope(line,scope)&&line.billingEntityId===item.id);const merged=mergeFixedFeeMetrics({minutes:current.minutes,total:current.worked,invoiced:current.invoiced,paid:current.paid,pending:current.receivable,averageRate:null,uninvoicedCount:current.uninvoiced,unpaidCount:current.unpaid,missingPrice:current.missingPrice},scoped);return {...current,worked:merged.total,invoiced:merged.invoiced,paid:merged.paid,receivable:merged.pending,uninvoiced:merged.uninvoicedCount??current.uninvoiced,unpaid:merged.unpaidCount??current.unpaid,missingPrice:merged.missingPrice??current.missingPrice}}));
       }
       setLoading(false);
       }catch(cause){if(active){setError(cause instanceof Error?cause.message:'Não foi possível carregar as sociedades.');setLoading(false)}}
@@ -75,7 +82,7 @@ export function BillingLandingPage({
     return () => {
       active = false;
     };
-  }, []);
+  }, [scope]);
 
   if (loading) return <DashboardProcessingGrid cards={(processingNames.length?processingNames:['Sociedade 1','Sociedade 2','Sociedade 3']).map((name,index)=>({key:`${name}-${index}`,title:name,subtitle:'Resumo da sociedade',icon:'building',metrics:['Clientes','Horas','Facturado','Por receber']}))}/>;
   if (error) return <DashboardProcessingGrid error={error} label="Erro ao calcular o dashboard de sociedades" cards={(processingNames.length?processingNames:['Sociedade 1','Sociedade 2','Sociedade 3']).map((name,index)=>({key:`${name}-${index}`,title:name,subtitle:'Resumo da sociedade',icon:'building',metrics:['Clientes','Horas','Facturado','Por receber']}))}/>;

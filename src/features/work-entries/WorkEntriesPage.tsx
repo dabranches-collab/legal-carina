@@ -1,3 +1,6 @@
+import { mixedWorkAggregate, mixedWorkClientIds } from './mixedWorkScope'
+import { useWorkflowScope } from '../workflow/useWorkflowScope'
+import { emptyWorkflowScope, intersectWorkflowFilter, intersectWorkflowClientType, isMixedWorkScope, mixedProfileType } from '../../types/workflowScope'
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../../components/ui/Icon";
 import {
@@ -72,33 +75,22 @@ if(import.meta.hot)import.meta.hot.dispose(()=>cacheAuthSubscription?.data.subsc
 async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchMeta> {
   if (!supabase) throw new Error("Ligação ao Supabase indisponível.");
   const db = supabase;
-  const profiles = await db
-    .from("client_profiles")
-    .select("client_id,client_type")
-    .eq("active", true);
-  if (profiles.error) throw profiles.error;
-  const types = new Map<string, Set<string>>();
-  for (const profile of profiles.data ?? []) {
-    const current = types.get(profile.client_id) ?? new Set<string>();
-    current.add(profile.client_type);
-    types.set(profile.client_id, current);
-  }
-  const clientIds = [...types.entries()]
-    .filter(([, values]) => values.size > 1)
-    .map(([id]) => id);
+  const clientIds = await mixedWorkClientIds(typeof searchArgs.p_client_id==='string'?searchArgs.p_client_id:null);
   const responses: SearchMeta[] = [];
   for (let start = 0; start < clientIds.length; start += 6) {
     const batch = await Promise.all(
       clientIds.slice(start, start + 6).map(async (clientId) => {
-        const response = await db.rpc("search_work_entries", {
-          ...searchArgs,
-          p_page: 1,
-          p_page_size: 10000,
-          p_client_type: null,
-          p_client_id: clientId,
-        });
-        if (response.error) throw response.error;
-        return response.data as SearchMeta;
+        const args={...searchArgs,p_client_type:mixedProfileType(searchArgs.p_client_type),p_client_id:clientId};
+        const response=await db.rpc('search_work_entries',{...args,p_page:1,p_page_size:10000});
+        if(response.error)throw response.error;
+        const first=response.data as SearchMeta,items=[...(first.items??[])],pageSize=Math.max(1,first.pageSize??10000),pages=Math.ceil(first.total/pageSize);
+        for(let page=2;page<=pages;page++){
+          const next=await db.rpc('search_work_entries',{...args,p_page:page,p_page_size:10000});
+          if(next.error)throw next.error;
+          items.push(...((next.data as SearchMeta).items??[]));
+        }
+        if(items.length!==first.total)throw new Error('A consulta dos clientes mistos está incompleta. Tente novamente.');
+        return {...first,items};
       }),
     );
     responses.push(...batch);
@@ -123,7 +115,7 @@ async function loadWorkUniverse(searchArgs: SearchArgs, onProgress?: (loaded:num
   const generation=cacheGeneration;
   const cacheKey=JSON.stringify(searchArgs),cached=workUniverseCache.get(cacheKey);
   if(cached&&cached.expiresAt>Date.now()){onProgress?.(cached.rows.length,cached.rows.length);return cached.rows;}
-  if(searchArgs.p_client_type==="mixed"){
+  if(isMixedWorkScope(typeof searchArgs.p_client_type==='string'?searchArgs.p_client_type:null)){
     const items=(await searchMixedClientEntries(searchArgs)).items;
     if(generation===cacheGeneration)workUniverseCache.set(cacheKey,{rows:items,expiresAt:Date.now()+120_000});onProgress?.(items.length,items.length);return items;
   }
@@ -155,7 +147,7 @@ export function prefetchWorkEntries(){
   backgroundPrefetch??=fetchWorkUniverse(baseUniverseArgs).finally(()=>{backgroundPrefetch=null});
   return backgroundPrefetch;
 }
-function invalidateWorkUniverse(){cacheGeneration++;workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
+function invalidateWorkUniverse(){attentionCountsCache.clear();attentionSummariesCache.clear();cacheGeneration++;workUniverseCache.clear();workUniverseRequests.clear();backgroundPrefetch=null}
 async function hydrateExpenseSummaryChunk(entries:Entry[]){
   if(!supabase||!entries.length)return entries;
   const db=supabase;
@@ -201,7 +193,9 @@ const archives = [
   ["other", "Outro"],
 ] as const;
 
-export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQuery,onEntrySaved}:{canDelete?:boolean;requiresReason?:boolean;embeddedQuery?:string;onEntrySaved?:()=>void}={}) {
+export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQuery,onEntrySaved,ignoreWorkflowScope=false}:{ignoreWorkflowScope?:boolean;canDelete?:boolean;requiresReason?:boolean;embeddedQuery?:string;onEntrySaved?:()=>void}={}) {
+  const selectedScope = useWorkflowScope();
+  const sharedScope = ignoreWorkflowScope ? emptyWorkflowScope : selectedScope;
   const initialParams = new URLSearchParams(embeddedQuery??window.location.search);
   const [uncollectibleOnly,setUncollectibleOnly]=useState(()=>initialParams.get("collectionState")==="uncollectible");
   const [rows, setRows] = useState<Entry[]>([]),
@@ -216,8 +210,8 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
   const [search, setSearch] = useState(""),
     [query, setQuery] = useState(""),
     [year, setYear] = useState(""),
-    [professional, setProfessional] = useState(() => initialParams.get("professionalId") ?? ""),
-    [billing, setBilling] = useState(() => initialParams.get("billingEntityId") ?? ""),
+    [localProfessional, setProfessional] = useState(() => initialParams.get("professionalId") ?? ""),
+    [localBilling, setBilling] = useState(() => initialParams.get("billingEntityId") ?? ""),
     [invoiced, setInvoiced] = useState(
       () => initialParams.get("invoiced") ?? "",
     ),
@@ -234,10 +228,11 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
           ? "missing_price"
           : "",
     );
+  const professional = intersectWorkflowFilter(localProfessional, sharedScope.professional), billing = intersectWorkflowFilter(localBilling, sharedScope.society);
   const missingPrice = reviewIssue === "missing_price",
     missingSociety = reviewIssue === "missing_society",
     review = reviewIssue === "historical",
-    clientType = initialParams.get("clientType"),
+    clientType = intersectWorkflowClientType(initialParams.get("clientType"), sharedScope.clientType),
     clientId = initialParams.get("clientId");
   const [refreshToken, setRefreshToken] = useState(0),
     [notice, setNotice] = useState("");
@@ -250,7 +245,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     const timer = setTimeout(() => setQuery(search.trim()), 300);
     return () => clearTimeout(timer);
   }, [search]);
-  const hasEmptyPrefilter = [year,professional,billing,invoiced,paid,archive].includes("__NONE__");
+  const hasEmptyPrefilter = [year,professional,billing,invoiced,paid,archive,clientType].includes("__NONE__");
   const searchArgs = useMemo(
     () => ({
       p_search: query || null,
@@ -313,7 +308,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       let metadata;
       try {
         metadata = await withTransientRetry(async () =>
-          clientType === "mixed"
+          isMixedWorkScope(clientType)
             ? { data: await searchMixedClientEntries(searchArgs), error: null }
             : uncollectibleOnly
               ? await client.rpc("get_uncollectible_work_entries",{p_search:searchArgs.p_search,p_year:searchArgs.p_year,p_professional_id:searchArgs.p_professional_id,p_billing_entity_id:searchArgs.p_billing_entity_id,p_archive:searchArgs.p_archive,p_missing_price:searchArgs.p_missing_price,p_client_type:searchArgs.p_client_type,p_client_id:searchArgs.p_client_id,p_missing_society:searchArgs.p_missing_society})
@@ -358,13 +353,13 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       const common={p_search:query||null,p_year:year?Number(year):null,p_professional_id:professional||null,p_billing_entity_id:billing||null,p_archive:archive||null,p_client_type:clientType||null,p_client_id:clientId||null};
       const cacheKey=JSON.stringify(common),cached=attentionCountsCache.get(cacheKey);
       if(cached)setReviewCounts(cached);
-      const result=await supabase.rpc("get_work_attention_counts",common);
+      const result=isMixedWorkScope(clientType)?await mixedWorkAggregate("get_work_attention_counts",common,false):await supabase.rpc("get_work_attention_counts",common);
       if(!active)return;
       if(result.error)return;
       const counts=result.data as Record<string,number>;
       const normalized=Object.fromEntries(Object.entries(counts).map(([key,value])=>[key,Number(value)]));
       attentionCountsCache.set(cacheKey,normalized);setReviewCounts(normalized);
-    })();
+    })().catch(()=>{if(active)setReviewCounts({})});
     return()=>{active=false};
   },[query,year,professional,billing,archive,clientType,clientId,refreshToken,embeddedQuery,hasEmptyPrefilter]);
   useEffect(()=>{
@@ -375,11 +370,11 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     const key=JSON.stringify(common),cached=attentionSummariesCache.get(key);
     if(cached){setReviewSummaries(cached);return()=>{active=false}};
     const kinds=['missing_price','uninvoiced','unpaid','historical','retainer'] as const;
-    void Promise.all([Promise.resolve(supabase.rpc('get_work_attention_summaries',common)),loadFixedFeeLines()]).then(async ([fast,fixedFeeLines])=>{
+    void Promise.all([(isMixedWorkScope(clientType)?mixedWorkAggregate('get_work_attention_summaries',common,true):Promise.resolve(supabase.rpc('get_work_attention_summaries',common))),loadFixedFeeLines()]).then(async ([fast,fixedFeeLines])=>{
       if(!active)return;
       const fixedFilters={search:query||null,year:year?Number(year):null,professionalId:professional||null,billingEntityId:billing||null,archive:archive||null,clientType:clientType||null,clientId:clientId||null};
       if(!fast.error){const summaries=mergeFixedFeeAttentionSummaries(fast.data as Record<string,FilterSummary>,fixedFeeLines,fixedFilters);attentionSummariesCache.set(key,summaries);setReviewSummaries(summaries);return}
-      if(fast.error.code!=='PGRST202')return;
+      if(isMixedWorkScope(clientType)||fast.error.code!=='PGRST202'){setReviewSummaries({});return;}
       const results=await Promise.all([...kinds.map(kind=>supabase!.rpc('get_attention_work_entries',{...common,p_kind:kind})),supabase!.rpc('search_work_entries',{...common,p_page:1,p_page_size:10000,p_missing_society:true})]);
       if(!active||results.some(result=>result.error))return;
       const summaries:Record<string,FilterSummary>={};
@@ -432,7 +427,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     archive && archive !== "__NONE__" && `Arquivo: ${archive}`,
     reviewIssue && `A corrigir: ${reviewLabels[reviewIssue]}`,
     clientType &&
-      `Tipo de cliente: ${clientType === "company" ? "Empresa" : clientType === "mixed" ? "Mistos" : "Particular"}`,
+      `Tipo de cliente: ${clientType === "company" ? "Empresa" : isMixedWorkScope(clientType) ? "Mistos" : "Particular"}`,
   ].filter(Boolean) as string[];
   const loadExportRows = useCallback(async (onProgress?: (loaded:number,total:number,rows?:Entry[])=>void) => {
     if(hasEmptyPrefilter){onProgress?.(0,0,[]);return [];}
@@ -466,7 +461,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
       p_direction: "desc",
     };
     let entries: Entry[];
-    if (clientType === "mixed") {
+    if (isMixedWorkScope(clientType)) {
       entries = (await searchMixedClientEntries(exportArgs)).items;
     } else if (uncollectibleOnly) {
       const response = await supabase.rpc("get_uncollectible_work_entries", {

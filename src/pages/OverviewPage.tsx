@@ -1,3 +1,6 @@
+import { useWorkflowScope } from '../features/workflow/useWorkflowScope'
+import { scopedQuery, scopedClientIds } from '../features/workflow/scopedRead'
+import { hasWorkflowScope } from '../types/workflowScope'
 import { useEffect, useState } from "react";
 import { MetricCard } from "../components/dashboard/MetricCard";
 import {
@@ -73,12 +76,13 @@ const percent = (part: MoneyValue, total: MoneyValue) =>
     ? Math.round((part / total) * 100)
     : 0;
 
-export function OverviewPage() {
+export function OverviewPage({onSociety,onProfessional}: {onSociety?: (name:string)=>void;onProfessional?: (name:string)=>void} = {}) {
+  const scope=useWorkflowScope();
   const [data, setData] = useState<OverviewData | null>(null);
   const [breakdowns, setBreakdowns] = useState<MetricBreakdown[]>([]);
   const [error, setError] = useState("");
   const [receivingRows, setReceivingRows] = useState<Debtor[]|null>(null);
-  useEffect(()=>{if(!data)return;let active=true;void loadDebtors().then(rows=>{if(active)setReceivingRows(rows)}).catch(()=>undefined);return()=>{active=false}},[data]);
+  useEffect(()=>{if(!data)return;let active=true;void Promise.all([loadDebtors(hasWorkflowScope(scope)),scopedClientIds(scope)]).then(([rows,ids])=>{if(active)setReceivingRows(ids?rows.filter(row=>ids.has(row.id)):rows)}).catch(cause=>{if(active&&hasWorkflowScope(scope))setError(cause instanceof Error?cause.message:'Não foi possível obter os recebimentos filtrados.')});return()=>{active=false}},[data,scope]);
   useEffect(() => {
     let active = true;
     void (async () => {
@@ -87,13 +91,13 @@ export function OverviewPage() {
         return;
       }
       const [overview, breakdown] = await Promise.all([
-        supabase.rpc("get_dashboard_overview"),
-        supabase.rpc("get_dashboard_metric_breakdowns"),
+        scopedQuery("get_dashboard_overview",scope),
+        scopedQuery("get_dashboard_metric_breakdowns",scope),
       ]);
       if (!active) return;
       const { data: result, error: failure } = overview;
-      if (failure) {
-        setError(failure.message);
+      if (failure || (hasWorkflowScope(scope) && breakdown.error)) {
+        setError(failure?.message ?? breakdown.error!.message);
         return;
       }
       const next = result as OverviewData;
@@ -112,11 +116,11 @@ export function OverviewPage() {
           : ((breakdown.data as MetricBreakdown[] | null) ?? []),
       );
       setData(next);
-    })();
+    })().catch(cause=>{if(active)setError(cause instanceof Error?cause.message:'Não foi possível carregar o resumo.')});
     return () => {
       active = false;
     };
-  }, []);
+  }, [scope]);
   if (error)
     return (
       <div
@@ -291,7 +295,7 @@ export function OverviewPage() {
   };
   const metricSubtotals = (label: string) => {
     if(label==="Por facturar: trabalho, avenças e preço fixo")return receiving?[{label:"Registos",value:financial(receiving.workUnbilled)},{label:"Avenças",value:financial(receiving.retainerPending)},{label:"Preço fixo",value:financial(receiving.fixedPending)}]:[];
-    if (label === "Sem sociedade") return [];
+    if (label === "Sem sociedade" || (hasWorkflowScope(scope) && label === "Facturado por receber")) return [];
     const key = subtotalKey[label];
     return key
       ? breakdowns.map((row) => {
@@ -344,7 +348,7 @@ export function OverviewPage() {
                 key={label}
                 label={label}
                 value={value}
-                detail={detail}
+                detail={hasWorkflowScope(scope)&&["Total por receber","Facturado por receber","Por facturar: trabalho, avenças e preço fixo"].includes(label)?"Dívida integral dos clientes seleccionados":detail}
                 icon={icon}
                 tone={tone}
                 financial={/valor|preço|receb/i.test(label)}
@@ -368,7 +372,7 @@ export function OverviewPage() {
                 key={label}
                 label={label}
                 value={value}
-                detail={detail}
+                detail={hasWorkflowScope(scope)&&["Total por receber","Facturado por receber","Por facturar: trabalho, avenças e preço fixo"].includes(label)?"Dívida integral dos clientes seleccionados":detail}
                 icon={icon}
                 tone={followUpCount[label]===0?"success":tone === "warning" ? "danger" : tone}
                 financial={/valor|preço|receb/i.test(label)}
@@ -419,6 +423,7 @@ export function OverviewPage() {
               <div className="grid gap-4 lg:[&>figure]:col-span-1">
                 <HorizontalChart
                   title="Valor por sociedade"
+                  onSelect={onSociety}
                   subtitle="Sociedades"
                   labels={data.byBilling.map((p) => String(p.label))}
                   values={data.byBilling.map((p) => p.value)}
@@ -426,6 +431,7 @@ export function OverviewPage() {
                 />
                 <HorizontalChart
                   title="Valor por responsável"
+                  onSelect={onProfessional}
                   subtitle="Distribuição do trabalho"
                   labels={data.byProfessional.map((p) => String(p.label))}
                   values={data.byProfessional.map((p) => p.value)}

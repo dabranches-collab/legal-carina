@@ -1,6 +1,17 @@
 import { fireEvent,render,screen } from '@testing-library/react'
-import { describe,expect,it } from 'vitest'
-import { AnnualValueChart,DonutChart,MonthlyValueChart } from './Charts'
+import { describe,expect,it,vi } from 'vitest'
+import { AnnualValueChart,DonutChart,MonthlyValueChart,HorizontalChart } from './Charts'
+
+it('abre a entidade correcta sem alterar o valor ou a máscara financeira do gráfico',()=>{
+ const onSelect=vi.fn()
+ const {rerender}=render(<HorizontalChart title="Valor por sociedade" subtitle="Sociedades" labels={['LEGALTEAM']} values={[2000]} onSelect={onSelect}/>)
+ fireEvent.click(screen.getByRole('button',{name:'Abrir LEGALTEAM · Valor por sociedade'}))
+ expect(onSelect).toHaveBeenCalledWith('LEGALTEAM')
+ expect(screen.getByText(new Intl.NumberFormat('pt-PT').format(2000))).toHaveClass('financial-value')
+ rerender(<HorizontalChart title="Valor por sociedade" subtitle="Sociedades" labels={['LEGALTEAM']} values={[2000]}/>)
+ expect(screen.queryByRole('button')).not.toBeInTheDocument()
+ expect(screen.getByRole('img',{name:'Valor por sociedade'})).toBeInTheDocument()
+})
 
 describe('DonutChart',()=>{
   it('centra a percentagem sem aplicar a máscara financeira ao contentor geométrico',()=>{
