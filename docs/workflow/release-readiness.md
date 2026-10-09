@@ -10,7 +10,7 @@ Dívidas, avenças, notas e contas mantêm os montantes integrais e indicam o re
 
 Nove novos contratos SQL de leitura preparados **fora de migrations**, sem execução num servidor real. Com âmbito activo, a aplicação exige os novos RPC; se faltarem, mostra erro, sem recuar para resultados globais. [Contrato e semântica](scoped-read-contract.md).
 
-Opção de build `VITE_WORKFLOW_NAVIGATION=five-areas` preparada, desactivada por omissão e independente dos atalhos QA. Build de produção local tenta forjar os parâmetros QA e deve permanecer no login. CI da branch prepara contratos sintéticos, regressão existente isolada e PWA compilada; execução remota ainda não confirmada.
+Opção de build `VITE_WORKFLOW_NAVIGATION=five-areas` preparada, desactivada por omissão e independente dos atalhos QA. Build de produção local tenta forjar os parâmetros QA e deve permanecer no login. CI da branch prepara contratos sintéticos, regressão existente isolada e PWA compilada; execução remota aprovada para o código funcional `956b39b` (run 37976453290, ambos os jobs), confirmada às 19:13:16 UTC.
 
 ## Verificações desta continuação
 
@@ -26,7 +26,7 @@ Opção de build `VITE_WORKFLOW_NAVIGATION=five-areas` preparada, desactivada po
 | Protótipo independente | 40 aprovados nos quatro formatos; PDF/Word, traduções, contratos e pagamentos simulados. |
 | PWA de produção local | Quatro aprovados: manifest, recusa dos atalhos QA, aviso da versão e instalação/activação/cache/service worker. Build com flag five-areas e destino fictício. |
 | Segurança / lint / tipos / build | Aprovados; mantém aviso de chunks grandes. Auditoria: duas vulnerabilidades moderadas, duas baixas, nenhuma alta/crítica. Não alteradas dependências para as corrigir. |
-| CI remota / publicação | CI remota não confirmada. Nenhum merge, deploy ou dry-run de publicação. |
+| CI remota / publicação | Código funcional `956b39b`: validate e dependency-audit aprovados no run 37976453290, confirmado às 19:13:16 UTC. Este lote documental seguinte não altera código. Nenhum merge, deploy ou dry-run de publicação. |
 | Instruções de ambiente | Guardadas no workspace. Persistência de install_script/start_skill bloqueada por configuração-base desactualizada; proposta completa preservada, sem publicação do ambiente. |
 
 Um erro de composição que introduzi no dashboard foi detectado e corrigido antes da suite final. As primeiras tentativas dirigidas também detectaram asserções que não correspondiam à apresentação existente (`1200,00 €`, nome completo «Paula Chaves» e rótulo «Valor Trabalhado»); os testes foram alinhados com estes contratos existentes, sem alterar a formatação/nome da aplicação nem remover verificações de montantes ou de selecção. As tentativas estão preservadas nos logs locais. A suite final de integração passou 56/56, sem skips ou retries.
@@ -39,8 +39,10 @@ As duas interrupções da regressão ocorreram em testes iniciados às 18:34:55/
 2. **Nove RPC ainda não instalados.** Rever as propostas e validar no esquema completo antes de qualquer aplicação autorizada. Sem eles, as vistas com âmbito financeiro apresentam erro. A preparação do frontend não basta para activação dos filtros.
 3. **Integrações reais.** Azure, Auth e Storage reais não contactados, por instrução expressa. Mocks validam contratos, documentos e falhas; não confirmam disponibilidade, configuração ou qualidade linguística do Azure real.
 4. **Safari/iPhone físico e operadores.** Faltam ensaio físico, revisão de percursos e validação operacional. Emulação Chromium não substitui Safari.
-5. **Entrega.** Confirmar CI remota e, apenas na fase de publicação autorizada, dry-run, configuração de activação/reversão, versão instalada e janela de entrega. A opção nova não foi configurada em produção.
+5. **Entrega.** CI do código funcional confirmada. Na fase de publicação autorizada, confirmar novamente os checks do SHA que será entregue, dry-run, configuração de activação/reversão, versão instalada e janela de entrega. A opção nova não foi configurada em produção.
 
 Os filtros não executam eliminações e os testes verificam o regresso dos registos após limpar o âmbito. Não houve alteração das funções de gravação, cálculos-base ou dados reais; isto não permite garantir ausência absoluta de regressões em produção. Produção não foi consultada neste lote; não há deployment/version ID novo.
 
 Instruções reproduzíveis: [cloud-setup.md](cloud-setup.md). Evidência local em `output/workflow-*`, logs em `/workspace/.tmp/workflow-scope-*` e recibo de entrega em `output/workflow-delivery/receipt.json` após confirmação do SHA remoto. Revisão visual A4: `output/workflow-integration/carina-ficha-cinco-grupos-a4.pdf`.
+
+Continuação dos bloqueios e roteiro executável após disponibilização do QA: [qa-completion.md](qa-completion.md). Os três scripts PostgreSQL foram novamente executados nesta continuação: todos recusaram por ausência do container dedicado, antes de inserir dados. Docker operacional com zero imagens/containers; imagem oficial exigida não está em cache e o registry não consta da política vigente. Não houve mudanças de rede, permissões, daemon, dependências ou scripts para contornar a recusa. Manifest local preserva os hashes das 137 migrations actuais.
