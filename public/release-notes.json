@@ -3,7 +3,7 @@
   "changes": [
     "Correcção da ficha de cliente em ecrãs pequenos e horizontais: os separadores deixam de tapar os campos e acções.",
     "Acções das tabelas acessíveis no iPhone, incluindo o botão para preparar notas de honorários.",
-    "Scroll das tabelas estabilizado, conservando o acesso aos cabeçalhos e à ordenação."
+    "Scroll das tabelas estabilizado, conservando o acesso aos cabeçalhos e à ordenação. Em ecrãs baixos, os controlos acompanham o scroll e libertam as primeiras linhas."
   ],
   "releases": [
     {
@@ -11,7 +11,7 @@
       "changes": [
         "Correcção da ficha de cliente em ecrãs pequenos e horizontais: os separadores deixam de tapar os campos e acções.",
         "Acções das tabelas acessíveis no iPhone, incluindo o botão para preparar notas de honorários.",
-        "Scroll das tabelas estabilizado, conservando o acesso aos cabeçalhos e à ordenação."
+        "Scroll das tabelas estabilizado, conservando o acesso aos cabeçalhos e à ordenação. Em ecrãs baixos, os controlos acompanham o scroll e libertam as primeiras linhas."
       ]
     },
     {

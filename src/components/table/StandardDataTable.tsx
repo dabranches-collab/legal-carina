@@ -610,7 +610,8 @@ export function StandardDataTable<Row>({
     const update=()=>{
       const tableRect=table.getBoundingClientRect(),headerHeight=header.offsetHeight;
       const targetTop=stickyTools?tools.getBoundingClientRect().bottom:stickyHeaderOffset;
-      const shouldFix=window.innerWidth>=768&&tableRect.top<=targetTop&&tableRect.bottom>targetTop;
+      // On short landscape screens, stacked toolbars and a fixed header would cover the first rows.
+      const shouldFix=window.innerWidth>=768&&window.innerHeight>500&&tableRect.top<=targetTop&&tableRect.bottom>targetTop;
       if(!shouldFix){if(fixed)reset();return}
       if(!fixed){
         const renderedWidths=headerCells.map(cell=>cell.offsetWidth);

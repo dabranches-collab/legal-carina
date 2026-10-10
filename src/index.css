@@ -134,6 +134,7 @@ input.control[type="search"]:focus { background: var(--color-surface); }
 }
 @media (max-height: 500px) {
   [aria-labelledby="entity-edit-title"] > .record-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+  .table-tools, .client-list-toolbar { position: static; }
 }
 .app-shell-header { min-height: calc(9.75rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
