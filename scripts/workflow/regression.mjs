@@ -8,7 +8,7 @@ const temporary = resolve(root, 'e2e/.isolated')
 if (existsSync(temporary)) throw new Error('Há uma execução isolada ou uma pasta anterior; não substituir trabalho existente.')
 mkdirSync(temporary, {recursive:true})
 try {
- for (const file of readdirSync(resolve(root,'e2e')).filter(name => name.endsWith('.spec.ts') && name !== 'workflow-integration.spec.ts')) {
+ for (const file of readdirSync(resolve(root,'e2e')).filter(name => name.endsWith('.spec.ts') && !['workflow-integration.spec.ts','responsive-flows.spec.ts'].includes(name))) {
   const original = resolve(root,'e2e',file)
   let source = readFileSync(original,'utf8')
   if(process.env.WORKFLOW_REGRESSION_PREVIEW==='1') source=source.replace(/\.goto\((['"`])\/\?/g, '.goto($1/?workflow=preview&')

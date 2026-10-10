@@ -1656,3 +1656,10 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
 
 Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
+## 2026-10-10 — QA responsive 0.16.2 em preparação
+
+Branch `codex/functional-qa-0161-20261010`, fonte anterior `1a84176`. Lote local **0.16.2**, ainda não publicado: correcção dos separadores da ficha que tapavam controlos no iPhone, rodapé compacto em horizontal e libertação de colunas fixas que tapavam «Nota» em tabelas estreitas. [Matriz e evidência](docs/workflow/responsive-qa-20261010.md).
+
+31 perfis Chromium/682 cenários em execução; configuração WebKit adicional de 15 perfis/330 cenários para CI Linux. Seis ensaios dirigidos aos dois tamanhos mais pequenos, 22 unitários da tabela e dez de pagamentos/PWA aprovados. Tipos e build passaram; resultados completos/CI ainda por confirmar. Ensaios exclusivamente sintéticos, serviços externos bloqueados, sem emissões/pagamentos/avenças de produção ou migrations.
+
+Produção reconfirmada por Wrangler: **0.16.1**, deployment `b0503af0-9830-464d-b2e5-566e449e7cf4`, Version ID `12ea78d7-c188-44c2-9bfe-1fc173ca10f2`, 100% desde `2026-10-10T09:23:40.34572Z`, URL https://legal-carina.dabranches.workers.dev. Revisão visual de leitura em 390×844, 844×390 e 1366×768; browser reposto a 1280×720. Origem do upload concorrente, falha de módulos entre versões, aviso pendente, Storage real e rascunhos/indicadores continuam pendentes; Safari físico não certificado.

@@ -2177,7 +2177,7 @@ export function MasterDataPage({
                 </p>
               )}
             </div>
-            <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-border bg-surface px-4 py-3 sm:flex sm:justify-end sm:px-6">
+            <div className="record-actions grid shrink-0 grid-cols-2 gap-3 border-t border-border bg-surface px-4 py-3 sm:flex sm:justify-end sm:px-6">
               <button
                 type="button"
                 data-close-record disabled={saving} onClick={closeEditor}

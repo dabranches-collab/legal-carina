@@ -458,6 +458,18 @@ export function StandardDataTable<Row>({
     headerSpacer = useRef<HTMLTableRowElement>(null),
     filterButtons = useRef<Record<string, HTMLButtonElement | null>>({}),
     draggedColumn = useRef<string | null>(null);
+  const [scrollerWidth,setScrollerWidth]=useState(0);
+  useLayoutEffect(()=>{
+    const element=scrollContainer.current;if(!element)return;
+    const update=()=>setScrollerWidth(element.clientWidth);
+    update();
+    if(typeof ResizeObserver==='undefined'){
+      window.addEventListener('resize',update);
+      return()=>window.removeEventListener('resize',update);
+    }
+    const observer=new ResizeObserver(update);observer.observe(element);
+    return()=>observer.disconnect();
+  },[]);
   const ordered = [...columns].sort((a, b) => {
     const ai = order.indexOf(a.id),
       bi = order.indexOf(b.id);
@@ -466,7 +478,10 @@ export function StandardDataTable<Row>({
   const visible = ordered.filter(
     (column) => column.essential || !hidden.includes(column.id),
   );
-  const stickyLayoutKey=visible.map(column=>`${column.id}:${widths[column.id]??column.width??160}`).join('|');
+  // A wide pinned column must not cover the actions when a narrow table scrolls.
+  const pinnedWidth=visible.reduce((total,column)=>total+(column.sticky?(widths[column.id]??column.width??160):0),0);
+  const pinColumns=pinnedWidth>0&&pinnedWidth<=scrollerWidth/2;
+  const stickyLayoutKey=visible.map(column=>`${column.id}:${widths[column.id]??column.width??160}`).join('|')+`|pin:${pinColumns}`;
   const tableWidth=visible.reduce((total,column)=>total+(widths[column.id]??column.width??160),onSelectionChange?48:0);
   const optionsFor = (column: TableColumn<Row>): TableColumn<Row> => {
     if(column.filterOptions||column.kind==="boolean"||column.kind==="number"||column.kind==="money"||column.kind==="date")return column;
@@ -1063,7 +1078,7 @@ export function StandardDataTable<Row>({
                 </th>
               )}
               {visible.map((column, index) => {
-                const sticky = Boolean(column.sticky),
+                const sticky = Boolean(column.sticky)&&pinColumns,
                   width = widths[column.id] ?? column.width ?? 160,
                   sortIndex = sorts.findIndex((item) => item.id === column.id);
                 return (
@@ -1259,7 +1274,7 @@ export function StandardDataTable<Row>({
                       </td>
                     )}
                     {visible.map((column, index) => {
-                      const sticky = Boolean(column.sticky),
+                      const sticky = Boolean(column.sticky)&&pinColumns,
                         width = widths[column.id] ?? column.width ?? 160,
                         raw = column.value(row),
                         tooltip = raw == null ? "" : String(raw);

@@ -13,10 +13,11 @@ function overviewFixture(items:WorkFixture[]){
  const grouped=(key:'client_name'|'professional_name')=>[...new Set(items.map(item=>item[key]))].map(label=>({label,value:items.filter(item=>item[key]===label).reduce((sum,item)=>sum+item.effective_amount,0)}))
  return {metrics:{minutes,worked:total,invoiced,paid,receivable:invoiced-paid,uninvoicedCount:items.filter(item=>!item.is_invoiced).length,unpaidCount:items.filter(item=>item.is_invoiced&&!item.is_paid).length,uncollectibleCount:0,uncollectibleValue:0,averageRate:minutes?total*60/minutes:null,activeClients:new Set(items.map(item=>item.client_id)).size,missingPrice:items.filter(item=>item.effective_hourly_rate===null).length,missingBilling:0,overrides:0,importErrors:0},annual:[{label:2026,value:total,minutes,societies:{LEGALTEAM:total}}],monthly:[{label:'2026-09',value:total,societies:{LEGALTEAM:total}}],monthlyByYear:[{year:2026,month:9,value:total}],billingAnnual:[{society:'LEGALTEAM',year:2026,value:total}],billingMonthly:[{society:'LEGALTEAM',period:'2026-09',value:total}],latestYear:2026,byClient:grouped('client_name'),byBilling:[{label:'LEGALTEAM',value:total}],byProfessional:grouped('professional_name'),byArchive:[],clientTypes:[]}
 }
-test.beforeEach(async({context,request,page})=>{
- for(const path of ['/supabase-api/auth/v1/user','/supabase-functions/v1/test','/api/document-translation']){const response=await request.get(path);expect(response.status()).toBe(403);expect(await response.text()).toBe('Blocked by isolated setup')}
+test.beforeEach(async({context,request,page},info)=>{
+ for(const path of ['/supabase-api/auth/v1/user','/supabase-functions/v1/test','/api/document-translation']){const response=await request.get(path,{maxRetries:2});expect(response.status()).toBe(403);expect(await response.text()).toBe('Blocked by isolated setup')}
  forbidden=[];searchCalls=[];scopeCalls=[];writes=[];browserErrors=[];page.on('pageerror',error=>browserErrors.push(error.message));const fixture=createQaAllocationData()
  await context.addInitScript(version=>localStorage.setItem('carina-release-notes-seen',version),packageJson.version)
+ if(process.env.WORKFLOW_RESPONSIVE_QA==='1')await context.addInitScript(theme=>localStorage.setItem('carina-theme',theme),info.project.name.startsWith('dark-')?'dark':'light')
  await context.route('**/*',async route=>{
   const request=route.request(),url=new URL(request.url())
   if(url.origin==='http://127.0.0.1:54321'&&url.pathname.startsWith('/rest/v1/')){
@@ -61,7 +62,14 @@ test.beforeEach(async({context,request,page})=>{
  })
  await context.routeWebSocket(/.*/,socket=>socket.close())
 })
-test.afterEach(()=>{expect(forbidden,'Nenhum serviço real ou pedido sem mock').toEqual([]);expect(browserErrors,'Sem erros não tratados no browser').toEqual([])})
+test.afterEach(async({page},info)=>{
+ expect(forbidden,'Nenhum serviço real ou pedido sem mock').toEqual([])
+ expect(browserErrors,'Sem erros não tratados no browser').toEqual([])
+ if(process.env.WORKFLOW_RESPONSIVE_QA==='1'){
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Sem overflow horizontal global após o fluxo').toBe(true)
+  await page.screenshot({path:`output/responsive-qa-20261010/${info.project.name}-${info.title.replace(/[^a-zA-Z0-9]+/g,'-')}.png`})
+ }
+})
 async function openFromList(page:import('@playwright/test').Page){
  if((page.viewportSize()?.width??1440)<900){await page.getByRole('button',{name:'Caixas',exact:true}).click();await page.getByRole('list',{name:'Lista de PARTICULARES em caixas'}).getByRole('button',{name:'Ficha',exact:true}).first().click()}
  else await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).first().dblclick()
@@ -82,7 +90,7 @@ test('cinco grupos reutilizam dados, registos, contratos e documentos',async({pa
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
  await page.screenshot({path:`output/workflow-integration/${info.project.name}-finance-light.png`})
  await dialog.locator('[data-close-record]').first().click()
- await page.getByRole('button',{name:'Activar modo escuro',exact:true}).click()
+ await page.getByRole('button',{name:/^Activar modo (escuro|claro)$/}).click()
  await openFromList(page)
  await nav.getByRole('button',{name:'Financeiro e documentos',exact:true}).click()
  await expect(nav).toBeVisible();await page.screenshot({path:`output/workflow-integration/${info.project.name}-finance-dark.png`})
