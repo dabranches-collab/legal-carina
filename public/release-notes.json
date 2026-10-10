@@ -1,10 +1,17 @@
 {
-  "version": "0.16.0",
+  "version": "0.16.1",
   "changes": [
-    "Primeira integração da navegação simplificada em modo de teste: Resumo, Clientes, Trabalho, Financeiro e Notas, com Definições secundárias.",
-    "Módulos, indicadores, gráficos, documentos, traduções e regras operacionais existentes conservados. A navegação habitual mantém-se como predefinição."
+    "Navegação Resumo, Clientes, Trabalho, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
+    "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças."
   ],
   "releases": [
+    {
+      "version": "0.16.1",
+      "changes": [
+        "Navegação Resumo, Clientes, Trabalho, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
+        "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças."
+      ]
+    },
     {
       "version": "0.16.0",
       "changes": [
