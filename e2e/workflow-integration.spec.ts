@@ -15,12 +15,13 @@ let networkFailures:Array<{method:string;path:string;error:string|undefined}>
 
 // Routed responses can appear network-idle to WebKit before fetch body readers
 // and chained application reads have settled. Do not navigate away mid-read.
-export async function settleReads(page:import('@playwright/test').Page){
+export async function settleReads(page:import('@playwright/test').Page,{workUniverse=false}:{workUniverse?:boolean}={}){
  if(page.url()==='about:blank')return
- await page.waitForFunction(()=>{
-  const state=(window as unknown as {__workflowQaReads?:{active:number;last:number}}).__workflowQaReads
-  return !state||state.active===0&&performance.now()-state.last>=1000
- },undefined,{timeout:15000})
+ await page.waitForFunction(requireUniverse=>{
+  const state=(window as unknown as {__workflowQaReads?:{active:number;last:number;workUniverse:boolean}}).__workflowQaReads
+  if(!state)return !requireUniverse
+  return (!requireUniverse||state.workUniverse)&&state.active===0&&performance.now()-state.last>=1000
+ },workUniverse,{timeout:15000})
  await page.waitForLoadState('networkidle')
 }
 type WorkFixture={id:string;professional_id:string;professional_name:string;billing_entity_id:string;client_type:string;client_id:string;client_name:string;activity_description:string;duration_minutes:number;effective_amount:number;effective_hourly_rate:number|null;is_invoiced:boolean;is_paid:boolean;billing_scope:string;work_date:string;status:string}
@@ -37,13 +38,24 @@ test.beforeEach(async({context,request,page},info)=>{
  const currentNetworkFailures=networkFailures
  page.on('requestfailed',request=>{const url=new URL(request.url());currentNetworkFailures.push({method:request.method(),path:url.origin+url.pathname,error:request.failure()?.errorText})})
  await context.addInitScript(()=>{
-  const state={active:0,last:performance.now()},nativeFetch=window.fetch.bind(window)
+  const state={active:0,last:performance.now(),workUniverse:false},nativeFetch=window.fetch.bind(window)
   Object.assign(window,{__workflowQaReads:state})
   window.fetch=async(input,init)=>{
    const url=String(input instanceof Request?input.url:input)
    if(!url.includes('/rest/v1/'))return nativeFetch(input,init)
    state.active++
-   try{const response=await nativeFetch(input,init);await response.clone().arrayBuffer();return response}
+   try{
+    const response=await nativeFetch(input,init);await response.clone().arrayBuffer()
+    // App schedules this unfiltered prefetch after mounting (also after scope
+    // remounts). Network idle alone cannot observe a fetch not started yet.
+    if(response.ok&&url.endsWith('/rpc/search_work_entries')&&typeof init?.body==='string'){
+     const args=JSON.parse(init.body)
+     if(args.p_page===1&&args.p_page_size===10000&&
+      ['p_search','p_year','p_professional_id','p_billing_entity_id','p_invoiced','p_paid','p_archive','p_client_type','p_client_id'].every(key=>args[key]===null)&&
+      ['p_review_only','p_missing_price','p_missing_society'].every(key=>args[key]===false))state.workUniverse=true
+    }
+    return response
+   }
    finally{state.active--;state.last=performance.now()}
   }
  })
@@ -215,8 +227,46 @@ test('a primeira linha da tabela abre a ficha sem sobreposição em horizontal',
  await expect(page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})).toBeVisible()
 })
 
+test('navegação interrompida cancela a leitura sintética pendente sem erro não tratado',async({page})=>{
+ await page.route('**/qa-navigation-lifecycle*',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Navegação sintética</title><main>Documento de teste</main>'}))
+ await page.goto('/qa-navigation-lifecycle')
+ let release!:()=>void,started!:()=>void
+ const held=new Promise<void>(resolve=>{release=resolve}),requested=new Promise<void>(resolve=>{started=resolve})
+ await page.route('**/rest/v1/rpc/get_navigation_probe',async route=>{
+  started();await held
+  await route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:'[]'})
+ })
+ const cancelled=page.waitForEvent('requestfailed',request=>request.url().endsWith('/rpc/get_navigation_probe'))
+ await page.evaluate(()=>{void fetch('/supabase-api/rest/v1/rpc/get_navigation_probe').then(response=>response.json()).catch(()=>undefined)})
+ await requested
+ await page.goto('/qa-navigation-lifecycle?next=1')
+ expect((await cancelled).failure()?.errorText).toMatch(/cancel|abort|ERR_ABORTED/i)
+ release()
+ await expect(page.getByRole('main')).toHaveText('Documento de teste')
+ expect(browserErrors).toEqual([])
+})
+
+test('controlo negativo distingue CORS negado de HTTP 403 no serviço sintético',async({context,request,browserName})=>{
+ const probe=await context.newPage(),errors:string[]=[],failures:string[]=[]
+ probe.on('pageerror',error=>errors.push(error.message))
+ probe.on('requestfailed',request=>failures.push(request.failure()?.errorText??''))
+ await probe.route('**/qa-cors-control',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Controlo CORS</title>'}))
+ await probe.route('http://127.0.0.1:54321/rest/v1/cors_probe',route=>route.fulfill({status:200,headers:{'access-control-allow-origin':'http://denied.invalid'},contentType:'application/json',body:'[]'}))
+ await probe.goto('/qa-cors-control')
+ const result=await probe.evaluate(async()=>{try{await fetch('http://127.0.0.1:54321/rest/v1/cors_probe');return 'unexpected success'}catch(error){return (error as Error).name}})
+ expect(result).toBe('TypeError')
+ await expect.poll(()=>failures.length).toBe(1)
+ if(browserName==='webkit')await expect.poll(()=>errors).toEqual([expect.stringContaining('cors_probe due to access control checks')])
+ else expect(errors).toEqual([])
+ // A forbidden local service is an HTTP response, never silently treated as a
+ // navigation abort. The ordinary test page keeps its zero-pageerror guard.
+ const blocked=await request.get('/supabase-api/rest/v1/unmocked_probe')
+ expect(blocked.status()).toBe(403);expect(await blocked.text()).toBe('Blocked by isolated setup')
+ await probe.close()
+})
+
 test('âmbito partilhado combina dimensões, restaura histórico e conserva notas integrais',async({page},info)=>{
- await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page,{workUniverse:true});await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
  const scope=page.getByRole('region',{name:'Filtros partilhados'}),table=page.getByRole('table',{name:'Registos de trabalho'})
  await scope.getByLabel('Filtrar sociedade').selectOption('00000000-0000-4000-8000-000000000002')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000010')
@@ -226,10 +276,10 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  await expect(clientType.locator('option:checked')).toHaveText('PARTICULARES')
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).not.toContainText('Reunião de acompanhamento')
  await expect.poll(()=>searchCalls.some(args=>args.p_professional_id==='00000000-0000-4000-8000-000000000010'&&args.p_billing_entity_id==='00000000-0000-4000-8000-000000000002'&&args.p_client_type==='individual')).toBe(true)
- await settleReads(page);await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
+ await settleReads(page,{workUniverse:true});await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000011');await expect(table).toContainText('Análise documental');await expect(table).not.toContainText('Consulta e preparação de processo')
- await settleReads(page);await page.goBack();await expect(table).toContainText('Consulta e preparação de processo')
- const url=new URL(page.url());url.searchParams.set('view','payments');await settleReads(page);await page.goto(url.toString())
+ await settleReads(page,{workUniverse:true});await page.goBack();await expect(table).toContainText('Consulta e preparação de processo')
+ const url=new URL(page.url());url.searchParams.set('view','payments');await settleReads(page,{workUniverse:true});await page.goto(url.toString())
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_payment_queue'&&call.args.p_scope_client_type==='individual')).toBe(true)
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()
  await expect(page.getByRole('table',{name:'Notas de honorários não pagas'})).toContainText('Nota integral simulada')
@@ -238,8 +288,9 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
  await page.screenshot({path:`output/workflow-integration/${info.project.name}-shared-scope.png`})
  await scope.getByRole('button',{name:'Limpar âmbito'}).click();expect(new URL(page.url()).searchParams.has('scopeSociety')).toBe(false)
- url.searchParams.set('view','work');url.searchParams.delete('scopeSociety');url.searchParams.delete('scopeProfessional');url.searchParams.delete('scopeClientType');await settleReads(page);await page.goto(url.toString())
+ url.searchParams.set('view','work');url.searchParams.delete('scopeSociety');url.searchParams.delete('scopeProfessional');url.searchParams.delete('scopeClientType');await settleReads(page,{workUniverse:true});await page.goto(url.toString())
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).toContainText('Reunião de acompanhamento')
+ await settleReads(page,{workUniverse:true})
 })
 
 test('falta da consulta financeira filtrada apresenta erro sem resultados globais',async({page})=>{

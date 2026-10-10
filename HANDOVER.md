@@ -1,3 +1,7 @@
+## 2026-10-10 - sincronização do harness WebKit (PR105, 0.16.4 em preparação)
+
+A falha CI de âmbito/histórico foi reproduzida localmente: o prefetch global reagendado começa depois de beforeunload, apesar da rede anteriormente quieta. O ensaio passa a observar a conclusão dessa leitura antes de navegar; sem aumentar esperas/timeouts ou filtrar erros. Controlos explícitos mantêm navegação interrompida, CORS negado e HTTP403. Primeira série corrigida:30/30 WebKit; gráficos10/10, tipos, build, guarda de ficheiros e lint dirigido aprovados. Repetição final e CI do novo SHA a confirmar. Diagnóstico em docs/workflow/webkit-navigation-harness.md. Produto de negócio, segurança e pipeline intactos; sem merge/deploy. Revisão da correcção de scroll concluída; alteração do harness requer revisão independente.
+
 ## 2026-10-10 - correcção de scroll em revisão (0.16.4)
 
 Branch codex/preserve-chart-scroll-resize-20261010, baseada em main 99fe573ff6a9eb0adcd21c21e5a1d18edfddbf94. Preserva a consulta manual após clamp de resize e rotação; regressões mínimas cobrem ambas as ordens do evento scroll/ResizeObserver. Trabalho em worktree QA isolado, sem alterar o checkout do responsável. Evidência sintética e comandos em docs/workflow/chart-scroll-resize-regression.md. 355 unitários, 52 verificações adicionais de browser e oito E2E aprovados. CI remota a confirmar na PR draft. Produção permanece na última versão confirmada 0.16.3; sem merge/deploy ou dados reais. Entradas seguintes são históricas.
