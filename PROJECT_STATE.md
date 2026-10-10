@@ -1525,3 +1525,6 @@ Actualizado em: 2026-08-17
 Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
 
 Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
+
+
+Checkpoint do ensaio e246065: nova passagem integral Chromium 682/682, 31 perfis, sem retries/omissões; WebKit 321/330, com os nove erros restantes apenas em pedidos ao substituir/recarregar páginas simuladas (também no mesmo origin, portanto sem prova de falha de CORS real). Ajuste seguinte apenas do ensaio: aguardar corpos das respostas e leituras encadeadas antes da navegação e da asserção final, sem ignorar erros; diagnóstico de pedidos falhados anexado em caso de erro. 20/20 Chromium dirigidos passaram; WebKit dessa espera pendente. Código da aplicação permanece ec01d843 e não houve deploy/escritas reais.

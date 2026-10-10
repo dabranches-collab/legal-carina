@@ -1,5 +1,5 @@
 // Import the full workflow contracts and their isolated synthetic fixture.
-import {syntheticCorsHeaders} from './workflow-integration.spec'
+import {syntheticCorsHeaders,settleReads} from './workflow-integration.spec'
 import {test,expect,type Locator} from '@playwright/test'
 import packageJson from '../package.json' with {type:'json'}
 import {createQaAllocationData} from '../src/lib/qaAllocationData'
@@ -30,7 +30,7 @@ test('recebimento parcial mantém o saldo e abre a ficha em todas as resoluçõe
   if(rpc==='record_pending_payment'){const args=route.request().postDataJSON();calls.push(args);item={...item,received:30,remaining:73,token:'synthetic-v2'};data={id:'synthetic-receipt'}}
   await route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify(data)})
  })
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments')
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()
  const region=page.getByRole('region',{name:'Notas de honorários não pagas'})
  await expect(region).toContainText('93,00')
@@ -50,7 +50,7 @@ test('recebimento parcial mantém o saldo e abre a ficha em todas as resoluçõe
 })
 
 test('formulários de registo, despesa, cliente e nota mantêm fecho acessível',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=work')
  for(const [name,title] of [['Criar novo registo','Criar movimento'],['Criar nova despesa','Nova despesa'],['Criar novo cliente','Criar cliente']]){
   await page.getByRole('button',{name,exact:true}).click()
   const dialog=page.getByRole('dialog',{name:title,exact:true})
@@ -58,7 +58,7 @@ test('formulários de registo, despesa, cliente e nota mantêm fecho acessível'
   const close=dialog.getByRole('button',{name:/^(Cancelar|Fechar)$/}).first()
   await usable(close);await close.click();await expect(dialog).toHaveCount(0)
  }
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-demo=1&qa-role=admin&workflow=preview&view=notes')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-demo=1&qa-role=admin&workflow=preview&view=notes')
  await page.getByRole('button',{name:'+ Nova nota',exact:true}).click()
  const dialog=page.getByRole('dialog',{name:'Criar nota'})
  await dialog.getByRole('button',{name:'+ Adicionar item'}).click()
@@ -79,7 +79,7 @@ test('avença anual conserva 32 horas e preço do excedente na edição',async({
   if(table==='get_client_retainer_summary')return route.fulfill({headers:syntheticCorsHeaders,json:{minutes:1905,movements:50,chargesTotal:0,invoiced:0,paid:0,periods:0,pendingPeriods:0,unpaidPeriods:0,effectiveHourlyRate:null}})
   return route.fallback()
  })
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  if(test.info().project.use.hasTouch)await activate(page.getByRole('button',{name:'Abrir ficha',exact:true}).first())
  else await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).dblclick()
  const dialog=page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})
@@ -98,7 +98,7 @@ test('avença anual conserva 32 horas e preço do excedente na edição',async({
 
 test('aviso da versão pode ser fechado antes de usar os formulários',async({page})=>{
  await page.addInitScript(()=>localStorage.setItem('carina-release-notes-seen','0.16.0'))
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=overview')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=overview')
  const notice=page.getByRole('status',{name:'Alterações da versão instalada'})
  await expect(notice).toContainText(packageJson.version)
  const close=notice.getByRole('button',{name:'Fechar alterações',exact:true})
@@ -119,7 +119,7 @@ test('pré-visualização de honorários em PT, EN e FR cabe no ecrã sem emiss�
   const input=route.request().postDataJSON();languages.push(input.language??input.targetLanguage??input.target)
   return route.fulfill({headers:syntheticCorsHeaders,json:{items:input.items.map((item:Record<string,unknown>)=>({...item,text:'Tradução sintética para QA'}))}})
  })
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  await activate(page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').first())
  const dialog=page.locator('[role="dialog"][aria-labelledby="honorarium-title"]')
  await expect(dialog).toBeVisible({timeout:10000})
@@ -140,7 +140,7 @@ test('pré-visualização de honorários em PT, EN e FR cabe no ecrã sem emiss�
 test('scroll liberta filtros e conserva linhas e cabeçalho da tabela',async({page})=>{
  const fixture=createQaAllocationData(100)
  await page.route('**/rest/v1/rpc/search_work_entries',route=>route.fulfill({headers:syntheticCorsHeaders,json:fixture('search_work_entries','',{},new URL(route.request().url()),'POST',false)}))
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
  const region=page.getByRole('region',{name:'Registos de trabalho',exact:true}),header=region.locator('thead')
  await expect(region.getByText('100 registos de 100',{exact:true})).toBeVisible()
  const filters=page.getByRole('region',{name:'Filtros dos registos',exact:true})

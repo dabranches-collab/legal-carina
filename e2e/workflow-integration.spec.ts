@@ -11,6 +11,18 @@ let searchCalls: Record<string,unknown>[]
 let scopeCalls: Array<{rpc:string;args:Record<string,unknown>}>
 let writes:string[]
 let browserErrors:string[]
+let networkFailures:Array<{method:string;path:string;error:string|undefined}>
+
+// Routed responses can appear network-idle to WebKit before fetch body readers
+// and chained application reads have settled. Do not navigate away mid-read.
+export async function settleReads(page:import('@playwright/test').Page){
+ if(page.url()==='about:blank')return
+ await page.waitForFunction(()=>{
+  const state=(window as unknown as {__workflowQaReads?:{active:number;last:number}}).__workflowQaReads
+  return !state||state.active===0&&performance.now()-state.last>=1000
+ },undefined,{timeout:15000})
+ await page.waitForLoadState('networkidle')
+}
 type WorkFixture={id:string;professional_id:string;professional_name:string;billing_entity_id:string;client_type:string;client_id:string;client_name:string;activity_description:string;duration_minutes:number;effective_amount:number;effective_hourly_rate:number|null;is_invoiced:boolean;is_paid:boolean;billing_scope:string;work_date:string;status:string}
 function overviewFixture(items:WorkFixture[]){
  const total=items.reduce((sum,item)=>sum+item.effective_amount,0),minutes=items.reduce((sum,item)=>sum+item.duration_minutes,0),invoiced=items.filter(item=>item.is_invoiced).reduce((sum,item)=>sum+item.effective_amount,0),paid=items.filter(item=>item.is_paid).reduce((sum,item)=>sum+item.effective_amount,0)
@@ -19,9 +31,22 @@ function overviewFixture(items:WorkFixture[]){
 }
 test.beforeEach(async({context,request,page},info)=>{
  for(const path of ['/supabase-api/auth/v1/user','/supabase-functions/v1/test','/api/document-translation']){const response=await request.get(path,{maxRetries:2});expect(response.status()).toBe(403);expect(await response.text()).toBe('Blocked by isolated setup')}
- forbidden=[];searchCalls=[];scopeCalls=[];writes=[];browserErrors=[];
+ forbidden=[];searchCalls=[];scopeCalls=[];writes=[];browserErrors=[];networkFailures=[];
  const currentErrors=browserErrors,currentForbidden=forbidden,currentSearch=searchCalls,currentScope=scopeCalls,currentWrites=writes;
  page.on('pageerror',error=>currentErrors.push(error.message));const fixture=createQaAllocationData()
+ const currentNetworkFailures=networkFailures
+ page.on('requestfailed',request=>{const url=new URL(request.url());currentNetworkFailures.push({method:request.method(),path:url.origin+url.pathname,error:request.failure()?.errorText})})
+ await context.addInitScript(()=>{
+  const state={active:0,last:performance.now()},nativeFetch=window.fetch.bind(window)
+  Object.assign(window,{__workflowQaReads:state})
+  window.fetch=async(input,init)=>{
+   const url=String(input instanceof Request?input.url:input)
+   if(!url.includes('/rest/v1/'))return nativeFetch(input,init)
+   state.active++
+   try{const response=await nativeFetch(input,init);await response.clone().arrayBuffer();return response}
+   finally{state.active--;state.last=performance.now()}
+  }
+ })
  await context.addInitScript(version=>localStorage.setItem('carina-release-notes-seen',version),packageJson.version)
  if(process.env.WORKFLOW_RESPONSIVE_QA==='1')await context.addInitScript(theme=>localStorage.setItem('carina-theme',theme),info.project.name.startsWith('dark-')?'dark':'light')
  await context.route('**/*',async route=>{
@@ -71,6 +96,8 @@ test.beforeEach(async({context,request,page},info)=>{
  await context.routeWebSocket(/.*/,socket=>socket.close())
 })
 test.afterEach(async({page},info)=>{
+ await settleReads(page)
+ if(browserErrors.length)await info.attach('synthetic-network-failures',{body:JSON.stringify(networkFailures,null,2),contentType:'application/json'})
  expect(forbidden,'Nenhum serviço real ou pedido sem mock').toEqual([])
  expect(browserErrors,'Sem erros não tratados no browser').toEqual([])
  if(process.env.WORKFLOW_RESPONSIVE_QA==='1'){
@@ -83,7 +110,7 @@ async function openFromList(page:import('@playwright/test').Page){
  else if(test.info().project.use.hasTouch)await page.getByRole('button',{name:'Abrir ficha',exact:true}).first().tap()
  else await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).first().dblclick()
 }
-async function open(page:import('@playwright/test').Page,preview=true){if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list'+(preview?'&workflow=preview':''));await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})}
+async function open(page:import('@playwright/test').Page,preview=true){await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list'+(preview?'&workflow=preview':''));await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})}
 test('cinco grupos reutilizam dados, registos, contratos e documentos',async({page},info)=>{
  const dialog=await open(page),nav=dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'})
  await expect(nav.getByRole('button')).toHaveCount(5);await expect(dialog.getByRole('region',{name:'Resumo da ficha'})).toBeVisible()
@@ -106,7 +133,7 @@ test('cinco grupos reutilizam dados, registos, contratos e documentos',async({pa
 })
 
 test('Nova despesa mostra sugestões ao escrever e permite escolher directamente por toque',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=overview')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=overview')
  await page.getByRole('button',{name:'Criar nova despesa'}).click()
  const dialog=page.getByRole('dialog',{name:'Nova despesa'}),client=dialog.getByRole('combobox',{name:'Cliente e vertente'})
  await client.fill('Alfa')
@@ -121,7 +148,7 @@ test('Nova despesa mostra sugestões ao escrever e permite escolher directamente
 })
 
 test('novo registo fecha sugestões vazias ou incompletas ao preencher outros campos',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=work')
  await page.getByRole('button',{name:'Criar novo registo'}).click()
  const dialog=page.getByRole('dialog',{name:'Criar movimento'}),client=dialog.getByRole('combobox',{name:'Cliente e vertente'})
  await client.click();await expect(dialog.getByRole('listbox')).toBeVisible()
@@ -134,7 +161,7 @@ test('novo registo fecha sugestões vazias ou incompletas ao preencher outros ca
 })
 test('URL conserva grupo, página e lista de origem',async({page})=>{
  const dialog=await open(page);await dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'}).getByRole('button',{name:'Financeiro e documentos',exact:true}).click();await dialog.getByRole('button',{name:'Documentos',exact:true}).click()
- await expect.poll(()=>new URL(page.url()).searchParams.get('clientGroup')).toBe('finance');await page.waitForLoadState('networkidle');await page.reload();await expect(dialog.getByRole('button',{name:'Documentos',exact:true})).toHaveAttribute('aria-current','page')
+ await expect.poll(()=>new URL(page.url()).searchParams.get('clientGroup')).toBe('finance');await settleReads(page);await page.reload();await expect(dialog.getByRole('button',{name:'Documentos',exact:true})).toHaveAttribute('aria-current','page')
  await dialog.locator('[data-close-record]').first().click();await expect(dialog).toHaveCount(0);expect(new URL(page.url()).searchParams.get('workflow')).toBe('preview');expect(new URL(page.url()).searchParams.has('clientGroup')).toBe(false)
 })
 test('sem preview conserva a ficha habitual',async({page})=>{
@@ -145,38 +172,38 @@ test('filtro de trabalho restaura após contratos e recarregamento',async({page}
  const dialog=await open(page),nav=dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'})
  await nav.getByRole('button',{name:'Contratos',exact:true}).click();await dialog.getByRole('button',{name:'Preço fixo',exact:true}).click();await nav.getByRole('button',{name:'Trabalho',exact:true}).click()
  await dialog.getByRole('button',{name:/Não facturados/}).click();await expect(dialog.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
- await expect.poll(()=>new URL(page.url()).searchParams.get('recordFilter')).toBe('uninvoiced');await page.waitForLoadState('networkidle');await page.reload()
+ await expect.poll(()=>new URL(page.url()).searchParams.get('recordFilter')).toBe('uninvoiced');await settleReads(page);await page.reload()
  await expect(nav.getByRole('button',{name:'Trabalho',exact:true})).toHaveAttribute('aria-current','page');await expect(dialog.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
 })
 
 test('sociedade, responsável e categoria chegam juntos à consulta e não removem dados',async({page})=>{
  const professional='00000000-0000-4000-8000-000000000010',society='00000000-0000-4000-8000-000000000002'
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto(`/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&professionalId=${professional}&billingEntityId=${society}&clientType=individual`)
+ await settleReads(page);await page.goto(`/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&professionalId=${professional}&billingEntityId=${society}&clientType=individual`)
  const table=page.getByRole('table',{name:'Registos de trabalho'})
  await expect(table).toContainText('Consulta e preparação de processo')
  await expect(table).not.toContainText('Reunião de acompanhamento')
  await expect.poll(()=>searchCalls.some(args=>args.p_professional_id===professional&&args.p_billing_entity_id===society&&args.p_client_type==='individual')).toBe(true)
- await page.waitForLoadState('networkidle');await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
+ await settleReads(page);await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
  await page.getByRole('group',{name:'Responsável',exact:true}).getByRole('combobox').selectOption('00000000-0000-4000-8000-000000000011')
  await expect(table).toContainText('Análise documental');await expect(table).not.toContainText('Consulta e preparação de processo')
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).toContainText('Reunião de acompanhamento')
 })
 
 test('mudar categoria e recarregar conserva a ficha nova',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients')
  await page.getByRole('button',{name:'PARTICULARES',exact:true}).click()
  expect(new URL(page.url()).searchParams.get('workflow')).toBe('preview')
  // The category navigation deliberately clears test identity parameters.
  // Restore the synthetic test identity without changing application Auth.
  await page.evaluate(()=>{const url=new URL(location.href);url.searchParams.set('qa-iphone','1');url.searchParams.set('qa-role','admin');history.replaceState({},'',url)})
- await page.waitForLoadState('networkidle');await page.reload();const dialog=await (async()=>{await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})})()
+ await settleReads(page);await page.reload();const dialog=await (async()=>{await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})})()
  await expect(dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'}).getByRole('button')).toHaveCount(5)
 })
 
 test('a primeira linha da tabela abre a ficha sem sobreposição em horizontal',async({page})=>{
  const landscape=(page.viewportSize()?.height??900)<500
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table'+(landscape?'&safe-left=59&safe-right=59&safe-bottom=21':''))
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table'+(landscape?'&safe-left=59&safe-right=59&safe-bottom=21':''))
  if(landscape){
   const controls=await page.locator('.app-shell-header button').evaluateAll(elements=>elements.filter(e=>e.checkVisibility()).map(e=>{const r=e.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return{label:e.getAttribute('aria-label'),safe:r.x>=59&&r.right<=innerWidth-59&&r.bottom<=innerHeight-21,hit:!!hit&&(hit===e||e.contains(hit))}}))
   for(const control of controls){expect(control.safe,control.label??'Controlo').toBe(true);expect(control.hit,control.label??'Controlo').toBe(true)}
@@ -187,7 +214,7 @@ test('a primeira linha da tabela abre a ficha sem sobreposição em horizontal',
 })
 
 test('âmbito partilhado combina dimensões, restaura histórico e conserva notas integrais',async({page},info)=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
  const scope=page.getByRole('region',{name:'Filtros partilhados'}),table=page.getByRole('table',{name:'Registos de trabalho'})
  await scope.getByLabel('Filtrar sociedade').selectOption('00000000-0000-4000-8000-000000000002')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000010')
@@ -197,10 +224,10 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  await expect(clientType.locator('option:checked')).toHaveText('PARTICULARES')
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).not.toContainText('Reunião de acompanhamento')
  await expect.poll(()=>searchCalls.some(args=>args.p_professional_id==='00000000-0000-4000-8000-000000000010'&&args.p_billing_entity_id==='00000000-0000-4000-8000-000000000002'&&args.p_client_type==='individual')).toBe(true)
- await page.waitForLoadState('networkidle');await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
+ await settleReads(page);await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000011');await expect(table).toContainText('Análise documental');await expect(table).not.toContainText('Consulta e preparação de processo')
  await page.goBack();await expect(table).toContainText('Consulta e preparação de processo')
- const url=new URL(page.url());url.searchParams.set('view','payments');if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto(url.toString())
+ const url=new URL(page.url());url.searchParams.set('view','payments');await settleReads(page);await page.goto(url.toString())
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_payment_queue'&&call.args.p_scope_client_type==='individual')).toBe(true)
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()
  await expect(page.getByRole('table',{name:'Notas de honorários não pagas'})).toContainText('Nota integral simulada')
@@ -209,7 +236,7 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
  await page.screenshot({path:`output/workflow-integration/${info.project.name}-shared-scope.png`})
  await scope.getByRole('button',{name:'Limpar âmbito'}).click();expect(new URL(page.url()).searchParams.has('scopeSociety')).toBe(false)
- url.searchParams.set('view','work');url.searchParams.delete('scopeSociety');url.searchParams.delete('scopeProfessional');url.searchParams.delete('scopeClientType');if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto(url.toString())
+ url.searchParams.set('view','work');url.searchParams.delete('scopeSociety');url.searchParams.delete('scopeProfessional');url.searchParams.delete('scopeClientType');await settleReads(page);await page.goto(url.toString())
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).toContainText('Reunião de acompanhamento')
 })
 
@@ -221,27 +248,27 @@ test('falta da consulta financeira filtrada apresenta erro sem resultados globai
   if(rpc==='get_workflow_payment_queue')return route.fulfill({headers:syntheticCorsHeaders,status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic scope RPC'})})
   return route.fallback()
  })
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments&scopeClientType=company')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments&scopeClientType=company')
  await expect(page.getByRole('alert')).toContainText('Não foram apresentados resultados globais')
  expect(globalCalls).toBe(0);expect(writes).toEqual([])
 })
 
 test('parâmetros inválidos e falta da consulta do resumo são bloqueados',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeSociety=LEGALTEAM')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeSociety=LEGALTEAM')
  await expect(page.getByRole('alert')).toContainText('inválido');expect(searchCalls).toEqual([])
  await page.getByRole('button',{name:'Limpar âmbito'}).click();await expect(page.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
  await page.route('**/rest/v1/rpc/get_workflow_dashboard_overview',route=>route.fulfill({headers:syntheticCorsHeaders,status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic dashboard scope'})}))
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=overview&scopeClientType=individual')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=overview&scopeClientType=individual')
  await expect(page.getByRole('alert')).toContainText('Não foram apresentados resultados globais')
  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toHaveCount(0)
 })
 
 test('categoria da lista preserva âmbito e os clientes excluídos regressam ao limpar',async({page})=>{
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&scopeClientType=individual')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&scopeClientType=individual')
  await expect(page.getByText('Cliente Demonstração Alfa',{exact:true}).first()).toBeVisible();await expect(page.getByText('Cliente Demonstração Beta',{exact:true})).toHaveCount(0)
  await page.getByRole('button',{name:'PARTICULARES',exact:true}).click();expect(new URL(page.url()).searchParams.get('scopeClientType')).toBe('individual')
  await page.getByRole('region',{name:'Filtros partilhados'}).getByRole('button',{name:'Limpar âmbito'}).click()
- const url=new URL(page.url());url.searchParams.delete('clientType');url.searchParams.set('qa-iphone','1');url.searchParams.set('qa-role','admin');if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto(url.toString())
+ const url=new URL(page.url());url.searchParams.delete('clientType');url.searchParams.set('qa-iphone','1');url.searchParams.set('qa-role','admin');await settleReads(page);await page.goto(url.toString())
  await expect(page.getByText('Cliente Demonstração Beta',{exact:true}).first()).toBeVisible();expect(writes).toEqual([])
 })
 
@@ -261,18 +288,18 @@ test('cliente misto intersecta vertente, pagina todos os registos e conserva cli
   if(rpc==='get_work_attention_summaries')return route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify({uninvoiced:{count:scoped(args).length,minutes:scoped(args).reduce((sum,item)=>sum+Number(item.duration_minutes),0),priced:scoped(args).length,amount:scoped(args).reduce((sum,item)=>sum+Number(item.effective_amount),0)}})})
   return route.fallback()
  })
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeClientType=mixed&clientType=individual')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeClientType=mixed&clientType=individual')
  const table=page.getByRole('table',{name:'Registos de trabalho'})
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).toContainText('Preparação de requerimento');await expect(table).not.toContainText('Análise documental');await expect(table).not.toContainText('Reunião de acompanhamento')
  await expect.poll(()=>searchCalls.some(args=>args.p_client_id===alpha&&args.p_client_type==='individual'&&args.p_page===2)).toBe(true)
- await page.waitForLoadState('networkidle');await page.reload();await expect(table).toContainText('Preparação de requerimento')
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeClientType=mixed&clientId='+beta)
+ await settleReads(page);await page.reload();await expect(table).toContainText('Preparação de requerimento')
+ await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeClientType=mixed&clientId='+beta)
  await expect(table).not.toContainText('Consulta e preparação de processo');await expect(table).not.toContainText('Reunião de acompanhamento');expect(writes).toEqual([])
 })
 
 test('gráficos e dashboards partilham filtros e abrem os movimentos correspondentes',async({page},info)=>{
  const params='qa-iphone=1&qa-role=admin&workflow=preview&scopeSociety=00000000-0000-4000-8000-000000000002&scopeProfessional=00000000-0000-4000-8000-000000000012&scopeClientType=individual'
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=overview&'+params)
+ await settleReads(page);await page.goto('/?view=overview&'+params)
  await expect(page.locator('article').filter({hasText:'Valor trabalhado'})).toContainText('500,00')
  await page.getByRole('button',{name:'Abrir LEGALTEAM · Valor por sociedade',exact:true}).click()
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_entity_dashboard_rolling'&&call.args.p_scope_professional_id==='00000000-0000-4000-8000-000000000012'&&call.args.p_kind==='billing')).toBe(true)
@@ -280,10 +307,10 @@ test('gráficos e dashboards partilham filtros e abrem os movimentos corresponde
  await page.getByRole('link',{name:'Abrir movimentos de Não Facturados',exact:true}).click()
  const table=page.getByRole('region',{name:'Resultados do acompanhamento',exact:true}).getByRole('table',{name:'Registos de trabalho'})
  await expect(table).toContainText('Preparação de requerimento');await expect(table).not.toContainText('Reunião de acompanhamento');await expect(table).not.toContainText('Consulta e preparação de processo')
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=clients&clientType=individual&clientMode=dashboard&'+params)
+ await settleReads(page);await page.goto('/?view=clients&clientType=individual&clientMode=dashboard&'+params)
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_client_category_dashboard'&&call.args.p_client_type==='individual')).toBe(true)
  await expect(page.locator('article').filter({hasText:'Valor total'}).first()).toContainText('500,00')
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=professionals&'+params)
+ await settleReads(page);await page.goto('/?view=professionals&'+params)
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_professional_landing_summaries')).toBe(true)
  await expect(page.getByRole('heading',{name:'Paula Chaves',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Carina Santos',exact:true})).toHaveCount(0)
  expect(writes).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
@@ -294,13 +321,13 @@ test('dívida e ficha conservam os valores e movimentos integrais do cliente sel
  const debtor=(id:string,name:string,retainerAmount:number,uninvoicedAmount:number)=>({id,name,code:'QA',unpaidCount:0,unpaidMinutes:0,unpaidAmount:0,unpaidPartial:false,uninvoicedCount:1,uninvoicedMinutes:150,uninvoicedAmount,uninvoicedPartial:false,retainerCount:1,retainerAmount,retainerPendingCount:0,retainerPendingAmount:0,oldestDate:'2026-08-01',oldestKind:'avença',oldestInvoiceDate:null})
  await page.route('**/rest/v1/rpc/get_receivable_client_summary',route=>route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify([debtor('00000000-0000-4000-8000-000000000020','Cliente Demonstração Alfa',1200,500),debtor('00000000-0000-4000-8000-000000000021','Cliente Demonstração Beta',900,200)])}))
  const params='qa-iphone=1&qa-role=admin&workflow=preview&scopeProfessional=00000000-0000-4000-8000-000000000010&scopeClientType=individual'
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=debtors&'+params)
+ await settleReads(page);await page.goto('/?view=debtors&'+params)
  await expect(page.getByText('Cliente Demonstração Alfa',{exact:true})).toBeVisible();await expect(page.getByText('Cliente Demonstração Beta',{exact:true})).toHaveCount(0)
  await expect(page.getByText(/1[.\s]?200,00/).first()).toBeVisible();await expect(page.getByText('500,00',{exact:false}).first()).toBeVisible()
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=overview&'+params)
+ await settleReads(page);await page.goto('/?view=overview&'+params)
  await expect(page.locator('article').filter({hasText:'Total por receber'})).toContainText(/1[.\s]?700,00/)
  await expect(page.locator('article').filter({hasText:'Valor trabalhado'})).toContainText('600,00')
- if(page.url()!=='about:blank')await page.waitForLoadState('networkidle');await page.goto('/?view=clients&clientType=individual&clientMode=list&'+params)
+ await settleReads(page);await page.goto('/?view=clients&clientType=individual&clientMode=list&'+params)
  await openFromList(page)
  const dialog=page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})
  await expect(page.getByRole('region',{name:'Filtros partilhados'}).getByLabel('Filtrar responsável')).toBeDisabled()
