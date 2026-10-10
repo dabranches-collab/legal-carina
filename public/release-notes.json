@@ -1,11 +1,15 @@
 {
-  "version": "0.16.2",
+  "version": "0.16.3",
   "changes": [
-    "Correcção da ficha de cliente em ecrãs pequenos e horizontais: os separadores deixam de tapar os campos e acções.",
-    "Acções das tabelas acessíveis no iPhone, incluindo o botão para preparar notas de honorários.",
-    "Scroll das tabelas estabilizado, conservando o acesso aos cabeçalhos e à ordenação. Em ecrãs baixos, os controlos acompanham o scroll e libertam as primeiras linhas."
+    "Gráficos com deslocação horizontal abrem no último período disponível, em todos os painéis, conservando a consulta manual dos períodos anteriores."
   ],
   "releases": [
+    {
+      "version": "0.16.3",
+      "changes": [
+        "Gráficos com deslocação horizontal abrem no último período disponível, em todos os painéis, conservando a consulta manual dos períodos anteriores."
+      ]
+    },
     {
       "version": "0.16.2",
       "changes": [

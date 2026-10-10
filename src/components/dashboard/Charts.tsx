@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LatestPeriodScroll } from "./LatestPeriodScroll";
 
 export type ChartPoint = {
   label: string | number;
@@ -322,7 +323,7 @@ export function AnnualValueChart({
           </div>
         </>
       ) : (
-        <div className="overflow-x-auto pb-1">
+        <LatestPeriodScroll className="pb-1">
           <div
             className="flex h-56 min-w-[34rem] items-end gap-2 border-b border-border pb-1 sm:gap-3"
             role="img"
@@ -347,7 +348,7 @@ export function AnnualValueChart({
               </div>
             ))}
           </div>
-        </div>
+        </LatestPeriodScroll>
       )}
     </ChartCard>
   );
@@ -437,7 +438,7 @@ export function MonthlyValueChart({
           rolling ? "Últimos 12 meses" : "Distribuição mensal disponível"
         }
       >
-        <div className="overflow-x-auto pb-1">
+        <LatestPeriodScroll className="pb-1">
           <div className="h-56 min-w-[42rem]">
             <div className="relative h-48">
               <svg
@@ -495,7 +496,7 @@ export function MonthlyValueChart({
               ))}
             </div>
           </div>
-        </div>
+        </LatestPeriodScroll>
       </ChartCard>
     );
   const valuesFor = (society: string) =>
@@ -538,7 +539,7 @@ export function MonthlyValueChart({
               </span>
             ))}
           </div>
-          <div className="overflow-x-auto pb-1">
+          <LatestPeriodScroll className="pb-1">
             <div className="h-60 min-w-[56rem]">
               <div
                 className="relative h-52"
@@ -589,10 +590,10 @@ export function MonthlyValueChart({
                 ))}
               </div>
             </div>
-          </div>
+          </LatestPeriodScroll>
         </>
       ) : (
-        <div className="overflow-x-auto pb-1">
+        <LatestPeriodScroll className="pb-1">
           <div className="h-56 min-w-[42rem]">
             <div className="relative h-48">
               <svg
@@ -639,19 +640,19 @@ export function MonthlyValueChart({
                 </span>
               ))}
             </div>
+            <div className="grid grid-cols-12 text-center text-[11px] text-text-secondary">
+              {labels.map((month, index) => (
+                <PeriodBreakdown
+                  key={`${month}-${index}`}
+                  label={month}
+                  total={pointsData[index].value}
+                  entries={breakdownFor(index)}
+                  emptyLabel={comparisonLabel}
+                />
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-12 text-center text-[11px] text-text-secondary">
-            {labels.map((month, index) => (
-              <PeriodBreakdown
-                key={`${month}-${index}`}
-                label={month}
-                total={pointsData[index].value}
-                entries={breakdownFor(index)}
-                emptyLabel={comparisonLabel}
-              />
-            ))}
-          </div>
-        </div>
+        </LatestPeriodScroll>
       )}
     </ChartCard>
   );
@@ -718,7 +719,7 @@ export function CompactVerticalChart({
   const max = Math.max(...values, 1);
   return (
     <ChartCard title={title} subtitle={subtitle}>
-      <div className="overflow-x-auto pb-1">
+      <LatestPeriodScroll className="pb-1">
         <div
           className="flex h-40 min-w-[28rem] items-end gap-2 border-b border-border px-1"
           role="img"
@@ -743,7 +744,7 @@ export function CompactVerticalChart({
             </div>
           ))}
         </div>
-      </div>
+      </LatestPeriodScroll>
     </ChartCard>
   );
 }
@@ -891,7 +892,7 @@ export function YearComparisonChart({
       subtitle={years.length ? years.join(" versus ") : "Seleccione anos"}
       className="lg:col-span-2"
     >
-      <div className="overflow-x-auto">
+      <LatestPeriodScroll>
         <div className="min-w-[42rem]">
           <div className="mb-3 flex justify-end gap-4 text-xs">
             {years.map((year, index) => (
@@ -943,7 +944,7 @@ export function YearComparisonChart({
             ))}
           </div>
         </div>
-      </div>
+      </LatestPeriodScroll>
     </ChartCard>
   );
 }
@@ -958,7 +959,7 @@ export function SocietyEvolutionChart({ data }: { data: SocietyYearPoint[] }) {
       subtitle="Comparação por sociedade"
       className="lg:col-span-2"
     >
-      <div className="overflow-x-auto pb-1">
+      <LatestPeriodScroll className="pb-1">
         <div
           className="min-w-[34rem] divide-y divide-border md:min-w-0"
           role="img"
@@ -1023,7 +1024,7 @@ export function SocietyEvolutionChart({ data }: { data: SocietyYearPoint[] }) {
             );
           })}
         </div>
-      </div>
+      </LatestPeriodScroll>
     </ChartCard>
   );
 }
