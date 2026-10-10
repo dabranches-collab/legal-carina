@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test'
 import {createQaAllocationData} from '../src/lib/qaAllocationData'
+import packageJson from '../package.json'
 test.skip(process.env.WORKFLOW_ISOLATED_E2E!=='1','Requer playwright.workflow.config.ts para bloquear serviços reais.')
 let forbidden:string[]
 let searchCalls: Record<string,unknown>[]
@@ -15,7 +16,7 @@ function overviewFixture(items:WorkFixture[]){
 test.beforeEach(async({context,request,page})=>{
  for(const path of ['/supabase-api/auth/v1/user','/supabase-functions/v1/test','/api/document-translation']){const response=await request.get(path);expect(response.status()).toBe(403);expect(await response.text()).toBe('Blocked by isolated setup')}
  forbidden=[];searchCalls=[];scopeCalls=[];writes=[];browserErrors=[];page.on('pageerror',error=>browserErrors.push(error.message));const fixture=createQaAllocationData()
- await context.addInitScript(()=>localStorage.setItem('carina-release-notes-seen','0.16.0'))
+ await context.addInitScript(version=>localStorage.setItem('carina-release-notes-seen',version),packageJson.version)
  await context.route('**/*',async route=>{
   const request=route.request(),url=new URL(request.url())
   if(url.origin==='http://127.0.0.1:54321'&&url.pathname.startsWith('/rest/v1/')){
