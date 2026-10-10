@@ -1,0 +1,436 @@
+[
+  {
+    "project": "GR",
+    "touch": false,
+    "scenario": {
+      "width": 390,
+      "height": 844,
+      "top": 59,
+      "side": 0,
+      "bottom": 34
+    },
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "bottom": 152,
+        "height": 152,
+        "background": "rgba(0, 0, 0, 0) linear-gradient(110deg, rgb(32, 33, 33) 0%, rgb(37, 32, 32) 55%, rgb(78, 33, 29) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+        "heightCSS": "152px",
+        "minHeight": "146px"
+      },
+      "controls": [
+        {
+          "text": "☰",
+          "x": 15,
+          "y": 85,
+          "right": 45,
+          "bottom": 115,
+          "width": 30,
+          "height": 30,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 21,
+          "y": 199.40625,
+          "right": 133,
+          "bottom": 231.40625,
+          "width": 112,
+          "height": 32,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 137,
+          "y": 199.40625,
+          "right": 249,
+          "bottom": 231.40625,
+          "width": 112,
+          "height": 32,
+          "hit": true
+        },
+        {
+          "text": "Período máximo",
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "hit": false
+        },
+        {
+          "text": "◉ Ocultar valores",
+          "x": 175,
+          "y": 247.40625,
+          "right": 211,
+          "bottom": 282.40625,
+          "width": 36,
+          "height": 35,
+          "hit": true
+        },
+        {
+          "text": "↻ Atualizar",
+          "x": 216,
+          "y": 245.40625,
+          "right": 252,
+          "bottom": 284.40625,
+          "width": 36,
+          "height": 39,
+          "hit": true
+        },
+        {
+          "text": "☾ Escuro",
+          "x": 257,
+          "y": 246.40625,
+          "right": 293,
+          "bottom": 283.40625,
+          "width": 36,
+          "height": 37,
+          "hit": true
+        },
+        {
+          "text": "⇩ Instalar",
+          "x": 298,
+          "y": 248.90625,
+          "right": 360,
+          "bottom": 280.90625,
+          "width": 62,
+          "height": 32,
+          "hit": true
+        }
+      ]
+    }
+  },
+  {
+    "project": "GR",
+    "touch": false,
+    "scenario": {
+      "width": 844,
+      "height": 390,
+      "top": 0,
+      "side": 59,
+      "bottom": 21
+    },
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "bottom": 152,
+        "height": 152,
+        "background": "rgba(0, 0, 0, 0) linear-gradient(110deg, rgb(32, 33, 33) 0%, rgb(37, 32, 32) 55%, rgb(78, 33, 29) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+        "heightCSS": "152px",
+        "minHeight": "146px"
+      },
+      "controls": [
+        {
+          "text": "☰",
+          "x": 74,
+          "y": 26,
+          "right": 104,
+          "bottom": 56,
+          "width": 30,
+          "height": 30,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 82,
+          "y": 145.3125,
+          "right": 217,
+          "bottom": 177.3125,
+          "width": 135,
+          "height": 32,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 224,
+          "y": 145.3125,
+          "right": 359,
+          "bottom": 177.3125,
+          "width": 135,
+          "height": 32,
+          "hit": true
+        },
+        {
+          "text": "Período máximo",
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "hit": false
+        },
+        {
+          "text": "◉ Ocultar valores",
+          "x": 403,
+          "y": 137.3125,
+          "right": 517,
+          "bottom": 170.3125,
+          "width": 114,
+          "height": 33,
+          "hit": true
+        },
+        {
+          "text": "↻ Atualizar",
+          "x": 522,
+          "y": 137.3125,
+          "right": 605,
+          "bottom": 170.3125,
+          "width": 83,
+          "height": 33,
+          "hit": true
+        },
+        {
+          "text": "☾ Escuro",
+          "x": 610,
+          "y": 137.3125,
+          "right": 677,
+          "bottom": 170.3125,
+          "width": 67,
+          "height": 33,
+          "hit": true
+        },
+        {
+          "text": "⇩ Instalar",
+          "x": 682,
+          "y": 137.3125,
+          "right": 755,
+          "bottom": 170.3125,
+          "width": 73,
+          "height": 33,
+          "hit": true
+        }
+      ]
+    }
+  },
+  {
+    "project": "GR",
+    "touch": true,
+    "scenario": {
+      "width": 390,
+      "height": 844,
+      "top": 59,
+      "side": 0,
+      "bottom": 34
+    },
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "bottom": 308.40625,
+        "height": 308.40625,
+        "background": "rgba(0, 0, 0, 0) linear-gradient(110deg, rgb(32, 33, 33) 0%, rgb(37, 32, 32) 55%, rgb(78, 33, 29) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+        "heightCSS": "308.406px",
+        "minHeight": "146px"
+      },
+      "controls": [
+        {
+          "text": "☰",
+          "x": 15,
+          "y": 85,
+          "right": 59,
+          "bottom": 129,
+          "width": 44,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 21,
+          "y": 191.40625,
+          "right": 163,
+          "bottom": 235.40625,
+          "width": 142,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 167,
+          "y": 191.40625,
+          "right": 309,
+          "bottom": 235.40625,
+          "width": 142,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "Período máximo",
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "hit": false
+        },
+        {
+          "text": "◉ Ocultar valores",
+          "x": 151,
+          "y": 249.40625,
+          "right": 195,
+          "bottom": 293.40625,
+          "width": 44,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "↻ Atualizar",
+          "x": 200,
+          "y": 249.40625,
+          "right": 244,
+          "bottom": 293.40625,
+          "width": 44,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "☾ Escuro",
+          "x": 249,
+          "y": 249.40625,
+          "right": 293,
+          "bottom": 293.40625,
+          "width": 44,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "⇩ Instalar",
+          "x": 298,
+          "y": 249.40625,
+          "right": 360,
+          "bottom": 293.40625,
+          "width": 62,
+          "height": 44,
+          "hit": true
+        }
+      ]
+    }
+  },
+  {
+    "project": "GR",
+    "touch": true,
+    "scenario": {
+      "width": 844,
+      "height": 390,
+      "top": 0,
+      "side": 59,
+      "bottom": 21
+    },
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "bottom": 206.3125,
+        "height": 206.3125,
+        "background": "rgba(0, 0, 0, 0) linear-gradient(110deg, rgb(32, 33, 33) 0%, rgb(37, 32, 32) 55%, rgb(78, 33, 29) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+        "heightCSS": "206.312px",
+        "minHeight": "146px"
+      },
+      "controls": [
+        {
+          "text": "☰",
+          "x": 74,
+          "y": 26,
+          "right": 118,
+          "bottom": 70,
+          "width": 44,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 82,
+          "y": 139.3125,
+          "right": 224,
+          "bottom": 183.3125,
+          "width": 142,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "date",
+          "x": 231,
+          "y": 139.3125,
+          "right": 373,
+          "bottom": 183.3125,
+          "width": 142,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "Período máximo",
+          "x": 0,
+          "y": 0,
+          "right": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "hit": false
+        },
+        {
+          "text": "◉ Ocultar valores",
+          "x": 403,
+          "y": 131.8125,
+          "right": 517,
+          "bottom": 175.8125,
+          "width": 114,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "↻ Atualizar",
+          "x": 522,
+          "y": 131.8125,
+          "right": 605,
+          "bottom": 175.8125,
+          "width": 83,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "☾ Escuro",
+          "x": 610,
+          "y": 131.8125,
+          "right": 677,
+          "bottom": 175.8125,
+          "width": 67,
+          "height": 44,
+          "hit": true
+        },
+        {
+          "text": "⇩ Instalar",
+          "x": 682,
+          "y": 131.8125,
+          "right": 755,
+          "bottom": 175.8125,
+          "width": 73,
+          "height": 44,
+          "hit": true
+        }
+      ]
+    }
+  },
+  {
+    "project": "Carina",
+    "case": "form-focus-short-viewport",
+    "note": "resize simulates lost height, not iOS keyboard",
+    "metrics": {
+      "tag": "INPUT",
+      "x": 38,
+      "y": 412,
+      "bottom": 456,
+      "height": 524,
+      "visible": true
+    }
+  },
+  {
+    "project": "Carina",
+    "case": "form-survives-resize",
+    "dialogCount": 1
+  }
+]

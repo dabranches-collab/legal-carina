@@ -1,0 +1,3249 @@
+{
+  "sha": "842d499c6c30ea73b2e8d668a8ef2b53c033b3f3",
+  "browser": "155.0.8059.39",
+  "fixture": "qa-demo=1 qa-role=owner local/test only",
+  "rows": [
+    {
+      "view": "overview",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 406,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nA carregar a Visão geral\n\nOs dado",
+      "tables": 0,
+      "charts": 13,
+      "overflow": true
+    },
+    {
+      "view": "overview",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Resumo operacional",
+        "Acompanhamento",
+        "Análise e tendências",
+        "Valor por ano",
+        "Valor por mês",
+        "Horas por ano",
+        "Valor por cliente",
+        "Valor por sociedade",
+        "Valor por responsável",
+        "Facturação",
+        "Recebimentos",
+        "Preço médio/hora",
+        "Tipo de cliente",
+        "Evolução anual das sociedades",
+        "Arquivo",
+        "Distribuição das sociedades"
+      ],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nResumo operacional\n\nDados reais ac",
+      "tables": 0,
+      "charts": 34,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional e acesso aos d",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nTodas as sociedades\nResponsável\nTodos os responsáveis\nResumo de clientes\nEscolher tipo\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nResumo operacional, alertas e ace",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nA abrir ecrã\n\nO conteúdo está a ser preparado.",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nA abrir ecrã\n\nO conteúdo está a ser preparado.",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · PARTICULARES",
+        "Lista de PARTICULARES"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nLista · PARTICULARES\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para es",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · PARTICULARES",
+        "Lista de PARTICULARES"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nLista · PARTICULARES\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para es",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · PARTICULARES",
+        "Lista de PARTICULARES"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nLista · PARTICULARES\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para es",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · PARTICULARES",
+        "Lista de PARTICULARES"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nLista · PARTICULARES\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para es",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · PARTICULARES",
+        "Lista de PARTICULARES"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nLista · PARTICULARES\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para es",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nTratamento das avenças\n\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\n\nCondições vigentes, hora",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPendências a corrigir\n\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\nSem preço\n0\nTrabalho por facturar\n0\nFacturados não pagos\n0\nPagos s/ factura ou data\n—\nCobertos por avença\n",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nACOMPANHAMENTO DE RECEBIMENTOS\n\nClientes por receber\n\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cad",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nPagamentos\n\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturad",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\n\nA abrir ecrã\n\nO conteúdo está a ser preparado.",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nTodos\nFiltrar responsável\nTodos\nFiltrar tipo de cliente\nTodos\nPARTICULARES\nEMPRESAS\nMISTOS\nProvisões\n\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n\n● Com saldo disp",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\n\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\n\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\n\nDe CARINA SANTOS\n\nNormal\n\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n\n30-08-2026 12:00\nConsultar\nPreparar reunião T",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nA abrir ecrã\n\nO conteúdo está a ser preparado.",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nA abrir ecrã\n\nO conteúdo está a ser preparado.",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clie",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clie",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clie",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clie",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\nCaixas\nTabela\nCriar cliente\n\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clie",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nUtilizadores\nRegistos de acesso",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\n\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImpr",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nIMPORTAÇÃO LOCAL EM DUAS FASES\n\nAnalisar antes de gravar\n\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segur",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\n\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\n\nPossível duplicado\n\n0\n\nPossíve",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "small",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 320,
+      "height": 568,
+      "dpr": 1,
+      "scrollWidth": 320,
+      "visualViewport": {
+        "width": 320,
+        "height": 568,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "wide-landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 932,
+      "height": 430,
+      "dpr": 1,
+      "scrollWidth": 932,
+      "visualViewport": {
+        "width": 932,
+        "height": 430,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "tablet",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 768,
+      "height": 1024,
+      "dpr": 1,
+      "scrollWidth": 768,
+      "visualViewport": {
+        "width": 768,
+        "height": 1024,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "tablet-landscape",
+      "insets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 20,
+        "left": 0
+      },
+      "width": 1024,
+      "height": 768,
+      "dpr": 1,
+      "scrollWidth": 1024,
+      "visualViewport": {
+        "width": 1024,
+        "height": 768,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\n\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\n\nActualizar\n\nApenas o proprietário pode consultar o histórico de acessos",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "physical": "PENDING",
+  "pwa": "PENDING",
+  "note": "Synthetic generic CSS profiles and insets; no real device certification"
+}

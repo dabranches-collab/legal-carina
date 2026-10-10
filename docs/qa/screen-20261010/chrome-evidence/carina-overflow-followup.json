@@ -1,0 +1,160 @@
+[
+  {
+    "delay": 0,
+    "metrics": {
+      "width": 320,
+      "scrollWidth": 320,
+      "offenders": [],
+      "loading": false
+    }
+  },
+  {
+    "delay": 200,
+    "metrics": {
+      "width": 320,
+      "scrollWidth": 320,
+      "offenders": [],
+      "loading": true
+    }
+  },
+  {
+    "delay": 800,
+    "metrics": {
+      "width": 320,
+      "scrollWidth": 320,
+      "offenders": [
+        {
+          "tag": "DIV",
+          "cls": "flex h-56 min-w-[34rem] items-end gap-2 border-b border-border pb-1 sm:gap-3",
+          "text": "16 mil €2420,4 mil €2524,8 mil €26",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "group flex h-full min-w-0 flex-1 flex-col justify-end",
+          "text": "20,4 mil €25",
+          "right": 398
+        },
+        {
+          "tag": "SPAN",
+          "cls": "financial-value mb-2 whitespace-nowrap text-center text-[11px] font-semibold tabular-nums text-text-primary",
+          "text": "20,4 mil €",
+          "right": 398
+        },
+        {
+          "tag": "DIV",
+          "cls": "min-h-1 rounded-t-md bg-chart-1 transition-[height,filter] duration-300 hover:brightness-110",
+          "text": "",
+          "right": 398
+        },
+        {
+          "tag": "SPAN",
+          "cls": "mt-2 text-center text-[11px] text-text-secondary",
+          "text": "25",
+          "right": 398
+        },
+        {
+          "tag": "DIV",
+          "cls": "group flex h-full min-w-0 flex-1 flex-col justify-end",
+          "text": "24,8 mil €26",
+          "right": 582
+        },
+        {
+          "tag": "SPAN",
+          "cls": "financial-value mb-2 whitespace-nowrap text-center text-[11px] font-semibold tabular-nums text-text-primary",
+          "text": "24,8 mil €",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "min-h-1 rounded-t-md bg-chart-1 transition-[height,filter] duration-300 hover:brightness-110",
+          "text": "",
+          "right": 582
+        },
+        {
+          "tag": "SPAN",
+          "cls": "mt-2 text-center text-[11px] text-text-secondary",
+          "text": "26",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "h-56 min-w-[42rem]",
+          "text": "0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €",
+          "right": 710
+        }
+      ],
+      "loading": false
+    }
+  },
+  {
+    "delay": 1600,
+    "metrics": {
+      "width": 320,
+      "scrollWidth": 320,
+      "offenders": [
+        {
+          "tag": "DIV",
+          "cls": "flex h-56 min-w-[34rem] items-end gap-2 border-b border-border pb-1 sm:gap-3",
+          "text": "16 mil €2420,4 mil €2524,8 mil €26",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "group flex h-full min-w-0 flex-1 flex-col justify-end",
+          "text": "20,4 mil €25",
+          "right": 398
+        },
+        {
+          "tag": "SPAN",
+          "cls": "financial-value mb-2 whitespace-nowrap text-center text-[11px] font-semibold tabular-nums text-text-primary",
+          "text": "20,4 mil €",
+          "right": 398
+        },
+        {
+          "tag": "DIV",
+          "cls": "min-h-1 rounded-t-md bg-chart-1 transition-[height,filter] duration-300 hover:brightness-110",
+          "text": "",
+          "right": 398
+        },
+        {
+          "tag": "SPAN",
+          "cls": "mt-2 text-center text-[11px] text-text-secondary",
+          "text": "25",
+          "right": 398
+        },
+        {
+          "tag": "DIV",
+          "cls": "group flex h-full min-w-0 flex-1 flex-col justify-end",
+          "text": "24,8 mil €26",
+          "right": 582
+        },
+        {
+          "tag": "SPAN",
+          "cls": "financial-value mb-2 whitespace-nowrap text-center text-[11px] font-semibold tabular-nums text-text-primary",
+          "text": "24,8 mil €",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "min-h-1 rounded-t-md bg-chart-1 transition-[height,filter] duration-300 hover:brightness-110",
+          "text": "",
+          "right": 582
+        },
+        {
+          "tag": "SPAN",
+          "cls": "mt-2 text-center text-[11px] text-text-secondary",
+          "text": "26",
+          "right": 582
+        },
+        {
+          "tag": "DIV",
+          "cls": "h-56 min-w-[42rem]",
+          "text": "0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €0 €",
+          "right": 710
+        }
+      ],
+      "loading": false
+    }
+  }
+]
