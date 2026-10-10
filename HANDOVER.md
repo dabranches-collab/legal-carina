@@ -1,3 +1,11 @@
+## 2026-10-10 - sincronização do harness WebKit (PR105, 0.16.4 em preparação)
+
+A falha CI de âmbito/histórico foi reproduzida localmente: o prefetch global reagendado começa depois de beforeunload, apesar da rede anteriormente quieta. O ensaio passa a observar a conclusão dessa leitura antes de navegar; sem aumentar esperas/timeouts ou filtrar erros. Controlos explícitos mantêm navegação interrompida, CORS negado e HTTP403. Validação local corrigida:30/30 WebKit, repetição final15/15 WebKit e6/6 Chrome; gráficos10/10, tipos, build, guarda de ficheiros e lint dirigido aprovados. Ajuste final do controlo de interrupção:3/3 WebKit e3/3 Chromium exacto1.62; combinação dos três cenários9/9 Chromium exacto. As três baterias WebKit da CI anterior passaram; a validação geral detectou uma expectativa de evento no controlo novo, entretanto corrigida. CI do novo SHA ainda a confirmar. Diagnóstico em docs/workflow/webkit-navigation-harness.md. Produto de negócio, segurança e pipeline intactos; sem merge/deploy. Revisão da correcção de scroll concluída; alteração do harness requer revisão independente.
+
+## 2026-10-10 - correcção de scroll em revisão (0.16.4)
+
+Branch codex/preserve-chart-scroll-resize-20261010, baseada em main 99fe573ff6a9eb0adcd21c21e5a1d18edfddbf94. Preserva a consulta manual após clamp de resize e rotação; regressões mínimas cobrem ambas as ordens do evento scroll/ResizeObserver. Trabalho em worktree QA isolado, sem alterar o checkout do responsável. Evidência sintética e comandos em docs/workflow/chart-scroll-resize-regression.md. 355 unitários, 52 verificações adicionais de browser e oito E2E aprovados. CI remota a confirmar na PR draft. Produção permanece na última versão confirmada 0.16.3; sem merge/deploy ou dados reais. Entradas seguintes são históricas.
+
 ## 2026-10-10 — 0.16.3 publicada e confirmada
 
 PR #103 integrada em main `c6ec17aad4ea5b3b81006775d96fa357fb62e39e`; fonte publicada `e525a651115300445f07be002586090433d4fdde`, produto `d14ef6b`. CI `38060334230` e secret scan `38060334253` aprovados: 353 unitários, contratos SQL/âmbito, Worker, build, 64 integração, 182 regressão e quatro PWA; três baterias WebKit 110/110 (330/330), dependências aprovadas. Segurança, lint, tipos, unitários/SQL locais, build real, dry-run e quatro PWA locais aprovados. Destinos reais e navegação five-areas fixados no build oficial.
