@@ -24,7 +24,7 @@ Cada perfil executa os 16 contratos da suite workflow, mais seis cenários:
 - edição de avença com 32 horas por ano, período de 12 meses e excedente a 150 €/hora;
 - fecho do aviso de alterações da versão instalada antes de abrir uma despesa;
 - pré-visualização de honorários em PT, EN e FR, incluindo PDF renderizado e Word preparado, sem emitir uma nota nem consumir numeração;
-- tabela de 100 movimentos: filtros saem da vista, restam pelo menos duas linhas completas abaixo do cabeçalho da aplicação e scroll horizontal não alarga a página. A ordenação é efectivamente accionada: cabeçalho fixo no desktop; no mobile, regressa-se aos controlos da tabela, que acompanham o scroll por desenho.
+- tabela de 100 movimentos: filtros saem da vista, restam pelo menos duas linhas completas abaixo do cabeçalho da aplicação e scroll horizontal não alarga a página. A ordenação é efectivamente accionada: cabeçalho fixo no desktop com altura superior a 500 px; em móvel/ecrãs baixos regressa-se aos controlos da tabela, que acompanham o scroll.
 
 Os contratos existentes verificam as cinco áreas, grupos/páginas da ficha, campos obrigatórios e sugestões, clientes mistos, persistência do âmbito na URL e após recarregar, intersecção de responsável/sociedade/categoria, dívida e notas integrais. Os botões financeiros e de fecho são verificados por hit-testing do centro: um controlo visível mas tapado por outro elemento faz falhar o ensaio. Todos os cenários verificam ausência de overflow horizontal global e de erros JavaScript não tratados.
 
@@ -45,7 +45,9 @@ Código da aplicação `ec01d8437c5b718ecbb212499175f153460a4e9a`, sem alteraç�
 - Chromium: duas passagens integrais **682/682**, 31 perfis, sem falhas, omissões ou retries de cenários (12,7 e 12,6 minutos). Relatórios `chromium-ec01-complete.json` e `chromium-e246-complete.json`.
 - Após estabilizar a espera pelas leituras: **155/155** dos cinco cenários de navegação em todos os 31 perfis, mais **31/31** do cenário dos grupos/páginas e tema. Relatórios `drain-all-profiles.json` e `groups-final.json`.
 - Tabelas: **27/27 E2E** após a quinta correcção; 22 unitários da tabela e dez de pagamentos/PWA, tipos e build aprovados no lote.
-- WebKit Ubuntu, CI `38051396855`: **329/330**, 15 perfis; duas baterias 110/110, terceira 109/110. Sem erros de pedidos nesta passagem. Um cenário que percorre todos os grupos/páginas e reabre a ficha no outro tema excedeu 45 segundos, no último botão. Captura sem sobreposição e diagnóstico sem erro de pedidos; esse cenário passa a ter 90 segundos, conservando todas as verificações. Repetição final WebKit pendente.
+- WebKit oficial no Ubuntu: **330/330**, 15 perfis, três baterias de 110/110 na CI [38052515079](https://github.com/dabranches-collab/legal-carina/actions/runs/38052515079), commit `5c67621882df86fedea0da726a5cefc696e3d1fd`. Sem falhas, omissões ou retries de cenários. Relatórios `webkit-5c6-{1,2,3}/results.json` e `webkit-final-summary.json`.
+
+A passagem WebKit anterior teve 329/330, sem erros de pedidos; um cenário que percorre todos os grupos/páginas e reabre a ficha no outro tema excedeu 45 segundos no último botão. Esse cenário passou a ter 90 segundos, conservando todas as verificações; a repetição integral acima passou. Não houve alteração adicional do produto nesse ajuste.
 
 Comando: `pnpm exec playwright test --config playwright.responsive.config.ts`; para WebKit, `WORKFLOW_RESPONSIVE_BROWSER=webkit`. JSON, capturas sintéticas por perfil/cenário e artefactos ficam em `output/responsive-qa-20261010/`, fora do Git. O relatório combinado deduplica por perfil e título, conservando o resultado mais recente; não conta repetições como cenários novos.
 
@@ -58,3 +60,6 @@ A CI geral `38048173028` aprovou segurança, lint, tipos, 351 unitários, contra
 WebKit oficial do Playwright foi executado no Ubuntu da CI; neste Windows faltava `libxml2.dll`, sem bypass dessa verificação. Emulação Chromium/WebKit não equivale a um iPhone físico. Teclado virtual, Fototeca/câmara, instalação PWA e comportamento do Safari num aparelho permanecem por validar fisicamente.
 
 O fecho do aviso da versão instalada foi testado; o aviso de actualização pendente não está certificado por esse ensaio. Estabilidade de módulos entre publicações e origem dos uploads concorrentes, ciclo Storage real e Guardar rascunho/indicadores de preenchimento continuam pendentes conforme o relatório funcional e handover. Tradução real Azure EN/FR foi previamente verificada numa pré-visualização de um cliente com notas traduzidas; não se emitiram novas notas ou comunicações a clientes.
+
+
+A CI 38052515079 aprovou os 330 WebKit, 351 unitários, 64 workflow, SQL, Worker e build. O job geral atingiu o limite global de 20 minutos nos últimos dois dos 178 casos agendados da regressão, sem falhas de testes observadas; o build/PWA seguintes não arrancaram. O limite do job passa a 30 minutos, conservando todas as guardas e verificações. CI geral com esse orçamento em repetição. A CI geral 38051396855 já tinha aprovado integralmente o mesmo produto.
