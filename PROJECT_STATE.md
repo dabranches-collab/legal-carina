@@ -1,3 +1,11 @@
+## 2026-10-10 — gráficos abrem no último período (0.16.3 em preparação)
+
+Branch `codex/charts-latest-period-20261010`, código `d14ef6b057ee31b4e7483481832c23c6d7c844a1`, baseado em main `f507be63`. Componente comum LatestPeriodScroll aplicado às sete regiões de scroll dos gráficos temporais (anual, mensal agregado/individual, comparação anual e evolução). Abertura no fim, ajuste ao redimensionamento/carregamento de fontes, conservação da consulta manual. Rótulos mensais agregados alinhados com a largura do gráfico. Gráficos sem overflow horizontal conservam a apresentação completa.
+
+Validação: oito testes unitários aprovados; oito E2E isolados aprovados, cada um com os quatro painéis Resumo/Sociedades/Responsáveis/Clientes (32 entradas), em 320×568, 390×844, 844×390 e 1280×720, claro/escuro, incluindo alternância de séries e consulta manual. Segurança, lint dirigido, typecheck, build e diff-check aprovados. Browser integrado confirmou gráfico mensal no último período em 390×844; provas locais output/charts-latest-iphone.jpg e logs charts-latest-*.log. Ensaios com dados sintéticos e serviços externos bloqueados, sem alterações à base de dados. CI completa posterior ao push ainda por confirmar; Safari físico não certificado.
+
+Produção permanece **0.16.2**, release-notes online reconfirmadas neste lote; último deployment confirmado `4b426d26-8cf7-4214-a6ed-fbe492ad08f9`, Version ID `09232cd8-728e-45c7-91aa-4f3f5e760d05`, 2026-10-10T14:19:02.952448Z. **Sem novo deploy.** Versão local/GitHub em preparação 0.16.3. output/ anterior preservado; não publicar o dist de QA. Entradas seguintes históricas.
+
 ## 2026-10-10 — 0.16.2 publicada e confirmada
 
 Publicação autorizada concluída: PR #100 integrada em main `111a3830d9d4c4873a8980de9152c43931af9d55`, fonte publicada `a931cef94e7d9504f2b90c80c8e6ca90a1645432` (produto `ec01d843`, ensaios `9c889a7`). CI final `38057606102` e secret scan `38057606175` aprovados; as três baterias WebKit passaram. Mantêm-se os resultados completos Chromium 682/682 em 31 perfis e WebKit 330/330 em 15 perfis, documentados em docs/workflow/responsive-qa-20261010.md.
