@@ -5,7 +5,7 @@ type Write={method:string;table:string;body:Record<string,unknown>}
 async function mockMasterData(page:Page,writes:Write[]){
  await page.route('**/rest/v1/**',async route=>{
   const request=route.request(),url=new URL(request.url()),table=url.pathname.split('/').at(-1)??'',method=request.method()
-  if(method==='POST'||method==='PATCH')writes.push({method,table,body:(request.postDataJSON()??{}) as Record<string,unknown>})
+  if((method==='POST'||method==='PATCH')&&table!=='get_client_document_action_flags')writes.push({method,table,body:(request.postDataJSON()??{}) as Record<string,unknown>})
   if(table==='firm_members')return route.fulfill({contentType:'application/json',body:JSON.stringify({firm_id:'qa-firm'})})
   if(table==='clients'&&method==='POST')return route.fulfill({contentType:'application/json',body:JSON.stringify({id:'qa-client-created'})})
   if((table==='billing_entities'||table==='professionals')&&method==='POST')return route.fulfill({contentType:'application/json',body:JSON.stringify({id:`qa-${table}-created`})})
@@ -14,10 +14,35 @@ async function mockMasterData(page:Page,writes:Write[]){
  })
 }
 
+for(const width of [1280,390])test(`cria cliente misto com duas vertentes e exige pelo menos uma em ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:844})
+ const writes:Write[]=[];await mockMasterData(page,writes)
+ await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=company&clientMode=list')
+ await page.getByRole('button',{name:'Criar cliente',exact:true}).click()
+ const dialog=page.getByRole('dialog',{name:'Criar cliente'})
+ await expect(dialog.getByText(/Escolha pelo menos uma opção/)).toBeVisible()
+ await dialog.getByLabel('Nome',{exact:true}).fill('Cliente misto sintético')
+ const individual=dialog.getByRole('checkbox',{name:'Particular',exact:true}),company=dialog.getByRole('checkbox',{name:'Empresa',exact:true})
+ await individual.uncheck();await company.uncheck()
+ await dialog.getByRole('button',{name:'Guardar alterações',exact:true}).click()
+ await expect(dialog.getByRole('alert')).toContainText('Active pelo menos uma vertente')
+ expect(writes).toEqual([])
+ await individual.check();await company.check()
+ await expect(individual).toBeChecked();await expect(company).toBeChecked()
+ const codes=dialog.getByRole('textbox',{name:'Código desta vertente'})
+ await expect(codes.nth(0)).toHaveValue(/^02\./);await expect(codes.nth(1)).toHaveValue(/^01\./)
+ await dialog.getByRole('button',{name:'Guardar alterações',exact:true}).click()
+ await expect(page.getByRole('status').filter({hasText:'Cliente misto sintético criado.'})).toBeVisible()
+ const profiles=writes.filter(item=>item.table==='client_profiles'&&item.method==='POST')
+ expect(profiles).toHaveLength(2)
+ expect(profiles.map(item=>item.body.client_type).sort()).toEqual(['company','individual'])
+ expect(profiles.every(item=>item.body.client_id==='qa-client-created'&&item.body.active===true)).toBe(true)
+})
+
 test('Operador cria clientes, sociedades e responsáveis nas Definições operacionais',async({page})=>{
  const writes:Write[]=[];await mockMasterData(page,writes)
  await page.goto('/?qa-iphone=1&qa-role=operator&view=clients&clientType=company&clientMode=list')
- await expect(page.getByRole('heading',{name:'Lista · Empresas'})).toBeVisible()
+ await expect(page.getByRole('heading',{name:'Lista · EMPRESAS'})).toBeVisible()
  await page.getByRole('button',{name:'Criar cliente'}).click()
  const dialog=page.getByRole('dialog');await dialog.getByLabel('Nome').fill('tcodexoperador cliente UI')
  await dialog.getByLabel('Empresa',{exact:true}).check()

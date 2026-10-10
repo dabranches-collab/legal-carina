@@ -95,7 +95,7 @@ describe('interface principal', () => {
   it('abre os dashboards de entrada de clientes, sociedades e responsáveis', async () => {
     renderApp()
     await userEvent.click(screen.getByRole('button',{name:'Visão Geral'}))
-    await userEvent.click(within(screen.getByRole('list',{name:'Dashboards de clientes'})).getByRole('button',{name:'Particulares'}))
+    await userEvent.click(within(screen.getByRole('list',{name:'Dashboards de clientes'})).getByRole('button',{name:'PARTICULARES'}))
     expect(await screen.findByRole('region',{name:'Resumo do Cliente'}, {timeout:5000})).toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button', { name: 'Sociedades' })[0])
     expect(within(screen.getByRole('navigation', { name: 'Localização' })).getByText('Sociedades')).toBeInTheDocument()
@@ -107,15 +107,15 @@ describe('interface principal', () => {
     renderApp()
     await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
     expect(await screen.findByText('Clientes com provisões')).toBeInTheDocument()
-    for(const title of ['Particulares','Empresas','Avenças','Provisões'])expect(screen.getByRole('heading',{name:title})).toBeInTheDocument()
+    for(const title of ['PARTICULARES','EMPRESAS','Avenças','Provisões'])expect(screen.getByRole('heading',{name:title})).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button',{name:'Abrir provisões'}))
     expect(window.location.search).toBe('?view=provisions')
   })
 
-  it('abre a lista a partir do resumo de Particulares',async()=>{
+  it('abre a lista a partir do resumo de PARTICULARES',async()=>{
     renderApp()
     await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
-    await userEvent.click(await screen.findByRole('button',{name:'Abrir lista de Particulares'}))
+    await userEvent.click(await screen.findByRole('button',{name:'Abrir lista de PARTICULARES'}))
     expect(window.location.search).toBe('?view=clients&clientType=individual&clientMode=list')
   })
 
@@ -160,7 +160,7 @@ describe('interface principal', () => {
     expect(screen.getByRole('button',{name:'Definições'})).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Administração'})).not.toBeInTheDocument()
     await userEvent.click(screen.getAllByRole('button',{name:'Clientes'})[0])
-    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'Empresas'})).toBeInTheDocument()
+    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'EMPRESAS'})).toBeInTheDocument()
   })
 
   it('preserva a secção e o submenu indicados no URL após refresh, também em modo PWA', async()=>{
@@ -168,7 +168,7 @@ describe('interface principal', () => {
     window.history.replaceState({},'', '/?view=clients&clientType=company&clientMode=list')
     renderApp('owner')
     expect(window.location.search).toBe('?view=clients&clientType=company&clientMode=list')
-    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'Empresas'})).toHaveAttribute('aria-current','page')
+    expect(within(screen.getByRole('list',{name:'Listas de clientes'})).getByRole('button',{name:'EMPRESAS'})).toHaveAttribute('aria-current','page')
   })
 
   it('bloqueia URLs administrativas ao Operador e mantém os Registos operacionais disponíveis', async()=>{
@@ -187,7 +187,7 @@ describe('primeira integração do workflow', () => {
   it('conserva o preview ao mudar de categoria e recarregar a lista', async () => {
     window.history.replaceState({}, '', '/?workflow=preview&view=clients')
     renderApp('operator')
-    await userEvent.click(screen.getByRole('button', {name:'Empresas'}))
+    await userEvent.click(screen.getByRole('button', {name:'EMPRESAS'}))
     expect(new URLSearchParams(window.location.search).get('workflow')).toBe('preview')
     expect(new URLSearchParams(window.location.search).get('clientType')).toBe('company')
     expect(new URLSearchParams(window.location.search).get('clientMode')).toBe('list')

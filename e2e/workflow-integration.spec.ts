@@ -34,7 +34,7 @@ test.beforeEach(async({context,request,page})=>{
     if(rpc==='get_workflow_professional_landing_summaries')result=[...new Set(scoped.map(item=>item.professional_id))].map(id=>{const subset=scoped.filter(item=>item.professional_id===id),metrics=overviewFixture(subset).metrics;return {id,name:subset[0].professional_name,minutes:metrics.minutes,total:metrics.worked,invoiced:metrics.invoiced,clients:metrics.activeClients,uninvoiced:metrics.uninvoicedCount,unpaid:metrics.unpaidCount,missingPrice:metrics.missingPrice}})
     if(rpc==='get_workflow_entity_dashboard_rolling'||rpc==='get_workflow_client_category_dashboard'){
      const kind=args.p_kind??'client',selected=String(args.p_entity_id??(kind==='billing'?'00000000-0000-4000-8000-000000000002':kind==='professional'?scoped[0]?.professional_id:args.p_client_type??'all'))
-     const subset=scoped.filter(item=>rpc==='get_workflow_client_category_dashboard'?!args.p_client_type||item.client_type===args.p_client_type:kind==='billing'?item.billing_entity_id===selected:kind==='professional'?item.professional_id===selected:item.client_id===selected),data=overviewFixture(subset),title=kind==='billing'?'LEGALTEAM':kind==='professional'?subset[0]?.professional_name??'Responsável':'Particulares'
+     const subset=scoped.filter(item=>rpc==='get_workflow_client_category_dashboard'?!args.p_client_type||item.client_type===args.p_client_type:kind==='billing'?item.billing_entity_id===selected:kind==='professional'?item.professional_id===selected:item.client_id===selected),data=overviewFixture(subset),title=kind==='billing'?'LEGALTEAM':kind==='professional'?subset[0]?.professional_name??'Responsável':'PARTICULARES'
      result={selectedId:selected,identity:{title,subtitle:String(kind),code:''},options:[{id:selected,label:title}],metrics:{...data.metrics,total:data.metrics.worked,pending:data.metrics.receivable,movements:subset.length,clients:data.metrics.activeClients,professionals:new Set(subset.map(item=>item.professional_id)).size,billingEntities:new Set(subset.map(item=>item.billing_entity_id)).size},annual:data.annual,monthly:data.monthly,recent:subset}
     }
     if(rpc==='get_workflow_payment_queue')result=[...scoped.filter(item=>item.is_invoiced&&!item.is_paid).map(item=>({id:item.id,category:'work',client_id:item.client_id,client_name:item.client_name,society_name:'LEGALTEAM',title:item.activity_description,date:'2026-09-01',currency:'EUR',total:200.12,received:30,deducted:20,remaining:150.12,token:'synthetic-token-unchanged',can_pay:true,can_edit:true,status:'invoiced'})),...(clients.includes('00000000-0000-4000-8000-000000000020')?[{id:'00000000-0000-4000-8000-000000000070',category:'note',client_id:clients[0],client_name:'Cliente Demonstração Alfa',society_name:'LEGALTEAM',title:'Nota integral simulada',date:'2026-09-01',currency:'EUR',total:1500,received:200,deducted:300.01,remaining:999.99,token:'synthetic-revision-2',revision:2,can_pay:true,can_edit:false,status:'invoiced'}]:[])]
@@ -63,7 +63,7 @@ test.beforeEach(async({context,request,page})=>{
 })
 test.afterEach(()=>{expect(forbidden,'Nenhum serviço real ou pedido sem mock').toEqual([]);expect(browserErrors,'Sem erros não tratados no browser').toEqual([])})
 async function openFromList(page:import('@playwright/test').Page){
- if((page.viewportSize()?.width??1440)<900){await page.getByRole('button',{name:'Caixas',exact:true}).click();await page.getByRole('list',{name:'Lista de Particulares em caixas'}).getByRole('button',{name:'Ficha',exact:true}).first().click()}
+ if((page.viewportSize()?.width??1440)<900){await page.getByRole('button',{name:'Caixas',exact:true}).click();await page.getByRole('list',{name:'Lista de PARTICULARES em caixas'}).getByRole('button',{name:'Ficha',exact:true}).first().click()}
  else await page.getByRole('cell',{name:'Cliente Demonstração Alfa',exact:true}).first().dblclick()
 }
 async function open(page:import('@playwright/test').Page,preview=true){await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list'+(preview?'&workflow=preview':''));await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})}
@@ -86,6 +86,34 @@ test('cinco grupos reutilizam dados, registos, contratos e documentos',async({pa
  await openFromList(page)
  await nav.getByRole('button',{name:'Financeiro e documentos',exact:true}).click()
  await expect(nav).toBeVisible();await page.screenshot({path:`output/workflow-integration/${info.project.name}-finance-dark.png`})
+})
+
+test('Nova despesa mostra sugestões ao escrever e permite escolher directamente por toque',async({page})=>{
+ await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=overview')
+ await page.getByRole('button',{name:'Criar nova despesa'}).click()
+ const dialog=page.getByRole('dialog',{name:'Nova despesa'}),client=dialog.getByRole('combobox',{name:'Cliente e vertente'})
+ await client.fill('Alfa')
+ const suggestion=dialog.getByRole('option',{name:/Cliente Demonstração Alfa/})
+ await expect(suggestion).toBeVisible()
+ const size=await suggestion.boundingBox();expect(size&&size.height>=44).toBeTruthy()
+ await suggestion.click()
+ await expect(dialog.getByRole('listbox')).toHaveCount(0)
+ await expect(dialog.getByLabel('Registo deste cliente')).toBeVisible()
+ await expect(client).toHaveValue(/Cliente Demonstração Alfa/)
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true)
+})
+
+test('novo registo fecha sugestões vazias ou incompletas ao preencher outros campos',async({page})=>{
+ await page.goto('/?qa-iphone=1&qa-demo=1&qa-allocation=1&qa-role=admin&workflow=preview&view=work')
+ await page.getByRole('button',{name:'Criar novo registo'}).click()
+ const dialog=page.getByRole('dialog',{name:'Criar movimento'}),client=dialog.getByRole('combobox',{name:'Cliente e vertente'})
+ await client.click();await expect(dialog.getByRole('listbox')).toBeVisible()
+ await dialog.getByRole('textbox',{name:/^Data/}).click();await expect(dialog.getByRole('listbox')).toHaveCount(0)
+ await client.fill('Alfa');await expect(dialog.getByRole('listbox')).toBeVisible()
+ await dialog.getByRole('heading',{name:'Criar movimento'}).click();await expect(dialog.getByRole('listbox')).toHaveCount(0)
+ await dialog.getByLabel('Actividade',{exact:true}).fill('Preencher primeiro a actividade')
+ await expect(client).toHaveValue('Alfa')
+ await expect(dialog.getByRole('button',{name:'Guardar movimento'})).toBeDisabled()
 })
 test('URL conserva grupo, página e lista de origem',async({page})=>{
  const dialog=await open(page);await dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'}).getByRole('button',{name:'Financeiro e documentos',exact:true}).click();await dialog.getByRole('button',{name:'Documentos',exact:true}).click()
@@ -120,7 +148,7 @@ test('sociedade, responsável e categoria chegam juntos à consulta e não remov
 
 test('mudar categoria e recarregar conserva a ficha nova',async({page})=>{
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients')
- await page.getByRole('button',{name:'Particulares',exact:true}).click()
+ await page.getByRole('button',{name:'PARTICULARES',exact:true}).click()
  expect(new URL(page.url()).searchParams.get('workflow')).toBe('preview')
  // The category navigation deliberately clears test identity parameters.
  // Restore the synthetic test identity without changing application Auth.
@@ -145,7 +173,10 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  const scope=page.getByRole('region',{name:'Filtros partilhados'}),table=page.getByRole('table',{name:'Registos de trabalho'})
  await scope.getByLabel('Filtrar sociedade').selectOption('00000000-0000-4000-8000-000000000002')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000010')
- await scope.getByLabel('Filtrar tipo de cliente').selectOption('individual')
+ const clientType=scope.getByLabel('Filtrar tipo de cliente')
+ await expect(clientType.locator('option')).toHaveText(['Todos','PARTICULARES','EMPRESAS','MISTOS'])
+ await clientType.selectOption('individual')
+ await expect(clientType.locator('option:checked')).toHaveText('PARTICULARES')
  await expect(table).toContainText('Consulta e preparação de processo');await expect(table).not.toContainText('Reunião de acompanhamento')
  await expect.poll(()=>searchCalls.some(args=>args.p_professional_id==='00000000-0000-4000-8000-000000000010'&&args.p_billing_entity_id==='00000000-0000-4000-8000-000000000002'&&args.p_client_type==='individual')).toBe(true)
  await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
@@ -190,7 +221,7 @@ test('parâmetros inválidos e falta da consulta do resumo são bloqueados',asyn
 test('categoria da lista preserva âmbito e os clientes excluídos regressam ao limpar',async({page})=>{
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&scopeClientType=individual')
  await expect(page.getByText('Cliente Demonstração Alfa',{exact:true}).first()).toBeVisible();await expect(page.getByText('Cliente Demonstração Beta',{exact:true})).toHaveCount(0)
- await page.getByRole('button',{name:'Particulares',exact:true}).click();expect(new URL(page.url()).searchParams.get('scopeClientType')).toBe('individual')
+ await page.getByRole('button',{name:'PARTICULARES',exact:true}).click();expect(new URL(page.url()).searchParams.get('scopeClientType')).toBe('individual')
  await page.getByRole('region',{name:'Filtros partilhados'}).getByRole('button',{name:'Limpar âmbito'}).click()
  const url=new URL(page.url());url.searchParams.delete('clientType');url.searchParams.set('qa-iphone','1');url.searchParams.set('qa-role','admin');await page.goto(url.toString())
  await expect(page.getByText('Cliente Demonstração Beta',{exact:true}).first()).toBeVisible();expect(writes).toEqual([])

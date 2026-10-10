@@ -33,14 +33,14 @@ test('Visão Geral abre dashboards e Clientes abre directamente as listas',async
   await page.goto('/?qa-iphone=1&view=overview')
   const sidebar=page.getByRole('complementary',{name:'Navegação principal'})
   await sidebar.getByRole('button',{name:'Visão Geral'}).click()
-  await sidebar.getByRole('list',{name:'Dashboards de clientes'}).getByRole('button',{name:'Particulares'}).click()
+  await sidebar.getByRole('list',{name:'Dashboards de clientes'}).getByRole('button',{name:'PARTICULARES'}).click()
   await expect(page).toHaveURL(/view=clients&clientType=individual$/)
   await expect(page.getByRole('navigation',{name:'Localização'})).toContainText('Visão Geral')
   await sidebar.getByRole('button',{name:'Clientes',exact:true}).click()
-  await sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'Empresas'}).click()
+  await sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'EMPRESAS'}).click()
   await expect(page).toHaveURL(/view=clients&clientType=company&clientMode=list$/)
   await expect(page.getByRole('navigation',{name:'Localização'})).toContainText('Clientes')
-  await expect(sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'Empresas'})).toHaveAttribute('aria-current','page')
+  await expect(sidebar.getByRole('list',{name:'Listas de clientes'}).getByRole('button',{name:'EMPRESAS'})).toHaveAttribute('aria-current','page')
 })
 
 for (const viewport of windowsViewports) {

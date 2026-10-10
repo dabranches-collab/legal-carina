@@ -3,7 +3,11 @@
   "changes": [
     "Navegação Resumo, Clientes, Registos, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
     "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças.",
-    "O menu dos movimentos conserva a designação Registos."
+    "O menu dos movimentos conserva a designação Registos.",
+    "Sugestões de clientes ao escrever numa despesa, com fecho ao clicar fora ou mudar de campo nos formulários.",
+    "Criação de clientes com uma ou ambas as vertentes Particular e Empresa.",
+    "Categorias PARTICULARES, EMPRESAS e MISTOS em maiúsculas nos menus e filtros.",
+    "Pesquisa livre diferenciada e alinhamento dos filtros dos Registos."
   ],
   "releases": [
     {
@@ -11,7 +15,11 @@
       "changes": [
         "Navegação Resumo, Clientes, Registos, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
         "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças.",
-        "O menu dos movimentos conserva a designação Registos."
+        "O menu dos movimentos conserva a designação Registos.",
+        "Sugestões de clientes ao escrever numa despesa, com fecho ao clicar fora ou mudar de campo nos formulários.",
+        "Criação de clientes com uma ou ambas as vertentes Particular e Empresa.",
+        "Categorias PARTICULARES, EMPRESAS e MISTOS em maiúsculas nos menus e filtros.",
+        "Pesquisa livre diferenciada e alinhamento dos filtros dos Registos."
       ]
     },
     {

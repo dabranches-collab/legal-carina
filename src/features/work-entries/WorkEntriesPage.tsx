@@ -89,7 +89,7 @@ async function searchMixedClientEntries(searchArgs: SearchArgs): Promise<SearchM
           if(next.error)throw next.error;
           items.push(...((next.data as SearchMeta).items??[]));
         }
-        if(items.length!==first.total)throw new Error('A consulta dos clientes mistos está incompleta. Tente novamente.');
+        if(items.length!==first.total)throw new Error('A consulta dos clientes MISTOS está incompleta. Tente novamente.');
         return {...first,items};
       }),
     );
@@ -427,7 +427,7 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
     archive && archive !== "__NONE__" && `Arquivo: ${archive}`,
     reviewIssue && `A corrigir: ${reviewLabels[reviewIssue]}`,
     clientType &&
-      `Tipo de cliente: ${clientType === "company" ? "Empresa" : isMixedWorkScope(clientType) ? "Mistos" : "Particular"}`,
+      `Tipo de cliente: ${clientType === "company" ? "Empresa" : isMixedWorkScope(clientType) ? "MISTOS" : "Particular"}`,
   ].filter(Boolean) as string[];
   const loadExportRows = useCallback(async (onProgress?: (loaded:number,total:number,rows?:Entry[])=>void) => {
     if(hasEmptyPrefilter){onProgress?.(0,0,[]);return [];}
@@ -646,19 +646,20 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
         </div>
       </div>
         <div className="grid gap-2 lg:grid-cols-[minmax(15rem,2fr)_repeat(3,minmax(9rem,1fr))]">
-          <div className="relative">
+          <label className="block min-w-0"><span className="mb-1 block text-xs font-semibold text-secondary">Pesquisa livre</span><div className="relative">
             <Icon
               name="search"
               className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-secondary"
             />
             <input
+              type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               aria-label="Pesquisar registos"
               className="control min-h-9 w-full py-1.5 pl-10 pr-3 text-sm"
               placeholder="Cliente, código, actividade ou observação…"
             />
-          </div>
+          </div></label>
           <div className="min-w-0" role="group" aria-label="Ano"><span className="mb-1 block text-xs text-text-secondary">Ano</span><select
             aria-label="Ano"
             value={year}
@@ -731,13 +732,13 @@ export function WorkEntriesPage({canDelete=true,requiresReason=false,embeddedQue
               </option>
             ))}
           <option value="__NONE__">Nenhum</option></select><div className="mt-1 flex gap-2"><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setArchive("")}>Todos</button><button type="button" className="control min-h-9 flex-1 text-sm" onClick={()=>setArchive("__NONE__")}>Limpar</button></div></div>
-          <button
+          <div className="flex items-end gap-2"><button
             onClick={clear}
             className="control min-h-9 px-3 text-sm font-semibold"
           >
             Todos
           </button>
-          <button type="button" className="control min-h-9 px-3 text-sm font-semibold" onClick={()=>{clear();setYear("__NONE__");setProfessional("__NONE__");setBilling("__NONE__");setInvoiced("__NONE__");setPaid("__NONE__");setArchive("__NONE__")}}>Limpar</button>
+          <button type="button" className="control min-h-9 flex-1 px-3 text-sm font-semibold" onClick={()=>{clear();setYear("__NONE__");setProfessional("__NONE__");setBilling("__NONE__");setInvoiced("__NONE__");setPaid("__NONE__");setArchive("__NONE__")}}>Limpar</button></div>
         </div>
         {activeFilters.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5 border-t border-border pt-2">

@@ -32,7 +32,7 @@ test('prestação abre por duplo clique e só grava a própria prestação na co
  await expect(page.getByLabel('Pesquisar avenças',{exact:true})).toHaveValue('Alfa')
  await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list')
  await page.getByRole('button',{name:'Caixas',exact:true}).click()
- const compact=page.getByRole('list',{name:'Lista de Particulares em caixas'})
+ const compact=page.getByRole('list',{name:'Lista de PARTICULARES em caixas'})
  await expect(compact).toContainText('Cliente Demonstração Alfa')
  await expect(compact.getByRole('button',{name:'Ficha',exact:true}).first()).toHaveAttribute('title','Abrir ficha do cliente')
  await expect(compact.getByRole('button',{name:'Nota',exact:true}).first()).toBeEnabled()

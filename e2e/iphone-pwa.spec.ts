@@ -136,7 +136,7 @@ test('atalhos de registo, cliente e despesa ficam lado a lado e abrem as fichas 
   const dialog=page.getByRole('dialog',{name:'Criar cliente'})
   await expect(dialog).toBeVisible()
   await expect(dialog.getByRole('textbox',{name:'Nome',exact:true})).toHaveValue('')
-  await dialog.getByRole('radio',{name:'Particular',exact:true}).check()
+  await dialog.getByRole('checkbox',{name:'Particular',exact:true}).check()
   await expect(dialog.getByRole('textbox',{name:'Código desta vertente'}).first()).toHaveValue('02.0002')
   await dialog.getByRole('button',{name:'Fechar',exact:true}).first().click()
   await expect(dialog).toHaveCount(0)

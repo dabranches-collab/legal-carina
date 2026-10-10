@@ -16,7 +16,7 @@ for(const theme of ['light','dark'] as const){
   expect(boxes[0]!.y).toBe(boxes[1]!.y)
   expect(boxes[1]!.y).toBe(boxes[2]!.y)
   await shortcuts[2].click()
-  await page.getByRole('combobox',{name:'Cliente e vertente'}).selectOption('qa-profile')
+  await page.getByRole('combobox',{name:'Cliente e vertente'}).fill('Demonstração');await page.getByRole('option',{name:/Cliente de demonstração/}).first().click()
   await expect(page.getByRole('button',{name:'Tirar fotografia'})).toBeVisible()
   await expect(page.getByLabel('Escolher a partir de ficheiro')).toHaveAttribute('accept',/image\/jpeg/)
   await page.getByRole('button',{name:'Tirar fotografia'}).click()

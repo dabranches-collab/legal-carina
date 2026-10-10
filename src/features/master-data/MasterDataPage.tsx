@@ -731,20 +731,6 @@ export function MasterDataPage({
       ),
     );
   }
-  function selectCreationProfile(type: "individual" | "company") {
-    setDirty(true);
-    setProfiles((current) =>
-      current.map((item) =>
-        item.client_type === type
-          ? {
-              ...item,
-              active: true,
-              client_code: item.client_code || suggestedCodes[type],
-            }
-          : { ...item, active: false, client_code: "" },
-      ),
-    );
-  }
   function updateIdentifier(index: number, change: Partial<Identifier>) {
     setDirty(true);
     setIdentifiers((current) =>
@@ -1206,7 +1192,7 @@ export function MasterDataPage({
                   filterOptions: [
                     { value: "individual", label: "Particular" },
                     { value: "company", label: "Empresa" },
-                    { value: "mixed", label: "Mistos" },
+                    { value: "mixed", label: "MISTOS" },
                   ],
                   filterValues: (row: Row) => {
                     const types = row.profile_types ?? [
@@ -1241,9 +1227,9 @@ export function MasterDataPage({
     label = clientTypeFilter
       ? (
           {
-            individual: "Particulares",
-            company: "Empresas",
-            mixed: "Mistos",
+            individual: "PARTICULARES",
+            company: "EMPRESAS",
+            mixed: "MISTOS",
           } as const
         )[clientTypeFilter]
       : (sections.find((item) => item.id === section)?.label ?? "Entidades");
@@ -1491,9 +1477,9 @@ export function MasterDataPage({
                       </legend>
                       {creating && (
                         <p className="mt-2 rounded-lg bg-warning-soft p-3 text-sm text-warning">
-                          Escolha obrigatoriamente uma única opção. O prefixo 02
-                          identifica Particulares e o prefixo 01 identifica
-                          Empresas.
+                          Escolha pelo menos uma opção. Pode seleccionar ambas para criar um cliente misto. O prefixo 02
+                          identifica PARTICULARES e o prefixo 01 identifica
+                          EMPRESAS.
                         </p>
                       )}
                       {(["individual", "company"] as const)
@@ -1507,13 +1493,10 @@ export function MasterDataPage({
                           >
                             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
                               <input
-                                type={creating ? "radio" : "checkbox"}
-                                name={creating ? "new-client-type" : undefined}
+                                type="checkbox"
                                 checked={item.active}
                                 onChange={(event) =>
-                                  creating
-                                    ? selectCreationProfile(type)
-                                    : updateProfile(type, {
+                                  updateProfile(type, {
                                         active: event.target.checked,
                                         client_code:
                                           event.target.checked &&
