@@ -1,0 +1,745 @@
+{
+  "checkedAt": "2026-10-10T19:37:31.935Z",
+  "version": "0.16.4",
+  "host": "https://legal-carina.dabranches.workers.dev",
+  "rows": [
+    {
+      "file": "app-icon-180.png",
+      "status": 200,
+      "expected": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "actual": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "ef49f3af067f1ccb72e49864092c7acbd359f6d6b65a8fb49a54efd5c9d3f6a1"
+    },
+    {
+      "file": "app-icon-192.png",
+      "status": 200,
+      "expected": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "actual": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "cfdf21aa2557d77b955513eacdb85c86a090043ffe233360cfa8f4a2f7e9f0b6"
+    },
+    {
+      "file": "app-icon-512.png",
+      "status": 200,
+      "expected": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "actual": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "00336a837282a8cc05e5b8b4cc4dd31997d08958131d4a959b6a2417fc93827d"
+    },
+    {
+      "file": "app-icon.svg",
+      "status": 200,
+      "expected": "a2bf7482185bb362782de65b97872b625cde3546dffb9a706cb8f8ac943c1c94",
+      "actual": "478febffe6deb052e939518624b3e7ac66a9454d1d9f8a787728e2f2bf1dedf8",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "478febffe6deb052e939518624b3e7ac66a9454d1d9f8a787728e2f2bf1dedf8"
+    },
+    {
+      "file": "favicon.svg",
+      "status": 200,
+      "expected": "32842f0ba424605d7f294f8b01412f0e357c05d999aca5656ae001643261a934",
+      "actual": "4e3ebd7e0adb2431dc60746d6e062bdacb8bc15e4b5d69907cbea66cf6d0dabd",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "4e3ebd7e0adb2431dc60746d6e062bdacb8bc15e4b5d69907cbea66cf6d0dabd"
+    },
+    {
+      "file": "icons.svg",
+      "status": 200,
+      "expected": "7ca2d67c9c3aebf50cdc8709ee8aacf8cdb8cc7ea6325ea94939caef5da1c53d",
+      "actual": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+    },
+    {
+      "file": "index.html",
+      "status": 200,
+      "expected": "0b583c1b63ae492bbc82917006e11c4b4354e6ae46273714c208f15c0e21e287",
+      "actual": "fe29f9f5bcaec004797ac3beade15bcaffb6b8d1076d83b1f51dece4721493a5",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "fe29f9f5bcaec004797ac3beade15bcaffb6b8d1076d83b1f51dece4721493a5"
+    },
+    {
+      "file": "lady-justice-bright-favicon-32.png",
+      "status": 200,
+      "expected": "1340e8bbe6c3b7c49e7b57636de4e175f86a4c5f9cec94966159d917e459d0a6",
+      "actual": "1340e8bbe6c3b7c49e7b57636de4e175f86a4c5f9cec94966159d917e459d0a6",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "8170ae57549e5756abb2113f265ea95122a35665dc51c63a17d4ab7869ac0f4c"
+    },
+    {
+      "file": "lady-justice-bright-icon-180.png",
+      "status": 200,
+      "expected": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "actual": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "ef49f3af067f1ccb72e49864092c7acbd359f6d6b65a8fb49a54efd5c9d3f6a1"
+    },
+    {
+      "file": "lady-justice-favicon-32.png",
+      "status": 200,
+      "expected": "1340e8bbe6c3b7c49e7b57636de4e175f86a4c5f9cec94966159d917e459d0a6",
+      "actual": "1340e8bbe6c3b7c49e7b57636de4e175f86a4c5f9cec94966159d917e459d0a6",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "8170ae57549e5756abb2113f265ea95122a35665dc51c63a17d4ab7869ac0f4c"
+    },
+    {
+      "file": "lady-justice-icon-180.png",
+      "status": 200,
+      "expected": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "actual": "dce277573a65eaff91b665cff163458c8fc05d2d7c3457c349917ccefca91972",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "ef49f3af067f1ccb72e49864092c7acbd359f6d6b65a8fb49a54efd5c9d3f6a1"
+    },
+    {
+      "file": "lady-justice-icon-192.png",
+      "status": 200,
+      "expected": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "actual": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "cfdf21aa2557d77b955513eacdb85c86a090043ffe233360cfa8f4a2f7e9f0b6"
+    },
+    {
+      "file": "lady-justice-icon-512.png",
+      "status": 200,
+      "expected": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "actual": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "00336a837282a8cc05e5b8b4cc4dd31997d08958131d4a959b6a2417fc93827d"
+    },
+    {
+      "file": "lady-justice-windows-icon-192.png",
+      "status": 200,
+      "expected": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "actual": "51d82b22bb758ea3e7b253e83e2edd93bac0b8eecfc9195583e23e714b07e3cb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "cfdf21aa2557d77b955513eacdb85c86a090043ffe233360cfa8f4a2f7e9f0b6"
+    },
+    {
+      "file": "lady-justice-windows-icon-512.png",
+      "status": 200,
+      "expected": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "actual": "c75dd4c437b7c0fb0bb5b6c887b877029cb2440bb660292e5ecd8827ce84805d",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "00336a837282a8cc05e5b8b4cc4dd31997d08958131d4a959b6a2417fc93827d"
+    },
+    {
+      "file": "manifest.webmanifest",
+      "status": 200,
+      "expected": "987e1c226eb1ff8f46bc88d8829b5c2524e0445dac2ea9f5efc7fde7c725d844",
+      "actual": "7d7917017aa1d5a141560cd34773bd0164bb123fd1994c92f59f511dffc9e9a1",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "7d7917017aa1d5a141560cd34773bd0164bb123fd1994c92f59f511dffc9e9a1"
+    },
+    {
+      "file": "release-notes.json",
+      "status": 200,
+      "expected": "b864c90e156f9c12cefb32dd9e0fe88ec51e27238167c1eed89b271d8361d5af",
+      "actual": "ed0a3f722b483ec3869a655e4779de92a6bbc9c39a12f7cecf8965100d11e428",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "ed0a3f722b483ec3869a655e4779de92a6bbc9c39a12f7cecf8965100d11e428"
+    },
+    {
+      "file": "sw.js",
+      "status": 200,
+      "expected": "503184ce762afd0d0ea99f727b6b433c53b3f72ab4fb3c4c014fd5a282d85f0a",
+      "actual": "dfae42a12459024518140e3e8a306a99ec27e8eeaa32502a69595ab239976570",
+      "equal": false,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "dfae42a12459024518140e3e8a306a99ec27e8eeaa32502a69595ab239976570"
+    },
+    {
+      "file": "assets/AccessLogsPage-GSQW9Oc-.js",
+      "status": 200,
+      "expected": "6ded2ee02d5f6dc6439ec73e2ca1b0045bbca72c44003f067b26f173e4889433",
+      "actual": "6ded2ee02d5f6dc6439ec73e2ca1b0045bbca72c44003f067b26f173e4889433",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "6ded2ee02d5f6dc6439ec73e2ca1b0045bbca72c44003f067b26f173e4889433"
+    },
+    {
+      "file": "assets/AdminLandingPage-UPJz2thl.js",
+      "status": 200,
+      "expected": "a36d96907783232bf17713325f7f28844d0d0b03c4d06f0a2a825f1909d5a7eb",
+      "actual": "a36d96907783232bf17713325f7f28844d0d0b03c4d06f0a2a825f1909d5a7eb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "a36d96907783232bf17713325f7f28844d0d0b03c4d06f0a2a825f1909d5a7eb"
+    },
+    {
+      "file": "assets/AdminPage-CNcuB8lL.js",
+      "status": 200,
+      "expected": "e341eea4dded2fd9512d5d80f6ea31a8033c629d29a8150f13ed025ef67ed0b8",
+      "actual": "e341eea4dded2fd9512d5d80f6ea31a8033c629d29a8150f13ed025ef67ed0b8",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "e341eea4dded2fd9512d5d80f6ea31a8033c629d29a8150f13ed025ef67ed0b8"
+    },
+    {
+      "file": "assets/AdminTables-BowwkdsU.js",
+      "status": 200,
+      "expected": "9dd620190400a12b360fdf0adecc2bc36042525a52c000b41d9bb01ff3cdd5d9",
+      "actual": "9dd620190400a12b360fdf0adecc2bc36042525a52c000b41d9bb01ff3cdd5d9",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "9dd620190400a12b360fdf0adecc2bc36042525a52c000b41d9bb01ff3cdd5d9"
+    },
+    {
+      "file": "assets/analyzeFile-DJkyCEdB.js",
+      "status": 200,
+      "expected": "22e4f513f501f329012b7081bb24d6ea0976b55253b9e0938814f9ace8b97004",
+      "actual": "22e4f513f501f329012b7081bb24d6ea0976b55253b9e0938814f9ace8b97004",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "22e4f513f501f329012b7081bb24d6ea0976b55253b9e0938814f9ace8b97004"
+    },
+    {
+      "file": "assets/AppLink-GrHkJ5Qg.js",
+      "status": 200,
+      "expected": "698b85c106a15f40b94299ba178c2566941af1e1963e1dd09a74db23e0c6b026",
+      "actual": "698b85c106a15f40b94299ba178c2566941af1e1963e1dd09a74db23e0c6b026",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "698b85c106a15f40b94299ba178c2566941af1e1963e1dd09a74db23e0c6b026"
+    },
+    {
+      "file": "assets/attentionCounts-qt2OcJCE.js",
+      "status": 200,
+      "expected": "5cf020ecc30f02ee95396ec5d6bb249912303148f6ce4c167d59cdadc932696c",
+      "actual": "5cf020ecc30f02ee95396ec5d6bb249912303148f6ce4c167d59cdadc932696c",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "5cf020ecc30f02ee95396ec5d6bb249912303148f6ce4c167d59cdadc932696c"
+    },
+    {
+      "file": "assets/AttentionPanel-t_2FNTE7.js",
+      "status": 200,
+      "expected": "6e6588b830b83615f59c638f04f99a97c03b048f1604c580a93670f7b4cfc1a1",
+      "actual": "6e6588b830b83615f59c638f04f99a97c03b048f1604c580a93670f7b4cfc1a1",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "6e6588b830b83615f59c638f04f99a97c03b048f1604c580a93670f7b4cfc1a1"
+    },
+    {
+      "file": "assets/BillingLandingPage-N1G5YuXc.js",
+      "status": 200,
+      "expected": "f458b8c499414173930a12009f005accc3bbb06577a4362bab97504d32ee9032",
+      "actual": "f458b8c499414173930a12009f005accc3bbb06577a4362bab97504d32ee9032",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "f458b8c499414173930a12009f005accc3bbb06577a4362bab97504d32ee9032"
+    },
+    {
+      "file": "assets/CalendarDateInput-DEKl7pm8.js",
+      "status": 200,
+      "expected": "c3ad557c73c53b6bcb0d2cb4eb1601a0d7b1c91969a62e1f5dd36bc07e1392b4",
+      "actual": "c3ad557c73c53b6bcb0d2cb4eb1601a0d7b1c91969a62e1f5dd36bc07e1392b4",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "c3ad557c73c53b6bcb0d2cb4eb1601a0d7b1c91969a62e1f5dd36bc07e1392b4"
+    },
+    {
+      "file": "assets/ClientCreditPanel-BMoaweXR.js",
+      "status": 200,
+      "expected": "fc40b12d39a2442e963fb8991deaa3bab0568c697ca8f86f12f00a8a80476e0e",
+      "actual": "fc40b12d39a2442e963fb8991deaa3bab0568c697ca8f86f12f00a8a80476e0e",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "fc40b12d39a2442e963fb8991deaa3bab0568c697ca8f86f12f00a8a80476e0e"
+    },
+    {
+      "file": "assets/ClientLandingPage-CB07zm-R.js",
+      "status": 200,
+      "expected": "8c577f75380d3117e15b37a696797593adcf9a00e50140791eb39f40c7bf00e1",
+      "actual": "8c577f75380d3117e15b37a696797593adcf9a00e50140791eb39f40c7bf00e1",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "8c577f75380d3117e15b37a696797593adcf9a00e50140791eb39f40c7bf00e1"
+    },
+    {
+      "file": "assets/ColumnResizeHandle-sEIvuG0X.js",
+      "status": 200,
+      "expected": "d6fc30c1a1accbd2f8f83bfb3ab2545959f43b4b8fb88cb5d07678fd9f3ced7c",
+      "actual": "d6fc30c1a1accbd2f8f83bfb3ab2545959f43b4b8fb88cb5d07678fd9f3ced7c",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "d6fc30c1a1accbd2f8f83bfb3ab2545959f43b4b8fb88cb5d07678fd9f3ced7c"
+    },
+    {
+      "file": "assets/CreateWorkEntryModal-c2w16q03.js",
+      "status": 200,
+      "expected": "a4a4908da32421e4892b8445416094fcbe4352b54d211de18ffbbdb4305ccedf",
+      "actual": "a4a4908da32421e4892b8445416094fcbe4352b54d211de18ffbbdb4305ccedf",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "a4a4908da32421e4892b8445416094fcbe4352b54d211de18ffbbdb4305ccedf"
+    },
+    {
+      "file": "assets/DashboardProcessingGrid-Bf-Pv4U6.js",
+      "status": 200,
+      "expected": "ecacd5f57222dce97b7cd220133e4bc518e2159934e5839f6178e6f27c9b80e4",
+      "actual": "ecacd5f57222dce97b7cd220133e4bc518e2159934e5839f6178e6f27c9b80e4",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "ecacd5f57222dce97b7cd220133e4bc518e2159934e5839f6178e6f27c9b80e4"
+    },
+    {
+      "file": "assets/date-z5QvVTxd.js",
+      "status": 200,
+      "expected": "7bbbd6eac36af001cfdbee17668d5f0e8d6c6bbfc964d923e52d17611823c88f",
+      "actual": "7bbbd6eac36af001cfdbee17668d5f0e8d6c6bbfc964d923e52d17611823c88f",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "7bbbd6eac36af001cfdbee17668d5f0e8d6c6bbfc964d923e52d17611823c88f"
+    },
+    {
+      "file": "assets/DebtorFixedFeeJobs-C8EK_c5I.js",
+      "status": 200,
+      "expected": "9122764f99d0d271629a6cc29c617b03ca8d79214aad3be6aab50e922f6fdefa",
+      "actual": "9122764f99d0d271629a6cc29c617b03ca8d79214aad3be6aab50e922f6fdefa",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "9122764f99d0d271629a6cc29c617b03ca8d79214aad3be6aab50e922f6fdefa"
+    },
+    {
+      "file": "assets/DebtorRetainerCharges-CggMlgZ8.js",
+      "status": 200,
+      "expected": "15e97a21f8f04463323338db1185c8054ba110f9500cd5707ed8eb470c578264",
+      "actual": "15e97a21f8f04463323338db1185c8054ba110f9500cd5707ed8eb470c578264",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "15e97a21f8f04463323338db1185c8054ba110f9500cd5707ed8eb470c578264"
+    },
+    {
+      "file": "assets/DebtorsPage-CZu8uQgu.js",
+      "status": 200,
+      "expected": "88fae451960cb6401ddcb04063f252b34df9edd773d1791766296f04c1bbfc55",
+      "actual": "88fae451960cb6401ddcb04063f252b34df9edd773d1791766296f04c1bbfc55",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "88fae451960cb6401ddcb04063f252b34df9edd773d1791766296f04c1bbfc55"
+    },
+    {
+      "file": "assets/debtorSummary-SaUihrNm.js",
+      "status": 200,
+      "expected": "36299b818c081973ab1c2490038ec4a046c869df09d71b3f453f3f93cb6f2598",
+      "actual": "36299b818c081973ab1c2490038ec4a046c869df09d71b3f453f3f93cb6f2598",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "36299b818c081973ab1c2490038ec4a046c869df09d71b3f453f3f93cb6f2598"
+    },
+    {
+      "file": "assets/EditWorkEntryModal-BZHeA0ju.js",
+      "status": 200,
+      "expected": "ee8e4633c12931c3faebddf04877be26846e1fd66469266483088cdafab1e809",
+      "actual": "ee8e4633c12931c3faebddf04877be26846e1fd66469266483088cdafab1e809",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "ee8e4633c12931c3faebddf04877be26846e1fd66469266483088cdafab1e809"
+    },
+    {
+      "file": "assets/EntityDashboard-DjPz4sHn.js",
+      "status": 200,
+      "expected": "27de1f6b6fd9ea98937225ef57e360e11f3c07873672b24fef78ce5c776efcd9",
+      "actual": "27de1f6b6fd9ea98937225ef57e360e11f3c07873672b24fef78ce5c776efcd9",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "27de1f6b6fd9ea98937225ef57e360e11f3c07873672b24fef78ce5c776efcd9"
+    },
+    {
+      "file": "assets/es-DY73bV4A.js",
+      "status": 200,
+      "expected": "e00bc33a117a7677e9df4ba603f822a279e5beb263e5b3d0efd9970fb7b82854",
+      "actual": "e00bc33a117a7677e9df4ba603f822a279e5beb263e5b3d0efd9970fb7b82854",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "e00bc33a117a7677e9df4ba603f822a279e5beb263e5b3d0efd9970fb7b82854"
+    },
+    {
+      "file": "assets/fixedFeeAnalytics-9_7GKqcu.js",
+      "status": 200,
+      "expected": "650648d84cd5f8359e969fc1411ffe96b0f86a2508a7df169d3c305c59f090d6",
+      "actual": "650648d84cd5f8359e969fc1411ffe96b0f86a2508a7df169d3c305c59f090d6",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "650648d84cd5f8359e969fc1411ffe96b0f86a2508a7df169d3c305c59f090d6"
+    },
+    {
+      "file": "assets/fixedFeeDashboard-Q0-PGpf1.js",
+      "status": 200,
+      "expected": "491e189354d5a7ff71faa1f17c3021ff2859c75f9c8eb9ee737f0bf8408eef7a",
+      "actual": "491e189354d5a7ff71faa1f17c3021ff2859c75f9c8eb9ee737f0bf8408eef7a",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "491e189354d5a7ff71faa1f17c3021ff2859c75f9c8eb9ee737f0bf8408eef7a"
+    },
+    {
+      "file": "assets/fixedFeeFinance-BM6pWPdX.js",
+      "status": 200,
+      "expected": "9614b80751639b311c4ae8171fde5f13205fad2535864ba37368624599c93036",
+      "actual": "9614b80751639b311c4ae8171fde5f13205fad2535864ba37368624599c93036",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "9614b80751639b311c4ae8171fde5f13205fad2535864ba37368624599c93036"
+    },
+    {
+      "file": "assets/HonorariumNoteModal-C-ZNHvuv.js",
+      "status": 200,
+      "expected": "89751b80bc72d0a25510028cf0666788c127f9ee77986a6fa5dbffe225662b30",
+      "actual": "89751b80bc72d0a25510028cf0666788c127f9ee77986a6fa5dbffe225662b30",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "89751b80bc72d0a25510028cf0666788c127f9ee77986a6fa5dbffe225662b30"
+    },
+    {
+      "file": "assets/html2canvas-KL8tBLDX.js",
+      "status": 200,
+      "expected": "4fe58d5ac8476efc10d82572e278ad054e22b9ce622bd4baed3c3912c8a1c1d8",
+      "actual": "4fe58d5ac8476efc10d82572e278ad054e22b9ce622bd4baed3c3912c8a1c1d8",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "4fe58d5ac8476efc10d82572e278ad054e22b9ce622bd4baed3c3912c8a1c1d8"
+    },
+    {
+      "file": "assets/ImportReviewPage-Cr7cgaM8.js",
+      "status": 200,
+      "expected": "1c1d2ffc942dca80e93fd8eb870c9660e281b8808c45bc0d329cc74984112452",
+      "actual": "1c1d2ffc942dca80e93fd8eb870c9660e281b8808c45bc0d329cc74984112452",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "1c1d2ffc942dca80e93fd8eb870c9660e281b8808c45bc0d329cc74984112452"
+    },
+    {
+      "file": "assets/ImportWizard-DGRWYdBN.js",
+      "status": 200,
+      "expected": "2f394797b4550e7f94368473f32417f7c95b6ef38401602b4d9368327d8465c0",
+      "actual": "2f394797b4550e7f94368473f32417f7c95b6ef38401602b4d9368327d8465c0",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "2f394797b4550e7f94368473f32417f7c95b6ef38401602b4d9368327d8465c0"
+    },
+    {
+      "file": "assets/index-Dri27FTA.css",
+      "status": 200,
+      "expected": "599585016342895352d59b8203b7150ddfba13e4643eb74a786ce281d1ed8502",
+      "actual": "599585016342895352d59b8203b7150ddfba13e4643eb74a786ce281d1ed8502",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "599585016342895352d59b8203b7150ddfba13e4643eb74a786ce281d1ed8502"
+    },
+    {
+      "file": "assets/index-kG4p8dwl.js",
+      "status": 200,
+      "expected": "1de26e08d6c9f57d2cb9771a18e8cb28edc80b0017e09020725fd23fe247d015",
+      "actual": "1de26e08d6c9f57d2cb9771a18e8cb28edc80b0017e09020725fd23fe247d015",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "1de26e08d6c9f57d2cb9771a18e8cb28edc80b0017e09020725fd23fe247d015"
+    },
+    {
+      "file": "assets/index.es-DUwrJEdn.js",
+      "status": 200,
+      "expected": "e5d7d2d0c694e01971302fa38147bf0b29f1aa65ff038301ca0bf326bf734676",
+      "actual": "e5d7d2d0c694e01971302fa38147bf0b29f1aa65ff038301ca0bf326bf734676",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "e5d7d2d0c694e01971302fa38147bf0b29f1aa65ff038301ca0bf326bf734676"
+    },
+    {
+      "file": "assets/jspdf.es.min-CokG6ipd.js",
+      "status": 200,
+      "expected": "f02b3191fa44c597d9c40df453f4d38876b4462a78fb3f176cbac9d8308fa815",
+      "actual": "f02b3191fa44c597d9c40df453f4d38876b4462a78fb3f176cbac9d8308fa815",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "f02b3191fa44c597d9c40df453f4d38876b4462a78fb3f176cbac9d8308fa815"
+    },
+    {
+      "file": "assets/MasterDataPage-N-tJDze0.js",
+      "status": 200,
+      "expected": "a37bcc78393cccdee495b05d186232787d8dc501a32c5a9cd14d047a161ca8f5",
+      "actual": "a37bcc78393cccdee495b05d186232787d8dc501a32c5a9cd14d047a161ca8f5",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "a37bcc78393cccdee495b05d186232787d8dc501a32c5a9cd14d047a161ca8f5"
+    },
+    {
+      "file": "assets/MetricCard-byPZyVVG.js",
+      "status": 200,
+      "expected": "fbe4d5bffa3268ed4b008836d9423bd03f4c83c1705260335ab84ae24b311026",
+      "actual": "fbe4d5bffa3268ed4b008836d9423bd03f4c83c1705260335ab84ae24b311026",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "fbe4d5bffa3268ed4b008836d9423bd03f4c83c1705260335ab84ae24b311026"
+    },
+    {
+      "file": "assets/mixedWorkScope-CKvmvI2d.js",
+      "status": 200,
+      "expected": "567ed2d09e4d3eee5b3238c6d9c16019b35b19b9f7f115da9a6a95000c338ce5",
+      "actual": "567ed2d09e4d3eee5b3238c6d9c16019b35b19b9f7f115da9a6a95000c338ce5",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "567ed2d09e4d3eee5b3238c6d9c16019b35b19b9f7f115da9a6a95000c338ce5"
+    },
+    {
+      "file": "assets/NotesPage-DCe1U73r.js",
+      "status": 200,
+      "expected": "eaa3df22add6718a4fd92eeba768a9b233c00302e854cc04d65e4d4068e78dbe",
+      "actual": "eaa3df22add6718a4fd92eeba768a9b233c00302e854cc04d65e4d4068e78dbe",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "eaa3df22add6718a4fd92eeba768a9b233c00302e854cc04d65e4d4068e78dbe"
+    },
+    {
+      "file": "assets/openClientRecord-bQFb1GUV.js",
+      "status": 200,
+      "expected": "77c65f4b462c8d4664db9dde35ec0041990a5ea2dd1da4b4d7de8f7e79b1f1d1",
+      "actual": "77c65f4b462c8d4664db9dde35ec0041990a5ea2dd1da4b4d7de8f7e79b1f1d1",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "77c65f4b462c8d4664db9dde35ec0041990a5ea2dd1da4b4d7de8f7e79b1f1d1"
+    },
+    {
+      "file": "assets/OverviewPage-Dvcty9fq.js",
+      "status": 200,
+      "expected": "9e3a0aa7c9219bb9d589ba4d7240205eec4a4f9f6131a4ab277f1b246481e16e",
+      "actual": "9e3a0aa7c9219bb9d589ba4d7240205eec4a4f9f6131a4ab277f1b246481e16e",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "9e3a0aa7c9219bb9d589ba4d7240205eec4a4f9f6131a4ab277f1b246481e16e"
+    },
+    {
+      "file": "assets/PaymentsPage-CBLhI-53.js",
+      "status": 200,
+      "expected": "5bd98b0c8372518bc0b1a8c8883966dee767a4d6a645f87e9742491af14690bb",
+      "actual": "5bd98b0c8372518bc0b1a8c8883966dee767a4d6a645f87e9742491af14690bb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "5bd98b0c8372518bc0b1a8c8883966dee767a4d6a645f87e9742491af14690bb"
+    },
+    {
+      "file": "assets/pdf-BNqDwJR4.js",
+      "status": 200,
+      "expected": "aedbedcd7349c64ac520c9fa97ce36fadab8baa780124e9b0337876f11004944",
+      "actual": "aedbedcd7349c64ac520c9fa97ce36fadab8baa780124e9b0337876f11004944",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "aedbedcd7349c64ac520c9fa97ce36fadab8baa780124e9b0337876f11004944"
+    },
+    {
+      "file": "assets/pdf.worker.min-r-TJsTTt.mjs",
+      "status": 200,
+      "expected": "c964e291707ad492e6e90ff7f4f352b75e05ea2734c3dd3a80b94983b1b7ce3d",
+      "actual": "c964e291707ad492e6e90ff7f4f352b75e05ea2734c3dd3a80b94983b1b7ce3d",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "c964e291707ad492e6e90ff7f4f352b75e05ea2734c3dd3a80b94983b1b7ce3d"
+    },
+    {
+      "file": "assets/ProfessionalLandingPage-e8uqok3J.js",
+      "status": 200,
+      "expected": "1e58ccc9aee14fca20f478c7bc7482946cffc32984cde80f07ded2b820ce842c",
+      "actual": "1e58ccc9aee14fca20f478c7bc7482946cffc32984cde80f07ded2b820ce842c",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "1e58ccc9aee14fca20f478c7bc7482946cffc32984cde80f07ded2b820ce842c"
+    },
+    {
+      "file": "assets/ProvisionsPage-D1I08rM4.js",
+      "status": 200,
+      "expected": "dd5e297d4c0b7e43a8273d3a5fd8b758b8dc05b42f90f21fcc0827e2a4bcd042",
+      "actual": "dd5e297d4c0b7e43a8273d3a5fd8b758b8dc05b42f90f21fcc0827e2a4bcd042",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "dd5e297d4c0b7e43a8273d3a5fd8b758b8dc05b42f90f21fcc0827e2a4bcd042"
+    },
+    {
+      "file": "assets/purify.es-BlKBIatO.js",
+      "status": 200,
+      "expected": "6e294458c43f75031cd3737eb11359de1f814723f10350b3578fe2952966cafa",
+      "actual": "6e294458c43f75031cd3737eb11359de1f814723f10350b3578fe2952966cafa",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "6e294458c43f75031cd3737eb11359de1f814723f10350b3578fe2952966cafa"
+    },
+    {
+      "file": "assets/QuickExpenseModal-DHebdy-f.js",
+      "status": 200,
+      "expected": "8c1f12061d336e8a0f267b12511993f35dcf714305caf2502e62e29e679a4e8d",
+      "actual": "8c1f12061d336e8a0f267b12511993f35dcf714305caf2502e62e29e679a4e8d",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "8c1f12061d336e8a0f267b12511993f35dcf714305caf2502e62e29e679a4e8d"
+    },
+    {
+      "file": "assets/readBatches-D2MEeQ_9.js",
+      "status": 200,
+      "expected": "8fbf09c0a08e4703ce118e0ba4b3a3330d27301257e3a8565ca9c29622da6cdb",
+      "actual": "8fbf09c0a08e4703ce118e0ba4b3a3330d27301257e3a8565ca9c29622da6cdb",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "8fbf09c0a08e4703ce118e0ba4b3a3330d27301257e3a8565ca9c29622da6cdb"
+    },
+    {
+      "file": "assets/RetainerChargeDialog-DW7-nXNA.js",
+      "status": 200,
+      "expected": "8dffa7e0e7e8b4d9e7192a36e8d9b3575d7be2d932f2711e8f223a4cb77b6031",
+      "actual": "8dffa7e0e7e8b4d9e7192a36e8d9b3575d7be2d932f2711e8f223a4cb77b6031",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "8dffa7e0e7e8b4d9e7192a36e8d9b3575d7be2d932f2711e8f223a4cb77b6031"
+    },
+    {
+      "file": "assets/RetainersPage-i-qk7NE4.js",
+      "status": 200,
+      "expected": "7b848472c4dc4c024bafca50336eca4b7ee4755cdb7623d590a2a006b82d3928",
+      "actual": "7b848472c4dc4c024bafca50336eca4b7ee4755cdb7623d590a2a006b82d3928",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "7b848472c4dc4c024bafca50336eca4b7ee4755cdb7623d590a2a006b82d3928"
+    },
+    {
+      "file": "assets/rolldown-runtime-Dd_uD5pT.js",
+      "status": 200,
+      "expected": "c5f0356f5d0918a3137e4e811fd18950efe8ac8f6bf84d1d4da7811c477a24d8",
+      "actual": "c5f0356f5d0918a3137e4e811fd18950efe8ac8f6bf84d1d4da7811c477a24d8",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "c5f0356f5d0918a3137e4e811fd18950efe8ac8f6bf84d1d4da7811c477a24d8"
+    },
+    {
+      "file": "assets/scopedRead-C6J4h2F1.js",
+      "status": 200,
+      "expected": "508ee0f66fad6f4d041bd6fd9add4154f0cc05d5ac1464664ed250bdfe0c1b2a",
+      "actual": "508ee0f66fad6f4d041bd6fd9add4154f0cc05d5ac1464664ed250bdfe0c1b2a",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "508ee0f66fad6f4d041bd6fd9add4154f0cc05d5ac1464664ed250bdfe0c1b2a"
+    },
+    {
+      "file": "assets/StandardDataTable-CtbwNT4L.js",
+      "status": 200,
+      "expected": "af88acb7d87ff647f25add8497e166e5853369ecaa00b4d209b82faa1955cfd6",
+      "actual": "af88acb7d87ff647f25add8497e166e5853369ecaa00b4d209b82faa1955cfd6",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "af88acb7d87ff647f25add8497e166e5853369ecaa00b4d209b82faa1955cfd6"
+    },
+    {
+      "file": "assets/useModalLifecycle-BInkw6MD.js",
+      "status": 200,
+      "expected": "abab5b8ac273f9d1f3d7e3c77920df4c2705ceed02aa328cdd1e64a204355fdf",
+      "actual": "abab5b8ac273f9d1f3d7e3c77920df4c2705ceed02aa328cdd1e64a204355fdf",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "abab5b8ac273f9d1f3d7e3c77920df4c2705ceed02aa328cdd1e64a204355fdf"
+    },
+    {
+      "file": "assets/useResizablePlainTable-C9szyLTT.js",
+      "status": 200,
+      "expected": "3405bd131fb45f85e51f71094f443079b9ef3ab413b6a23d6a34b8e1806dddd3",
+      "actual": "3405bd131fb45f85e51f71094f443079b9ef3ab413b6a23d6a34b8e1806dddd3",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "3405bd131fb45f85e51f71094f443079b9ef3ab413b6a23d6a34b8e1806dddd3"
+    },
+    {
+      "file": "assets/WorkEntriesPage-w1Fi2UzE.js",
+      "status": 200,
+      "expected": "2bd92b061bde5099faca7502e9e11ac2b0ed99a09a3ef2bcc8403d0e7e234efc",
+      "actual": "2bd92b061bde5099faca7502e9e11ac2b0ed99a09a3ef2bcc8403d0e7e234efc",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "2bd92b061bde5099faca7502e9e11ac2b0ed99a09a3ef2bcc8403d0e7e234efc"
+    },
+    {
+      "file": "assets/workEntryCompatibility-D_PBJNxv.js",
+      "status": 200,
+      "expected": "a60377354efc0c95032b48dba46fd8b2606b2f91860a43cba6606c8a3eaf49cf",
+      "actual": "a60377354efc0c95032b48dba46fd8b2606b2f91860a43cba6606c8a3eaf49cf",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "a60377354efc0c95032b48dba46fd8b2606b2f91860a43cba6606c8a3eaf49cf"
+    },
+    {
+      "file": "assets/WorkEntryExpensesEditor-u2SVaR0V.js",
+      "status": 200,
+      "expected": "be18f04bbe3d8bced8a899864eadc9d3495b7d3a5f736d2e427858b2fc712870",
+      "actual": "be18f04bbe3d8bced8a899864eadc9d3495b7d3a5f736d2e427858b2fc712870",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "be18f04bbe3d8bced8a899864eadc9d3495b7d3a5f736d2e427858b2fc712870"
+    },
+    {
+      "file": "assets/WorkResultsLink-DflsNuDK.js",
+      "status": 200,
+      "expected": "87be2b8ac980decff549529f39bbe770125d1d7fa9dade515460d987717973c6",
+      "actual": "87be2b8ac980decff549529f39bbe770125d1d7fa9dade515460d987717973c6",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "87be2b8ac980decff549529f39bbe770125d1d7fa9dade515460d987717973c6"
+    },
+    {
+      "file": "assets/xlsx-CIWsbm6w.js",
+      "status": 200,
+      "expected": "54d45020de344884a069250c279fc7bf64115007724c8eb334386f6bb1a55cf8",
+      "actual": "54d45020de344884a069250c279fc7bf64115007724c8eb334386f6bb1a55cf8",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "54d45020de344884a069250c279fc7bf64115007724c8eb334386f6bb1a55cf8"
+    },
+    {
+      "file": "brand/lady-justice-bust-a.png",
+      "status": 200,
+      "expected": "415ec8ca0f8a0c6949604aa743af13918456535bd367a7c413be44e66e811c0c",
+      "actual": "415ec8ca0f8a0c6949604aa743af13918456535bd367a7c413be44e66e811c0c",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "f6982bcb406c140edcc33df07bd7fd636b87a7b4b46d3b16246a3664aabc7739"
+    },
+    {
+      "file": "brand/legalteam-logo.jpg",
+      "status": 200,
+      "expected": "5378ee7413167a6014cd5d093df2a341fd348216b41b47b90693ae3843386456",
+      "actual": "5378ee7413167a6014cd5d093df2a341fd348216b41b47b90693ae3843386456",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "861382170ea48a67e851b0463ac006206fc79a8a1b4103d1074a2fc17a4b557b"
+    },
+    {
+      "file": "examples/note-example.png",
+      "status": 200,
+      "expected": "415ec8ca0f8a0c6949604aa743af13918456535bd367a7c413be44e66e811c0c",
+      "actual": "415ec8ca0f8a0c6949604aa743af13918456535bd367a7c413be44e66e811c0c",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": false,
+      "normalizedExpected": "f6982bcb406c140edcc33df07bd7fd636b87a7b4b46d3b16246a3664aabc7739"
+    },
+    {
+      "file": "examples/note-example.wav",
+      "status": 200,
+      "expected": "5b517b506f635e251ee0d7020062f1ce375cc3a92f1f445e71be6995f4a591f1",
+      "actual": "5b517b506f635e251ee0d7020062f1ce375cc3a92f1f445e71be6995f4a591f1",
+      "equal": true,
+      "matchesAfterWindowsLineEndingNormalization": true,
+      "normalizedExpected": "5b517b506f635e251ee0d7020062f1ce375cc3a92f1f445e71be6995f4a591f1"
+    }
+  ]
+}

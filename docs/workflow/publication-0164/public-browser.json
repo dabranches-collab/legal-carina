@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-10-10T19:35:49.990Z",
+  "authenticatedMenus": "NOT TESTED: no authorised session access",
+  "rows": [
+    {
+      "engine": "chrome",
+      "browserVersion": "155.0.8059.39",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        390,
+        844
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    },
+    {
+      "engine": "chrome",
+      "browserVersion": "155.0.8059.39",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        844,
+        390
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    },
+    {
+      "engine": "chrome",
+      "browserVersion": "155.0.8059.39",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    },
+    {
+      "engine": "webkit",
+      "browserVersion": "26.0",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        390,
+        844
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    },
+    {
+      "engine": "webkit",
+      "browserVersion": "26.0",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        844,
+        390
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    },
+    {
+      "engine": "webkit",
+      "browserVersion": "26.0",
+      "status": 200,
+      "overflow": false,
+      "scale": 1,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "loginVisible": true,
+      "pageErrors": []
+    }
+  ]
+}
