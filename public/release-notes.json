@@ -1,15 +1,17 @@
 {
   "version": "0.16.1",
   "changes": [
-    "Navegação Resumo, Clientes, Trabalho, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
-    "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças."
+    "Navegação Resumo, Clientes, Registos, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
+    "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças.",
+    "O menu dos movimentos conserva a designação Registos."
   ],
   "releases": [
     {
       "version": "0.16.1",
       "changes": [
-        "Navegação Resumo, Clientes, Trabalho, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
-        "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças."
+        "Navegação Resumo, Clientes, Registos, Financeiro e Notas fixada na configuração de publicação, para impedir o regresso aos menus anteriores.",
+        "Actualização da aplicação com nova versão, conservando os dados e as regras de pagamentos e avenças.",
+        "O menu dos movimentos conserva a designação Registos."
       ]
     },
     {
