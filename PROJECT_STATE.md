@@ -1,3 +1,40 @@
+## 2026-10-10 — QA de iPhone e desktop concluída
+
+Lote local 0.16.2, PR draft #100, branch codex/functional-qa-0161-20261010. Produto ec01d843, ensaios finais 9c889a7. Chromium: duas passagens completas de 682/682 em 31 perfis, mais 155/155 navegação e 31/31 por cenário de grupos/tema, histórico e dívida/ficha. WebKit oficial: 330/330 em 15 perfis, três baterias de 110, sem falhas/omissões/flaky/retries na CI 38056327987. Mesma CI geral integralmente aprovada: segurança, lint, types, 351 unitários, SQL, Worker, build, 64 workflow, 174 regressão e quatro PWA; dependências e segredos aprovados. Relatório docs/workflow/responsive-qa-20261010.md e evidência local output/responsive-qa-20261010/webkit-verified-summary.json. Commit de fecho só documental; não confundir essa HEAD com o commit de código testado.
+
+Cinco defeitos da interface corrigidos: separadores da ficha sobrepostos no iPhone, rodapé horizontal, colunas fixas que tapavam Nota, ancoragem de scroll oscilante e barras/cabeçalho que tapavam a primeira linha em horizontal baixo. Ajustes finais do ensaio aguardam leituras antes de histórico e fecho da ficha e retêm trace em falha; não ignoram erros. Pendências físicas/operacionais: Safari/teclado/câmara/PWA num iPhone físico, Storage real completo, módulos de sessões antigas/coordenação de uploads, aviso de actualização pendente e Guardar rascunho/indicadores vermelho-verde. Auditoria funcional real e a pendência contabilística de 368 € estão no relatório funcional, sem regularização automática.
+
+Sem deploy, migrations, emissões, pagamentos, alterações de avenças ou novas permissões reais. Produção reconfirmada 0.16.1, deployment b0503af0-9830-464d-b2e5-566e449e7cf4, Version ID 12ea78d7-c188-44c2-9bfe-1fc173ca10f2 a 100%, criado 2026-10-10T09:23:40.34572Z. Entradas seguintes são checkpoints históricos.
+
+## 2026-10-10 — CI geral aprovada; diagnóstico residual WebKit
+
+CI geral 38054983248/b3e6d07 aprovada integralmente, com o orçamento de 30 minutos: 351 unitários, SQL, Worker, build, 64 workflow, regressão 174 aprovados/4 omissões de PWA e quatro PWA executados separadamente. Dependências e segredos aprovados. WebKit 329/330: apenas dívida/ficha em phone-se-old registou erro de leitura no serviço sintético; os três casos de histórico antes falhados passaram. Acrescentada espera das consultas antes de fechar essa ficha e trace conservada apenas em falha; repetição Chromium dirigida 31/31, sem falhas/omissões/retries. Nova CI WebKit pendente. Aplicação ec01d843/0.16.2 sem alterações adicionais; produção 0.16.1, sem deploy/escrita real. Entradas abaixo são históricas.
+
+## 2026-10-10 — espera do histórico em repetição WebKit
+
+A repetição CI 38053946155 teve 327/330 WebKit: três falhas do mesmo cenário de âmbito/histórico, nos perfis landscape-plus, phone-pro-max e landscape-pro-max, com erro de leitura ao navegar. Faltava a espera das consultas antes de page.goBack(); foi acrescentada sem ignorar erros. Repetição Chromium dirigida desse cenário: 31/31, todos os perfis, sem falhas/omissões/retries. CI completa seguinte pendente. Aplicação permanece ec01d843/0.16.2, sem alteração adicional do produto, deploy ou escrita real. Entradas abaixo são checkpoints históricos.
+## 2026-10-10 — matriz concluída; CI geral com mais tempo
+
+Chromium 682/682 nos 31 perfis (duas passagens limpas), mais 155/155 e 31/31 dirigidos. WebKit 330/330 nos 15 perfis, três baterias limpas da CI 38052515079/5c67621. Relatórios JSON consolidados em output/responsive-qa-20261010/. CI geral anterior c4f3500 aprovada; último job geral atingiu 20 minutos a dois casos do fim da regressão, antes do build/PWA finais, sem falhas observadas. Orçamento desse job aumentado para 30 minutos; nova CI geral pendente. Sem alterações posteriores ao produto ec01d843/0.16.2 local, sem deploy ou escrita real. Produção reconfirmada 0.16.1, deployment b0503af0, Version ID 12ea78d7. Entradas abaixo são históricas.
+
+## 2026-10-10 — CI geral aprovada; último cenário WebKit em repetição
+
+CI 38051396855/c4f3500: validate, dependências e segredos aprovados. Chromium 682/682 integral, mais 155/155 navegação e 31/31 grupos/tema nos 31 perfis. WebKit 329/330 em 15 perfis, zero erros de pedidos; só o cenário longo de grupos/tema excedeu 45 s no último botão. Orçamento desse cenário ajustado para 90 s, sem retirar asserções; repetição WebKit pendente. Produto permanece ec01d843/0.16.2 local, PR #100 draft; sem deploy ou escrita real. As entradas anteriores são histórico de checkpoints, não o estado final.
+
+## 2026-10-10 — passagem completa Chromium e repetição WebKit
+
+Aplicação ec01d843: 682/682 Chromium numa única passagem, 31 perfis, sem falhas/retries/omissões; 27/27 tabelas. WebKit da mesma CI: 322/330. Cinco controlos parcialmente visíveis e três erros no servidor CORS simulado ainda impedem certificar WebKit. Ajuste apenas do ensaio: scroll centrado antes de toque e proxy local do mesmo origin, mantendo bloqueio 403 e zero erros obrigatório. 24/24 Chromium dirigidos desse ajuste aprovados. Nova matriz WebKit e CI pendentes; sem alteração adicional da aplicação/deploy/dados. Relatório docs/workflow/responsive-qa-20261010.md.
+
+## 2026-10-10 — testes iPhone/desktop e correcções 0.16.2
+
+0.16.2 em preparação, PR draft [#100](https://github.com/dabranches-collab/legal-carina/pull/100), sem deploy: separadores da ficha deixam de tapar controlos, rodapé horizontal compacto, colunas fixas libertadas em tabelas estreitas e scroll estabilizado. 31 perfis Chromium/682 cenários distintos aprovados após repetições dirigidas; última passagem scroll/âmbito 62/62. 32 unitários dirigidos, tipos e build aprovados; CI geral b96b3ac aprovada. WebKit Ubuntu 318/330; doze falhas em resolução horizontal/toque/recarga em correcção, com 12/12 ensaios locais dirigidos aprovados. Matrizes completas finais pendentes. Serviços reais bloqueados, sem alterações de dados ou migrations. [Relatório](docs/workflow/responsive-qa-20261010.md). Produção permanece 0.16.1/deployment b0503af0/Version ID 12ea78d7; limites operacionais anteriores mantêm-se.
+
+## 2026-10-10 — validação funcional ampla
+
+[Relatório completo](docs/workflow/functional-qa-20261010.md), branch `codex/functional-qa-0161-20261010`: 351 unitários, 114 contratos SQL, 54 PostgreSQL completo, nove auditorias, 174 E2E legados, 64 workflow e quatro PWA aprovados. Azure real EN/FR e pré-visualização PT aprovados num cliente com notas anteriormente traduzidas; sem novas emissões ou pagamentos de produção. 420 verificações de integridade sem violações, nove RPC com anon recusado e 51 hashes/contagens de negócio/Storage iguais antes/depois. Scripts de auditoria actualizados, nova cadeia documental/recebimentos e imports Windows corrigidos. Lint, segurança, tipos e diff-check aprovados.
+
+Produção apresenta 0.16.1, mas foi posteriormente substituída por outro upload: deployment `b0503af0-9830-464d-b2e5-566e449e7cf4`, Version ID `12ea78d7-c188-44c2-9bfe-1fc173ca10f2`, 100% desde `2026-10-10T09:23:40.34572Z`; fonte não identificada e assets diferentes do artefacto certificado abaixo. A sessão antiga falhou num módulo e recuperou após recarregar. Aviso pendente tapava atalhos; actualizar a sessão e fechar o aviso recuperou a navegação. Não houve deploy ou migrations nesta QA. Não certificar estabilidade entre publicações, Safari físico ou ciclo Storage real. Rascunhos/indicadores continuam pendentes; excedente de 368 € previsto pelo produto requer regularização contabilística, sem alterações automáticas.
+
 ## 2026-10-10 — 0.16.1 publicada e confirmada
 
 Publicação autorizada concluída. PR #96 integrada em main 89fabd9d5cc0245f8ae8a1994c48a07a0a25f8b6; fonte funcional 2d963d1f8f295cdafeb2b1d0dbb49de14e3c971b. CI 38039545139 e secret scan 38039545140 aprovados: 351 unitários, 61 contratos SQL, 64 integração, 174 regressão e quatro PWA. Segurança, tipos, build real e dry-run aprovados. 25 E2E locais dirigidos passaram; a regressão completa local encontrou limitação preexistente de imports absolutos Windows, resolvida no âmbito de validação pela suite completa Linux na CI.
@@ -1511,3 +1548,6 @@ Actualizado em: 2026-08-17
 Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
 
 Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
+
+
+Checkpoint do ensaio e246065: nova passagem integral Chromium 682/682, 31 perfis, sem retries/omissões; WebKit 321/330, com os nove erros restantes apenas em pedidos ao substituir/recarregar páginas simuladas (também no mesmo origin, portanto sem prova de falha de CORS real). Ajuste seguinte apenas do ensaio: aguardar corpos das respostas e leituras encadeadas antes da navegação e da asserção final, sem ignorar erros; diagnóstico de pedidos falhados anexado em caso de erro. 20/20 Chromium dirigidos passaram; WebKit dessa espera pendente. Código da aplicação permanece ec01d843 e não houve deploy/escritas reais.

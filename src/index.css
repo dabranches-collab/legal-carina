@@ -115,6 +115,9 @@ button:disabled { cursor: not-allowed; }
 input.control[type="search"] { border-width: 2px; border-color: var(--color-secondary); background: var(--color-secondary-soft); }
 input.control[type="search"]:focus { background: var(--color-surface); }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
+/* The table reserves its own header space; browser anchoring can otherwise
+   alternate the scroll position when the header becomes fixed. */
+.table-standard { overflow-anchor: none; }
 .table-row-active, .table-row-active > td { background: var(--color-row-selected) !important; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); overflow-y: auto; }
@@ -122,6 +125,17 @@ input.control[type="search"]:focus { background: var(--color-surface); }
 .app-safe-fixed.grid > * { max-height: 100%; }
 .app-safe-popover { max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 1rem); }
 .app-safe-toast { right: max(1rem, var(--safe-right)); bottom: max(1rem, var(--safe-bottom)); left: max(1rem, var(--safe-left)); }
+/* On narrow or short screens the wrapped group bar covers the next page
+   controls when the browser scrolls them into view. Let the whole form scroll. */
+@media (max-width: 767px), (max-height: 500px) {
+  [role="dialog"] nav[aria-label="Grupos da ficha do cliente"],
+  [role="dialog"] nav[aria-label="Páginas da ficha do cliente"],
+  [role="dialog"] nav[aria-label="Separadores da ficha"] { position: static; }
+}
+@media (max-height: 500px) {
+  [aria-labelledby="entity-edit-title"] > .record-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+  .table-tools, .client-list-toolbar { position: static; }
+}
 .app-shell-header { min-height: calc(9.75rem + var(--safe-top)); padding-top: var(--safe-top); padding-right: max(var(--space-page), var(--safe-right)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-main { padding-right: max(var(--space-page), var(--safe-right)); padding-bottom: max(2rem, var(--safe-bottom)); padding-left: max(var(--space-page), var(--safe-left)); }
 .app-shell-sidebar { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); padding-left: var(--safe-left); }

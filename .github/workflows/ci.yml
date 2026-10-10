@@ -15,7 +15,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
         with:
@@ -64,3 +64,31 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level high
+
+  responsive-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps webkit
+      - name: iPhone workflows with isolated services in WebKit
+        run: pnpm exec playwright test --config playwright.responsive.config.ts --shard=${{ matrix.shard }}/3
+        env:
+          WORKFLOW_RESPONSIVE_BROWSER: webkit
+      - name: Synthetic responsive evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-webkit-${{ matrix.shard }}
+          path: output/responsive-qa-20261010/
+          retention-days: 7

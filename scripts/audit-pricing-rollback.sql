@@ -50,7 +50,9 @@ values ('fab64aa2-be79-4203-89ef-cda108f8b5d4', 'Desconto sintético', 'work_ent
 insert into audit_results select pg_temp.audit_is((select discount_amount from private.calculate_work_entry('5b60e8f5-750a-4193-8155-e2e70d3800af')), 15.00::numeric, 'aplica desconto percentual');
 insert into audit_results select pg_temp.audit_is((select proposed_amount from private.calculate_work_entry('5b60e8f5-750a-4193-8155-e2e70d3800af')), 135.00::numeric, 'calcula o valor após desconto');
 
-set local role authenticated;
+-- Private pricing helpers are server-only; run them as the database owner with
+-- the same synthetic actor, without widening the authenticated grants.
+reset role;
 select set_config('request.jwt.claim.sub', '17d0099b-6125-406e-8da5-bffe800e8b52', true);
 insert into audit_results select pg_temp.audit_lives(
   $$select private.apply_work_entry_override('5b60e8f5-750a-4193-8155-e2e70d3800af', 'effective_amount', '145'::jsonb, 'Acordo sintético autorizado')$$,
