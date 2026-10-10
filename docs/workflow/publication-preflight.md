@@ -1,3 +1,16 @@
+## 2026-10-10 — 0.16.1 publicada e confirmada
+
+Publicação autorizada concluída. PR #96 integrada em main 89fabd9d5cc0245f8ae8a1994c48a07a0a25f8b6; fonte funcional 2d963d1f8f295cdafeb2b1d0dbb49de14e3c971b. CI 38039545139 e secret scan 38039545140 aprovados: 351 unitários, 61 contratos SQL, 64 integração, 174 regressão e quatro PWA. Segurança, tipos, build real e dry-run aprovados. 25 E2E locais dirigidos passaram; a regressão completa local encontrou limitação preexistente de imports absolutos Windows, resolvida no âmbito de validação pela suite completa Linux na CI.
+
+Worker https://legal-carina.dabranches.workers.dev, **0.16.1**, Version ID b9f159f8-4436-445b-a5f8-6a996aec1222, deployment 2793142a-9012-41e8-8814-dcace4376401, 100% desde **10-10-2026 10:17:31 WAT** (2026-10-10T09:17:31.265577Z). Dez assets públicos exactamente iguais ao build real, Auth verificado pela guarda e five-areas fixado no build oficial. Sessão existente confirmou 0.16.1, menu **Registos**, opções PARTICULARES/EMPRESAS/MISTOS e ausência de alerts. Evidência sanitizada: output/publication-0161-receipt.json, publica-public-hashes-0161.json e publication-0.16.1-proof.png.
+
+Sem migrations ou alterações a dados/ACL/Auth/Storage nesta publicação. Contagens/hashes das **51 relações de negócio/Storage** iguais antes/depois. auth.users conserva cinco utilizadores; o hash mudou durante a sessão, sem atribuição de causa. Não inferir perda de dados a partir dessa mudança de metadados. Nove RPC dos filtros confirmados com acesso autenticado e anon revogado.
+
+Após o upload identificado surgiu outro upload Wrangler sem mensagem/commit: Version ID 7556cf3c-6a28-4f65-80a2-bc4c95bbd822, 09:14:26 UTC, com assets diferentes. Origem ainda não identificada; não atribuir a pessoa/chat/automatização sem evidência. Foi activado o artefacto revisto b9f159f8 e confirmados hashes/sessão após activação. O build oficial impede omissão da navegação nas builds actuais; não garante que outro emissor não publique um checkout antigo. Investigar a origem antes de afirmar controlo exclusivo da publicação. Rollback frontend: e175a768-fbaf-4239-a5d5-bc2b5d9d2cfc (0.16.0), preservando dados/migrations.
+
+**Guardar rascunho com cliente/data e indicadores vermelho/verde permanecem pendentes, fora desta release.** Safari/iPhone físico, tradução Azure e upload/download reais continuam não certificados. Este registo documental é um checkpoint de continuidade, sem novo deploy; entradas abaixo são históricas.
+
+
 ## 2026-10-10 — 0.16.0 publicada e confirmada
 
 Publicação concluída por ordem expressa renovada depois de comunicar os ensaios externos pendentes. PR #93 e correcção PR #94 integrados em main; fonte funcional `bfde6a8d4da9884fe9d1255cebdf57d7c9af347a`, código da correcção `c88547efad4f1615b07b4c630bd15862088908a1`. CI `38004536233` e secret scan `38004536464` aprovados: 344 unitários, 61 contratos SQL, 56 integração, 172 regressão e quatro PWA. QA PostgreSQL: 15 verificações completas dos nove RPC, três verificações de cálculo único e 27 contratos de âmbito aprovados.
