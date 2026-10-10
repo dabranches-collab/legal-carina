@@ -27,6 +27,9 @@ const projects=[
 ]
 const selected=webkit?projects.filter(project=>/^(phone-|landscape-)/.test(project.name)||project.name==='desktop-1440x900'||/^dark-(375|430)x/.test(project.name)).map(project=>({...project,use:{...project.use,browserName:'webkit' as const}})):projects
 export default defineConfig({...workflow,testMatch:'responsive-flows.spec.ts',workers:process.env.CI?2:4,timeout:45000,projects:selected,
+ // Match the integrated localhost preview's same-origin service proxy. The
+ // isolated server still refuses every unmocked service request with HTTP 403.
+ webServer:{...workflow.webServer as object,env:{VITE_SUPABASE_URL:'http://127.0.0.1:5173/supabase-api',VITE_SUPABASE_PUBLISHABLE_KEY:'test-publishable-key-not-a-secret',VITE_APP_ENV:'test'}},
  use:{...workflow.use,...(webkit?{launchOptions:{}}:{})},
  outputDir:'output/responsive-qa-20261010/artifacts',
  reporter:[['list'],['json',{outputFile:'output/responsive-qa-20261010/results.json'}]],

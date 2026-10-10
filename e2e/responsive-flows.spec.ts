@@ -6,7 +6,9 @@ import {createQaAllocationData} from '../src/lib/qaAllocationData'
 
 async function usable(control:Locator){
  await expect(async()=>{
-  await control.scrollIntoViewIfNeeded()
+  // A partially visible control can still sit under the floating scrollbar.
+  // Centre it by ordinary scrolling before checking whether a user can tap it.
+  await control.evaluate(e=>e.scrollIntoView({block:'center',inline:'center',behavior:'instant'}))
   await expect(control).toBeInViewport()
   expect(await control.evaluate(e=>{const r=e.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return !!hit&&(hit===e||e.contains(hit))}),'Acção acessível por clique/toque, sem sobreposição').toBe(true)
  }).toPass({timeout:8000,intervals:[100,250,500]})

@@ -1,3 +1,7 @@
+## 2026-10-10 — passagem completa Chromium e repetição WebKit
+
+Aplicação ec01d843: 682/682 Chromium numa única passagem, 31 perfis, sem falhas/retries/omissões; 27/27 tabelas. WebKit da mesma CI: 322/330. Cinco controlos parcialmente visíveis e três erros no servidor CORS simulado ainda impedem certificar WebKit. Ajuste apenas do ensaio: scroll centrado antes de toque e proxy local do mesmo origin, mantendo bloqueio 403 e zero erros obrigatório. 24/24 Chromium dirigidos desse ajuste aprovados. Nova matriz WebKit e CI pendentes; sem alteração adicional da aplicação/deploy/dados. Relatório docs/workflow/responsive-qa-20261010.md.
+
 ## 2026-10-10 — testes iPhone/desktop e correcções 0.16.2
 
 0.16.2 em preparação, PR draft [#100](https://github.com/dabranches-collab/legal-carina/pull/100), sem deploy: separadores da ficha deixam de tapar controlos, rodapé horizontal compacto, colunas fixas libertadas em tabelas estreitas e scroll estabilizado. 31 perfis Chromium/682 cenários distintos aprovados após repetições dirigidas; última passagem scroll/âmbito 62/62. 32 unitários dirigidos, tipos e build aprovados; CI geral b96b3ac aprovada. WebKit Ubuntu 318/330; doze falhas em resolução horizontal/toque/recarga em correcção, com 12/12 ensaios locais dirigidos aprovados. Matrizes completas finais pendentes. Serviços reais bloqueados, sem alterações de dados ou migrations. [Relatório](docs/workflow/responsive-qa-20261010.md). Produção permanece 0.16.1/deployment b0503af0/Version ID 12ea78d7; limites operacionais anteriores mantêm-se.

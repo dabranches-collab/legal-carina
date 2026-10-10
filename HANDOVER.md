@@ -1,3 +1,7 @@
+## 2026-10-10 — passagem completa Chromium e repetição WebKit
+
+Aplicação ec01d843: 682/682 Chromium numa única passagem, 31 perfis, sem falhas/retries/omissões; 27/27 tabelas. WebKit da mesma CI: 322/330. Cinco controlos parcialmente visíveis e três erros no servidor CORS simulado ainda impedem certificar WebKit. Ajuste apenas do ensaio: scroll centrado antes de toque e proxy local do mesmo origin, mantendo bloqueio 403 e zero erros obrigatório. 24/24 Chromium dirigidos desse ajuste aprovados. Nova matriz WebKit e CI pendentes; sem alteração adicional da aplicação/deploy/dados. Relatório docs/workflow/responsive-qa-20261010.md.
+
 ## 2026-10-10 — QA responsive 0.16.2 em preparação
 
 Branch `codex/functional-qa-0161-20261010`, PR draft [#100](https://github.com/dabranches-collab/legal-carina/pull/100), checkpoint `b96b3ac`. Lote local **0.16.2**, ainda não publicado: correcção dos separadores da ficha que tapavam controlos no iPhone, rodapé compacto em horizontal, libertação de colunas fixas que tapavam «Nota» e estabilização da ancoragem do scroll das tabelas. [Matriz e evidência](docs/workflow/responsive-qa-20261010.md).

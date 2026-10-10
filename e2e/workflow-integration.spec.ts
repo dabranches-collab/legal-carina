@@ -26,7 +26,8 @@ test.beforeEach(async({context,request,page},info)=>{
  if(process.env.WORKFLOW_RESPONSIVE_QA==='1')await context.addInitScript(theme=>localStorage.setItem('carina-theme',theme),info.project.name.startsWith('dark-')?'dark':'light')
  await context.route('**/*',async route=>{
   const request=route.request(),url=new URL(request.url())
-  if(url.origin==='http://127.0.0.1:54321'&&url.pathname.startsWith('/rest/v1/')){
+  const syntheticService=(url.origin==='http://127.0.0.1:54321'&&url.pathname.startsWith('/rest/v1/'))||(url.origin==='http://127.0.0.1:5173'&&url.pathname.startsWith('/supabase-api/rest/v1/'))
+  if(syntheticService){
    if(request.method()==='OPTIONS')return route.fulfill({status:204,headers:syntheticCorsHeaders})
    const rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],table=url.pathname.split('/').at(-1)??'',args=request.method()==='POST'?request.postDataJSON():{}
    let result=fixture(rpc,table,args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
