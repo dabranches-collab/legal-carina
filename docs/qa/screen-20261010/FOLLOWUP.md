@@ -9,3 +9,5 @@ Sem merge/deploy. Matrizes físicas permanecem pendentes. Runners locais empacot
 Repetição500ms: 112 estados, overflow em [], erros [].
 
 Repetição com500ms após resize:112/112 estados sem overflow global e sem erros. A matriz rápida registou transições ainda em curso; abertura directa320px também permaneceu estável.
+
+Revisão de cobertura e ligação CSV corrigida: [COVERAGE_REVIEW.md](COVERAGE_REVIEW.md). Inclui distinção de erro da fixture,loading,conteúdo,vazio e guardas administrativas; nenhum menu é certificado só pela ausência de overflow.

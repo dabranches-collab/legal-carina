@@ -1,0 +1,1400 @@
+{
+  "sha": "842d499c6c30ea73b2e8d668a8ef2b53c033b3f3",
+  "browser": "26.0",
+  "fixture": "qa-demo=1 qa-role=owner local/test only",
+  "rows": [
+    {
+      "view": "overview",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nNão foi possível carregar o dashboard: undefined is not an object (evaluating 'next.annual.map')",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nNão foi possível carregar o dashboard: undefined is not an object (evaluating 'next.annual.map')",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nNão foi possível carregar o dashboard: undefined is not an object (evaluating 'next.annual.map')",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional e acesso aos dashboards de cada sociedade.\nLEGALTEAM\nResumo da sociedade\nClientes\n0\nHoras\n0 h\nFacturado\n0 €\nPor receber\n0 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional e acesso aos dashboards de cada sociedade.\nLEGALTEAM\nResumo da sociedade\nClientes\n0\nHoras\n0 h\nFacturado\n0 €\nPor receber\n0 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "billing",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional e acesso aos dashboards de cada sociedade.\nLEGALTEAM\nResumo da sociedade\nClientes\n0\nHoras\n0 h\nFacturado\n0 €\nPor receber\n0 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional, alertas e acesso aos dashboards.\nCarina Santos\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nHugo Mendonça\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nPaula Chaves\nResumo do responsável\nClientes\n2\nHoras\n3 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 19,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional, alertas e acesso aos dashboards.\nCarina Santos\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nHugo Mendonça\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nPaula Chaves\nResumo do responsável\nClientes\n2\nHoras\n3 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 19,
+      "overflow": false
+    },
+    {
+      "view": "professionals",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional, alertas e acesso aos dashboards.\nCarina Santos\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nHugo Mendonça\nResumo do responsável\nClientes\n2\nHoras\n4 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard\nPaula Chaves\nResumo do responsável\nClientes\n2\nHoras\n3 h\nValor\n1000 €\nFacturado\n500 €\nPor facturar\n500 €\nPor facturar\n0\nAbrir tabela →\nFacturados não pagos\n0\nAbrir tabela →\nMovimentos sem preço\n0\nAbrir tabela →\nAbrir dashboard",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 19,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nA abrir ecrã\nO conteúdo está a ser preparado.",
+      "state": "loading",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nA abrir ecrã\nO conteúdo está a ser preparado.",
+      "state": "loading",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nA abrir ecrã\nO conteúdo está a ser preparado.",
+      "state": "loading",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nTratamento das avenças\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\nCondições vigentes, horas contratadas e utilizadas, e estado da facturação periódica.\n\nEBO — EXEMPLO TESTE\n02.0001 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2021 — sem fim · 3 linhas\nValor por período de facturação\n1600,00 €\nMensal\nValor anual equivalente\n19 200,00 €\n12 prestações por ano\nValor/hora efectivo\n528,89 €\nPor facturar · acumulado\n1600,00 €\nPor liquidar · acumulado\n0,00 €\nHoras utilizadas no período actual\n36 h 00 min utilizadas de 120 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 30% utilizado\nHoras utilizadas — histórico total: 36 h 00 min\nPrestações geradas ainda sem pagamento\n1600,00 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nINFANTÁRIO DO POVO — EXEMPLO TESTE\n02.0002 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2024 — sem fim · 2 linhas\nValor por período de facturação\n1306,67 €\nMensal\nValor anual equivalente\n15 680,04 €\n12 prestações por ano\nValor/hora efectivo\n182,33 €\nPor facturar · acumulado\n0,00 €\nPor liquidar · acumulado\n1306,67 €\nHoras utilizadas no período actual\n86 h 00 min utilizadas de 100 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 86% utilizado\nHoras utilizadas — histórico total: 86 h 00 min\nPrestações geradas ainda sem pagamento\n1306,67 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nCOCKTAIL TEAM — EXEMPLO TESTE\n02.0003 · LEGAL TEAM\nActiva\nCondição vigente\n01-01-2023 — sem fim · 4 linhas\nValor por período de facturação\n1586,67 €\nMensal\nValor anual equivalente\n1",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nTratamento das avenças\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\nCondições vigentes, horas contratadas e utilizadas, e estado da facturação periódica.\n\nEBO — EXEMPLO TESTE\n02.0001 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2021 — sem fim · 3 linhas\nValor por período de facturação\n1600,00 €\nMensal\nValor anual equivalente\n19 200,00 €\n12 prestações por ano\nValor/hora efectivo\n528,89 €\nPor facturar · acumulado\n1600,00 €\nPor liquidar · acumulado\n0,00 €\nHoras utilizadas no período actual\n36 h 00 min utilizadas de 120 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 30% utilizado\nHoras utilizadas — histórico total: 36 h 00 min\nPrestações geradas ainda sem pagamento\n1600,00 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nINFANTÁRIO DO POVO — EXEMPLO TESTE\n02.0002 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2024 — sem fim · 2 linhas\nValor por período de facturação\n1306,67 €\nMensal\nValor anual equivalente\n15 680,04 €\n12 prestações por ano\nValor/hora efectivo\n182,33 €\nPor facturar · acumulado\n0,00 €\nPor liquidar · acumulado\n1306,67 €\nHoras utilizadas no período actual\n86 h 00 min utilizadas de 100 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 86% utilizado\nHoras utilizadas — histórico total: 86 h 00 min\nPrestações geradas ainda sem pagamento\n1306,67 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nCOCKTAIL TEAM — EXEMPLO TESTE\n02.0003 · LEGAL TEAM\nActiva\nCondição vigente\n01-01-2023 — sem fim · 4 linhas\nValor por período de facturação\n1586,67 €\nMensal\nValor anual equivalente\n1",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "retainers",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Tratamento das avenças"
+      ],
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nTratamento das avenças\nMODO DE DEMONSTRAÇÃO · Clientes e valores sintéticos. Não representam contratos reais.\nCondições vigentes, horas contratadas e utilizadas, e estado da facturação periódica.\n\nEBO — EXEMPLO TESTE\n02.0001 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2021 — sem fim · 3 linhas\nValor por período de facturação\n1600,00 €\nMensal\nValor anual equivalente\n19 200,00 €\n12 prestações por ano\nValor/hora efectivo\n528,89 €\nPor facturar · acumulado\n1600,00 €\nPor liquidar · acumulado\n0,00 €\nHoras utilizadas no período actual\n36 h 00 min utilizadas de 120 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 30% utilizado\nHoras utilizadas — histórico total: 36 h 00 min\nPrestações geradas ainda sem pagamento\n1600,00 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nINFANTÁRIO DO POVO — EXEMPLO TESTE\n02.0002 · CARINA SANTOS\nActiva\nCondição vigente\n01-01-2024 — sem fim · 2 linhas\nValor por período de facturação\n1306,67 €\nMensal\nValor anual equivalente\n15 680,04 €\n12 prestações por ano\nValor/hora efectivo\n182,33 €\nPor facturar · acumulado\n0,00 €\nPor liquidar · acumulado\n1306,67 €\nHoras utilizadas no período actual\n86 h 00 min utilizadas de 100 h 00 min contratadas\n01-01-2026 — 31-12-2026 · 86% utilizado\nHoras utilizadas — histórico total: 86 h 00 min\nPrestações geradas ainda sem pagamento\n1306,67 €\nInclui pendentes e facturadas; só o estado Pago retira uma prestação deste total.\nFicha do cliente\nRegistos do cliente\nCOCKTAIL TEAM — EXEMPLO TESTE\n02.0003 · LEGAL TEAM\nActiva\nCondição vigente\n01-01-2023 — sem fim · 4 linhas\nValor por período de facturação\n1586,67 €\nMensal\nValor anual equivalente\n1",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPendências a corrigir\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\n\nSem preço\n0\n\nTrabalho por facturar\n0\n\nFacturados não pagos\n0\n\nPagos s/ factura ou data\n—\n\nCobertos por avença\n0\nPesquisa livre\n\nAno\n\nTodos\nLimpar\nResponsável\n\nTodos\nLimpar\nSociedade\n\nTodos\nLimpar\nEstado de facturação\n\nTodos\nLimpar\nPagamento\n\nTodos\nLimpar\nArquivo\n\nTodos\nLimpar\nTodos\nLimpar\nTipo de cliente: Particular\n4 movimentos acessíveis\n\n＋\nCriar\nmovimento\nTodos\nLimpar\nColunas · 17/17\nXLSX\nImprimir / PDF\n4 registos de 4\nRegistos de trabalho\n\nData\nFiltrar…\n↑\n↓\n\nCliente\nFiltrar…\n↑\n↓\n\nCódigo (automático)\nFiltrar…\n↑\n↓\n\nActividade\nFiltrar…\n↑\n↓\n\nResponsável\nFiltrar…\n↑\n↓\n\nDuração (min)\nFiltrar…\n↑\n↓\n\nTratamento\nFiltrar…\n↑\n↓\n\nValor/hora (EUR)\nFiltrar…\n↑\n↓\n\nValor (EUR)\nFiltrar…\n↑\n↓\n\nDespesas\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nFacturado\nFiltrar…\n↑\n↓\n\nN.º factura\nFiltrar…\n↑\n↓\n\nData factura\nFiltrar…\n↑\n↓\n\nPago\nFiltrar…\n↑\n↓\n\nArquivo\nFiltrar…\n↑\n↓\n\nObservações\nFiltrar…\n↑\n↓\n01-09-2026\nCliente Demonstração Alfa\n02.0001\nConsulta e preparação de processo\nCarina\n180\nFacturação normal\n200\t600\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n02-09-2026\nCliente Demonstração Alfa\n02.0001\nAnálise documental\nHugo\n210\nFacturação normal\n200\t700\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Alfa\n02.0001\nPreparação de requerimento\nPaula\n150\nFacturação normal\n200\t500\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Beta\n01.0001\nReunião de acompanhamento\nCarina\n60\nFacturação normal\n200\t200\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n1–4 de 4",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPendências a corrigir\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\n\nSem preço\n0\n\nTrabalho por facturar\n0\n\nFacturados não pagos\n0\n\nPagos s/ factura ou data\n—\n\nCobertos por avença\n0\nPesquisa livre\n\nAno\n\nTodos\nLimpar\nResponsável\n\nTodos\nLimpar\nSociedade\n\nTodos\nLimpar\nEstado de facturação\n\nTodos\nLimpar\nPagamento\n\nTodos\nLimpar\nArquivo\n\nTodos\nLimpar\nTodos\nLimpar\nTipo de cliente: Particular\n4 movimentos acessíveis\n\n＋\nCriar\nmovimento\nTodos\nLimpar\nColunas · 17/17\nXLSX\nImprimir / PDF\n4 registos de 4\nRegistos de trabalho\n\nData\nFiltrar…\n↑\n↓\n\nCliente\nFiltrar…\n↑\n↓\n\nCódigo (automático)\nFiltrar…\n↑\n↓\n\nActividade\nFiltrar…\n↑\n↓\n\nResponsável\nFiltrar…\n↑\n↓\n\nDuração (min)\nFiltrar…\n↑\n↓\n\nTratamento\nFiltrar…\n↑\n↓\n\nValor/hora (EUR)\nFiltrar…\n↑\n↓\n\nValor (EUR)\nFiltrar…\n↑\n↓\n\nDespesas\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nFacturado\nFiltrar…\n↑\n↓\n\nN.º factura\nFiltrar…\n↑\n↓\n\nData factura\nFiltrar…\n↑\n↓\n\nPago\nFiltrar…\n↑\n↓\n\nArquivo\nFiltrar…\n↑\n↓\n\nObservações\nFiltrar…\n↑\n↓\n01-09-2026\nCliente Demonstração Alfa\n02.0001\nConsulta e preparação de processo\nCarina\n180\nFacturação normal\n200\t600\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n02-09-2026\nCliente Demonstração Alfa\n02.0001\nAnálise documental\nHugo\n210\nFacturação normal\n200\t700\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Alfa\n02.0001\nPreparação de requerimento\nPaula\n150\nFacturação normal\n200\t500\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Beta\n01.0001\nReunião de acompanhamento\nCarina\n60\nFacturação normal\n200\t200\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n1–4 de 4",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "work",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pendências a corrigir",
+        "Registos de trabalho"
+      ],
+      "text": "Filtrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPendências a corrigir\nSeleccione para filtrar o universo completo.\n\nSem sociedade\n0\n\nSem preço\n0\n\nTrabalho por facturar\n0\n\nFacturados não pagos\n0\n\nPagos s/ factura ou data\n—\n\nCobertos por avença\n0\nPesquisa livre\n\nAno\n\nTodos\nLimpar\nResponsável\n\nTodos\nLimpar\nSociedade\n\nTodos\nLimpar\nEstado de facturação\n\nTodos\nLimpar\nPagamento\n\nTodos\nLimpar\nArquivo\n\nTodos\nLimpar\nTodos\nLimpar\nTipo de cliente: Particular\n4 movimentos acessíveis\n\n＋\nCriar\nmovimento\nTodos\nLimpar\nColunas · 17/17\nXLSX\nImprimir / PDF\n4 registos de 4\nRegistos de trabalho\n\nData\nFiltrar…\n↑\n↓\n\nCliente\nFiltrar…\n↑\n↓\n\nCódigo (automático)\nFiltrar…\n↑\n↓\n\nActividade\nFiltrar…\n↑\n↓\n\nResponsável\nFiltrar…\n↑\n↓\n\nDuração (min)\nFiltrar…\n↑\n↓\n\nTratamento\nFiltrar…\n↑\n↓\n\nValor/hora (EUR)\nFiltrar…\n↑\n↓\n\nValor (EUR)\nFiltrar…\n↑\n↓\n\nDespesas\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nFacturado\nFiltrar…\n↑\n↓\n\nN.º factura\nFiltrar…\n↑\n↓\n\nData factura\nFiltrar…\n↑\n↓\n\nPago\nFiltrar…\n↑\n↓\n\nArquivo\nFiltrar…\n↑\n↓\n\nObservações\nFiltrar…\n↑\n↓\n01-09-2026\nCliente Demonstração Alfa\n02.0001\nConsulta e preparação de processo\nCarina\n180\nFacturação normal\n200\t600\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n02-09-2026\nCliente Demonstração Alfa\n02.0001\nAnálise documental\nHugo\n210\nFacturação normal\n200\t700\t—\t\nLEGALTEAM\nSim\n—\n01-09-2026\nSim\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Alfa\n02.0001\nPreparação de requerimento\nPaula\n150\nFacturação normal\n200\t500\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n03-09-2026\nCliente Demonstração Beta\n01.0001\nReunião de acompanhamento\nCarina\n60\nFacturação normal\n200\t200\t—\t\nLEGALTEAM\nNão\n—\n—\nNão\n—\nDemonstração sintética\n1–4 de 4\n",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nACOMPANHAMENTO DE RECEBIMENTOS\nClientes por receber\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cada fase apresentada separadamente.\nActualizar\nFacturado por receber\n0,00 €\nPor facturar\n0,00 €\nClientes em acompanhamento\n0\nPor receber: registos, avenças e trabalhos a preço fixo facturados ainda sem pagamento. Por facturar: os mesmos tipos antes da factura. Os registos associados a preço fixo entram apenas com horas; o valor do trabalho conta uma vez.\nProcurar cliente\nNão há clientes com valores por receber ou por facturar.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nACOMPANHAMENTO DE RECEBIMENTOS\nClientes por receber\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cada fase apresentada separadamente.\nActualizar\nFacturado por receber\n0,00 €\nPor facturar\n0,00 €\nClientes em acompanhamento\n0\nPor receber: registos, avenças e trabalhos a preço fixo facturados ainda sem pagamento. Por facturar: os mesmos tipos antes da factura. Os registos associados a preço fixo entram apenas com horas; o valor do trabalho conta uma vez.\nProcurar cliente\nNão há clientes com valores por receber ou por facturar.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "debtors",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Clientes por receber"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nACOMPANHAMENTO DE RECEBIMENTOS\nClientes por receber\nInclui registos, avenças e trabalhos a preço fixo. Ordenação pelo total em aberto, com cada fase apresentada separadamente.\nActualizar\nFacturado por receber\n0,00 €\nPor facturar\n0,00 €\nClientes em acompanhamento\n0\nPor receber: registos, avenças e trabalhos a preço fixo facturados ainda sem pagamento. Por facturar: os mesmos tipos antes da factura. Os registos associados a preço fixo entram apenas com horas; o valor do trabalho conta uma vez.\nProcurar cliente\nNão há clientes com valores por receber ou por facturar.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPagamentos\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturados\n0\n\nRegistos facturados não pagos\n0\n\nNotas de honorários não pagas\n0\n\nAvenças não pagas\n0\nPesquisar em Registos não facturados\nTodos\nLimpar\nColunas · 7/7\nXLSX\nImprimir / PDF\n0 resultados de 0\nRegistos não facturados\n\nCliente\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nDetalhe\nFiltrar…\n↑\n↓\n\nData\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nValor\nFiltrar…\n↑\n↓\n\nMoeda\nFiltrar…\n↑\n↓\nSem pendências nesta categoria.\n0 resultados",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPagamentos\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturados\n0\n\nRegistos facturados não pagos\n0\n\nNotas de honorários não pagas\n0\n\nAvenças não pagas\n0\nPesquisar em Registos não facturados\nTodos\nLimpar\nColunas · 7/7\nXLSX\nImprimir / PDF\n0 resultados de 0\nRegistos não facturados\n\nCliente\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nDetalhe\nFiltrar…\n↑\n↓\n\nData\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nValor\nFiltrar…\n↑\n↓\n\nMoeda\nFiltrar…\n↑\n↓\nSem pendências nesta categoria.\n0 resultados",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "payments",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Pagamentos",
+        "Registos não facturados"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nPagamentos\nConsulte as pendências e abra um item para conferir o saldo. Facturação e recebimento são operações distintas.\n\nRegistos não facturados\n0\n\nRegistos facturados não pagos\n0\n\nNotas de honorários não pagas\n0\n\nAvenças não pagas\n0\nPesquisar em Registos não facturados\nTodos\nLimpar\nColunas · 7/7\nXLSX\nImprimir / PDF\n0 resultados de 0\nRegistos não facturados\n\nCliente\nFiltrar…\n↑\n↓\n\nSociedade\nFiltrar…\n↑\n↓\n\nDetalhe\nFiltrar…\n↑\n↓\n\nData\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nValor\nFiltrar…\n↑\n↓\n\nMoeda\nFiltrar…\n↑\n↓\nSem pendências nesta categoria.\n0 resultados",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nProvisões\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n● Com saldo disponível\n● Saldo esgotado\nSaldo actualizado pelos pagamentos, abates das notas e estornos. O histórico apresenta também a estimativa pelas horas registadas.\nActualizar provisões\nAinda não existem clientes com provisões.\n",
+      "state": "empty-or-mixed",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nProvisões\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n● Com saldo disponível\n● Saldo esgotado\nSaldo actualizado pelos pagamentos, abates das notas e estornos. O histórico apresenta também a estimativa pelas horas registadas.\nActualizar provisões\nAinda não existem clientes com provisões.\n",
+      "state": "empty-or-mixed",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "provisions",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Provisões"
+      ],
+      "text": "Por receber\nPagamentos e facturação\nProvisões\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nProvisões\nTodos os clientes que já tiveram provisões, incluindo as esgotadas. Mantêm-se nas listas de PARTICULARES e EMPRESAS.\n● Com saldo disponível\n● Saldo esgotado\nSaldo actualizado pelos pagamentos, abates das notas e estornos. O histórico apresenta também a estimativa pelas horas registadas.\nActualizar provisões\nAinda não existem clientes com provisões.\n",
+      "state": "empty-or-mixed",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\nDe CARINA SANTOS\nNormal\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n30-08-2026 12:00\nConsultar\nPreparar reunião TESTE\nDe CARINA SANTOS\nAtenção\nExemplo de lista de tarefas partilhada com permissão de edição.\nLista\n1 de 3 concluídos\n\nRever as horas da avença\n\nConfirmar facturas emitidas\n\nPreparar o resumo anual\n30-08-2026 12:00\nEditar\nDocumento recebido TESTE\nDe CARINA SANTOS\nUrgente\nExemplo de uma nota com imagem anexada.\n\nexemplo-documento-TESTE.svg\n30-08-2026 12:00\nConsultar\nMensagem de voz TESTE\nDe CARINA SANTOS\nCrítico\nExemplo de uma nota com gravação de voz partilhada.\n\ngravacao-TESTE.wav\nEliminar\n30-08-2026 12:00\nEditar",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\nDe CARINA SANTOS\nNormal\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n30-08-2026 12:00\nConsultar\nPreparar reunião TESTE\nDe CARINA SANTOS\nAtenção\nExemplo de lista de tarefas partilhada com permissão de edição.\nLista\n1 de 3 concluídos\n\nRever as horas da avença\n\nConfirmar facturas emitidas\n\nPreparar o resumo anual\n30-08-2026 12:00\nEditar\nDocumento recebido TESTE\nDe CARINA SANTOS\nUrgente\nExemplo de uma nota com imagem anexada.\n\nexemplo-documento-TESTE.svg\n30-08-2026 12:00\nConsultar\nMensagem de voz TESTE\nDe CARINA SANTOS\nCrítico\nExemplo de uma nota com gravação de voz partilhada.\n\ngravacao-TESTE.wav\nEliminar\n30-08-2026 12:00\nEditar",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "notes",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lembrete TESTE",
+        "Preparar reunião TESTE",
+        "Documento recebido TESTE",
+        "Mensagem de voz TESTE"
+      ],
+      "text": "+ Nova nota\nCrie texto, listas, imagens ou gravações de voz e defina a urgência.\nTodas\nNormal\nAtenção\nUrgente\nCrítico\nLembrete TESTE\nDe CARINA SANTOS\nNormal\nExemplo de uma nota simples de texto, criada pela CARINA SANTOS e partilhada para consulta.\n30-08-2026 12:00\nConsultar\nPreparar reunião TESTE\nDe CARINA SANTOS\nAtenção\nExemplo de lista de tarefas partilhada com permissão de edição.\nLista\n1 de 3 concluídos\n\nRever as horas da avença\n\nConfirmar facturas emitidas\n\nPreparar o resumo anual\n30-08-2026 12:00\nEditar\nDocumento recebido TESTE\nDe CARINA SANTOS\nUrgente\nExemplo de uma nota com imagem anexada.\n\nexemplo-documento-TESTE.svg\n30-08-2026 12:00\nConsultar\nMensagem de voz TESTE\nDe CARINA SANTOS\nCrítico\nExemplo de uma nota com gravação de voz partilhada.\n\ngravacao-TESTE.wav\nEliminar\n30-08-2026 12:00\nEditar",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 13,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clientes\nTodos\nLimpar\nColunas · 12/12\nXLSX\nImprimir / PDF\n2 resultados de 2\nLista de Clientes\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\n\nPerfil actual\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\nParticular\nCliente Demonstração Beta\n01.0001\nFicha\nNota\nCobrança\nActivo\n—\nEmpresa\n1–2 de 2",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clientes\nTodos\nLimpar\nColunas · 12/12\nXLSX\nImprimir / PDF\n2 resultados de 2\nLista de Clientes\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\n\nPerfil actual\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\nParticular\nCliente Demonstração Beta\n01.0001\nFicha\nNota\nCobrança\nActivo\n—\nEmpresa\n1–2 de 2",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "master-data",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Lista · Clientes",
+        "Lista de Clientes"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nLista · Clientes\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de Clientes\nTodos\nLimpar\nColunas · 12/12\nXLSX\nImprimir / PDF\n2 resultados de 2\nLista de Clientes\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\n\nPerfil actual\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\nParticular\nCliente Demonstração Beta\n01.0001\nFicha\nNota\nCobrança\nActivo\n—\nEmpresa\n1–2 de 2\n",
+      "state": "rendered-content",
+      "tables": 1,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nUtilizadores\n\nRegistos de acesso",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nUtilizadores\n\nRegistos de acesso",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\n\nUtilizadores\n\nRegistos de acesso",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImprimir / PDF\n0 resultados de 0\nUtilizadores existentes\n\nNome\n↑\n↓\n\nUtilizador\n↑\n↓\n\nPerfil\n↑\n↓\n\nEstado\n↑\n↓\n\nÚltimo acesso\n↑\n↓\n\nAcções\nNão existem dados.\n0 resultados\nADMINISTRAÇÃO\nCriar utilizador\nO nome fica visível durante a sessão; o utilizador serve apenas para entrar. No primeiro acesso, o PIN inicial terá de ser substituído.\nNome visível\nUtilizador para login\nPIN inicial de 4 algarismos\nO PIN fica visível neste formulário para poder comunicá-lo ao utilizador. Será substituído obrigatoriamente no primeiro acesso.\nPerfil\nRegistos e processos dentro das sociedades autorizadas.\nVisibilidade inicial por Sociedade\nDefina separadamente se pode consultar a Sociedade e os respectivos valores financeiros.\nCopiar dados de acessoCriar utilizador",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImprimir / PDF\n0 resultados de 0\nUtilizadores existentes\n\nNome\n↑\n↓\n\nUtilizador\n↑\n↓\n\nPerfil\n↑\n↓\n\nEstado\n↑\n↓\n\nÚltimo acesso\n↑\n↓\n\nAcções\nNão existem dados.\n0 resultados\nADMINISTRAÇÃO\nCriar utilizador\nO nome fica visível durante a sessão; o utilizador serve apenas para entrar. No primeiro acesso, o PIN inicial terá de ser substituído.\nNome visível\nUtilizador para login\nPIN inicial de 4 algarismos\nO PIN fica visível neste formulário para poder comunicá-lo ao utilizador. Será substituído obrigatoriamente no primeiro acesso.\nPerfil\nRegistos e processos dentro das sociedades autorizadas.\nVisibilidade inicial por Sociedade\nDefina separadamente se pode consultar a Sociedade e os respectivos valores financeiros.\nCopiar dados de acessoCriar utilizador",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-users",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Utilizadores da aplicação",
+        "Utilizadores existentes",
+        "Criar utilizador"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nPermissão administrativa necessária.\nUtilizadores da aplicação\nPerfis e visibilidade são aplicados no backend.\n\nPesquisar em Utilizadores existentes\nTodos\nLimpar\nColunas · 6/6\nXLSX\nImprimir / PDF\n0 resultados de 0\nUtilizadores existentes\n\nNome\n↑\n↓\n\nUtilizador\n↑\n↓\n\nPerfil\n↑\n↓\n\nEstado\n↑\n↓\n\nÚltimo acesso\n↑\n↓\n\nAcções\nNão existem dados.\n0 resultados\nADMINISTRAÇÃO\nCriar utilizador\nO nome fica visível durante a sessão; o utilizador serve apenas para entrar. No primeiro acesso, o PIN inicial terá de ser substituído.\nNome visível\nUtilizador para login\nPIN inicial de 4 algarismos\nO PIN fica visível neste formulário para poder comunicá-lo ao utilizador. Será substituído obrigatoriamente no primeiro acesso.\nPerfil\nRegistos e processos dentro das sociedades autorizadas.\nVisibilidade inicial por Sociedade\nDefina separadamente se pode consultar a Sociedade e os respectivos valores financeiros.\nCopiar dados de acessoCriar utilizador",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nIMPORTAÇÃO LOCAL EM DUAS FASES\nAnalisar antes de gravar\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segura com o Supabase; nenhum movimento é gravado antes da confirmação final.\nImportações com erros\n0\nLotes com linhas rejeitadas\nCom override\n0\nMovimentos com alterações manuais protegidas\nArraste o ficheiro para esta zona\nFormatos permitidos: .xlsx e .csv · sem macros ou conteúdo activo\nSeleccionar ficheiro\nLimite configurável\n\nMB\nNenhum ficheiro seleccionado.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nIMPORTAÇÃO LOCAL EM DUAS FASES\nAnalisar antes de gravar\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segura com o Supabase; nenhum movimento é gravado antes da confirmação final.\nImportações com erros\n0\nLotes com linhas rejeitadas\nCom override\n0\nMovimentos com alterações manuais protegidas\nArraste o ficheiro para esta zona\nFormatos permitidos: .xlsx e .csv · sem macros ou conteúdo activo\nSeleccionar ficheiro\nLimite configurável\n\nMB\nNenhum ficheiro seleccionado.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "imports",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Analisar antes de gravar"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nIMPORTAÇÃO LOCAL EM DUAS FASES\nAnalisar antes de gravar\nO ficheiro é processado primeiro neste browser. Depois da validação local, as linhas normalizadas são comparadas de forma segura com o Supabase; nenhum movimento é gravado antes da confirmação final.\nImportações com erros\n0\nLotes com linhas rejeitadas\nCom override\n0\nMovimentos com alterações manuais protegidas\nArraste o ficheiro para esta zona\nFormatos permitidos: .xlsx e .csv · sem macros ou conteúdo activo\nSeleccionar ficheiro\nLimite configurável\n\nMB\nNenhum ficheiro seleccionado.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\nPossível duplicado\n0\nPossível duplicado já existente\n0\nFacturado sem data\n0\nPago sem marca de facturado\n0\nCliente com vertente particular e empresa\n0\nTipo de cliente por confirmar\n0\nCódigo não encontrado na folha CLIENTES\n0\nSem preço ou preço inválido\n0\nValor histórico diferente do cálculo\n0\nValor possivelmente introduzido manualmente\n0\nMovimento actualizado a partir do ficheiro\n0\nPrimeiros 100 movimentos da fila. A linha refere-se à folha DADOS do ficheiro original.\n\nPesquisar em Movimentos em revisão\nTodos\nLimpar\nColunas · 3/3\nXLSX\nImprimir / PDF\n0 resultados de 0\nMovimentos em revisão\n\nLinha Excel\nFiltrar…\n↑\n↓\n\nAvisos\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\nNão existem dados.\n0 resultados",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\nPossível duplicado\n0\nPossível duplicado já existente\n0\nFacturado sem data\n0\nPago sem marca de facturado\n0\nCliente com vertente particular e empresa\n0\nTipo de cliente por confirmar\n0\nCódigo não encontrado na folha CLIENTES\n0\nSem preço ou preço inválido\n0\nValor histórico diferente do cálculo\n0\nValor possivelmente introduzido manualmente\n0\nMovimento actualizado a partir do ficheiro\n0\nPrimeiros 100 movimentos da fila. A linha refere-se à folha DADOS do ficheiro original.\n\nPesquisar em Movimentos em revisão\nTodos\nLimpar\nColunas · 3/3\nXLSX\nImprimir / PDF\n0 resultados de 0\nMovimentos em revisão\n\nLinha Excel\nFiltrar…\n↑\n↓\n\nAvisos\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\nNão existem dados.\n0 resultados",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "import-review",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Movimentos importados que requerem confirmação",
+        "Movimentos em revisão"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nMovimentos importados que requerem confirmação\nEstes movimentos foram importados sem alterar o histórico. Um aviso não elimina nem recalcula o movimento.\nPossível duplicado\n0\nPossível duplicado já existente\n0\nFacturado sem data\n0\nPago sem marca de facturado\n0\nCliente com vertente particular e empresa\n0\nTipo de cliente por confirmar\n0\nCódigo não encontrado na folha CLIENTES\n0\nSem preço ou preço inválido\n0\nValor histórico diferente do cálculo\n0\nValor possivelmente introduzido manualmente\n0\nMovimento actualizado a partir do ficheiro\n0\nPrimeiros 100 movimentos da fila. A linha refere-se à folha DADOS do ficheiro original.\n\nPesquisar em Movimentos em revisão\nTodos\nLimpar\nColunas · 3/3\nXLSX\nImprimir / PDF\n0 resultados de 0\nMovimentos em revisão\n\nLinha Excel\nFiltrar…\n↑\n↓\n\nAvisos\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\nNão existem dados.\n0 resultados",
+      "state": "empty-or-mixed",
+      "tables": 1,
+      "charts": 15,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "portrait",
+      "insets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      },
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "scrollWidth": 390,
+      "visualViewport": {
+        "width": 390,
+        "height": 844,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\nActualizar\nApenas o proprietário pode consultar o histórico de acessos.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "landscape",
+      "insets": {
+        "top": 0,
+        "right": 59,
+        "bottom": 21,
+        "left": 59
+      },
+      "width": 844,
+      "height": 390,
+      "dpr": 1,
+      "scrollWidth": 844,
+      "visualViewport": {
+        "width": 844,
+        "height": 390,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\nActualizar\nApenas o proprietário pode consultar o histórico de acessos.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    },
+    {
+      "view": "admin-access-logs",
+      "profile": "desktop",
+      "insets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "scrollWidth": 1920,
+      "visualViewport": {
+        "width": 1920,
+        "height": 1080,
+        "offsetTop": 0,
+        "offsetLeft": 0,
+        "scale": 1
+      },
+      "headings": [
+        "Registos de acesso"
+      ],
+      "text": "Clientes\nSociedades\nResponsáveis\nAdministração\nUtilizadores\nImportações\nRevisão de importações\nRegistos de acesso\nRegistos de acesso\nÁrea exclusiva do proprietário. Entradas consecutivas do mesmo utilizador aparecem agrupadas.\nActualizar\nApenas o proprietário pode consultar o histórico de acessos.",
+      "state": "rendered-content",
+      "tables": 0,
+      "charts": 14,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "physical": "PENDING",
+  "pwa": "PENDING",
+  "note": "Synthetic generic CSS profiles and insets; no real device certification"
+}
