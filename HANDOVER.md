@@ -1,3 +1,11 @@
+## 2026-10-10 — QA responsive 0.16.2 em preparação
+
+Branch `codex/functional-qa-0161-20261010`, PR draft [#100](https://github.com/dabranches-collab/legal-carina/pull/100), checkpoint `b96b3ac`. Lote local **0.16.2**, ainda não publicado: correcção dos separadores da ficha que tapavam controlos no iPhone, rodapé compacto em horizontal, libertação de colunas fixas que tapavam «Nota» e estabilização da ancoragem do scroll das tabelas. [Matriz e evidência](docs/workflow/responsive-qa-20261010.md).
+
+31 perfis Chromium/**682 cenários distintos aprovados**, após as repetições dirigidas documentadas (não uma única passagem limpa). Última repetição scroll/âmbito: 62/62 sem omissões ou retries de cenários. 22 unitários da tabela e dez de pagamentos/PWA aprovados; tipos e build passaram. CI geral do checkpoint b96b3ac aprovada (351 unitários, 64 workflow, 174 E2E e quatro PWA); WebKit 15 perfis/330 cenários e CI da última correcção ainda por confirmar. Ensaios exclusivamente sintéticos, serviços externos bloqueados, sem emissões/pagamentos/avenças de produção ou migrations.
+
+Produção reconfirmada por Wrangler: **0.16.1**, deployment `b0503af0-9830-464d-b2e5-566e449e7cf4`, Version ID `12ea78d7-c188-44c2-9bfe-1fc173ca10f2`, 100% desde `2026-10-10T09:23:40.34572Z`, URL https://legal-carina.dabranches.workers.dev. Revisão visual de leitura em 390×844, 844×390 e 1366×768; browser reposto a 1280×720. Origem do upload concorrente, falha de módulos entre versões, aviso pendente, Storage real e rascunhos/indicadores continuam pendentes; Safari físico não certificado.
+
 ## 2026-10-10 — validação funcional ampla da 0.16.1
 
 Branch `codex/functional-qa-0161-20261010`: [relatório de ensaios](docs/workflow/functional-qa-20261010.md). Passaram 351 unitários, 114 contratos SQL em esquemas mínimos, 54 verificações PostgreSQL completo, nove auditorias transaccionais, 174 E2E legados, 64 workflow e quatro PWA. Tradução Azure real EN/FR e pré-visualização PT verificadas pela aplicação publicada, num cliente com histórico traduzido escolhido conforme instrução do utilizador, sem guardar/emissão. Metadados públicos e 143 funções de produção comparados à QA; 420 verificações de integridade sem violações; hashes/contagens das 51 relações de negócio/Storage iguais antes/depois. Guardas e grants preservados. Scripts históricos corrigidos para contratos actuais, nova cadeia despesas/IVA/provisão/revisão/pagamento parcial/rollback e regressão Windows portável.
@@ -1656,10 +1664,3 @@ Nota: a base remota contém migrações locais anteriores ainda não registadas 
 Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
 
 Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
-## 2026-10-10 — QA responsive 0.16.2 em preparação
-
-Branch `codex/functional-qa-0161-20261010`, fonte anterior `1a84176`. Lote local **0.16.2**, ainda não publicado: correcção dos separadores da ficha que tapavam controlos no iPhone, rodapé compacto em horizontal e libertação de colunas fixas que tapavam «Nota» em tabelas estreitas. [Matriz e evidência](docs/workflow/responsive-qa-20261010.md).
-
-31 perfis Chromium/682 cenários em execução; configuração WebKit adicional de 15 perfis/330 cenários para CI Linux. Seis ensaios dirigidos aos dois tamanhos mais pequenos, 22 unitários da tabela e dez de pagamentos/PWA aprovados. Tipos e build passaram; resultados completos/CI ainda por confirmar. Ensaios exclusivamente sintéticos, serviços externos bloqueados, sem emissões/pagamentos/avenças de produção ou migrations.
-
-Produção reconfirmada por Wrangler: **0.16.1**, deployment `b0503af0-9830-464d-b2e5-566e449e7cf4`, Version ID `12ea78d7-c188-44c2-9bfe-1fc173ca10f2`, 100% desde `2026-10-10T09:23:40.34572Z`, URL https://legal-carina.dabranches.workers.dev. Revisão visual de leitura em 390×844, 844×390 e 1366×768; browser reposto a 1280×720. Origem do upload concorrente, falha de módulos entre versões, aviso pendente, Storage real e rascunhos/indicadores continuam pendentes; Safari físico não certificado.

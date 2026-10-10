@@ -115,6 +115,9 @@ button:disabled { cursor: not-allowed; }
 input.control[type="search"] { border-width: 2px; border-color: var(--color-secondary); background: var(--color-secondary-soft); }
 input.control[type="search"]:focus { background: var(--color-surface); }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
+/* The table reserves its own header space; browser anchoring can otherwise
+   alternate the scroll position when the header becomes fixed. */
+.table-standard { overflow-anchor: none; }
 .table-row-active, .table-row-active > td { background: var(--color-row-selected) !important; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
 .app-safe-fixed { inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); overflow-y: auto; }

@@ -13,7 +13,7 @@ Lote local 0.16.2 em preparação, na branch `codex/functional-qa-0161-20261010`
 | Tablet | 768×1024, 1024×768 |
 | Modo escuro, todos os fluxos | 375×667, 430×932, 1366×768, 1920×1080 |
 
-31 perfis. O ensaio de navegação da ficha alterna entre claro e escuro em todos os perfis. O zoom equivalente divide o viewport CSS pelo factor de zoom e ajusta o DPR; não certifica o zoom do sistema operativo nem uma dimensão física de monitor. Os perfis móveis usam touch, `isMobile` e DPR, com safe areas simuladas nos cenários existentes.
+31 perfis. Inclui as seis geometrias obrigatórias da [matriz desktop habitual](../responsive-desktop-matrix.md), associadas aos monitores de 14, 24 e 27 polegadas. O ensaio de navegação da ficha alterna entre claro e escuro em todos os perfis. O zoom equivalente divide o viewport CSS pelo factor de zoom e ajusta o DPR; não certifica o zoom do sistema operativo nem uma dimensão física de monitor. Os perfis móveis usam touch, `isMobile` e DPR, com safe areas simuladas nos cenários existentes.
 
 ## Fluxos e verificações
 
@@ -24,7 +24,7 @@ Cada perfil executa os 16 contratos da suite workflow, mais seis cenários:
 - edição de avença com 32 horas por ano, período de 12 meses e excedente a 150 €/hora;
 - fecho do aviso de alterações da versão instalada antes de abrir uma despesa;
 - pré-visualização de honorários em PT, EN e FR, incluindo PDF renderizado e Word preparado, sem emitir uma nota nem consumir numeração;
-- tabela de 100 movimentos: filtros saem da vista, cabeçalho continua acessível, restam pelo menos duas linhas de leitura e scroll horizontal não alarga a página.
+- tabela de 100 movimentos: filtros saem da vista, restam pelo menos duas linhas completas abaixo do cabeçalho da aplicação e scroll horizontal não alarga a página. A ordenação é efectivamente accionada: cabeçalho fixo no desktop; no mobile, regressa-se aos controlos da tabela, que acompanham o scroll por desenho.
 
 Os contratos existentes verificam as cinco áreas, grupos/páginas da ficha, campos obrigatórios e sugestões, clientes mistos, persistência do âmbito na URL e após recarregar, intersecção de responsável/sociedade/categoria, dívida e notas integrais. Os botões financeiros e de fecho são verificados por hit-testing do centro: um controlo visível mas tapado por outro elemento faz falhar o ensaio. Todos os cenários verificam ausência de overflow horizontal global e de erros JavaScript não tratados.
 
@@ -35,10 +35,15 @@ A suite bloqueia serviços externos, WebSockets e os proxies de Supabase/Azure. 
 1. No iPhone pequeno horizontal, o grupo fixo da ficha tapava «Contactos» ao deslocar o formulário. No iPhone de 320 px vertical tapava a acção de guardar a avença. Os separadores passam a acompanhar o scroll em fichas estreitas ou ecrãs baixos.
 2. O rodapé da ficha ocupava duas linhas de botões em horizontal pequeno. Passa a três colunas nesse caso, conservando os controlos de toque e aumentando a altura disponível para o formulário.
 3. Na tabela de clientes a 320 px, a coluna fixa de 240 px tapava a acção «Nota» ao deslocar horizontalmente. A fixação horizontal é desactivada quando as colunas fixas ocupam mais de metade da largura útil da tabela; reaplica-se automaticamente quando há espaço. O cabeçalho vertical e as larguras guardadas mantêm-se.
+4. A 896×414, a ancoragem automática do browser podia fazer oscilar o scroll 101 px ao fixar/desfixar o cabeçalho da tabela, tapando «Data» e impedindo ordenar. O diagnóstico observou a oscilação mesmo sem qualquer clique. A ancoragem fica desactivada dentro das tabelas que já gerem o seu cabeçalho e espaço reservado; o resto da página conserva o comportamento do browser.
 
 ## Execução e evidência
 
-Comando reprodutível: `pnpm exec playwright test --config playwright.responsive.config.ts`. Relatório JSON, capturas sintéticas por perfil/cenário e artefactos de falhas ficam em `output/responsive-qa-20261010/`, fora do Git. Resultados finais a preencher após a execução completa.
+Comando reprodutível: `pnpm exec playwright test --config playwright.responsive.config.ts`. Relatório JSON, capturas sintéticas por perfil/cenário e artefactos de falhas ficam em `output/responsive-qa-20261010/`, fora do Git.
+
+Chromium: **682 cenários distintos aprovados nos 31 perfis**, considerando a última execução de cada caso. Não foi uma única passagem sem falhas: a matriz inicial teve 653 aprovações/29 falhas; corrigiram-se esperas do ensaio que seleccionavam o diálogo transitório «Abrir ficha» e acrescentou-se repetição apenas para resets HTTP da guarda local. A repetição de 11 cenários em todos os perfis teve 336 aprovações/5 falhas; quatro demonstraram a oscilação de scroll descrita acima e uma excedeu a espera de carregamento de cinco segundos. Após corrigir a ancoragem, os dois cenários afectados foram repetidos em todos os perfis: **62/62 aprovados**, sem omissões nem retries de cenários. Os relatórios `baseline.json`, `directed.json`, `scroll-fixed.json` e `summary.json` conservam esta sequência.
+
+Também passaram 22 unitários da tabela após a última correcção e dez de pagamentos/PWA no lote. A CI `38046472395` aprovou segurança, lint, tipos, 351 unitários, contratos SQL sintéticos, runtime Worker, build, 64 workflow, 174 E2E legados e quatro PWA. WebKit ainda em execução; build final local e CI da última correcção por consolidar.
 
 Revisão visual no browser integrado: produção a 390×844, 844×390 e 1366×768; ficha sintética corrigida a 568×320, com «Contactos» efectivamente seleccionado e rodapé mais compacto. Os ensaios financeiros de produção são de leitura; não há novas emissões, pagamentos ou alterações de avenças nesta matriz.
 

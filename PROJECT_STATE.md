@@ -1,3 +1,7 @@
+## 2026-10-10 — testes iPhone/desktop e correcções 0.16.2
+
+0.16.2 em preparação, PR draft [#100](https://github.com/dabranches-collab/legal-carina/pull/100), sem deploy: separadores da ficha deixam de tapar controlos, rodapé horizontal compacto, colunas fixas libertadas em tabelas estreitas e scroll estabilizado. 31 perfis Chromium/682 cenários distintos aprovados após repetições dirigidas; última passagem scroll/âmbito 62/62. 32 unitários dirigidos, tipos e build aprovados; CI geral b96b3ac aprovada. WebKit 15 perfis/330 cenários e CI da última correcção por confirmar. Serviços reais bloqueados, sem alterações de dados ou migrations. [Relatório](docs/workflow/responsive-qa-20261010.md). Produção permanece 0.16.1/deployment b0503af0/Version ID 12ea78d7; limites operacionais anteriores mantêm-se.
+
 ## 2026-10-10 — validação funcional ampla
 
 [Relatório completo](docs/workflow/functional-qa-20261010.md), branch `codex/functional-qa-0161-20261010`: 351 unitários, 114 contratos SQL, 54 PostgreSQL completo, nove auditorias, 174 E2E legados, 64 workflow e quatro PWA aprovados. Azure real EN/FR e pré-visualização PT aprovados num cliente com notas anteriormente traduzidas; sem novas emissões ou pagamentos de produção. 420 verificações de integridade sem violações, nove RPC com anon recusado e 51 hashes/contagens de negócio/Storage iguais antes/depois. Scripts de auditoria actualizados, nova cadeia documental/recebimentos e imports Windows corrigidos. Lint, segurança, tipos e diff-check aprovados.
@@ -1517,6 +1521,3 @@ Actualizado em: 2026-08-17
 Acrescentadas as regras de [trabalho local e continuidade](LOCAL_WORKFLOW.md). Procurar e reutilizar o clone pelo conteúdo/remoto, verificar destinos físicos e caches, usar OneDrive apenas para consulta autorizada e preferir GitHub sem hidratação recursiva de `.git`. Aplicação e dados publicados permanecem independentes do PC.
 
 Âmbito: documentação apenas, em branch própria para PR draft. Validar o diff e os links; preservar todo o trabalho alheio. Sem mudança de versão, código, configuração de segurança, dados ou deployment. Para retomar noutro computador, obter a branch/commit da PR; estas regras não estão na branch principal antes da integração autorizada.
-## 2026-10-10 — testes iPhone/desktop e correcções 0.16.2
-
-0.16.2 em preparação, sem deploy: separadores da ficha deixam de tapar controlos em ecrãs pequenos, rodapé em horizontal mais compacto e colunas fixas libertadas quando tapavam as acções da tabela. Nova matriz de 31 perfis Chromium/682 cenários; mais 15 perfis WebKit/330 cenários na CI Linux. Seis ensaios dirigidos, 32 unitários, tipos e build aprovados; execução completa/CI ainda em curso. Serviços reais bloqueados nos testes, sem alterações de dados ou migrations. [Relatório](docs/workflow/responsive-qa-20261010.md). Produção permanece 0.16.1/deployment b0503af0/Version ID 12ea78d7, reconfirmados em Wrangler; limites operacionais do relatório anterior mantêm-se.
