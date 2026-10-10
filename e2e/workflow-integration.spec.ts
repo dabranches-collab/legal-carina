@@ -227,7 +227,7 @@ test('a primeira linha da tabela abre a ficha sem sobreposição em horizontal',
  await expect(page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})).toBeVisible()
 })
 
-test('navegação interrompida cancela a leitura sintética pendente sem erro não tratado',async({page})=>{
+test('navegação interrompida descarta leitura pendente sem alterar o novo documento',async({page,browserName})=>{
  await page.route('**/qa-navigation-lifecycle*',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Navegação sintética</title><main>Documento de teste</main>'}))
  await page.goto('/qa-navigation-lifecycle')
  let release!:()=>void,started!:()=>void
@@ -236,13 +236,28 @@ test('navegação interrompida cancela a leitura sintética pendente sem erro n�
   started();await held
   await route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:'[]'})
  })
- const cancelled=page.waitForEvent('requestfailed',request=>request.url().endsWith('/rpc/get_navigation_probe'))
- await page.evaluate(()=>{void fetch('/supabase-api/rest/v1/rpc/get_navigation_probe').then(response=>response.json()).catch(()=>undefined)})
+ const cancelled=browserName==='webkit'?page.waitForEvent('requestfailed',request=>request.url().endsWith('/rpc/get_navigation_probe')):null
+ const pendingRead=page.evaluate(async()=>{
+  const response=await fetch('/supabase-api/rest/v1/rpc/get_navigation_probe')
+  const rows=await response.json()
+  document.body.dataset.lateResult=JSON.stringify(rows)
+  return rows
+ }).then(()=>({error:''}),error=>({error:String(error)}))
  await requested
  await page.goto('/qa-navigation-lifecycle?next=1')
- expect((await cancelled).failure()?.errorText).toMatch(/cancel|abort|ERR_ABORTED/i)
+ // An intercepted request need not emit requestfailed in every engine/version.
+ // Assert the actual lifecycle contract: the pending reader loses its outgoing
+ // execution context and cannot apply a late result to the replacement document.
  release()
+ const outcome=await pendingRead
+ if(cancelled){
+  // WebKit rejects the read before destroying its realm. Require a matching
+  // cancellation event as well: an unrelated Load failed/CORS error is not OK.
+  expect((await cancelled).failure()?.errorText).toMatch(/cancel|abort/i)
+  expect(outcome.error).toMatch(/execution context was destroyed|TypeError: Load failed/i)
+ }else expect(outcome.error).toMatch(/execution context was destroyed/i)
  await expect(page.getByRole('main')).toHaveText('Documento de teste')
+ expect(await page.evaluate(()=>document.body.dataset.lateResult)).toBeUndefined()
  expect(browserErrors).toEqual([])
 })
 

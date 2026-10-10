@@ -29,3 +29,11 @@ Sem alterações a negócio, dados, RLS, credenciais, segurança, serviços, pip
 ## Validação local concluída
 
 Primeira série corrigida: 30/30 WebKit (dez vezes cada cenário). Versão final, com verificação exacta do erro CORS e espera final do prefetch: 15/15 WebKit (cinco vezes cada cenário) e 6/6 Chrome (duas vezes cada cenário). Gráficos: 10/10; tipos, build, lint dirigido, guarda de ficheiros e diff-check aprovados. O código de negócio não foi alterado. A CI Linux do SHA final e a revisão independente do harness continuam gates obrigatórios.
+
+## Controlo de navegação no Chromium da CI
+
+A CI 38069472885 passou os cenários antigos de integração, mas o novo controlo de interrupção esperava requestfailed numa rota interceptada. No Chromium emparelhado com Playwright 1.62.1 esse evento não é garantido, mesmo libertando a rota depois da navegação; o teste excedeu o timeout nos quatro perfis. A expectativa foi substituída pelo contrato observável de ciclo de vida: iniciar uma leitura mantida pendente, navegar, libertar a resposta, exigir a rejeição do leitor antigo e confirmar que o documento novo não recebeu o marcador de resultado tardio. Chromium tem de reportar Execution context was destroyed; WebKit tem de reportar o cancelamento do pedido exacto, acompanhado de Load failed ou destruição de contexto. A guarda zero-pageerrors permanece. Não há aumento de timeout ou exclusão de erro.
+
+O controlo final e os outros dois cenários passaram 9/9 no Chromium 151 / Playwright 1.62.1 emparelhados (três repetições), e o controlo final específico de interrupção passou ainda 3/3 em WebKit e 3/3 no Chromium exacto. Esta alteração não modifica o sinal de conclusão do prefetch, já verificado nas baterias WebKit da CI.
+
+A CI 38069472885 terminou com todas as três baterias WebKit aprovadas; a validação geral ficou em 68/72 pela expectativa requestfailed do controlo novo, corrigida acima. A falha original de âmbito/histórico não reapareceu. A execução completa do novo SHA continua obrigatória; nenhum resultado anterior foi apagado ou declarado verde.
