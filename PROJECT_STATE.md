@@ -1,3 +1,7 @@
+## 2026-10-10 — pesquisa livre das tabelas partilhadas
+
+A pesquisa geral do StandardDataTable também usa a apresentação distinta dos campos de pesquisa livre, abrangendo Financeiro e as restantes listas. 22 testes do componente aprovados; selector E2E de desempenho ajustado para searchbox. Publicação 0.16.1 autorizada, por concluir após CI do último commit, build/dry-run real e confirmação pública. Sem migrations ou escritas de dados.
+
 ## 2026-10-10 — formulários e categorias 0.16.1 em preparação
 
 Lote local na branch `codex/fix-production-navigation-0161`, PR #96: categorias PARTICULARES, EMPRESAS e MISTOS em maiúsculas nos menus, filtros e opção seleccionada; pesquisa livre diferenciada e filtros dos Registos alinhados; sugestões imediatas de clientes nas despesas e fecho ao clicar fora/mudar de campo nos formulários; criação de clientes com ambas as vertentes. 40 testes unitários e 11 E2E de despesas/criação de clientes aprovados com dados sintéticos. Mais 12 testes de integração aprovados em desktop, tablet, iPhone e iPhone horizontal, incluindo texto das opções e opção seleccionada em maiúsculas. Typecheck, segurança e diff-check aprovados; CI completa deste lote ainda pendente. Produção permanece a restauração 0.16.0, sem alterações a dados neste lote.
