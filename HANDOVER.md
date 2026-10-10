@@ -1,3 +1,11 @@
+## 10-10-2026 — contrato Duo/18, Safari, Chrome e PWA (documentação)
+
+Pedido transversal do titular: [contrato obrigatório de dispositivos e áreas seguras](MOBILE_DEVICE_CONTRACT.md), ligado por AGENTS.md e pelas instruções de engenharia existentes quando aplicável. Inclui os dois painéis Duo, 18 Pro/Pro Max confirmados pela Apple, modelos não confirmados e CSS/DPR/insets por medir; todos os ensaios físicos permanecem PENDENTES. A obrigação cobre toda a plataforma e mantém as regressões anteriores.
+
+Base documental remota: main, SHA 842d499c6c30ea73b2e8d668a8ef2b53c033b3f3. Branch de revisão: codex/iphone-duo-18-docs-20261010. Clone isolado fora de OneDrive; checkouts anteriores e trabalho alheio preservados. Online | Deployment: NÃO COMPROVADOS novamente nesta tarefa; recibos anteriores continuam históricos. Commit/base/branch: CONFIRMADOS por Git. Nenhuma alteração funcional, de versão, dados, segredos, ACLs, infraestrutura, merge ou deploy. O pedido autoriza documentação transversal, não certificação de continuidade de produção.
+
+Validação deste lote: revisão do diff documental, preservação das instruções existentes e links locais; git diff --check. Não executados build, testes de aplicação, Safari/Chrome físicos, PWA instalada ou dobragem real: não há alteração de código. Obter a branch/PR de documentação para revisão e integrar apenas mediante autorização; uma PR draft não altera automaticamente a branch operacional. Antes de futura adaptação, cumprir os gates do repositório, medir os perfis reais e anexar evidência por navegador, painel, orientação e estado.
+
 ## 2026-10-10 — 0.16.1 publicada e confirmada
 
 Publicação autorizada concluída. PR #96 integrada em main 89fabd9d5cc0245f8ae8a1994c48a07a0a25f8b6; fonte funcional 2d963d1f8f295cdafeb2b1d0dbb49de14e3c971b. CI 38039545139 e secret scan 38039545140 aprovados: 351 unitários, 61 contratos SQL, 64 integração, 174 regressão e quatro PWA. Segurança, tipos, build real e dry-run aprovados. 25 E2E locais dirigidos passaram; a regressão completa local encontrou limitação preexistente de imports absolutos Windows, resolvida no âmbito de validação pela suite completa Linux na CI.
