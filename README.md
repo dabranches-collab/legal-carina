@@ -1,3 +1,7 @@
+## Versão publicada — 0.16.1
+
+Confirmada em 10-10-2026: menu **Registos**, categorias **PARTICULARES/EMPRESAS/MISTOS**, sugestões de clientes nos formulários e pesquisa livre distinta nas listas. [Aplicação](https://legal-carina.dabranches.workers.dev). Build oficial fixa a navegação; dados de negócio preservados. Ver HANDOVER.md para fonte, CI, implantação, incidente concorrente e pedidos pendentes.
+
 # Legal Carina
 
 Aplicação de gestão de horas, clientes, facturação e recebimentos para um escritório de advogados.
