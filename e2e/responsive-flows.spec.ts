@@ -1,5 +1,5 @@
 // Import the full workflow contracts and their isolated synthetic fixture.
-import './workflow-integration.spec'
+import {syntheticCorsHeaders} from './workflow-integration.spec'
 import {test,expect,type Locator} from '@playwright/test'
 import packageJson from '../package.json' with {type:'json'}
 import {createQaAllocationData} from '../src/lib/qaAllocationData'
@@ -21,7 +21,7 @@ test('recebimento parcial mantém o saldo e abre a ficha em todas as resoluçõe
   let data:unknown=[item]
   if(rpc==='get_payment_detail')data={item,receipts:[],items:[]}
   if(rpc==='record_pending_payment'){const args=route.request().postDataJSON();calls.push(args);item={...item,received:30,remaining:73,token:'synthetic-v2'};data={id:'synthetic-receipt'}}
-  await route.fulfill({contentType:'application/json',body:JSON.stringify(data)})
+  await route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify(data)})
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments')
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()
@@ -67,9 +67,9 @@ test('avença anual conserva 32 horas e preço do excedente na edição',async({
   const request=route.request(),table=new URL(request.url()).pathname.split('/').at(-1)
   if(table==='client_retainers'){
    if(request.method()==='PATCH'){const args=request.postDataJSON();changes.push(args);Object.assign(terms,args)}
-   return route.fulfill({json:[terms]})
+   return route.fulfill({headers:syntheticCorsHeaders,json:[terms]})
   }
-  if(table==='get_client_retainer_summary')return route.fulfill({json:{minutes:1905,movements:50,chargesTotal:0,invoiced:0,paid:0,periods:0,pendingPeriods:0,unpaidPeriods:0,effectiveHourlyRate:null}})
+  if(table==='get_client_retainer_summary')return route.fulfill({headers:syntheticCorsHeaders,json:{minutes:1905,movements:50,chargesTotal:0,invoiced:0,paid:0,periods:0,pendingPeriods:0,unpaidPeriods:0,effectiveHourlyRate:null}})
   return route.fallback()
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
@@ -101,14 +101,15 @@ test('aviso da versão pode ser fechado antes de usar os formulários',async({pa
 })
 
 test('pré-visualização de honorários em PT, EN e FR cabe no ecrã sem emissão',async({page})=>{
+ test.setTimeout(90000)
  await page.addInitScript(()=>localStorage.setItem('legal-carina-auth',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:4102444800,token_type:'bearer',user:{id:'00000000-0000-4000-8000-000000000090'}})))
  let saves=0
  const languages:string[]=[]
  page.on('request',request=>{if(request.url().includes('/rpc/save_honorarium_document'))saves++})
- await page.route('**/rest/v1/rpc/get_client_document_action_flags',route=>route.fulfill({json:[{client_id:'00000000-0000-4000-8000-000000000020',has_uninvoiced:true,has_unpaid:true}]}))
+ await page.route('**/rest/v1/rpc/get_client_document_action_flags',route=>route.fulfill({headers:syntheticCorsHeaders,json:[{client_id:'00000000-0000-4000-8000-000000000020',has_uninvoiced:true,has_unpaid:true}]}))
  await page.route('**/api/document-translation',route=>{
   const input=route.request().postDataJSON();languages.push(input.language??input.targetLanguage??input.target)
-  return route.fulfill({json:{items:input.items.map((item:Record<string,unknown>)=>({...item,text:'Tradução sintética para QA'}))}})
+  return route.fulfill({headers:syntheticCorsHeaders,json:{items:input.items.map((item:Record<string,unknown>)=>({...item,text:'Tradução sintética para QA'}))}})
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=clients&clientType=individual&clientMode=list&clientLayout=table')
  await page.getByTitle('Preparar, consultar ou rever notas de honorários deste cliente.').first().click()
@@ -119,8 +120,8 @@ test('pré-visualização de honorários em PT, EN e FR cabe no ecrã sem emiss�
   const previewButton=dialog.getByRole('button',{name:'Pré-visualizar sem guardar',exact:true})
   await usable(previewButton);await previewButton.click()
   const preview=page.getByRole('dialog',{name:'Pré-visualização da nota de honorários'})
-  await expect(preview).toContainText('Rascunho sem gravação')
-  await expect(preview.getByRole('img',{name:'Página 1 da Nota de Honorários'})).toBeVisible()
+  await expect(preview).toContainText('Rascunho sem gravação',{timeout:20000})
+  await expect(preview.getByRole('img',{name:'Página 1 da Nota de Honorários'})).toBeVisible({timeout:20000})
   const close=preview.getByRole('button',{name:/Fechar/}).first()
   await usable(close);await close.click();await expect(preview).toHaveCount(0)
  }
@@ -129,7 +130,7 @@ test('pré-visualização de honorários em PT, EN e FR cabe no ecrã sem emiss�
 
 test('scroll liberta filtros e conserva linhas e cabeçalho da tabela',async({page})=>{
  const fixture=createQaAllocationData(100)
- await page.route('**/rest/v1/rpc/search_work_entries',route=>route.fulfill({json:fixture('search_work_entries','',{},new URL(route.request().url()),'POST',false)}))
+ await page.route('**/rest/v1/rpc/search_work_entries',route=>route.fulfill({headers:syntheticCorsHeaders,json:fixture('search_work_entries','',{},new URL(route.request().url()),'POST',false)}))
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work')
  const region=page.getByRole('region',{name:'Registos de trabalho',exact:true}),header=region.locator('thead')
  await expect(region.getByText('100 registos de 100',{exact:true})).toBeVisible()

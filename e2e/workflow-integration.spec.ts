@@ -1,6 +1,10 @@
 import {test,expect} from '@playwright/test'
 import {createQaAllocationData} from '../src/lib/qaAllocationData'
 import packageJson from '../package.json' with {type:'json'}
+
+// Supabase's real CORS contract, restricted here to the isolated local origin.
+// WebKit checks these headers on intercepted cross-origin responses too.
+export const syntheticCorsHeaders={'access-control-allow-origin':'http://127.0.0.1:5173','access-control-allow-methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','access-control-allow-headers':'authorization, apikey, content-type, x-client-info, prefer, accept, range','access-control-expose-headers':'content-range'}
 test.skip(process.env.WORKFLOW_ISOLATED_E2E!=='1','Requer playwright.workflow.config.ts para bloquear serviços reais.')
 let forbidden:string[]
 let searchCalls: Record<string,unknown>[]
@@ -21,6 +25,7 @@ test.beforeEach(async({context,request,page},info)=>{
  await context.route('**/*',async route=>{
   const request=route.request(),url=new URL(request.url())
   if(url.origin==='http://127.0.0.1:54321'&&url.pathname.startsWith('/rest/v1/')){
+   if(request.method()==='OPTIONS')return route.fulfill({status:204,headers:syntheticCorsHeaders})
    const rpc=url.pathname.match(/\/rpc\/([^/]+)/)?.[1],table=url.pathname.split('/').at(-1)??'',args=request.method()==='POST'?request.postDataJSON():{}
    let result=fixture(rpc,table,args,url,request.method(),request.headers().accept?.includes('vnd.pgrst.object')??false)
    if(!rpc&&request.method()!=='GET')writes.push(request.method()+' '+table)
@@ -55,7 +60,7 @@ test.beforeEach(async({context,request,page},info)=>{
     const items=base.items.filter(item=>(!args.p_client_id||item.client_id===args.p_client_id)&&(!args.p_professional_id||(item as WorkFixture).professional_id===args.p_professional_id)&&(!args.p_billing_entity_id||(item as WorkFixture).billing_entity_id===args.p_billing_entity_id)&&(!args.p_client_type||(item as WorkFixture).client_type===args.p_client_type)&&(args.p_kind==='uninvoiced'?!item.is_invoiced:args.p_kind==='unpaid'?item.is_invoiced&&!item.is_paid:false))
     result={...base,items,total:items.length}
    }
-   return route.fulfill({contentType:'application/json',body:JSON.stringify(result)})
+   return route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify(result)})
   }
   if(url.origin==='http://127.0.0.1:5173'&&!/^\/(supabase-api|supabase-functions|api\/document-translation)/.test(url.pathname))return route.continue()
   forbidden.push(url.origin+url.pathname);return route.abort('blockedbyclient')
@@ -208,7 +213,7 @@ test('falta da consulta financeira filtrada apresenta erro sem resultados globai
  await page.route('**/rest/v1/rpc/*',async route=>{
   const rpc=new URL(route.request().url()).pathname.split('/').at(-1)
   if(rpc==='get_payment_queue')globalCalls++
-  if(rpc==='get_workflow_payment_queue')return route.fulfill({status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic scope RPC'})})
+  if(rpc==='get_workflow_payment_queue')return route.fulfill({headers:syntheticCorsHeaders,status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic scope RPC'})})
   return route.fallback()
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=payments&scopeClientType=company')
@@ -220,7 +225,7 @@ test('parâmetros inválidos e falta da consulta do resumo são bloqueados',asyn
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeSociety=LEGALTEAM')
  await expect(page.getByRole('alert')).toContainText('inválido');expect(searchCalls).toEqual([])
  await page.getByRole('button',{name:'Limpar âmbito'}).click();await expect(page.getByRole('table',{name:'Registos de trabalho'})).toBeVisible()
- await page.route('**/rest/v1/rpc/get_workflow_dashboard_overview',route=>route.fulfill({status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic dashboard scope'})}))
+ await page.route('**/rest/v1/rpc/get_workflow_dashboard_overview',route=>route.fulfill({headers:syntheticCorsHeaders,status:404,contentType:'application/json',body:JSON.stringify({code:'PGRST202',message:'Missing synthetic dashboard scope'})}))
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=overview&scopeClientType=individual')
  await expect(page.getByRole('alert')).toContainText('Não foram apresentados resultados globais')
  await expect(page.getByRole('heading',{name:'Visão Geral',exact:true})).toHaveCount(0)
@@ -240,15 +245,15 @@ test('cliente misto intersecta vertente, pagina todos os registos e conserva cli
  const alpha='00000000-0000-4000-8000-000000000020',beta='00000000-0000-4000-8000-000000000021'
  const items=base.items.map((item,index)=>index===1?{...item,client_type:'company'}:item)
  const scoped=(args:Record<string,unknown>)=>items.filter(item=>(!args.p_client_id||item.client_id===args.p_client_id)&&(!args.p_client_type||item.client_type===args.p_client_type))
- await page.route('**/rest/v1/client_profiles?*',route=>route.fulfill({contentType:'application/json',body:JSON.stringify([{client_id:alpha,client_type:'individual'},{client_id:alpha,client_type:'company'},{client_id:beta,client_type:'company'}])}))
+ await page.route('**/rest/v1/client_profiles?*',route=>route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify([{client_id:alpha,client_type:'individual'},{client_id:alpha,client_type:'company'},{client_id:beta,client_type:'company'}])}))
  await page.route('**/rest/v1/rpc/*',async route=>{
   const rpc=new URL(route.request().url()).pathname.split('/').at(-1),args=route.request().postDataJSON()
   if(rpc==='search_work_entries'){
    searchCalls.push(args);const all=scoped(args),offset=Number(args.p_page??1)-1
-   return route.fulfill({contentType:'application/json',body:JSON.stringify({...base,items:all.slice(offset,offset+1),total:all.length,pageSize:1})})
+   return route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify({...base,items:all.slice(offset,offset+1),total:all.length,pageSize:1})})
   }
-  if(rpc==='get_work_attention_counts')return route.fulfill({contentType:'application/json',body:JSON.stringify({uninvoiced:scoped(args).length,unpaid:0})})
-  if(rpc==='get_work_attention_summaries')return route.fulfill({contentType:'application/json',body:JSON.stringify({uninvoiced:{count:scoped(args).length,minutes:scoped(args).reduce((sum,item)=>sum+Number(item.duration_minutes),0),priced:scoped(args).length,amount:scoped(args).reduce((sum,item)=>sum+Number(item.effective_amount),0)}})})
+  if(rpc==='get_work_attention_counts')return route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify({uninvoiced:scoped(args).length,unpaid:0})})
+  if(rpc==='get_work_attention_summaries')return route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify({uninvoiced:{count:scoped(args).length,minutes:scoped(args).reduce((sum,item)=>sum+Number(item.duration_minutes),0),priced:scoped(args).length,amount:scoped(args).reduce((sum,item)=>sum+Number(item.effective_amount),0)}})})
   return route.fallback()
  })
  await page.goto('/?qa-iphone=1&qa-role=admin&workflow=preview&view=work&scopeClientType=mixed&clientType=individual')
@@ -282,7 +287,7 @@ test('gráficos e dashboards partilham filtros e abrem os movimentos corresponde
 
 test('dívida e ficha conservam os valores e movimentos integrais do cliente seleccionado',async({page})=>{
  const debtor=(id:string,name:string,retainerAmount:number,uninvoicedAmount:number)=>({id,name,code:'QA',unpaidCount:0,unpaidMinutes:0,unpaidAmount:0,unpaidPartial:false,uninvoicedCount:1,uninvoicedMinutes:150,uninvoicedAmount,uninvoicedPartial:false,retainerCount:1,retainerAmount,retainerPendingCount:0,retainerPendingAmount:0,oldestDate:'2026-08-01',oldestKind:'avença',oldestInvoiceDate:null})
- await page.route('**/rest/v1/rpc/get_receivable_client_summary',route=>route.fulfill({contentType:'application/json',body:JSON.stringify([debtor('00000000-0000-4000-8000-000000000020','Cliente Demonstração Alfa',1200,500),debtor('00000000-0000-4000-8000-000000000021','Cliente Demonstração Beta',900,200)])}))
+ await page.route('**/rest/v1/rpc/get_receivable_client_summary',route=>route.fulfill({headers:syntheticCorsHeaders,contentType:'application/json',body:JSON.stringify([debtor('00000000-0000-4000-8000-000000000020','Cliente Demonstração Alfa',1200,500),debtor('00000000-0000-4000-8000-000000000021','Cliente Demonstração Beta',900,200)])}))
  const params='qa-iphone=1&qa-role=admin&workflow=preview&scopeProfessional=00000000-0000-4000-8000-000000000010&scopeClientType=individual'
  await page.goto('/?view=debtors&'+params)
  await expect(page.getByText('Cliente Demonstração Alfa',{exact:true})).toBeVisible();await expect(page.getByText('Cliente Demonstração Beta',{exact:true})).toHaveCount(0)
