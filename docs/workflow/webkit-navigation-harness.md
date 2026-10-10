@@ -25,3 +25,7 @@ Reproduzir: WORKFLOW_RESPONSIVE_BROWSER=webkit pnpm exec playwright test --confi
 No HP foi usado Playwright 1.56.1 com o seu WebKit 26.0 emparelhado; o runtime 1.62.1 Windows não arrancou por libxml2.dll ausente. Sem DLLs/PATH globais alterados. A confirmação final depende da CI Linux com a versão do repositório. Não constitui certificação de Safari físico.
 
 Sem alterações a negócio, dados, RLS, credenciais, segurança, serviços, pipeline ou publicação. A instabilidade de saída não autoriza ignorar erros em navegação normal; testes dedicados conservam essa fronteira explícita.
+
+## Validação local concluída
+
+Primeira série corrigida: 30/30 WebKit (dez vezes cada cenário). Versão final, com verificação exacta do erro CORS e espera final do prefetch: 15/15 WebKit (cinco vezes cada cenário) e 6/6 Chrome (duas vezes cada cenário). Gráficos: 10/10; tipos, build, lint dirigido, guarda de ficheiros e diff-check aprovados. O código de negócio não foi alterado. A CI Linux do SHA final e a revisão independente do harness continuam gates obrigatórios.
