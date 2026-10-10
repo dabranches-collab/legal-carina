@@ -1,0 +1,53 @@
+{
+  "rows": [
+    {
+      "view": "overview",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional\nDados reais acessíveis através das políticas RLS\nTotal de horas\n136 h\nDuração importada convertida\nValor trabalhado\n24 800,00 €\nValor efectivo preservado\nValor facturado\n21 600,00 €\n87% do trabalhado\nValor recebido\n18 400,00 €\n85% do facturado\nPreço médio/hora\n182,00 €\nMédia ponderada\nClientes\n12\nCom movimentos\nAcompanhamento\nIndicadores com acesso directo aos movimentos contabilizados\nTotal por receber\n0,00 €\nFacturado e por facturar\nVer movimentos\nFacturado por receber\n0,00 €\nMontante em dívida (€): trabalho, avenças e preço fixo\nVer movimentos\nPor facturar: trabalho, avenças e preço fixo\n0,00 €\nRegistos, prestações e trabalhos pendentes\nRegistos\n0,00 €\nAvenças\n0,00 €\nPreço fixo\n0,00 €\nVer movimentos\nFacturados não pagos\n3\nNúmero de movimentos de trabalho por pagar\nVer movimentos\nIncobráveis\n1\n250,00 €\nVer movimentos\nMovimentos sem preço\n0\nSó movimentos de cobrança normal sem valor/hora\nVer movimentos\nSem sociedade\n0\nMovimentos sem sociedade associada\nVer movimentos\nAnálise e tendências\nHistórico importado de 2018 a 2026\nValor por ano\nTodas as sociedades agregadas\nAgregado\nPor sociedade\n\n16,0 mil €\n24\n20,4 mil €\n25\n24,8 mil €\n26\nValor por mês\nDistribuição mensal disponível\nAgregado\nPor sociedade\n0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €\nJan\nFev\nMar\nAbr\nMai\nJun\nJul\nAgo\nSet\nOut\nNov\nDez\nHoras por ano\nVolume anual\n\n2024\n103 h\n2025\n120 h\n2026\n136 h\nValor por cliente\nDez maiores\n\nValor por sociedade\nSociedades\nValor por responsável\nDistribuição do trabalho\nFacturação\nValor facturado versus restante\n\n87%\nFacturado\n87%\nNão facturado\n13%\nRecebimentos\nValor pago versus por receber\n\n85%\nPago\n85%\nPor receber\n15%\nPreço médio/hora\nMédia global actual\n\nMédia ponderada\n182,00 €/h\nTipo de cliente\nContagens inclusivas; os MISTOS constam em ambas\n\n0%\nEMPRESAS\n0%\nPARTICULARES\n100%\nEMPRESAS\n0\nPARTICULARES\n0\nEvolução anual das sociedades\nComparação por sociedade\n\nTOTAL\nArquivo\nMovimentos por localização\n\nDistribuição das sociedades\nValor total por sociedade\n",
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "width": 844,
+      "height": 390,
+      "scrollWidth": 844,
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional\nDados reais acessíveis através das políticas RLS\nTotal de horas\n136 h\nDuração importada convertida\nValor trabalhado\n24 800,00 €\nValor efectivo preservado\nValor facturado\n21 600,00 €\n87% do trabalhado\nValor recebido\n18 400,00 €\n85% do facturado\nPreço médio/hora\n182,00 €\nMédia ponderada\nClientes\n12\nCom movimentos\nAcompanhamento\nIndicadores com acesso directo aos movimentos contabilizados\nTotal por receber\n0,00 €\nFacturado e por facturar\nVer movimentos\nFacturado por receber\n0,00 €\nMontante em dívida (€): trabalho, avenças e preço fixo\nVer movimentos\nPor facturar: trabalho, avenças e preço fixo\n0,00 €\nRegistos, prestações e trabalhos pendentes\nRegistos\n0,00 €\nAvenças\n0,00 €\nPreço fixo\n0,00 €\nVer movimentos\nFacturados não pagos\n3\nNúmero de movimentos de trabalho por pagar\nVer movimentos\nIncobráveis\n1\n250,00 €\nVer movimentos\nMovimentos sem preço\n0\nSó movimentos de cobrança normal sem valor/hora\nVer movimentos\nSem sociedade\n0\nMovimentos sem sociedade associada\nVer movimentos\nAnálise e tendências\nHistórico importado de 2018 a 2026\nValor por ano\nTodas as sociedades agregadas\nAgregado\nPor sociedade\n\n16,0 mil €\n24\n20,4 mil €\n25\n24,8 mil €\n26\nValor por mês\nDistribuição mensal disponível\nAgregado\nPor sociedade\n0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €\nJan\nFev\nMar\nAbr\nMai\nJun\nJul\nAgo\nSet\nOut\nNov\nDez\nHoras por ano\nVolume anual\n\n2024\n103 h\n2025\n120 h\n2026\n136 h\nValor por cliente\nDez maiores\n\nValor por sociedade\nSociedades\nValor por responsável\nDistribuição do trabalho\nFacturação\nValor facturado versus restante\n\n87%\nFacturado\n87%\nNão facturado\n13%\nRecebimentos\nValor pago versus por receber\n\n85%\nPago\n85%\nPor receber\n15%\nPreço médio/hora\nMédia global actual\n\nMédia ponderada\n182,00 €/h\nTipo de cliente\nContagens inclusivas; os MISTOS constam em ambas\n\n0%\nEMPRESAS\n0%\nPARTICULARES\n100%\nEMPRESAS\n0\nPARTICULARES\n0\nEvolução anual das sociedades\nComparação por sociedade\n\nTOTAL\nArquivo\nMovimentos por localização\n\nDistribuição das sociedades\nValor total por sociedade\n",
+      "overflow": false
+    },
+    {
+      "view": "overview",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "text": "Global\nSociedades\nResponsáveis\nSociedade\nResponsável\nResumo de clientes\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nResumo operacional\nDados reais acessíveis através das políticas RLS\nTotal de horas\n136 h\nDuração importada convertida\nValor trabalhado\n24 800,00 €\nValor efectivo preservado\nValor facturado\n21 600,00 €\n87% do trabalhado\nValor recebido\n18 400,00 €\n85% do facturado\nPreço médio/hora\n182,00 €\nMédia ponderada\nClientes\n12\nCom movimentos\nAcompanhamento\nIndicadores com acesso directo aos movimentos contabilizados\nTotal por receber\n0,00 €\nFacturado e por facturar\nVer movimentos\nFacturado por receber\n0,00 €\nMontante em dívida (€): trabalho, avenças e preço fixo\nVer movimentos\nPor facturar: trabalho, avenças e preço fixo\n0,00 €\nRegistos, prestações e trabalhos pendentes\nRegistos\n0,00 €\nAvenças\n0,00 €\nPreço fixo\n0,00 €\nVer movimentos\nFacturados não pagos\n3\nNúmero de movimentos de trabalho por pagar\nVer movimentos\nIncobráveis\n1\n250,00 €\nVer movimentos\nMovimentos sem preço\n0\nSó movimentos de cobrança normal sem valor/hora\nVer movimentos\nSem sociedade\n0\nMovimentos sem sociedade associada\nVer movimentos\nAnálise e tendências\nHistórico importado de 2018 a 2026\nValor por ano\nTodas as sociedades agregadas\nAgregado\nPor sociedade\n\n16,0 mil €\n24\n20,4 mil €\n25\n24,8 mil €\n26\nValor por mês\nDistribuição mensal disponível\nAgregado\nPor sociedade\n0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €0,0 €\nJan\nFev\nMar\nAbr\nMai\nJun\nJul\nAgo\nSet\nOut\nNov\nDez\nHoras por ano\nVolume anual\n\n2024\n103 h\n2025\n120 h\n2026\n136 h\nValor por cliente\nDez maiores\n\nValor por sociedade\nSociedades\nValor por responsável\nDistribuição do trabalho\nFacturação\nValor facturado versus restante\n\n87%\nFacturado\n87%\nNão facturado\n13%\nRecebimentos\nValor pago versus por receber\n\n85%\nPago\n85%\nPor receber\n15%\nPreço médio/hora\nMédia global actual\n\nMédia ponderada\n182,00 €/h\nTipo de cliente\nContagens inclusivas; os MISTOS constam em ambas\n\n0%\nEMPRESAS\n0%\nPARTICULARES\n100%\nEMPRESAS\n0\nPARTICULARES\n0\nEvolução anual das sociedades\nComparação por sociedade\n\nTOTAL\nArquivo\nMovimentos por localização\n\nDistribuição das sociedades\nValor total por sociedade\n",
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nLista · PARTICULARES\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de PARTICULARES\nTodos\nLimpar\nColunas · 11/11\nXLSX\nImprimir / PDF\n1 resultados de 1\nLista de PARTICULARES\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\n1–1 de 1",
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "width": 844,
+      "height": 390,
+      "scrollWidth": 844,
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nLista · PARTICULARES\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de PARTICULARES\nTodos\nLimpar\nColunas · 11/11\nXLSX\nImprimir / PDF\n1 resultados de 1\nLista de PARTICULARES\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\n1–1 de 1",
+      "overflow": false
+    },
+    {
+      "view": "clients",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "text": "Lista de clientes\nAvenças\nPARTICULARES\nEMPRESAS\nMISTOS\nFiltrar sociedade\nFiltrar responsável\nFiltrar tipo de cliente\nLista · PARTICULARES\n\nCaixas\nTabela\nCriar cliente\nDesloque a tabela horizontalmente para consultar todos os dados. Use «Colunas» para escolher os campos visíveis.\n\nPesquisar em Lista de PARTICULARES\nTodos\nLimpar\nColunas · 11/11\nXLSX\nImprimir / PDF\n1 resultados de 1\nLista de PARTICULARES\n\nNome\nFiltrar…\n↑\n↓\n\nCódigo\nFiltrar…\n↑\n↓\n\nAngariador\nFiltrar…\n↑\n↓\n\nSociedade do cliente\nFiltrar…\n↑\n↓\n\nNIF\nFiltrar…\n↑\n↓\n\nAcções\n\nEmail\nFiltrar…\n↑\n↓\n\nTelefone\nFiltrar…\n↑\n↓\n\nMorada\nFiltrar…\n↑\n↓\n\nEstado\nFiltrar…\n↑\n↓\n\nAvença\nFiltrar…\n↑\n↓\nCliente Demonstração Alfa\n02.0001\nCarina Santos\nFicha\nNota\nCobrança\nActivo\n—\n1–1 de 1\n",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

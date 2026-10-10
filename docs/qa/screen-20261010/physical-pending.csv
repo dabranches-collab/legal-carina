@@ -1,0 +1,577 @@
+menu,environment,device,orientation,status,reason
+overview,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+overview,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+billing,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+professionals,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+clients,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+retainers,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+work,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+debtors,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+payments,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+provisions,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+notes,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+master-data,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-users,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+imports,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+import-review,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Safari physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,Chrome iOS physical,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,Duo inner,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,Duo inner,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,Duo outer,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,Duo outer,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,18 Pro,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,18 Pro,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,18 Pro Max,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,18 Pro Max,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,previous iPhone,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,previous iPhone,landscape,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,iPad,portrait,PENDING,No physical device or measured CSS-DPR-insets
+admin-access-logs,PWA installed,iPad,landscape,PENDING,No physical device or measured CSS-DPR-insets

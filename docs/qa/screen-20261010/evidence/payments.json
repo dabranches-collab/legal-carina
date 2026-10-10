@@ -1,0 +1,104 @@
+{
+  "results": [
+    {
+      "width": 390,
+      "height": 844,
+      "category": "Registos não facturados",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "category": "Registos facturados não pagos",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "category": "Notas de honorários não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "category": "Avenças não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "category": "Registos não facturados",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "category": "Registos facturados não pagos",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "category": "Notas de honorários não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "category": "Avenças não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "category": "Registos não facturados",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "category": "Registos facturados não pagos",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "category": "Notas de honorários não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "category": "Avenças não pagas",
+      "overflow": false,
+      "fixtureVisible": 1
+    }
+  ],
+  "requests": [
+    "billing_entities",
+    "professionals",
+    "billing_entities",
+    "professionals",
+    "billing_entities",
+    "professionals",
+    "billing_entities",
+    "professionals",
+    "get_payment_queue",
+    "get_payment_queue",
+    "search_work_entries"
+  ],
+  "mutations": [],
+  "fixture": "synthetic queue route.fulfill, all nonlocal requests blocked",
+  "note": "No payment submit; physical validation pending"
+}
