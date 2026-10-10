@@ -1,3 +1,7 @@
+## 2026-10-10 — CI geral aprovada; diagnóstico residual WebKit
+
+CI geral 38054983248/b3e6d07 aprovada integralmente, com o orçamento de 30 minutos: 351 unitários, SQL, Worker, build, 64 workflow, regressão 174 aprovados/4 omissões de PWA e quatro PWA executados separadamente. Dependências e segredos aprovados. WebKit 329/330: apenas dívida/ficha em phone-se-old registou erro de leitura no serviço sintético; os três casos de histórico antes falhados passaram. Acrescentada espera das consultas antes de fechar essa ficha e trace conservada apenas em falha; repetição Chromium dirigida 31/31, sem falhas/omissões/retries. Nova CI WebKit pendente. Aplicação ec01d843/0.16.2 sem alterações adicionais; produção 0.16.1, sem deploy/escrita real. Entradas abaixo são históricas.
+
 ## 2026-10-10 — espera do histórico em repetição WebKit
 
 A repetição CI 38053946155 teve 327/330 WebKit: três falhas do mesmo cenário de âmbito/histórico, nos perfis landscape-plus, phone-pro-max e landscape-pro-max, com erro de leitura ao navegar. Faltava a espera das consultas antes de page.goBack(); foi acrescentada sem ignorar erros. Repetição Chromium dirigida desse cenário: 31/31, todos os perfis, sem falhas/omissões/retries. CI completa seguinte pendente. Aplicação permanece ec01d843/0.16.2, sem alteração adicional do produto, deploy ou escrita real. Entradas abaixo são checkpoints históricos.

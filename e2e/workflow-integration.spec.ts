@@ -337,6 +337,7 @@ test('dívida e ficha conservam os valores e movimentos integrais do cliente sel
  const table=dialog.getByRole('table',{name:'Registos de trabalho'})
  for(const text of ['Consulta e preparação de processo','Análise documental','Preparação de requerimento'])await expect(table).toContainText(text)
  await expect(dialog.getByText('A ficha conserva todos os dados e movimentos deste cliente.',{exact:false})).toBeVisible()
+ await settleReads(page)
  await dialog.locator('[data-close-record]').first().click()
  await expect(page.getByRole('region',{name:'Filtros partilhados'}).getByLabel('Filtrar responsável')).toBeEnabled()
  expect(writes).toEqual([])

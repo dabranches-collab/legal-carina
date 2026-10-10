@@ -30,7 +30,7 @@ export default defineConfig({...workflow,testMatch:'responsive-flows.spec.ts',wo
  // Match the integrated localhost preview's same-origin service proxy. The
  // isolated server still refuses every unmocked service request with HTTP 403.
  webServer:{...workflow.webServer as object,env:{VITE_SUPABASE_URL:'http://127.0.0.1:5173/supabase-api',VITE_SUPABASE_PUBLISHABLE_KEY:'test-publishable-key-not-a-secret',VITE_APP_ENV:'test'}},
- use:{...workflow.use,...(webkit?{launchOptions:{}}:{})},
+ use:{...workflow.use,trace:'retain-on-failure',...(webkit?{launchOptions:{}}:{})},
  outputDir:'output/responsive-qa-20261010/artifacts',
  reporter:[['list'],['json',{outputFile:'output/responsive-qa-20261010/results.json'}]],
 })
