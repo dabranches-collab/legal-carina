@@ -1,4 +1,4 @@
-## Versão publicada — 0.16.1
+## Versão publicada — 0.16.2
 
 Confirmada em 10-10-2026: menu **Registos**, categorias **PARTICULARES/EMPRESAS/MISTOS**, sugestões de clientes nos formulários e pesquisa livre distinta nas listas. [Aplicação](https://legal-carina.dabranches.workers.dev). Build oficial fixa a navegação; dados de negócio preservados. Ver HANDOVER.md para fonte, CI, implantação, incidente concorrente e pedidos pendentes.
 
@@ -12,8 +12,8 @@ React 19, TypeScript, Vite 8, Tailwind CSS 4, Vitest/Testing Library e Playwrigh
 
 ## Estado canónico
 
-- Versão publicada: `0.13.3`, confirmada directamente em `HANDOVER.md`.
-- Fonte canónica no GitHub: `main`; commit funcional publicado `1f02023a5a89af62c5d425d4973633c34cb5ca0d`, integrado pelo PR #86. O registo de publicação consta de `HANDOVER.md`.
+- Versão publicada: `0.16.2`, confirmada no browser e pelos hashes dos assets em 10-10-2026.
+- Fonte canónica no GitHub: `main`; fonte publicada `a931cef94e7d9504f2b90c80c8e6ca90a1645432`, integrada pelo PR #100 em `111a3830d9d4c4873a8980de9152c43931af9d55`. Identificadores e validações em `HANDOVER.md`.
 - Produção: `https://legal-carina.dabranches.workers.dev`.
 - As alterações e os identificadores do deployment activo estão registados em [HANDOVER.md](HANDOVER.md) e [docs/deployment.md](docs/deployment.md).
 
