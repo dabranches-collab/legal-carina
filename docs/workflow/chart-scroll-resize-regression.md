@@ -19,3 +19,6 @@ Executar `pnpm exec vitest run src/components/dashboard/LatestPeriodScroll.test.
 Os resultados de browser correspondem a simulações locais com pedidos externos bloqueados. WebKit não certifica Safari físico; Chrome desktop não certifica Chrome iOS. Permanecem pendentes toque/momentum/scrollbar e dispositivos físicos. Uma tentativa de gesto quando não existe overflow e não ocorre evento de scroll não está certificada.
 
 Só dados sintéticos foram usados. Fixtures locais, capturas e logs operacionais ficam fora da PR; os testes mínimos versionados reproduzem o defeito. A CI desta branch deve ser consultada antes de integrar. Publicação depende de coordenação e autorização próprias.
+
+Notas de versão alinhadas com package.json em 0.16.4, preservando o histórico 0.16.3. Build local aprovado após corrigir o bloqueio de coerência; a CI do novo SHA deve substituir a validação falhada de 85e1a0a3. Sem alteração adicional ao comportamento de scroll.
+
