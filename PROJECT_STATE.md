@@ -1,3 +1,6 @@
+## 2026-10-10 — espera do histórico em repetição WebKit
+
+A repetição CI 38053946155 teve 327/330 WebKit: três falhas do mesmo cenário de âmbito/histórico, nos perfis landscape-plus, phone-pro-max e landscape-pro-max, com erro de leitura ao navegar. Faltava a espera das consultas antes de page.goBack(); foi acrescentada sem ignorar erros. Repetição Chromium dirigida desse cenário: 31/31, todos os perfis, sem falhas/omissões/retries. CI completa seguinte pendente. Aplicação permanece ec01d843/0.16.2, sem alteração adicional do produto, deploy ou escrita real. Entradas abaixo são checkpoints históricos.
 ## 2026-10-10 — matriz concluída; CI geral com mais tempo
 
 Chromium 682/682 nos 31 perfis (duas passagens limpas), mais 155/155 e 31/31 dirigidos. WebKit 330/330 nos 15 perfis, três baterias limpas da CI 38052515079/5c67621. Relatórios JSON consolidados em output/responsive-qa-20261010/. CI geral anterior c4f3500 aprovada; último job geral atingiu 20 minutos a dois casos do fim da regressão, antes do build/PWA finais, sem falhas observadas. Orçamento desse job aumentado para 30 minutos; nova CI geral pendente. Sem alterações posteriores ao produto ec01d843/0.16.2 local, sem deploy ou escrita real. Produção reconfirmada 0.16.1, deployment b0503af0, Version ID 12ea78d7. Entradas abaixo são históricas.

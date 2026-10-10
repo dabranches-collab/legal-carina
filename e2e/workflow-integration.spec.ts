@@ -228,7 +228,7 @@ test('âmbito partilhado combina dimensões, restaura histórico e conserva nota
  await expect.poll(()=>searchCalls.some(args=>args.p_professional_id==='00000000-0000-4000-8000-000000000010'&&args.p_billing_entity_id==='00000000-0000-4000-8000-000000000002'&&args.p_client_type==='individual')).toBe(true)
  await settleReads(page);await page.reload();await expect(table).toContainText('Consulta e preparação de processo')
  await scope.getByLabel('Filtrar responsável').selectOption('00000000-0000-4000-8000-000000000011');await expect(table).toContainText('Análise documental');await expect(table).not.toContainText('Consulta e preparação de processo')
- await page.goBack();await expect(table).toContainText('Consulta e preparação de processo')
+ await settleReads(page);await page.goBack();await expect(table).toContainText('Consulta e preparação de processo')
  const url=new URL(page.url());url.searchParams.set('view','payments');await settleReads(page);await page.goto(url.toString())
  await expect.poll(()=>scopeCalls.some(call=>call.rpc==='get_workflow_payment_queue'&&call.args.p_scope_client_type==='individual')).toBe(true)
  await page.getByRole('button',{name:/Notas de honorários não pagas/}).click()

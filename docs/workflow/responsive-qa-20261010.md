@@ -63,3 +63,5 @@ O fecho do aviso da versão instalada foi testado; o aviso de actualização pen
 
 
 A CI 38052515079 aprovou os 330 WebKit, 351 unitários, 64 workflow, SQL, Worker e build. O job geral atingiu o limite global de 20 minutos nos últimos dois dos 178 casos agendados da regressão, sem falhas de testes observadas; o build/PWA seguintes não arrancaram. O limite do job passa a 30 minutos, conservando todas as guardas e verificações. CI geral com esse orçamento em repetição. A CI geral 38051396855 já tinha aprovado integralmente o mesmo produto.
+
+Repetição CI 38053946155: 327/330 WebKit; três erros de leitura no mesmo cenário de histórico (landscape-plus, phone-pro-max e landscape-pro-max). A espera antes de voltar no histórico estava omissa; foi acrescentada. Ensaio dirigido Chromium desse cenário: 31/31 nos 31 perfis (history-drain-all-profiles.json), sem falhas/omissões/retries. Nova repetição integral WebKit e geral pendente; nenhuma asserção de erro retirada e nenhuma alteração adicional da aplicação.
