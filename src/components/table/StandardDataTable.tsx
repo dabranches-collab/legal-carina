@@ -888,6 +888,7 @@ export function StandardDataTable<Row>({
         {showSearch && <label className="relative min-w-52 flex-1">
           <span className="sr-only">Pesquisar em {label}</span>
           <input
+            type="search"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);

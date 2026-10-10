@@ -47,7 +47,7 @@ export function WorkflowFilters({ view, aggregate = false }: { view: string; agg
     <div className="grid gap-3 sm:grid-cols-3">{([
       ['scopeSociety', 'Filtrar sociedade', scope.society, societies],
       ['scopeProfessional', 'Filtrar responsável', scope.professional, professionals],
-      ['scopeClientType', 'Filtrar tipo de cliente', scope.clientType, [{ id: 'individual', label: 'Particulares' }, { id: 'company', label: 'Empresas' }, { id: 'mixed', label: 'Mistos' }]],
+      ['scopeClientType', 'Filtrar tipo de cliente', scope.clientType, [{ id: 'individual', label: 'PARTICULARES' }, { id: 'company', label: 'EMPRESAS' }, { id: 'mixed', label: 'MISTOS' }]],
     ] as [string, string, string, Option[]][]).map(([param, label, value, options]) => <label key={param} className="text-sm font-semibold">{label}<select aria-label={label} value={value} disabled={Boolean(error)||locked} onChange={event => update(param, event.target.value)} className="control mt-1 min-h-11 w-full px-3"><option value="">Todos</option>{value && !options.some(option => option.id === value) && <option value={value}>Selecção guardada</option>}{options.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>)}</div>
     {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     {locked&&<p className="text-sm text-text-secondary">Feche a janela de detalhe antes de alterar o âmbito.</p>}

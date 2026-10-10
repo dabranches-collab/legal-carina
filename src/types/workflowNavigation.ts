@@ -17,7 +17,7 @@ export function workflowArea(view: ViewId, clientDashboard = false): WorkflowAre
 export const workflowAreas: { id: WorkflowArea; view: ViewId; label: string; icon: IconName }[] = [
   { id: 'resumo', view: 'overview', label: 'Resumo', icon: 'overview' },
   { id: 'clientes', view: 'clients', label: 'Clientes', icon: 'clients' },
-  { id: 'trabalho', view: 'work', label: 'Trabalho', icon: 'clock' },
+  { id: 'trabalho', view: 'work', label: 'Registos', icon: 'clock' },
   { id: 'financeiro', view: 'debtors', label: 'Financeiro', icon: 'payment' },
   { id: 'notas', view: 'notes', label: 'Notas', icon: 'audit' },
 ]

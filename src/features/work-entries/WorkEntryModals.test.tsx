@@ -19,6 +19,17 @@ const options={societies:[{id:'soc-1',name:'Carina Santos'}],clientProfiles:[{id
 beforeEach(()=>{retainerContract=null;Object.values(retainerFilters).forEach(mock=>mock.mockReset());rpc.mockReset();rpc.mockImplementation(async(name:string,args?:Record<string,unknown>)=>name==='get_work_entry_form_options'?{data:options,error:null}:name==='get_work_entry_for_edit'?{data:{id:'entry-1',work_date:'2026-08-16',client_profile_id:'profile-1',matter_id:'matter-1',professional_id:'resp-1',billing_entity_id:'soc-1',activity_description:'Actividade original',observations:null,duration_minutes:30,effective_hourly_rate:150,effective_amount:75,currency:'EUR',status:'draft',is_billable:true,is_invoiced:false,invoice_date:null,is_paid:false,archive_status:null,charge_type:'hourly',effective_discount_amount:0,discount_percentage:0,discount_reason:null,has_manual_override:false,source_type:'manual',billing_scope:'standard'},error:null}:name==='create_classified_work_entry'?{data:{workEntryId:'entry-new',expenses:((args?.p_expenses as {key:string}[])??[]).map((item,index)=>({key:item.key,id:`expense-${index+1}`}))},error:null}:{data:1,error:null})})
 
 describe('movimentos controlados',()=>{
+ test('fecha as sugestões ao sair do cliente vazio ou incompleto, sem obrigar a preenchê-lo primeiro',async()=>{
+  const user=userEvent.setup(),onClose=vi.fn();render(<CreateWorkEntryModal onClose={onClose} onCreated={vi.fn()}/>)
+  const client=await screen.findByRole('combobox',{name:'Cliente e vertente'})
+  await user.click(client);expect(screen.getByRole('listbox')).toBeVisible()
+  await user.click(screen.getByLabelText('Actividade'));expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+  await user.type(screen.getByLabelText('Actividade'),'Preenchida antes do cliente')
+  await user.type(client,'Cliente');expect(screen.getByRole('listbox')).toBeVisible()
+  await user.click(screen.getByRole('heading',{name:'Criar movimento'}));expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+  expect(client).toHaveValue('Cliente');expect(screen.getByLabelText('Actividade')).toHaveValue('Preenchida antes do cliente')
+  expect(screen.getByRole('button',{name:'Guardar movimento'})).toBeDisabled();expect(onClose).not.toHaveBeenCalled()
+ })
  test('guarda a passagem para avença com valores vazios e sem pedir motivo',async()=>{
   const user=userEvent.setup(),onSaved=vi.fn();render(<EditWorkEntryModal entryId="entry-1" requiresReason={false} onClose={vi.fn()} onSaved={onSaved}/>);
   await screen.findByDisplayValue('Actividade original');await user.selectOptions(screen.getByLabelText('Tratamento para facturação'),'retainer');

@@ -467,13 +467,13 @@ export function OverviewPage({onSociety,onProfessional}: {onSociety?: (name:stri
               />
               <DonutChart
                 title="Tipo de cliente"
-                subtitle="Contagens inclusivas; os mistos constam em ambas"
-                firstLabel="Empresas"
-                secondLabel="Particulares"
+                subtitle="Contagens inclusivas; os MISTOS constam em ambas"
+                firstLabel="EMPRESAS"
+                secondLabel="PARTICULARES"
                 first={percent(company, company + individual)}
                 subtotals={[
-                  { label: "Empresas", value: number.format(company) },
-                  { label: "Particulares", value: number.format(individual) },
+                  { label: "EMPRESAS", value: number.format(company) },
+                  { label: "PARTICULARES", value: number.format(individual) },
                 ]}
               />
             </div>

@@ -112,6 +112,8 @@ button:disabled { cursor: not-allowed; }
 .control { min-height: 2.5rem; border: 1px solid var(--color-border-strong); border-radius: 0.625rem; background: var(--color-surface); color: var(--color-text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
 .control:hover { border-color: var(--color-secondary); }
 .control:focus { border-color: var(--color-secondary); box-shadow: 0 0 0 3px var(--color-secondary-soft); outline: 0; }
+input.control[type="search"] { border-width: 2px; border-color: var(--color-secondary); background: var(--color-secondary-soft); }
+input.control[type="search"]:focus { background: var(--color-surface); }
 .scrollbar-thin { scrollbar-color: var(--color-border-strong) transparent; scrollbar-width: thin; }
 .table-row-active, .table-row-active > td { background: var(--color-row-selected) !important; }
 .app-safe-screen { min-height: 100vh; min-height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
@@ -283,6 +285,7 @@ main .overscroll-contain { overscroll-behavior: auto; }
     font-size: 12px;
   }
   .work-filters-bar [role="group"] > select { min-height: 36px; padding-inline: 8px; }
+  .work-filters-bar input[type="search"] { min-height: 36px; height: 36px; }
 }
 
 @media (pointer: coarse) {

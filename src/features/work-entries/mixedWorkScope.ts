@@ -2,7 +2,7 @@ import { supabase } from '../../lib/supabase'
 import { mixedProfileType } from '../../types/workflowScope'
 export type WorkScopeArgs = Record<string, string | number | boolean | null>
 function metricNumber(value: unknown) {
-  if (!['number', 'string'].includes(typeof value) || !Number.isFinite(Number(value))) throw new Error('Resumo de clientes mistos inválido.')
+  if (!['number', 'string'].includes(typeof value) || !Number.isFinite(Number(value))) throw new Error('Resumo de clientes MISTOS inválido.')
   return Number(value)
 }
 export async function mixedWorkClientIds(clientId: string | null): Promise<string[]> {
@@ -32,10 +32,10 @@ export async function mixedWorkAggregate(name: string, args: WorkScopeArgs, summ
     const responses = await Promise.all(ids.slice(offset, offset + 6).map(id => supabase!.rpc(name, { ...args, p_client_type: mixedProfileType(args.p_client_type), p_client_id: id })))
     for (const response of responses) {
       if (response.error) return { data: null, error: response.error }
-      if (!response.data || typeof response.data !== 'object' || Array.isArray(response.data)) throw new Error('Resumo de clientes mistos inválido.')
+      if (!response.data || typeof response.data !== 'object' || Array.isArray(response.data)) throw new Error('Resumo de clientes MISTOS inválido.')
       for (const [kind, value] of Object.entries(response.data)) {
         if (summaries) {
-          if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Resumo de clientes mistos inválido.')
+          if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Resumo de clientes MISTOS inválido.')
           const target = (data[kind] ?? {}) as Record<string, number>
           for (const [metric, amount] of Object.entries(value)) target[metric] = (target[metric] ?? 0) + metricNumber(amount)
           data[kind] = target

@@ -1,3 +1,17 @@
+## 2026-10-10 — pesquisa livre das tabelas partilhadas
+
+A pesquisa geral do StandardDataTable também usa a apresentação distinta dos campos de pesquisa livre, abrangendo Financeiro e as restantes listas. 22 testes do componente aprovados; selector E2E de desempenho ajustado para searchbox. Publicação 0.16.1 autorizada, por concluir após CI do último commit, build/dry-run real e confirmação pública. Sem migrations ou escritas de dados.
+
+## 2026-10-10 — formulários e categorias 0.16.1 em preparação
+
+Lote local na branch `codex/fix-production-navigation-0161`, PR #96: categorias PARTICULARES, EMPRESAS e MISTOS em maiúsculas nos menus, filtros e opção seleccionada; pesquisa livre diferenciada e filtros dos Registos alinhados; sugestões imediatas de clientes nas despesas e fecho ao clicar fora/mudar de campo nos formulários; criação de clientes com ambas as vertentes. 40 testes unitários e 11 E2E de despesas/criação de clientes aprovados com dados sintéticos. Mais 12 testes de integração aprovados em desktop, tablet, iPhone e iPhone horizontal, incluindo texto das opções e opção seleccionada em maiúsculas. Typecheck, segurança e diff-check aprovados; CI completa deste lote ainda pendente. Produção permanece a restauração 0.16.0, sem alterações a dados neste lote.
+
+Pedido de rascunho permanece pendente: botão «Guardar rascunho» com cliente e data, sem gravação automática ao fechar, e indicação vermelho/verde dos campos pendentes/preenchidos. Não implementado nem certificado por este lote. Requer persistência compatível com as restrições existentes, testes PostgreSQL e verificação de preservação dos dados antes da publicação já autorizada. Não confundir os rótulos de rascunho existentes com a possibilidade de guardar um movimento incompleto.
+
+## 2026-10-10 — correcção 0.16.1 em preparação
+
+Regressão confirmada: publicação posterior da 0.16.0 (`30463cca-4779-4e29-abc0-ebff3418435c`, 09-10 23:48:45 UTC) omitiu VITE_WORKFLOW_NAVIGATION. Bundle público passou undefined ao selector, repondo menus anteriores. Frontend validado `e175a768-fbaf-4239-a5d5-bc2b5d9d2cfc` reposto a 100%; sem operações na base de dados. Build oficial Wrangler passa a fixar five-areas e conserva a guarda Auth real. 0.16.1 em preparação; não publicada ainda. Testes e CI por confirmar.
+
 ## 2026-10-10 — 0.16.0 publicada e confirmada
 
 Publicação concluída por ordem expressa renovada depois de comunicar os ensaios externos pendentes. PR #93 e correcção PR #94 integrados em main; fonte funcional `bfde6a8d4da9884fe9d1255cebdf57d7c9af347a`, código da correcção `c88547efad4f1615b07b4c630bd15862088908a1`. CI `38004536233` e secret scan `38004536464` aprovados: 344 unitários, 61 contratos SQL, 56 integração, 172 regressão e quatro PWA. QA PostgreSQL: 15 verificações completas dos nove RPC, três verificações de cálculo único e 27 contratos de âmbito aprovados.
