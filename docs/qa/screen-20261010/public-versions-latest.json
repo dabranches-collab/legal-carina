@@ -1,0 +1,26 @@
+[
+  {
+    "project": "Carina",
+    "url": "https://legal-carina.dabranches.workers.dev/release-notes.json",
+    "status": 200,
+    "version": "0.16.1",
+    "checkedAt": "2026-10-10T11:06:40.590Z",
+    "sha256": "b27dc3f942460956732b9e47a1f32d261352150ab73bd2065f1392edbfcadb40"
+  },
+  {
+    "project": "GR",
+    "url": "https://gr-automotive.dabranches.workers.dev/version.json",
+    "status": 200,
+    "version": "0.5.31",
+    "checkedAt": "2026-10-10T11:06:40.656Z",
+    "sha256": "76937ac0cb0a10c2f3d56e2b77be8b32a8baa5ca7345269157c2608caff4860b"
+  },
+  {
+    "project": "Financas",
+    "url": "https://financas.dabranches.workers.dev/app.html",
+    "status": 200,
+    "version": "1.1.42",
+    "checkedAt": "2026-10-10T11:06:40.885Z",
+    "sha256": "4235e3ad9f88279a4c333953f923262f7c18b6b3e1dfc6b35560f9a3cb185faa"
+  }
+]

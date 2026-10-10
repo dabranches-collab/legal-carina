@@ -1,3 +1,5 @@
+> Actualização: consultar [FOLLOWUP.md](FOLLOWUP.md) para WebKit recuperado e resultados posteriores. As indicações de bloqueio abaixo são históricas.
+
 # QA visual — Carina Legal — 10-10-2026
 
 Base remota verificada: 842d499c6c30ea73b2e8d668a8ef2b53c033b3f3. Branch local codex/screen-qa-20261010. Produção: ver evidence/public-versions.json (HTTP público, não certificação de deployment ID).
