@@ -1,3 +1,7 @@
+## 2026-10-10 — CI geral aprovada; último cenário WebKit em repetição
+
+CI 38051396855/c4f3500: validate, dependências e segredos aprovados. Chromium 682/682 integral, mais 155/155 navegação e 31/31 grupos/tema nos 31 perfis. WebKit 329/330 em 15 perfis, zero erros de pedidos; só o cenário longo de grupos/tema excedeu 45 s no último botão. Orçamento desse cenário ajustado para 90 s, sem retirar asserções; repetição WebKit pendente. Produto permanece ec01d843/0.16.2 local, PR #100 draft; sem deploy ou escrita real. As entradas anteriores são histórico de checkpoints, não o estado final.
+
 ## 2026-10-10 — passagem completa Chromium e repetição WebKit
 
 Aplicação ec01d843: 682/682 Chromium numa única passagem, 31 perfis, sem falhas/retries/omissões; 27/27 tabelas. WebKit da mesma CI: 322/330. Cinco controlos parcialmente visíveis e três erros no servidor CORS simulado ainda impedem certificar WebKit. Ajuste apenas do ensaio: scroll centrado antes de toque e proxy local do mesmo origin, mantendo bloqueio 403 e zero erros obrigatório. 24/24 Chromium dirigidos desse ajuste aprovados. Nova matriz WebKit e CI pendentes; sem alteração adicional da aplicação/deploy/dados. Relatório docs/workflow/responsive-qa-20261010.md.

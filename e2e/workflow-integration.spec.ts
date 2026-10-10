@@ -112,6 +112,8 @@ async function openFromList(page:import('@playwright/test').Page){
 }
 async function open(page:import('@playwright/test').Page,preview=true){await settleReads(page);await page.goto('/?qa-iphone=1&qa-role=admin&view=clients&clientType=individual&clientMode=list'+(preview?'&workflow=preview':''));await openFromList(page);return page.getByRole('dialog',{name:'Cliente Demonstração Alfa',exact:true})}
 test('cinco grupos reutilizam dados, registos, contratos e documentos',async({page},info)=>{
+ // This scenario traverses every group/page twice, including a cold theme reopen.
+ test.setTimeout(90000)
  const dialog=await open(page),nav=dialog.getByRole('navigation',{name:'Grupos da ficha do cliente'})
  await expect(nav.getByRole('button')).toHaveCount(5);await expect(dialog.getByRole('region',{name:'Resumo da ficha'})).toBeVisible()
  await nav.getByRole('button',{name:'Dados',exact:true}).click();await expect(dialog.getByLabel('Nome',{exact:true})).toBeVisible()
