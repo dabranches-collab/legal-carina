@@ -29,7 +29,12 @@ union all select 'Mensalidade pertence ao cliente da avença',count(*) from reta
 union all select 'Nota pertence à conta do lançamento',count(*) from client_credit_movements m join provision_honorarium_notes n on n.id=m.note_id where n.account_id<>m.account_id
 union all select 'Estorno na mesma conta e de montante inverso',count(*) from client_credit_movements m join client_credit_movements r on r.id=m.reverses_id where m.account_id<>r.account_id or m.amount<>-r.amount
 union all select 'Saldo contabilístico não negativo',count(*) from (select account_id from client_credit_movements group by account_id having sum(amount)<0) x
-union all select 'Total e dedução da nota',count(*) from provision_honorarium_notes where round(subtotal+vat,2)<>total or round(total-deducted,2)<>remaining or deducted<0 or deducted>total
+union all select 'Total, dedução e recebimento da nota',count(*) from provision_honorarium_notes where round(subtotal+vat,2)<>total or greatest(0,round(total-deducted-coalesce((document_options->'direct_payment'->>'amount')::numeric,0),2))<>remaining or deducted<0 or deducted>total
 union all select 'Estados pagos coerentes',count(*) from work_entries where is_paid and not is_invoiced and not has_historical_state_exception;
 select count(*) checks,sum(violations) violations,coalesce(jsonb_agg(jsonb_build_object('check',check_name,'count',violations)) filter(where violations>0),'[]') findings from integrity_results;
+-- The product deliberately tracks overpayments outside the provision account.
+-- They require accounting regularisation, not an automatic database correction.
+select count(*) notes_with_external_excess,coalesce(sum(deducted+coalesce((document_options->'direct_payment'->>'amount')::numeric,(document_options->'fixed_fee_payment'->>'external')::numeric,0)-total),0) excess_total
+from (select distinct on(document_id) * from honorarium_document_versions order by document_id,revision desc)n
+where not voided and deducted+coalesce((document_options->'direct_payment'->>'amount')::numeric,(document_options->'fixed_fee_payment'->>'external')::numeric,0)>total;
 rollback;

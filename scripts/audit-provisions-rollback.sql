@@ -40,7 +40,9 @@ insert into tap_results select pg_temp.audit_throws('delete from client_credit_m
 -- Existing work updates use SECURITY DEFINER RPCs. Exercise the invariant as
 -- the database owner too, retaining the synthetic actor and every trigger.
 reset role;
-insert into tap_results select pg_temp.audit_throws('update work_entries set activity_description=''Alteração'' where id=''5e14e611-879b-4a68-89c8-4247eaa4938d''','%Estorne a nota%','Noted work is protected even for privileged writes');
+update work_entries set activity_description='Alteração' where id='5e14e611-879b-4a68-89c8-4247eaa4938d';
+insert into tap_results select pg_temp.audit_is((select activity_description from work_entries where id='5e14e611-879b-4a68-89c8-4247eaa4938d'),'Alteração'::text,'Ordinary text corrections remain possible after a note');
+insert into tap_results select pg_temp.audit_throws('select update_work_entry_inline_audited(''5e14e611-879b-4a68-89c8-4247eaa4938d'',''duration_minutes'',''61'',''Synthetic correction'')','%nota%','Noted financial work is protected through its authorised correction RPC');
 set local role authenticated;
 insert into tap_results select pg_temp.audit_throws(format('select reverse_client_credit(%L,%L,gen_random_uuid())',payment,'Estorno sintético'),'%saldo não pode%','Payment reversal cannot create negative balance') from context;
 select reverse_client_credit((select id from client_credit_movements where kind='consumption' and account_id=(select account from context)),'Estorno sintético',gen_random_uuid());

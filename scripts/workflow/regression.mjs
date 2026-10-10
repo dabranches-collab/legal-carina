@@ -1,5 +1,5 @@
 import {mkdirSync, readFileSync, readdirSync, writeFileSync, rmSync,existsSync} from 'node:fs'
-import {resolve, dirname} from 'node:path'
+import {resolve, dirname, relative as relativePath} from 'node:path'
 import {spawnSync} from 'node:child_process'
 import {pathToFileURL} from 'node:url'
 
@@ -13,7 +13,11 @@ try {
   let source = readFileSync(original,'utf8')
   if(process.env.WORKFLOW_REGRESSION_PREVIEW==='1') source=source.replace(/\.goto\((['"`])\/\?/g, '.goto($1/?workflow=preview&')
   source = source.replace(/from (['"])@playwright\/test\1/g, "from '../../scripts/workflow/regression-fixture'")
-  source = source.replace(/from (['"])(\.\.?\/[^'"]+)\1/g, (match, quote, relative) => relative.includes('regression-fixture') ? match : `from ${quote}${resolve(dirname(original),relative)}${quote}`)
+  source = source.replace(/from (['"])(\.\.?\/[^'"]+)\1/g, (match, quote, relative) => {
+   if (relative.includes('regression-fixture')) return match
+   const target = relativePath(temporary,resolve(dirname(original),relative)).replaceAll('\\','/')
+   return `from ${quote}${target.startsWith('.') ? target : './'+target}${quote}`
+  })
   source = source.replace(/new URL\((['"])(\.\.?\/[^'"]+)\1,\s*import.meta.url\)/g, (_match, quote, relative) => `new URL(${quote}${pathToFileURL(resolve(dirname(original),relative)).href}${quote})`)
   writeFileSync(resolve(temporary,file), source)
  }

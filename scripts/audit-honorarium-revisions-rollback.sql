@@ -26,13 +26,18 @@ begin
  if (again->>'revision')::integer<>2 or (select count(*) from public.client_credit_movements where account_id=account)<>ledger_count then raise exception 'Reprint duplicated ledger';end if;
  revised:=public.save_honorarium_document(client,society,array[first_id],0,'{}',(note->>'document_id')::uuid,2,true,100,100,gen_random_uuid());
  if (revised->>'balance_after')::numeric<>100 then raise exception 'Removal did not return excess';end if;
- duplicate:=public.save_honorarium_document(client,society,array[first_id],0,'{}',null,null,true,100,100,gen_random_uuid());
+ begin
+  duplicate:=public.save_honorarium_document(client,society,array[first_id],0,'{}',null,null,true,100,100,gen_random_uuid());
+  raise exception 'Duplicate current note accepted';
+ exception when raise_exception then
+  if sqlerrm not like '%outra nota vigente%' then raise;end if;
+ end;
  if (select sum(amount) from public.client_credit_movements where account_id=account)<>100 then raise exception 'Repeated work consumed provision twice';end if;
  if exists(select 1 from public.work_entries where client_id=client and (is_invoiced or is_paid)) then raise exception 'Fee document changed invoice/payment status';end if;
  result:=public.void_honorarium_document((note->>'document_id')::uuid,3,gen_random_uuid());
  if not(result->>'voided')::boolean or (select sum(amount) from public.client_credit_movements where account_id=account)<>200 then raise exception 'Void did not restore provision';end if;
  if jsonb_array_length(public.get_client_credit_accounts(client)->0->'noted_work_ids')<>0 then raise exception 'Void did not free work';end if;
- if jsonb_array_length(public.get_client_honorarium_documents(client))<5 then raise exception 'History lost revisions';end if;
+ if jsonb_array_length(public.get_client_honorarium_documents(client))<>4 then raise exception 'History lost revisions';end if;
  begin
   perform public.save_honorarium_document(client,society,array[second_id],0,'{}',(note->>'document_id')::uuid,1,true,200,200,gen_random_uuid());
   raise exception 'Stale revision accepted';
