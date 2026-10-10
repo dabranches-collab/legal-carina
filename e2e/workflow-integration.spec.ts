@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 import {createQaAllocationData} from '../src/lib/qaAllocationData'
-import packageJson from '../package.json'
+import packageJson from '../package.json' with {type:'json'}
 test.skip(process.env.WORKFLOW_ISOLATED_E2E!=='1','Requer playwright.workflow.config.ts para bloquear serviços reais.')
 let forbidden:string[]
 let searchCalls: Record<string,unknown>[]

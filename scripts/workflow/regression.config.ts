@@ -1,7 +1,7 @@
 import {defineConfig} from '@playwright/test'
 import workflow from '../../playwright.workflow.config'
 import {resolve} from 'node:path'
-import packageJson from '../../package.json'
+import packageJson from '../../package.json' with {type:'json'}
 const report = ['retry','preview-documents'].includes(process.env.WORKFLOW_REGRESSION_REPORT??'') ? process.env.WORKFLOW_REGRESSION_REPORT : 'results'
 export default defineConfig({...workflow,
  testDir: '../../e2e/.isolated',
